@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#4a1705">
 <title>Congelados — De Minas Pão de Queijaria</title>
 <meta name="description" content="Pães de queijo, biscoitos, chipas e broas congelados da De Minas Pão de Queijaria. Monte seu pedido e envie pelo WhatsApp.">
-<link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -166,7 +166,7 @@ footer .adm{display:inline-block;margin-top:18px;font-size:12px;color:#c9a98a;te
 <body data-cats="congelados" data-hero="Congelados De Minas: monte seu pedido e envie pelo WhatsApp" data-qr1="Escaneie e peça seus congelados" data-qr2="direto pelo WhatsApp">
 
 <header class="hero">
-  <img src="img/logo.jpg" alt="De Minas Pão de Queijaria — O autêntico pão de queijo mineiro" width="720" height="455">
+  <img src="logo.jpg" alt="De Minas Pão de Queijaria — O autêntico pão de queijo mineiro" width="720" height="455">
   <p>Escolha seus produtos e envie o pedido direto pelo WhatsApp</p>
   <div class="rule"></div>
 </header>
@@ -227,7 +227,7 @@ footer .adm{display:inline-block;margin-top:18px;font-size:12px;color:#c9a98a;te
 
 <dialog id="dlg" class="sheet"></dialog>
 
-<script src="lib/qrcode.js"></script>
+<script src="qrcode.js"></script>
 <script>
 (() => {
 'use strict';
@@ -704,7 +704,7 @@ async function publish() {
     let n = 0;
     for (const p of pend) {
       toast(`Enviando fotos… ${++n}/${pend.length}`, 20000);
-      const path = `img/${p.id}-${Date.now().toString(36)}.jpg`;
+      const path = `${p.id}-${Date.now().toString(36)}.jpg`;
       await putFile(path, p.foto.split(',')[1], 'Foto: ' + p.nome, g.branch || 'main');
       p.foto = path;
     }
@@ -739,7 +739,7 @@ function openQR() {
   $('#qPng').addEventListener('click', () => dl(qrCanvas($('#qUrl').value.trim() || baseURL(), 1400), 'qrcode-de-minas.png'));
   $('#qArt').addEventListener('click', async () => {
     try { await Promise.all([document.fonts.load('800 64px Fraunces'), document.fonts.load('700 40px "Nunito Sans"')]); } catch {}
-    const logo = await new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = 'img/logo.jpg'; });
+    const logo = await new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = 'logo.jpg'; });
     const W = 1200, H = 1650, a = document.createElement('canvas'); a.width = W; a.height = H; const x = a.getContext('2d');
     x.fillStyle = '#fcf3e2'; x.fillRect(0, 0, W, H);
     x.fillStyle = '#4a1705'; x.fillRect(0, 0, W, 26); x.fillRect(0, H - 26, W, 26);

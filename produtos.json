@@ -37,7 +37,7 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Pão de Queijo Tradicional 30g",
-   "foto": "img/pao-de-queijo.jpg",
+   "foto": "pao-de-queijo.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -56,7 +56,7 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Pão de Queijo Coquetel 15g",
-   "foto": "img/pao-de-queijo-coquetel.jpg",
+   "foto": "pao-de-queijo-coquetel.jpg",
    "opcoes": [
     {
      "label": "2kgs",
@@ -71,7 +71,7 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Pão de Queijo Lanche 80g",
-   "foto": "img/pao-de-queijo.jpg",
+   "foto": "pao-de-queijo.jpg",
    "opcoes": [
     {
      "label": "2kgs",
@@ -86,7 +86,7 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Pão de Queijo Super Lanche 100g",
-   "foto": "img/pao-de-queijo.jpg",
+   "foto": "pao-de-queijo.jpg",
    "opcoes": [
     {
      "label": "2kgs",
@@ -101,7 +101,7 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Chipa com 3 Queijos",
-   "foto": "img/chipa.jpg",
+   "foto": "chipa.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -116,7 +116,7 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Biscoito de Queijo com 2 Queijos",
-   "foto": "img/biscoito-de-queijo.jpg",
+   "foto": "biscoito-de-queijo.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -131,7 +131,7 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Broa Doce",
-   "foto": "img/broa.jpg",
+   "foto": "broa.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -146,7 +146,7 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Broa Doce com Ervas",
-   "foto": "img/broa.jpg",
+   "foto": "broa.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -161,7 +161,7 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Broa Salgada Temperada",
-   "foto": "img/broa.jpg",
+   "foto": "broa.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -176,7 +176,7 @@
    "cat": "congelados",
    "grupo": "Bem de Minas",
    "nome": "Pão de Queijo Tradicional 25g",
-   "foto": "img/pao-de-queijo.jpg",
+   "foto": "pao-de-queijo.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -195,7 +195,7 @@
    "cat": "congelados",
    "grupo": "Bem de Minas",
    "nome": "Biscoito (Chipa)",
-   "foto": "img/chipa.jpg",
+   "foto": "chipa.jpg",
    "opcoes": [
     {
      "label": "500g",
@@ -225,7 +225,7 @@
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Goiabada",
-   "foto": "img/recheado-goiabada.jpg",
+   "foto": "recheado-goiabada.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -240,7 +240,7 @@
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Frango",
-   "foto": "img/recheado-frango.jpg",
+   "foto": "recheado-frango.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -255,7 +255,7 @@
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Calabresa",
-   "foto": "img/recheado-calabresa.jpg",
+   "foto": "recheado-calabresa.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -270,7 +270,7 @@
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Requeijão",
-   "foto": "img/recheado-requeijao.jpg",
+   "foto": "recheado-requeijao.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -300,7 +300,7 @@
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Pão de Queijo Tradicional",
-   "foto": "img/pao-de-queijo.jpg",
+   "foto": "pao-de-queijo.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -319,7 +319,7 @@
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Broas",
-   "foto": "img/broa.jpg",
+   "foto": "broa.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -334,7 +334,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Brasil Mineiro",
-   "foto": "img/pao-de-queijo.jpg",
+   "foto": "pao-de-queijo.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -353,7 +353,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Encanto Tradicional",
-   "foto": "img/pao-de-queijo.jpg",
+   "foto": "pao-de-queijo.jpg",
    "opcoes": [
     {
      "label": "400g",
@@ -579,7 +579,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Broa Doce",
-   "foto": "img/broa.jpg",
+   "foto": "broa.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -594,7 +594,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Broa Salgada",
-   "foto": "img/broa.jpg",
+   "foto": "broa.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -609,7 +609,7 @@
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Kit 4 Parmesão Canastra",
-   "foto": "img/kit-parmesao-canastra.jpg",
+   "foto": "kit-parmesao-canastra.jpg",
    "opcoes": [
     {
      "label": "Kit",
@@ -624,7 +624,7 @@
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Kit 4 Queijos Serra da Canastra",
-   "foto": "img/kit-queijos-serra-da-canastra.jpg",
+   "foto": "kit-queijos-serra-da-canastra.jpg",
    "opcoes": [
     {
      "label": "Kit",
@@ -639,7 +639,7 @@
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Fresco",
-   "foto": "img/queijo-fresco.jpg",
+   "foto": "queijo-fresco.jpg",
    "opcoes": [
     {
      "label": "Peça",
@@ -654,7 +654,7 @@
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Meia Cura Monte Carmelo",
-   "foto": "img/meia-cura-monte-carmelo.jpg",
+   "foto": "meia-cura-monte-carmelo.jpg",
    "opcoes": [
     {
      "label": "Preço por kg",
@@ -670,7 +670,7 @@
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Canastra Medeiros",
-   "foto": "img/canastra-medeiros.jpg",
+   "foto": "canastra-medeiros.jpg",
    "opcoes": [
     {
      "label": "Preço por kg",
@@ -686,7 +686,7 @@
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Meia Cura Cruzeiro da Fortaleza",
-   "foto": "img/meia-cura-cruzeiro-da-fortaleza.jpg",
+   "foto": "meia-cura-cruzeiro-da-fortaleza.jpg",
    "opcoes": [
     {
      "label": "Preço por kg",
@@ -702,7 +702,7 @@
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Meia Cura Serra do Salitre",
-   "foto": "img/meia-cura-serra-do-salitre.jpg",
+   "foto": "meia-cura-serra-do-salitre.jpg",
    "opcoes": [
     {
      "label": "Preço por kg",
@@ -718,7 +718,7 @@
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Serra da Canastra",
-   "foto": "img/serra-da-canastra.jpg",
+   "foto": "serra-da-canastra.jpg",
    "opcoes": [
     {
      "label": "Preço por kg",
@@ -734,7 +734,7 @@
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Meia Cura Araxá",
-   "foto": "img/meia-cura-araxa.jpg",
+   "foto": "meia-cura-araxa.jpg",
    "opcoes": [
     {
      "label": "Preço por kg",
@@ -750,7 +750,7 @@
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Malacaxeta",
-   "foto": "img/malacaxeta.jpg",
+   "foto": "malacaxeta.jpg",
    "opcoes": [
     {
      "label": "Peça",
@@ -765,7 +765,7 @@
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo da Santa",
-   "foto": "img/queijo-da-santa.jpg",
+   "foto": "queijo-da-santa.jpg",
    "opcoes": [
     {
      "label": "Peça",
@@ -780,7 +780,7 @@
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Trança Provolone",
-   "foto": "img/tranca-provolone.jpg",
+   "foto": "tranca-provolone.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -795,7 +795,7 @@
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Trança com Alho",
-   "foto": "img/tranca-alho.jpg",
+   "foto": "tranca-alho.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -810,7 +810,7 @@
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Trança ao Vinho",
-   "foto": "img/tranca-vinho.jpg",
+   "foto": "tranca-vinho.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -825,7 +825,7 @@
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Nozinho Provolone Defumado",
-   "foto": "img/nozinho-provolone-defumado.jpg",
+   "foto": "nozinho-provolone-defumado.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -840,7 +840,7 @@
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Palito Temperado",
-   "foto": "img/palito-temperado.jpg",
+   "foto": "palito-temperado.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -855,7 +855,7 @@
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Nozinho Temperado",
-   "foto": "img/nozinho-temperado.jpg",
+   "foto": "nozinho-temperado.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -870,7 +870,7 @@
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Trança",
-   "foto": "img/tranca.jpg",
+   "foto": "tranca.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -885,7 +885,7 @@
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Provolone Fresco Defumado",
-   "foto": "img/provolone-fresco-defumado.jpg",
+   "foto": "provolone-fresco-defumado.jpg",
    "opcoes": [
     {
      "label": "Preço por kg",
@@ -901,7 +901,7 @@
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Provolone Desidratado",
-   "foto": "img/provolone-desidratado.jpg",
+   "foto": "provolone-desidratado.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -916,7 +916,7 @@
    "cat": "queijos",
    "grupo": "Coalho e Requeijão",
    "nome": "Requeijão Moreno",
-   "foto": "img/requeijao-moreno.jpg",
+   "foto": "requeijao-moreno.jpg",
    "opcoes": [
     {
      "label": "Preço por kg",
@@ -932,7 +932,7 @@
    "cat": "queijos",
    "grupo": "Coalho e Requeijão",
    "nome": "Queijo Coalho",
-   "foto": "img/queijo-coalho.jpg",
+   "foto": "queijo-coalho.jpg",
    "opcoes": [
     {
      "label": "Preço por kg",
@@ -948,7 +948,7 @@
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce de Leite Moreno",
-   "foto": "img/dl-moreno.jpg",
+   "foto": "dl-moreno.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -963,7 +963,7 @@
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce de Leite Claro",
-   "foto": "img/dl-claro.jpg",
+   "foto": "dl-claro.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -978,7 +978,7 @@
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce de Leite Viçosa 400g",
-   "foto": "img/dl-vicosa.jpg",
+   "foto": "dl-vicosa.jpg",
    "opcoes": [
     {
      "label": "400g",
@@ -993,7 +993,7 @@
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce de Leite Dona Lázara",
-   "foto": "img/dl-dona-lazara.jpg",
+   "foto": "dl-dona-lazara.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1008,7 +1008,7 @@
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce de Leite Barra (tablete)",
-   "foto": "img/dl-barra-tablete.jpg",
+   "foto": "dl-barra-tablete.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -1023,7 +1023,7 @@
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Barra Doce de Leite",
-   "foto": "img/barra-dl.jpg",
+   "foto": "barra-dl.jpg",
    "opcoes": [
     {
      "label": "400g",
@@ -1042,7 +1042,7 @@
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce de Leite na Palha",
-   "foto": "img/dl-na-palha.jpg",
+   "foto": "dl-na-palha.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -1057,7 +1057,7 @@
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce de Leite na Palha Dona Lázara",
-   "foto": "img/dl-na-palha-dona-lazara.jpg",
+   "foto": "dl-na-palha-dona-lazara.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -1072,7 +1072,7 @@
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce Pingo de Leite",
-   "foto": "img/pingo-de-leite.jpg",
+   "foto": "pingo-de-leite.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1087,7 +1087,7 @@
    "cat": "doces",
    "grupo": "Goiabadas, Marmelada e Bananada",
    "nome": "Goiabada Cascão Corte",
-   "foto": "img/goiabada-cascao-corte.jpg",
+   "foto": "goiabada-cascao-corte.jpg",
    "opcoes": [
     {
      "label": "250g",
@@ -1110,7 +1110,7 @@
    "cat": "doces",
    "grupo": "Goiabadas, Marmelada e Bananada",
    "nome": "Goiabada Cascão de Corte",
-   "foto": "img/goiabada-corte-cascao.jpg",
+   "foto": "goiabada-corte-cascao.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -1125,7 +1125,7 @@
    "cat": "doces",
    "grupo": "Goiabadas, Marmelada e Bananada",
    "nome": "Goiabada Cascão de Colher",
-   "foto": "img/goiabada-colher.jpg",
+   "foto": "goiabada-colher.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1140,7 +1140,7 @@
    "cat": "doces",
    "grupo": "Goiabadas, Marmelada e Bananada",
    "nome": "Goiabada Cremosa Zélia",
-   "foto": "img/goiabada-cremosa-zelia.jpg",
+   "foto": "goiabada-cremosa-zelia.jpg",
    "opcoes": [
     {
      "label": "Lata",
@@ -1155,7 +1155,7 @@
    "cat": "doces",
    "grupo": "Goiabadas, Marmelada e Bananada",
    "nome": "Goiabada Cascão na Palha",
-   "foto": "img/goiabada-na-palha.jpg",
+   "foto": "goiabada-na-palha.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -1170,7 +1170,7 @@
    "cat": "doces",
    "grupo": "Goiabadas, Marmelada e Bananada",
    "nome": "Bananada na Palha",
-   "foto": "img/bananada-na-palha.jpg",
+   "foto": "bananada-na-palha.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -1185,7 +1185,7 @@
    "cat": "doces",
    "grupo": "Goiabadas, Marmelada e Bananada",
    "nome": "Marmelada",
-   "foto": "img/marmelada.jpg",
+   "foto": "marmelada.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -1200,7 +1200,7 @@
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Doce Ambrosia",
-   "foto": "img/ambrosia.jpg",
+   "foto": "ambrosia.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1215,7 +1215,7 @@
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Doce de Manga",
-   "foto": "img/doce-de-manga.jpg",
+   "foto": "doce-de-manga.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1230,7 +1230,7 @@
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Cocada Morena Cremosa",
-   "foto": "img/cocada-morena.jpg",
+   "foto": "cocada-morena.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1245,7 +1245,7 @@
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Cocada Branca Cremosa",
-   "foto": "img/cocada-branca.jpg",
+   "foto": "cocada-branca.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1260,7 +1260,7 @@
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Doce Pastoso com Leite",
-   "foto": "img/doce-pastoso-leite.jpg",
+   "foto": "doce-pastoso-leite.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1275,7 +1275,7 @@
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Doce de Mamão Ralado",
-   "foto": "img/doce-de-mamao.jpg",
+   "foto": "doce-de-mamao.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1290,7 +1290,7 @@
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Doce de Figo",
-   "foto": "img/doce-de-figo.jpg",
+   "foto": "doce-de-figo.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1305,7 +1305,7 @@
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Doce de Abóbora em Pedaços",
-   "foto": "img/doce-de-abobora.jpg",
+   "foto": "doce-de-abobora.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1320,7 +1320,7 @@
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Figo Ramy Caramelizado ao Conhaque Francês",
-   "foto": "img/figo-ramy.jpg",
+   "foto": "figo-ramy.jpg",
    "opcoes": [
     {
      "label": "Lata",
@@ -1335,7 +1335,7 @@
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Doce de Queijo em Calda",
-   "foto": "img/doce-de-queijo-calda.jpg",
+   "foto": "doce-de-queijo-calda.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1350,7 +1350,7 @@
    "cat": "doces",
    "grupo": "Balas",
    "nome": "Bala Doce de Leite",
-   "foto": "img/bala-dl-35.jpg",
+   "foto": "bala-dl-35.jpg",
    "opcoes": [
     {
      "label": "Pacote",
@@ -1365,7 +1365,7 @@
    "cat": "doces",
    "grupo": "Balas",
    "nome": "Bala Doce de Leite (pacote maior)",
-   "foto": "img/bala-dl-40.jpg",
+   "foto": "bala-dl-40.jpg",
    "opcoes": [
     {
      "label": "Pacote",
@@ -1380,7 +1380,7 @@
    "cat": "doces",
    "grupo": "Balas",
    "nome": "Bala Quebra Queixo",
-   "foto": "img/quebra-queixo.jpg",
+   "foto": "quebra-queixo.jpg",
    "opcoes": [
     {
      "label": "Pacote",
@@ -1395,7 +1395,7 @@
    "cat": "mel",
    "grupo": "",
    "nome": "Mel Florada Silvestre",
-   "foto": "img/mel-silvestre.jpg",
+   "foto": "mel-silvestre.jpg",
    "opcoes": [
     {
      "label": "250g",
@@ -1418,7 +1418,7 @@
    "cat": "mel",
    "grupo": "",
    "nome": "Mel Florada Laranjeira",
-   "foto": "img/mel-laranjeira.jpg",
+   "foto": "mel-laranjeira.jpg",
    "opcoes": [
     {
      "label": "250g",
@@ -1441,7 +1441,7 @@
    "cat": "mel",
    "grupo": "",
    "nome": "Mel Florada Eucalipto",
-   "foto": "img/mel-eucalipto.jpg",
+   "foto": "mel-eucalipto.jpg",
    "opcoes": [
     {
      "label": "250g",
@@ -1464,7 +1464,7 @@
    "cat": "mel",
    "grupo": "",
    "nome": "Mel com Favo",
-   "foto": "img/mel-com-favo.jpg",
+   "foto": "mel-com-favo.jpg",
    "opcoes": [
     {
      "label": "500g",
@@ -1483,7 +1483,7 @@
    "cat": "mel",
    "grupo": "",
    "nome": "Mel Silvestre 330g",
-   "foto": "img/mel-silvestre-330.jpg",
+   "foto": "mel-silvestre-330.jpg",
    "opcoes": [
     {
      "label": "330g",
@@ -1498,7 +1498,7 @@
    "cat": "mel",
    "grupo": "",
    "nome": "Mel com Favo 150g",
-   "foto": "img/mel-com-favo-150.jpg",
+   "foto": "mel-com-favo-150.jpg",
    "opcoes": [
     {
      "label": "150g",
@@ -1513,7 +1513,7 @@
    "cat": "mel",
    "grupo": "",
    "nome": "Melado",
-   "foto": "img/melado.jpg",
+   "foto": "melado.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1528,7 +1528,7 @@
    "cat": "mel",
    "grupo": "",
    "nome": "Melado de Cana 248g",
-   "foto": "img/melado-de-cana.jpg",
+   "foto": "melado-de-cana.jpg",
    "opcoes": [
     {
      "label": "248g",
@@ -1543,7 +1543,7 @@
    "cat": "mercearia",
    "grupo": "",
    "nome": "Manteiga Canastra 500g",
-   "foto": "img/manteiga-canastra.jpg",
+   "foto": "manteiga-canastra.jpg",
    "opcoes": [
     {
      "label": "500g",
@@ -1558,7 +1558,7 @@
    "cat": "mercearia",
    "grupo": "",
    "nome": "Manteiga de Garrafa",
-   "foto": "img/manteiga-garrafa.jpg",
+   "foto": "manteiga-garrafa.jpg",
    "opcoes": [
     {
      "label": "Garrafa",
@@ -1573,7 +1573,7 @@
    "cat": "mercearia",
    "grupo": "",
    "nome": "Geleias de Pimenta 250g",
-   "foto": "img/geleias-pimenta.jpg",
+   "foto": "geleias-pimenta.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -1588,7 +1588,7 @@
    "cat": "mercearia",
    "grupo": "",
    "nome": "Farinha de Mandioca Biju 800g",
-   "foto": "img/farinha-biju.jpg",
+   "foto": "farinha-biju.jpg",
    "opcoes": [
     {
      "label": "800g",
@@ -1603,7 +1603,7 @@
    "cat": "mercearia",
    "grupo": "",
    "nome": "Farinha Temperada sem Pimenta",
-   "foto": "img/farinha-temperada.jpg",
+   "foto": "farinha-temperada.jpg",
    "opcoes": [
     {
      "label": "Pacote",
@@ -1618,7 +1618,7 @@
    "cat": "mercearia",
    "grupo": "",
    "nome": "Farinha Temperada de Alho",
-   "foto": "img/farinha-alho.jpg",
+   "foto": "farinha-alho.jpg",
    "opcoes": [
     {
      "label": "Pacote",
@@ -1633,7 +1633,7 @@
    "cat": "mercearia",
    "grupo": "",
    "nome": "Picles",
-   "foto": "img/picles.jpg",
+   "foto": "picles.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1648,7 +1648,7 @@
    "cat": "biscoitos",
    "grupo": "",
    "nome": "Casadinho de Goiabada",
-   "foto": "img/casadinho.jpg",
+   "foto": "casadinho.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1663,7 +1663,7 @@
    "cat": "biscoitos",
    "grupo": "",
    "nome": "Sequilho de Goiabada",
-   "foto": "img/sequilho.jpg",
+   "foto": "sequilho.jpg",
    "opcoes": [
     {
      "label": "Pote",
@@ -1678,7 +1678,7 @@
    "cat": "biscoitos",
    "grupo": "",
    "nome": "Bolacha de Nata",
-   "foto": "img/bolacha-de-nata.jpg",
+   "foto": "bolacha-de-nata.jpg",
    "opcoes": [
     {
      "label": "Pacote",
@@ -1693,7 +1693,7 @@
    "cat": "biscoitos",
    "grupo": "",
    "nome": "Biscoito de Queijo Canastra",
-   "foto": "img/biscoito-canastra.jpg",
+   "foto": "biscoito-canastra.jpg",
    "opcoes": [
     {
      "label": "Pacote",
@@ -1708,7 +1708,7 @@
    "cat": "biscoitos",
    "grupo": "",
    "nome": "Suspiro",
-   "foto": "img/suspiro.jpg",
+   "foto": "suspiro.jpg",
    "opcoes": [
     {
      "label": "Pacote",
