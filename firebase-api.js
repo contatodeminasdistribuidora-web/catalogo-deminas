@@ -83,10 +83,12 @@ export async function atualizarPedido(id, dados) {
 }
 
 export async function listarPedidos() {
-  const q = query(collection(db, "pedidos"), orderBy("criadoEm", "desc"), limit(500));
-  const snap = await getDocs(q);
+  // Sem orderBy("criadoEm"): pedidos do ERP usam o campo "data", e o orderBy
+  // excluiria todo documento que não tenha o campo ordenado.
+  const snap = await getDocs(collection(db, "pedidos"));
   const lista = [];
   snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
+  lista.sort((a, b) => String(b.data || "").localeCompare(String(a.data || "")));
   return lista;
 }
 
@@ -280,6 +282,7 @@ export async function migrarTudoParaNuvem(dbLocal) {
     desps: "financeiro_despesas"
   };
 
+  const TAM_LOTE = 400; // limite do Firestore é 500 operações por batch
   const resultados = {};
 
   for (const [chaveLocal, nomeColecao] of Object.entries(mapa)) {
@@ -289,14 +292,21 @@ export async function migrarTudoParaNuvem(dbLocal) {
       continue;
     }
     try {
-      const batch = writeBatch(db);
-      lista.forEach(item => {
-        const id = item.id || `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-        const ref = doc(db, nomeColecao, id);
-        batch.set(ref, { ...item, id, migradoEm: serverTimestamp() }, { merge: true });
-      });
-      await batch.commit();
-      resultados[nomeColecao] = lista.length;
+      let enviados = 0;
+      for (let i = 0; i < lista.length; i += TAM_LOTE) {
+        const batch = writeBatch(db);
+        lista.slice(i, i + TAM_LOTE).forEach(item => {
+          // JSON remove campos undefined (o Firestore rejeita undefined)
+          const limpo = JSON.parse(JSON.stringify(item));
+          // id sempre string e sem "/" (ids numéricos ou com barra quebravam o doc())
+          const id = String(limpo.id || `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`).replace(/\//g, "_");
+          const ref = doc(db, nomeColecao, id);
+          batch.set(ref, { ...limpo, id, migradoEm: serverTimestamp() }, { merge: true });
+        });
+        await batch.commit();
+        enviados += Math.min(TAM_LOTE, lista.length - i);
+      }
+      resultados[nomeColecao] = enviados;
     } catch (e) {
       resultados[nomeColecao] = `ERRO: ${e.message}`;
     }
