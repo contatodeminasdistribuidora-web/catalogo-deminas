@@ -12,7 +12,8 @@
      FIREBASE v15 CLOUD — Imports e inicialização
      ============================================================ -->
 <script type="module">
-  import { onAuthStateChanged, entrarComGoogle as _entrar, sair as _sair } from './firebase-config.js';
+import { onAuthStateChanged } from './firebase-config.js';
+import { entrarComGoogle as _entrar, sair as _sair } from './firebase-api.js';
   import { carregarProdutos, salvarTodosProdutos, carregarConfig, salvarConfig,
            listarPedidos, criarPedido, listarVendas, listarClientes, listarAtClis,
            listarAtPeds, listarFornecedores, listarVendedores, listarAP, listarAR,
@@ -859,6 +860,23 @@ async function sincronizarParaNuvem() {
   } catch (err) {
     console.error('Erro ao sincronizar:', err);
     setCloudStatus('erro', 'Erro ao sincronizar');
+  }
+}
+function salvar(){
+  try{
+    const dados=JSON.stringify(db);
+    localStorage.setItem(DB_KEY,dados);
+    atualizarStorageIndicator();
+    if (fbUser && window.FB) {
+      clearTimeout(window._syncTimer);
+      window._syncTimer = setTimeout(() => {
+        sincronizarParaNuvem();
+      }, 2000);
+    }
+    return true;
+  }catch(e){
+    toast('⚠️ Erro ao salvar! Armazenamento cheio.','err');
+    return false;
   }
 }
 
