@@ -12,7 +12,7 @@
      FIREBASE v15 CLOUD — Imports e inicialização
      ============================================================ -->
 <script type="module">
-import { onAuthStateChanged } from './firebase-config.js';
+import { onAuthStateChanged, auth } from './firebase-config.js';
 import { entrarComGoogle as _entrar, sair as _sair } from './firebase-api.js';
   import { carregarProdutos, salvarTodosProdutos, carregarConfig, salvarConfig,
            listarPedidos, criarPedido, listarVendas, listarClientes, listarAtClis,
