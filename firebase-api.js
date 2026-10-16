@@ -314,3 +314,31 @@ export async function migrarTudoParaNuvem(dbLocal) {
 
   return resultados;
 }
+
+// ------------------------------------------------------------
+// CATÁLOGO PÚBLICO: pedidos pendentes de aprovação
+// ------------------------------------------------------------
+
+export async function listarPedidosCatalogo() {
+  const snap = await getDocs(collection(db, "pedidosCatalogo"));
+  const lista = [];
+  snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
+  // ordena mais recentes primeiro (criadoEm é um Timestamp do Firestore)
+  lista.sort((a, b) => {
+    const ta = a.criadoEm?.seconds || 0;
+    const tb = b.criadoEm?.seconds || 0;
+    return tb - ta;
+  });
+  return lista;
+}
+
+export async function atualizarPedidoCatalogo(id, dados) {
+  await updateDoc(doc(db, "pedidosCatalogo", id), {
+    ...dados,
+    atualizadoEm: serverTimestamp()
+  });
+}
+
+export async function deletarPedidoCatalogo(id) {
+  await deleteDoc(doc(db, "pedidosCatalogo", id));
+}
