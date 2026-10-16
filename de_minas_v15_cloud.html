@@ -849,19 +849,62 @@ async function sincronizarDoFirebase() {
   }
 }
 
+// Coleções do db que vão para o Firestore (mapeadas dentro de firebase-api.js → migrarTudoParaNuvem)
+const COLECOES_NUVEM = ['prods','peds','vendas','clis','atClis','atPeds','forns','vends','ap','ar','desps'];
+let _nuvemSnap = {}; // id -> JSON do último item enviado (envia só o que mudou)
+
+function _resultadoComErro(res) {
+  if (!res) return null;
+  if (typeof res === 'string') return res.indexOf('ERRO') >= 0 ? res : null;
+  const erros = Object.entries(res).filter(([, v]) => String(v).indexOf('ERRO') >= 0);
+  return erros.length ? erros.map(([k, v]) => k + ': ' + v).join(' | ') : null;
+}
+
+// Envia TODOS os dados locais para a nuvem (usado na 1ª sincronização e no botão manual)
+async function migrarParaNuvem() {
+  if (!window.FB || !fbUser) throw new Error('Não conectado ao Firebase');
+  if (!window.FB.migrarTudoParaNuvem) throw new Error('migrarTudoParaNuvem indisponível em firebase-api.js');
+  setCloudStatus('sincronizando', 'Enviando dados locais para a nuvem...');
+  const res = await window.FB.migrarTudoParaNuvem(db);
+  const erro = _resultadoComErro(res);
+  if (erro) throw new Error(erro);
+  if (Object.keys(cfg).length && window.FB.salvarConfig) await window.FB.salvarConfig(cfg);
+  COLECOES_NUVEM.forEach(c => (db[c] || []).forEach(it => { if (it && it.id) _nuvemSnap[c + ':' + it.id] = JSON.stringify(it); }));
+  console.log('Migração concluída:', res);
+  setCloudStatus('sincronizado', 'Sincronizado — ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
+  return res;
+}
+
+// Envio incremental: só itens novos/alterados desde o último envio
 async function sincronizarParaNuvem() {
   if (!window.FB || !fbUser) return;
   setCloudStatus('sincronizando', 'Enviando alterações...');
   try {
-    // Envia produtos completos (é o que mais muda)
-    if (db.prods.length) await window.FB.salvarTodosProdutos(db.prods);
-    if (Object.keys(cfg).length) await window.FB.salvarConfig(cfg);
+    const parcial = {}, novos = {};
+    let total = 0;
+    COLECOES_NUVEM.forEach(c => {
+      parcial[c] = (db[c] || []).filter(it => {
+        if (!it || !it.id) return false;
+        const k = c + ':' + it.id, js = JSON.stringify(it);
+        if (_nuvemSnap[k] === js) return false;
+        novos[k] = js; total++;
+        return true;
+      });
+    });
+    if (total && window.FB.migrarTudoParaNuvem) {
+      const res = await window.FB.migrarTudoParaNuvem(parcial);
+      const erro = _resultadoComErro(res);
+      if (erro) throw new Error(erro);
+      Object.assign(_nuvemSnap, novos);
+    }
+    if (Object.keys(cfg).length && window.FB.salvarConfig) await window.FB.salvarConfig(cfg);
     setCloudStatus('sincronizado', 'Sincronizado — ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
   } catch (err) {
     console.error('Erro ao sincronizar:', err);
-    setCloudStatus('erro', 'Erro ao sincronizar');
+    setCloudStatus('erro', 'Erro ao sincronizar: ' + (err.message || 'desconhecido'));
   }
 }
+
 function salvar(){
   try{
     const dados=JSON.stringify(db);
