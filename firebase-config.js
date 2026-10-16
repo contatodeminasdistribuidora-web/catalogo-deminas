@@ -18,7 +18,7 @@ import {
 
 // --- Credenciais do seu projeto Firebase ---
 const firebaseConfig = {
-  apiKey: "AIzaSyDj9wK5co9HEMNi7Iiu5wXZ1MqeZUpc5qQ",
+  apiKey: "AIzaSyDj9wKSco9HEMNi7Iiu5xWZ1MqeZUpc5qQ",
   authDomain: "deminas-pedidos.firebaseapp.com",
   projectId: "deminas-pedidos",
   storageBucket: "deminas-pedidos.firebasestorage.app",
