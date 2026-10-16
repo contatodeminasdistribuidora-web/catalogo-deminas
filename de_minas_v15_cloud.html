@@ -3,52 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>De Minas — Pão de Queijaria v15 Cloud</title>
+<title>De Minas — Pão de Queijaria v14.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-
-<!-- ============================================================
-     FIREBASE v15 CLOUD — Imports e inicialização
-     ============================================================ -->
-<script type="module">
-import { onAuthStateChanged, auth } from './firebase-config.js';
-import { entrarComGoogle as _entrar, sair as _sair } from './firebase-api.js';
-  import { carregarProdutos, salvarTodosProdutos, carregarConfig, salvarConfig,
-           listarPedidos, criarPedido, listarVendas, listarClientes, listarAtClis,
-           listarAtPeds, listarFornecedores, listarVendedores, listarAP, listarAR,
-           listarDespesas, migrarTudoParaNuvem } from './firebase-api.js';
-
-  // Expor funções para o código não-module (o resto do ERP)
-  window.FB = {
-    carregarProdutos, salvarTodosProdutos, carregarConfig, salvarConfig,
-    listarPedidos, criarPedido, listarVendas, listarClientes, listarAtClis,
-    listarAtPeds, listarFornecedores, listarVendedores, listarAP, listarAR,
-    listarDespesas, migrarTudoParaNuvem,
-    entrarComGoogle: async () => {
-      const r = await _entrar();
-      if (r.ok) {
-        document.dispatchEvent(new CustomEvent('fb-login', { detail: r.user }));
-      } else {
-        document.dispatchEvent(new CustomEvent('fb-login-error', { detail: r.erro }));
-      }
-      return r;
-    },
-    sair: async () => {
-      await _sair();
-      document.dispatchEvent(new CustomEvent('fb-logout'));
-    }
-  };
-
-  // Observa login/logout
-  onAuthStateChanged(auth, user => {
-    window.FB_USER = user;
-    document.dispatchEvent(new CustomEvent('fb-auth-change', { detail: { user } }));
-  });
-
-  window.FB_READY = true;
-  document.dispatchEvent(new CustomEvent('fb-ready'));
-</script>
 
 <style>
 :root{
@@ -62,8 +20,8 @@ import { entrarComGoogle as _entrar, sair as _sair } from './firebase-api.js';
   --radius:8px;--radius2:5px;--sb-width:230px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;background:#f0f0f0;color:var(--txt);min-height:100vh;display:flex;overflow:hidden;padding-top:24px}
-#sidebar{width:var(--sb-width);min-width:var(--sb-width);background:var(--sidebar-bg);display:flex;flex-direction:column;height:calc(100vh - 24px);position:fixed;left:0;top:24px;z-index:100;transition:.3s}
+body{font-family:'DM Sans',sans-serif;background:#f0f0f0;color:var(--txt);min-height:100vh;display:flex;overflow:hidden}
+#sidebar{width:var(--sb-width);min-width:var(--sb-width);background:var(--sidebar-bg);display:flex;flex-direction:column;height:100vh;position:fixed;left:0;top:0;z-index:100;transition:.3s}
 .sb-logo{padding:20px 18px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
 .sb-logo h1{font-family:'Playfair Display',serif;color:#fff;font-size:18px;font-weight:700;line-height:1.2;letter-spacing:.5px}
 .sb-logo p{color:#e09b10;font-size:10px;letter-spacing:2px;margin-top:2px;text-transform:uppercase}
@@ -75,18 +33,19 @@ body{font-family:'DM Sans',sans-serif;background:#f0f0f0;color:var(--txt);min-he
 .sb-badge{background:var(--ouro);color:#fff;border-radius:20px;padding:1px 6px;font-size:10px;font-weight:600;margin-left:auto}
 .sb-badge.red{background:var(--vermelho)}.sb-badge.blue{background:var(--congelado)}.sb-badge.green{background:var(--verde)}
 .sb-footer{padding:14px 18px;border-top:1px solid rgba(255,255,255,.08);color:var(--ouro);font-size:11px}
-.sb-toggle{position:fixed;top:40px;left:218px;width:28px;height:28px;background:#3d2000;border:2px solid rgba(255,255,255,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:200;color:#fff;font-size:12px;transition:left .3s;box-shadow:2px 2px 8px rgba(0,0,0,.3);line-height:1}
+.sb-toggle{position:fixed;top:16px;left:218px;width:28px;height:28px;background:#3d2000;border:2px solid rgba(255,255,255,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:200;color:#fff;font-size:12px;transition:left .3s;box-shadow:2px 2px 8px rgba(0,0,0,.3);line-height:1}
 .sb-toggle:hover{background:var(--ouro)}
 #sidebar.collapsed{width:56px;min-width:56px}
 #sidebar.collapsed .sb-logo h1,#sidebar.collapsed .sb-logo p,#sidebar.collapsed .sb-item span:not(.icon),#sidebar.collapsed .sb-badge,#sidebar.collapsed .sb-footer{opacity:0;pointer-events:none;width:0;overflow:hidden;white-space:nowrap}
 #sidebar.collapsed .sb-logo{padding:16px 8px;text-align:center}
 #sidebar.collapsed .sb-item{padding:12px 8px;justify-content:center;gap:0}
 #sidebar.collapsed .sb-item .icon{font-size:20px;width:auto}
-#main{margin-left:var(--sb-width);flex:1;display:flex;flex-direction:column;height:calc(100vh - 24px);overflow:hidden;transition:margin-left .3s}
+#main{margin-left:var(--sb-width);flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;transition:margin-left .3s}
 #topbar{background:#3d2000;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.2);position:relative;z-index:50}
 #topbar h2{font-family:'Playfair Display',serif;font-size:20px;color:#fff}
 .topbar-right{display:flex;align-items:center;gap:12px}
 .btn-menu{display:none;background:none;border:none;cursor:pointer;font-size:22px;color:#fff}
+/* Busca global */
 .busca-global-wrap{position:relative;display:flex;align-items:center}
 #busca-global{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 14px 6px 32px;color:#fff;font-size:13px;font-family:'DM Sans',sans-serif;width:220px;outline:none;transition:.2s}
 #busca-global::placeholder{color:rgba(255,255,255,.5)}
@@ -100,33 +59,11 @@ body{font-family:'DM Sans',sans-serif;background:#f0f0f0;color:var(--txt);min-he
 .bg-res-cat{font-size:10px;font-weight:700;color:#fff;padding:1px 7px;border-radius:12px;background:var(--vinho);flex-shrink:0}
 .bg-res-nome{font-size:13.5px;font-weight:500;color:var(--cafe)}
 .bg-res-sub{font-size:11px;color:var(--txt3)}
-
-/* ============================================================
-   BARRA DE STATUS DA NUVEM (v15)
-   ============================================================ */
-#cloud-bar{background:#7a5c3a;color:#fff;font-size:11px;font-weight:600;padding:0 14px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:9999;height:24px;letter-spacing:0.3px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-#cloud-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#c0392b;margin-right:6px;vertical-align:middle;transition:background .3s}
-#cloud-last-sync{opacity:0.75}
-
-/* Overlay de login */
-#login-overlay{display:none;position:fixed;inset:0;background:rgba(20,10,5,.92);z-index:10000;align-items:center;justify-content:center;padding:20px}
-#login-overlay.on{display:flex}
-.login-box{background:#fff;border-radius:14px;max-width:400px;width:100%;padding:32px 28px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)}
-.login-box h1{font-family:'Playfair Display',serif;font-size:22px;color:#3d2000;margin-bottom:6px}
-.login-box .sub{color:var(--txt3);font-size:13px;margin-bottom:24px}
-.login-box .btn-google{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 20px;background:#fff;border:2px solid var(--borda);border-radius:8px;font-size:14px;font-weight:600;color:var(--txt);cursor:pointer;transition:.2s;margin-bottom:14px}
-.login-box .btn-google:hover{border-color:var(--ouro);background:#fffdf5;transform:translateY(-1px)}
-.login-box .msg{font-size:12px;color:var(--txt3);line-height:1.5}
-.login-box .erro{background:#fde8e8;color:#c0392b;padding:10px 12px;border-radius:6px;font-size:13px;margin-top:12px;display:none}
-.login-box .erro.on{display:block}
-.btn-sair{margin-top:12px;padding:6px 14px;background:transparent;border:1px solid var(--borda);border-radius:6px;font-size:12px;color:var(--txt3);cursor:pointer;font-family:'DM Sans',sans-serif}
-.btn-sair:hover{border-color:var(--vermelho);color:var(--vermelho)}
-
 #content{flex:1;overflow-y:auto;padding:24px;position:relative}
 .painel-sticky{position:sticky;top:0;z-index:30;background:#f0f0f0;padding-top:4px;margin:-4px -4px 0;padding-left:4px;padding-right:4px;}
 .page{display:none}.page.active{display:block}
 .page#p-pdv{padding:0!important;margin:0!important;overflow:hidden!important}
-.page#p-pdv.active{display:block;position:fixed;top:80px;bottom:0;right:0;left:var(--sb-width);overflow:hidden;transition:left .3s}
+.page#p-pdv.active{display:block;position:fixed;top:56px;bottom:0;right:0;left:var(--sb-width);overflow:hidden;transition:left .3s}
 #sidebar.collapsed~#main .page#p-pdv.active{left:56px}
 .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:24px}
 .stat-card{background:#fff;border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden;border:1px solid #e8e8e8}
@@ -259,7 +196,9 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
 .recorr-status.ativo{background:var(--verde2);color:var(--verde)}
 .recorr-status.atencao{background:#fff3cd;color:#856404}
 .recorr-status.inativo{background:var(--vermelho2);color:var(--vermelho)}
+/* Lixeira */
 .lixeira-card{background:#fff;border-radius:var(--radius);padding:12px 16px;margin-bottom:8px;box-shadow:var(--shadow);border-left:4px solid var(--txt3);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+/* PIN modal */
 .pin-display{display:flex;gap:8px;justify-content:center;margin:16px 0}
 .pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--vinho);transition:.2s}
 .pin-dot.filled{background:var(--vinho)}
@@ -267,6 +206,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
 .pin-key{padding:14px;border:1.5px solid var(--borda);border-radius:var(--radius);background:#fff;cursor:pointer;font-size:18px;font-weight:600;text-align:center;transition:.2s;color:var(--cafe)}
 .pin-key:hover{background:var(--creme2);border-color:var(--vinho)}
 .pin-key.danger{color:var(--vermelho);font-size:13px}
+/* Storage warning */
 .storage-bar{height:6px;border-radius:3px;background:var(--creme2);overflow:hidden;margin-top:4px}
 .storage-bar-fill{height:100%;border-radius:3px;background:var(--verde);transition:.3s}
 .storage-bar-fill.warn{background:var(--laranja)}
@@ -300,38 +240,11 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
 .hist-item{padding:8px 12px;border-bottom:1px solid var(--creme2)}.hist-item:last-child{border-bottom:none}
 .venc-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
 .venc-ok{background:#e8f5ee;color:var(--verde)}.venc-warn{background:#fff3cd;color:#856404}.venc-red{background:var(--vermelho2);color:var(--vermelho)}
+/* Vendedor selector nos pedidos */
 .vend-sel-wrap{display:flex;align-items:center;gap:8px}
 </style>
 </head>
 <body>
-
-<!-- ============================================================
-     BARRA DE STATUS DA NUVEM (v15)
-     ============================================================ -->
-<div id="cloud-bar">
-  <span id="cloud-status">
-    <span id="cloud-dot"></span>
-    <span id="cloud-text">Carregando Firebase...</span>
-  </span>
-  <span id="cloud-last-sync"></span>
-</div>
-
-<!-- ============================================================
-     OVERLAY DE LOGIN (v15)
-     ============================================================ -->
-<div id="login-overlay">
-  <div class="login-box">
-    <h1>De Minas ERP</h1>
-    <p class="sub">Acesso restrito — faça login para continuar</p>
-    <button class="btn-google" onclick="fazerLogin()">
-      <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-      Entrar com Google
-    </button>
-    <p class="msg">Apenas a conta <strong>franklinrainier@gmail.com</strong> tem acesso ao ERP.</p>
-    <div class="erro" id="login-erro"></div>
-  </div>
-</div>
-
 <div id="sidebar">
   <div class="sb-logo"><h1>De Minas</h1><p>Pão de Queijaria</p></div>
   <nav class="sb-nav">
@@ -354,7 +267,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
     <button class="sb-item" onclick="ir('lixeira')"><span class="icon">🗑️</span> <span>Lixeira</span> <span class="sb-badge" id="badge-lixeira" style="display:none">0</span></button>
     <button class="sb-item" onclick="ir('config')"><span class="icon">⚙️</span> <span>Config</span></button>
   </nav>
-  <div class="sb-footer">De Minas v15 Cloud · Franklin Rainier</div>
+  <div class="sb-footer">De Minas v14.0 · Franklin Rainier</div>
 </div>
 <div class="overlay-close" id="overlay-close" onclick="closeSidebar()"></div>
 <button class="sb-toggle" onclick="toggleCollapse()" id="sb-toggle-btn">◀</button>
@@ -372,7 +285,6 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
       </div>
       <span id="topbar-date" style="font-size:12px;color:rgba(255,255,255,.75)"></span>
       <div id="storage-indicator" style="font-size:11px;color:rgba(255,255,255,.6);cursor:pointer" onclick="ir('config')" title="Uso do localStorage"></div>
-      <button id="btn-sair" class="btn-sair" style="display:none;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff" onclick="fazerLogout()">Sair</button>
     </div>
   </div>
   <div id="content">
@@ -564,9 +476,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
   <button class="mob-tab" onclick="ir('financeiro')"><span class="icon">💰</span>Financeiro</button>
 </div>
 <div id="toast-area"></div>
-<!-- ============================================================
-     MODAIS
-     ============================================================ -->
+<!-- MODAIS -->
 <div class="modal-overlay" id="mod-ped">
   <div class="modal modal-lg">
     <div class="modal-head"><h3 id="mod-ped-title">Novo Pedido</h3><button class="close-btn" onclick="fecharModalPed()">×</button></div>
@@ -594,12 +504,22 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
         <div class="form-group" style="margin:0"><label>Subtotal</label><div id="ped-add-preview" style="padding:9px 10px;background:var(--creme2);border-radius:var(--radius2);font-weight:700;font-size:14px;color:var(--vinho);min-width:80px;text-align:right">—</div></div>
         <div style="display:flex;align-items:flex-end"><button class="btn btn-ouro" onclick="addItemPed()" style="width:100%">+ Adicionar</button></div>
       </div>
+      <!-- Campos de peso inline — aparecem só para produtos com peso variável (pv:true) -->
       <div id="ped-pv-fields" style="display:none;background:#e8f2fa;border:1.5px solid var(--azul);border-radius:var(--radius2);padding:10px 12px;margin-bottom:10px">
         <div style="font-size:11px;font-weight:700;color:var(--azul);text-transform:uppercase;letter-spacing:.3px;margin-bottom:8px">⚖️ Peso já conhecido? Preencha agora — se não, deixe em branco e pese depois</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:end">
-          <div class="form-group" style="margin:0"><label>Peso real (kg)</label><input id="ped-pv-peso" type="number" min="0" step=".001" placeholder="Ex: 0.305" style="border:2px solid var(--azul)" oninput="atualizaPreviewItemPV()"></div>
-          <div class="form-group" style="margin:0"><label style="color:var(--azul)">Preço por kg R$</label><input id="ped-pv-prkg" type="number" min="0" step=".01" placeholder="Ex: 100,00" style="border:2px solid var(--azul)" oninput="atualizaPreviewItemPV()"></div>
-          <div class="form-group" style="margin:0"><label>Subtotal</label><div id="ped-pv-preview" style="padding:9px 10px;background:#fff;border-radius:var(--radius2);font-weight:700;font-size:14px;color:var(--azul);text-align:right">—</div></div>
+          <div class="form-group" style="margin:0">
+            <label>Peso real (kg)</label>
+            <input id="ped-pv-peso" type="number" min="0" step=".001" placeholder="Ex: 0.305" style="border:2px solid var(--azul)" oninput="atualizaPreviewItemPV()">
+          </div>
+          <div class="form-group" style="margin:0">
+            <label style="color:var(--azul)">Preço por kg R$</label>
+            <input id="ped-pv-prkg" type="number" min="0" step=".01" placeholder="Ex: 100,00" style="border:2px solid var(--azul)" oninput="atualizaPreviewItemPV()">
+          </div>
+          <div class="form-group" style="margin:0">
+            <label>Subtotal</label>
+            <div id="ped-pv-preview" style="padding:9px 10px;background:#fff;border-radius:var(--radius2);font-weight:700;font-size:14px;color:var(--azul);text-align:right">—</div>
+          </div>
         </div>
       </div>
       <div id="ped-itens-list" style="margin-bottom:12px"></div>
@@ -629,6 +549,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
 <div class="modal-overlay" id="mod-cli"><div class="modal"><div class="modal-head"><h3 id="cli-title">Novo Cliente</h3><button class="close-btn" onclick="fecharModalCli()">×</button></div><div class="modal-body"><div style="display:flex;gap:8px;margin-bottom:16px"><button id="cli-tipo-pf" onclick="setCliTipo('PF')" style="flex:1;padding:9px 0;border-radius:5px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:700;border:2px solid var(--azul);background:var(--azul);color:#fff">👤 PF</button><button id="cli-tipo-pj" onclick="setCliTipo('PJ')" style="flex:1;padding:9px 0;border-radius:5px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;border:2px solid var(--borda);background:#fff;color:var(--txt2)">🏢 PJ</button></div><div class="form-grid"><div class="form-group"><label>Nome *</label><input id="cli-n" placeholder="Nome completo"></div><div class="form-group"><label>WhatsApp</label><input id="cli-wa" placeholder="(11) 99999-9999"></div><div class="form-group"><label id="cli-doc-label">CPF/CNPJ</label><input id="cli-doc" placeholder="000.000.000-00"></div><div class="form-group"><label>E-mail</label><input id="cli-email" type="email" placeholder="email@exemplo.com"></div><div class="form-group"><label>Cidade/Bairro</label><input id="cli-cid" placeholder="Moema, SP"></div><div class="form-group"><label>Nascimento</label><input id="cli-nasc" type="date"></div><div class="form-group" style="grid-column:1/-1"><label>Logradouro</label><input id="cli-logradouro" list="end-list" placeholder="Rua, Av, Condomínio..."><datalist id="end-list"></datalist></div><div class="form-group"><label>Complemento</label><input id="cli-complemento" placeholder="Casa 11, Ap 302..."></div><div class="form-group"><label>Condomínio / Referência</label><input id="cli-condominio" list="cli-cond-list" placeholder="Ex: Condomínio Jardim..." autocomplete="off"><datalist id="cli-cond-list"></datalist></div><div class="form-group" style="grid-column:1/-1"><label>Observações</label><textarea id="cli-obs" placeholder="Notas..."></textarea></div></div><input type="hidden" id="cli-id"><input type="hidden" id="cli-tipo-val" value="PF"></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fecharModalCli()">Cancelar</button><button class="btn btn-primary" onclick="salvarCli()">Salvar</button></div></div></div>
 <div class="modal-overlay" id="mod-cli-hist"><div class="modal modal-lg"><div class="modal-head"><h3 id="cli-hist-title">Histórico</h3><button class="close-btn" onclick="fm('mod-cli-hist')">×</button></div><div class="modal-body" id="cli-hist-body"></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-cli-hist')">Fechar</button></div></div></div>
 
+<!-- MODAL: Quem comprou X? -->
 <div class="modal-overlay" id="mod-prod-hist">
   <div class="modal modal-lg">
     <div class="modal-head">
@@ -654,6 +575,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
 <div class="modal-overlay" id="mod-ar"><div class="modal modal-lg"><div class="modal-head"><h3 id="ar-title">Nova Conta a Receber</h3><button class="close-btn" onclick="fm('mod-ar')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-group" style="grid-column:1/-1"><label>Descrição *</label><input id="ar-desc" placeholder="Parcela cliente..."></div><div class="form-group"><label>Cliente</label><input id="ar-cli" list="ar-cli-list" placeholder="Nome do cliente"><datalist id="ar-cli-list"></datalist></div><div class="form-group"><label>Categoria</label><select id="ar-cat"><option>Venda</option><option>Comissão</option><option>Serviço</option><option>Outros</option></select></div><div class="form-group"><label>Valor R$</label><input id="ar-val" type="number" min="0" step=".01" oninput="calcParcelasAR()"></div><div class="form-group"><label>Vencimento</label><input id="ar-venc" type="date"></div><div class="form-group"><label>Parcelas</label><input id="ar-parc" type="number" min="1" max="60" value="1" oninput="calcParcelasAR()"></div><div class="form-group"><label>Forma</label><select id="ar-pgto"><option>PIX</option><option>Dinheiro</option><option>Transferência</option><option>Cartão</option><option>Boleto</option></select></div><div class="form-group" style="grid-column:1/-1"><label>Obs</label><input id="ar-obs" placeholder="Observações..."></div></div><div id="ar-parc-preview" style="margin-top:12px"></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-ar')">Cancelar</button><button class="btn btn-primary" onclick="salvarAR()">Salvar</button></div></div></div>
 <div class="modal-overlay" id="mod-ar-baixa"><div class="modal modal-sm"><div class="modal-head"><h3>✅ Dar Baixa</h3><button class="close-btn" onclick="fm('mod-ar-baixa')">×</button></div><div class="modal-body"><div id="ar-baixa-info" style="background:var(--creme2);border-radius:8px;padding:12px;margin-bottom:14px;font-size:14px"></div><div class="form-grid"><div class="form-group"><label>Data Recebimento</label><input id="ar-baixa-data" type="date"></div><div class="form-group"><label>Valor Recebido R$</label><input id="ar-baixa-val" type="number" min="0" step=".01"></div><div class="form-group" style="grid-column:1/-1"><label>Forma</label><select id="ar-baixa-pgto"><option>PIX</option><option>Dinheiro</option><option>Transferência</option><option>Cartão</option><option>Boleto</option></select></div></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-ar-baixa')">Cancelar</button><button class="btn btn-verde" onclick="confirmarBaixaAR()">✓ Confirmar</button></div></div></div>
 <div class="modal-overlay" id="mod-desp"><div class="modal modal-sm"><div class="modal-head"><h3>Nova Despesa</h3><button class="close-btn" onclick="fm('mod-desp')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-group" style="grid-column:1/-1"><label>Descrição *</label><input id="desp-desc" placeholder="Viagem a MG..."></div><div class="form-group"><label>Valor R$</label><input id="desp-val" type="number" min="0" step=".01"></div><div class="form-group"><label>Tipo</label><select id="desp-tipo"><option>Viagem</option><option>Fixo</option><option>Produto</option><option>Outros</option></select></div></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-desp')">Cancelar</button><button class="btn btn-primary" onclick="salvarDesp()">Salvar</button></div></div></div>
+<!-- Modal PIN para ações destrutivas -->
 <div class="modal-overlay" id="mod-pin">
   <div class="modal modal-sm">
     <div class="modal-head"><h3 id="pin-title">🔐 Confirmação de Segurança</h3><button class="close-btn" onclick="cancelarPin()">×</button></div>
@@ -681,12 +603,11 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
     </div>
   </div>
 </div>
-
 <script>
 // ============================================================
 // CONSTANTES E ESTADO GLOBAL
 // ============================================================
-const DB_KEY='de_minas_erp',CFG_KEY='de_minas_erp_cfg';
+const DB_KEY='de_minas_erp',CFG_KEY='de_minas_erp_cfg'; // chave estável — não muda com versão
 let db={prods:[],peds:[],clis:[],desps:[],atPeds:[],atClis:[],vendas:[],forns:[],vends:[],ap:[],ar:[],seq:1,seqAt:1,lixeira:[]};
 let cfg={nome:'De Minas — Pão de Queijaria',pix:'910.838.346-49',pixNome:'Franklin Rainier',wa1:'5511940507018',wa2:'5511986975803',pin:'1234'};
 let pdvCaixaAberta=false,pdvCartItems=[],pdvPgto='PIX',pdvOperador='',pdvFundo=0;
@@ -699,247 +620,42 @@ let modalPedDirty=false,modalCliDirty=false;
 let udiExtras=[];
 let pinCallback=null,pinBuffer='';
 let chartRendTimer=null;
-let fbReady=false;
-let fbUser=null;
-let syncPending=false;
 
 // ============================================================
-// FIREBASE — barra de status
+// FUNÇÕES AUXILIARES CORE
 // ============================================================
-function setCloudStatus(estado, texto) {
-  const cores = {
-    desconectado:'#c0392b',
-    sincronizando:'#c8860a',
-    sincronizado:'#1e7e3e',
-    offline:'#888888',
-    erro:'#c0392b'
-  };
-  const dot = document.getElementById('cloud-dot');
-  const txt = document.getElementById('cloud-text');
-  if (dot) dot.style.background = cores[estado] || '#888';
-  if (txt) txt.textContent = texto;
-  const lt = document.getElementById('cloud-last-sync');
-  if (lt && estado === 'sincronizado') {
-    lt.textContent = 'última sync: ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  }
-}
-
-function fazerLogin() {
-  if (!window.FB || !window.FB.entrarComGoogle) {
-    document.getElementById('login-erro').textContent = 'Firebase ainda carregando. Aguarde 2 segundos.';
-    document.getElementById('login-erro').classList.add('on');
-    return;
-  }
-  document.getElementById('login-erro').classList.remove('on');
-  setCloudStatus('sincronizando', 'Entrando...');
-  window.FB.entrarComGoogle();
-}
-
-function fazerLogout() {
-  if (!window.FB || !window.FB.sair) return;
-  if (!confirm('Sair do ERP? Você precisará logar novamente.')) return;
-  window.FB.sair();
-}
-
-document.addEventListener('fb-ready', () => {
-  fbReady = true;
-  setCloudStatus('desconectado', 'Firebase pronto — clique em "Entrar com Google"');
-});
-
-document.addEventListener('fb-auth-change', (e) => {
-  const u = e.detail.user;
-  fbUser = u;
-  const overlay = document.getElementById('login-overlay');
-  const btnSair = document.getElementById('btn-sair');
-  if (u) {
-    overlay.classList.remove('on');
-    btnSair.style.display = 'inline-flex';
-    setCloudStatus('sincronizado', 'Conectado como ' + u.email);
-    // Sincroniza do Firebase
-    sincronizarDoFirebase();
-  } else {
-    overlay.classList.add('on');
-    btnSair.style.display = 'none';
-    setCloudStatus('desconectado', 'Desconectado — faça login para sincronizar');
-  }
-});
-
-document.addEventListener('fb-login-error', (e) => {
-  const el = document.getElementById('login-erro');
-  if (el) {
-    el.textContent = e.detail || 'Erro ao fazer login.';
-    el.classList.add('on');
-  }
-  setCloudStatus('desconectado', 'Erro no login');
-});
-
-// Sincroniza dados do Firebase → localStorage
-async function sincronizarDoFirebase() {
-  if (!window.FB || !fbUser) return;
-  syncPending = true;
-  setCloudStatus('sincronizando', 'Sincronizando com a nuvem...');
-  try {
-    const [prods, peds, vendas, clis, atClis, atPeds, forns, vends, ap, ar, desps, cfgNuvem] = await Promise.all([
-      window.FB.carregarProdutos ? window.FB.carregarProdutos() : [],
-      window.FB.listarPedidos ? window.FB.listarPedidos() : [],
-      window.FB.listarVendas ? window.FB.listarVendas() : [],
-      window.FB.listarClientes ? window.FB.listarClientes() : [],
-      window.FB.listarAtClis ? window.FB.listarAtClis() : [],
-      window.FB.listarAtPeds ? window.FB.listarAtPeds() : [],
-      window.FB.listarFornecedores ? window.FB.listarFornecedores() : [],
-      window.FB.listarVendedores ? window.FB.listarVendedores() : [],
-      window.FB.listarAP ? window.FB.listarAP() : [],
-      window.FB.listarAR ? window.FB.listarAR() : [],
-      window.FB.listarDespesas ? window.FB.listarDespesas() : [],
-      window.FB.carregarConfig ? window.FB.carregarConfig() : null
-    ]);
-
-    const nuvemVazia = !prods.length && !peds.length && !vendas.length;
-    const localTemDados = db.prods.length || db.peds.length || db.vendas.length;
-    if (nuvemVazia && localTemDados) {
-      setCloudStatus('sincronizando', 'Primeira sincronização — subindo dados...');
-      await migrarParaNuvem();
-      return;
-    }
-
-    if (prods.length) db.prods = prods;
-
-    const mergeLists = (local, nuvem) => {
-      const mapa = new Map();
-      [...(nuvem || []), ...(local || [])].forEach(item => {
-        if (item && item.id) mapa.set(item.id, item);
-      });
-      return [...mapa.values()];
-    };
-
-    db.peds = mergeLists(db.peds, peds);
-    db.vendas = mergeLists(db.vendas, vendas);
-    db.clis = mergeLists(db.clis, clis);
-    db.atClis = mergeLists(db.atClis, atClis);
-    db.atPeds = mergeLists(db.atPeds, atPeds);
-    db.forns = mergeLists(db.forns, forns);
-    db.vends = mergeLists(db.vends, vends);
-    db.ap = mergeLists(db.ap, ap);
-    db.ar = mergeLists(db.ar, ar);
-    db.desps = mergeLists(db.desps, desps);
-    if (cfgNuvem) cfg = Object.assign(cfg, cfgNuvem);
-
-    const maxNum = Math.max(0, ...db.peds.map(p => p.num || 0));
-    const maxAtNum = Math.max(0, ...db.atPeds.map(p => p.num || 0));
-    if (db.seq <= maxNum) db.seq = maxNum + 1;
-    if (db.seqAt <= maxAtNum) db.seqAt = maxAtNum + 1;
-
-    localStorage.setItem(DB_KEY, JSON.stringify(db));
-    localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
-
-    const cur = document.querySelector('.page.active');
-    if (cur) {
-      const pg = cur.id.replace('p-','');
-      const fn = getRenderer(pg);
-      if (fn) fn();
-    }
-    atualizaBadges();
-    atualizarStorageIndicator();
-    setCloudStatus('sincronizado', 'Sincronizado — ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
-  } catch (err) {
-    console.error('Erro na sincronização:', err);
-    setCloudStatus('erro', 'Erro ao sincronizar: ' + (err.message || 'desconhecido'));
-  } finally {
-    syncPending = false;
-  }
-}
-
-// Coleções do db que vão para o Firestore (mapeadas dentro de firebase-api.js → migrarTudoParaNuvem)
-const COLECOES_NUVEM = ['prods','peds','vendas','clis','atClis','atPeds','forns','vends','ap','ar','desps'];
-let _nuvemSnap = {}; // id -> JSON do último item enviado (envia só o que mudou)
-
-function _resultadoComErro(res) {
-  if (!res) return null;
-  if (typeof res === 'string') return res.indexOf('ERRO') >= 0 ? res : null;
-  const erros = Object.entries(res).filter(([, v]) => String(v).indexOf('ERRO') >= 0);
-  return erros.length ? erros.map(([k, v]) => k + ': ' + v).join(' | ') : null;
-}
-
-// Envia TODOS os dados locais para a nuvem (usado na 1ª sincronização e no botão manual)
-async function migrarParaNuvem() {
-  if (!window.FB || !fbUser) throw new Error('Não conectado ao Firebase');
-  if (!window.FB.migrarTudoParaNuvem) throw new Error('migrarTudoParaNuvem indisponível em firebase-api.js');
-  setCloudStatus('sincronizando', 'Enviando dados locais para a nuvem...');
-  const res = await window.FB.migrarTudoParaNuvem(db);
-  const erro = _resultadoComErro(res);
-  if (erro) throw new Error(erro);
-  if (Object.keys(cfg).length && window.FB.salvarConfig) await window.FB.salvarConfig(cfg);
-  COLECOES_NUVEM.forEach(c => (db[c] || []).forEach(it => { if (it && it.id) _nuvemSnap[c + ':' + it.id] = JSON.stringify(it); }));
-  console.log('Migração concluída:', res);
-  setCloudStatus('sincronizado', 'Sincronizado — ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
-  return res;
-}
-
-// Envio incremental: só itens novos/alterados desde o último envio
-async function sincronizarParaNuvem() {
-  if (!window.FB || !fbUser) return;
-  setCloudStatus('sincronizando', 'Enviando alterações...');
-  try {
-    const parcial = {}, novos = {};
-    let total = 0;
-    COLECOES_NUVEM.forEach(c => {
-      parcial[c] = (db[c] || []).filter(it => {
-        if (!it || !it.id) return false;
-        const k = c + ':' + it.id, js = JSON.stringify(it);
-        if (_nuvemSnap[k] === js) return false;
-        novos[k] = js; total++;
-        return true;
-      });
-    });
-    if (total && window.FB.migrarTudoParaNuvem) {
-      const res = await window.FB.migrarTudoParaNuvem(parcial);
-      const erro = _resultadoComErro(res);
-      if (erro) throw new Error(erro);
-      Object.assign(_nuvemSnap, novos);
-    }
-    if (Object.keys(cfg).length && window.FB.salvarConfig) await window.FB.salvarConfig(cfg);
-    setCloudStatus('sincronizado', 'Sincronizado — ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
-  } catch (err) {
-    console.error('Erro ao sincronizar:', err);
-    setCloudStatus('erro', 'Erro ao sincronizar: ' + (err.message || 'desconhecido'));
-  }
-}
-
 function salvar(){
+
   try{
     const dados=JSON.stringify(db);
     localStorage.setItem(DB_KEY,dados);
     atualizarStorageIndicator();
-    if (fbUser && window.FB) {
-      clearTimeout(window._syncTimer);
-      window._syncTimer = setTimeout(() => {
-        sincronizarParaNuvem();
-      }, 2000);
-    }
     return true;
   }catch(e){
     toast('⚠️ Erro ao salvar! Armazenamento cheio.','err');
     return false;
   }
 }
-
-function salvarCfg(){try{localStorage.setItem(CFG_KEY,JSON.stringify(cfg));if(fbUser&&window.FB)window.FB.salvarConfig(cfg);}catch(e){}}
+function salvarCfg(){try{localStorage.setItem(CFG_KEY,JSON.stringify(cfg));}catch(e){}}
 function today(){return new Date().toISOString().slice(0,10);}
 function uid(){return Date.now()+'_'+Math.random().toString(36).slice(2,7);}
 const R=v=>'R$ '+Rn(v);
 const Rn=v=>parseFloat(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const nP=n=>'#'+String(n).padStart(5,'0');
 const nAt=n=>'AT-'+String(n).padStart(4,'0');
+// FIX: Usar date local para evitar problema de fuso horário
 function dF(d){if(!d)return'';try{const dt=new Date(d);if(isNaN(dt))return d;return dt.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'});}catch(e){return d;}}
 function dFD(d){if(!d)return'';try{const dt=new Date(d);if(isNaN(dt))return d;return dt.toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo'});}catch(e){return d;}}
 const gP=id=>db.prods.find(p=>p.id===id);
 const x=s=>{if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
 const am=id=>document.getElementById(id)?.classList.add('on');
 const fm=id=>document.getElementById(id)?.classList.remove('on');
+// FIX: usar faixa de datas local (São Paulo)
 const isSameDay=(iso,day)=>{if(!iso||!day)return false;try{const dt=new Date(iso);return dt.toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).split('/').reverse().join('-')===day;}catch(e){return iso&&iso.slice(0,10)===day;}};
 const addMonths=(d,n)=>{const dt=new Date(d+'T12:00:00');dt.setMonth(dt.getMonth()+n);return dt.toISOString().slice(0,10);};
 const enderecoCompleto=p=>{let end=p.logradouro||p.end||'—';if(p.complemento)end+=', '+p.complemento;if(p.condominio)end+=' ('+p.condominio+')';return end;};
 
+// FIX CRÍTICO: calcItemSubFn agora respeita desconto por item em TODOS os casos (incluindo peso variável)
 const calcItemSubFn=it=>{
   const dv=parseFloat(it.descItem)||0;
   const dt=it.descItemTipo||'P';
@@ -949,6 +665,7 @@ const calcItemSubFn=it=>{
   return prF*(it.qty||1);
 };
 
+// FIX CRÍTICO: calcTotal agora usa calcItemSubFn para TODOS os itens (consistência com peso variável + desconto)
 const calcTotal=p=>{
   if(!p||!p.itens)return p&&p.total?p.total:0;
   const sub=p.itens.reduce((s,it)=>s+calcItemSubFn(it),0);
@@ -980,6 +697,10 @@ function getStatusRecorrencia(dias){
   return{status:'INATIVO',label:'🔴 Inativo',cls:'inativo'};
 }
 
+// ============================================================
+// CONTROLE DE ESTOQUE (FIX: agora também debita/restaura para
+// pedidos WhatsApp e Atacado B2B, não só PDV)
+// ============================================================
 function debitarEstoque(itens){
   (itens||[]).forEach(it=>{
     const prod=gP(it.prodId);
@@ -996,6 +717,7 @@ function restaurarEstoque(itens){
     }
   });
 }
+// Aviso não-bloqueante quando o pedido pede mais do que o estoque atual tem
 function verificarEstoqueItens(itens){
   const avisos=[];
   (itens||[]).forEach(it=>{
@@ -1007,6 +729,9 @@ function verificarEstoqueItens(itens){
   if(avisos.length)toast('⚠️ Estoque insuficiente: '+avisos.join(', '),'warn');
 }
 
+// ============================================================
+// STORAGE INDICATOR (novo)
+// ============================================================
 function atualizarStorageIndicator(){
   try{
     const dados=localStorage.getItem(DB_KEY)||'';
@@ -1019,6 +744,9 @@ function atualizarStorageIndicator(){
   }catch(e){}
 }
 
+// ============================================================
+// VERIFICAÇÃO DE STORAGE ANTES DE SALVAR (novo)
+// ============================================================
 function verificarStorage(){
   try{
     const dados=localStorage.getItem(DB_KEY)||'';
@@ -1029,6 +757,9 @@ function verificarStorage(){
   }catch(e){}
 }
 
+// ============================================================
+// PIN SYSTEM (novo)
+// ============================================================
 function pedirPin(msg,callback){
   pinCallback=callback;pinBuffer='';
   document.getElementById('pin-msg').textContent=msg;
@@ -1056,26 +787,34 @@ function pinDigit(d){
 }
 function cancelarPin(){fm('mod-pin');pinCallback=null;pinBuffer='';}
 
+// ============================================================
+// BUSCA GLOBAL (novo)
+// ============================================================
 function buscaGlobal(q){
   const el=document.getElementById('busca-global-res');
   if(!q||q.length<2){el.classList.remove('on');el.innerHTML='';return;}
   const busca=q.toLowerCase();
   const res=[];
 
+  // Pedidos WhatsApp por cliente ou número
   db.peds.filter(p=>p.cli?.toLowerCase().includes(busca)||String(p.num).includes(busca)||nP(p.num).toLowerCase().includes(busca)).slice(0,3).forEach(p=>{
     res.push({cat:'Pedido',nome:nP(p.num)+' — '+p.cli,sub:R(calcTotal(p))+' · '+p.st,action:`abrirDetPed('${p.id}')`});
   });
 
+  // Clientes
   db.clis.filter(c=>c.n.toLowerCase().includes(busca)||(c.wa||'').includes(busca)).slice(0,2).forEach(c=>{
     res.push({cat:'Cliente',nome:c.n,sub:c.wa||'',action:`verHistCli('${c.id}')`});
   });
 
+  // Atacado por cliente ou número
   db.atPeds.filter(p=>p.cliNome?.toLowerCase().includes(busca)||String(p.num).includes(busca)||nAt(p.num).toLowerCase().includes(busca)).slice(0,2).forEach(p=>{
     res.push({cat:'Atacado',nome:nAt(p.num)+' — '+p.cliNome,sub:R(p.total||0)+' · '+p.st,action:`abrirDetAt('${p.id}')`});
   });
 
+  // BUSCA POR PRODUTO — mostra pedidos que contêm o produto buscado
   const prodMatch=db.prods.filter(p=>p.n.toLowerCase().includes(busca));
   if(prodMatch.length){
+    // Para cada produto encontrado, conta quantos pedidos têm esse produto
     prodMatch.slice(0,3).forEach(prod=>{
       const pedsProd=[
         ...db.peds.filter(p=>p.st!=='CANCELADO'&&(p.itens||[]).some(it=>it.prodId===prod.id)),
@@ -1084,6 +823,7 @@ function buscaGlobal(q){
       const pdvProd=db.vendas.filter(v=>!v.cancelado&&(v.itens||[]).some(it=>it.prodId===prod.id));
       const total=pedsProd.length+pdvProd.length;
       if(total>0){
+        // Ação: abre modal "Quem comprou?" direto com produto pré-selecionado
         res.push({
           cat:'Produto',
           nome:prod.n.split('—')[0].trim(),
@@ -1171,9 +911,13 @@ function getCatalogoMaster(){return[
 {id:'e6',n:'Guaraná Mineiro 2L',cat:'Outros',forn:'Artesanal MG',tipo:'encomenda',pr:12.90,pv:false,est:0,estMin:0},
 {id:'e7',n:'Manteiga Canastra 500g',cat:'Outros',forn:'Artesanal MG',tipo:'encomenda',pr:35.90,pv:false,est:0,estMin:0},
 {id:'e8',n:'Farinha de Mandioca Biju 800g',cat:'Outros',forn:'Artesanal MG',tipo:'encomenda',pr:28.90,pv:false,est:0,estMin:0},
+// Produtos identificados nas vendas reais — adicionados ao master para garantir fornecedor e pacote corretos
 {id:'cong_rec_doce_leite',n:'Pão de Queijo Recheado Doce de Leite Garcia de Minas — 1kg',cat:'Congelados',forn:'Garcia de Minas',tipo:'estoque',pr:38.90,prAtacado:28.90,pacote:'1kg',pv:false,est:0,estMin:2},
 {id:'cong_rec_costela',n:'Pão de Queijo Recheado Costela Garcia de Minas — 1kg',cat:'Congelados',forn:'Garcia de Minas',tipo:'estoque',pr:38.90,prAtacado:28.90,pacote:'1kg',pv:false,est:0,estMin:2},
 {id:'cong_trad_500g',n:'Pão de Queijo Bem de Minas — 500g',cat:'Congelados',forn:'Bem de Minas',tipo:'estoque',pr:15.90,prAtacado:10.90,pacote:'500g',pv:false,est:0,estMin:0},
+// ── Linha Encanto de Minas / Brasil Mineiro ──────────────────────────────────
+// Preços conforme Tabela de Varejo De Minas (preço ao consumidor)
+// Custo indicado como referência — prAtacado a definir conforme margem desejada
 {id:'enc_brasil_1kg',n:'Pão de Queijo Brasil Mineiro — 1kg',cat:'Congelados',forn:'Encanto de Minas / Brasil Mineiro',tipo:'estoque',pr:30.90,prAtacado:null,pacote:'1kg',pv:false,est:0,estMin:2},
 {id:'enc_trad_400g',n:'Pão de Queijo Encanto Tradicional — 400g',cat:'Congelados',forn:'Encanto de Minas / Brasil Mineiro',tipo:'estoque',pr:13.90,prAtacado:null,pacote:'400g',pv:false,est:0,estMin:2},
 {id:'enc_trad_1kg',n:'Pão de Queijo Encanto Tradicional — 1kg',cat:'Congelados',forn:'Encanto de Minas / Brasil Mineiro',tipo:'estoque',pr:32.90,prAtacado:null,pacote:'1kg',pv:false,est:0,estMin:2},
@@ -1203,10 +947,12 @@ function getCatalogoMaster(){return[
 
 function carregar(){
   try{
+    // Tenta versões anteriores do DB
     const d=localStorage.getItem(DB_KEY)||localStorage.getItem('dm_v14_0')||localStorage.getItem('dm_v13_7')||localStorage.getItem('dm_v13_6')||localStorage.getItem('dm_v13_5')||localStorage.getItem('dm_v13_4');
     if(d){const p=JSON.parse(d);db=Object.assign({prods:[],peds:[],clis:[],desps:[],atPeds:[],atClis:[],vendas:[],forns:[],vends:[],ap:[],ar:[],seq:1,seqAt:1,lixeira:[]},p);}
     const c=localStorage.getItem(CFG_KEY)||localStorage.getItem('dm_v14_cfg')||localStorage.getItem('dm_v7_cfg');
     if(c)cfg=Object.assign(cfg,JSON.parse(c));
+    // Garante PIN padrão
     if(!cfg.pin)cfg.pin='1234';
   }catch(e){console.error('Erro ao carregar:',e);}
   if(!db.forns||!db.forns.length)db.forns=[
@@ -1216,12 +962,15 @@ function carregar(){
     {id:'f4',n:'Bem de Minas',wa:'',cid:'Minas Gerais',prazo:'',pgto:'',obs:'Pão de Queijo 500g'},
     {id:'f5',n:'Encanto de Minas / Brasil Mineiro',wa:'34996728811',cid:'Uberlândia, MG',prazo:'',pgto:'',obs:'Mundo Mineiro Ind. e Com. de Alimentos Ltda — Rua Piauí 3120, Custódio Pereira'}
   ];
+  // Garantir fornecedores novos em instalações que já têm db.forns gravado
   if(!db.forns.find(f=>f.n==='Bem de Minas'))
     db.forns.push({id:'f4',n:'Bem de Minas',wa:'',cid:'Minas Gerais',prazo:'',pgto:'',obs:'Pão de Queijo 500g'});
   if(!db.forns.find(f=>f.n==='Encanto de Minas / Brasil Mineiro'))
     db.forns.push({id:'f5',n:'Encanto de Minas / Brasil Mineiro',wa:'34996728811',cid:'Uberlândia, MG',prazo:'',pgto:'',obs:'Mundo Mineiro Ind. e Com. de Alimentos Ltda — Rua Piauí 3120, Custódio Pereira'});
   if(!db.ap)db.ap=[];if(!db.ar)db.ar=[];if(!db.vends)db.vends=[];if(!db.lixeira)db.lixeira=[];
+  // Migrar campos de endereço legados
   db.peds.forEach(p=>{if(!p.logradouro&&p.end){p.logradouro=p.end;p.complemento=p.complemento||'';p.condominio=p.condominio||'';}});
+  // Merge catálogo master — por ID e por nome para não duplicar produtos criados manualmente
   const master=getCatalogoMaster();
   if(!db.prods||db.prods.length===0){db.prods=master;}
   else{master.forEach(mp=>{
@@ -1229,11 +978,17 @@ function carregar(){
     if(!jaExiste){
       db.prods.push({...mp});
     }else{
+      // Atualiza campos críticos desatualizados no localStorage
       if(jaExiste.pv!==mp.pv)jaExiste.pv=mp.pv;
+      // Atualiza o nome para incluir a marca (migração v14.1)
       if(jaExiste.n!==mp.n&&jaExiste.id===mp.id)jaExiste.n=mp.n;
       if(jaExiste.id.startsWith('user_')&&jaExiste.forn!==mp.forn)jaExiste.forn=mp.forn;
     }
   });}
+  // FIX: corrige preço do Pacote 2kg que pode ter ficado "preso" em versões antigas
+  // (ex.: pr=30 herdado de um catálogo anterior ao bugfix). O merge acima só ADICIONA
+  // produtos que faltam, nunca corrige os que já existem no localStorage do usuário —
+  // por isso esse ajuste pontual precisa rodar sempre, em todo carregamento.
   const pqt2kg=db.prods.find(p=>p.id==='cong_pqt2kg');
   if(pqt2kg&&(pqt2kg.pr!==60||pqt2kg.prAtacado!==40)){pqt2kg.pr=60;pqt2kg.prAtacado=40;}
   if(!db.seq||db.seq<1)db.seq=1;if(!db.seqAt||db.seqAt<1)db.seqAt=1;
@@ -1246,7 +1001,7 @@ carregar();
 // NAVEGAÇÃO
 // ============================================================
 const TITLES={painel:'Painel',pedidos:'Pedidos WhatsApp / Delivery',pdv:'PDV — Frente de Caixa',congelados:'Estoque de Congelados',atacado:'Atacado B2B',receber:'📋 Contas a Receber',recorrencia:'🔄 Recorrência de Clientes',pesagem:'Pesagem de Queijos',logistica:'Logística de Entregas',clientes:'Clientes',produtos:'Produtos',etiquetas:'Etiquetas de Entrega','lista-udi':'Lista de Compras — Uberlândia',fornecedores:'Fornecedores',vendedores:'Vendedores & Metas',financeiro:'Financeiro',lixeira:'🗑️ Lixeira',config:'Configurações'};
-
+// FIX: lazy lookup — evita ReferenceError pois as funções são buscadas em runtime
 function getRenderer(pg){
   const map={
     painel:()=>rendPainel(),pedidos:()=>rendPedidos(),pdv:()=>rendPDV(),
@@ -1293,7 +1048,7 @@ function toggleCollapse(){
 function atualizaBadges(){
   const pend=db.peds.filter(p=>p.st==='PENDENTE'||p.st==='PESAGEM').length;
   const bPed=document.getElementById('badge-ped');if(bPed){bPed.textContent=pend;bPed.style.display=pend>0?'inline':'none';}
-  const bPdv=document.getElementById('badge-pdv');if(bPdv)bPdv.style.display=pdvCaixaAberta?'inline':'none';
+  document.getElementById('badge-pdv').style.display=pdvCaixaAberta?'inline':'none';
   const cnt=db.peds.filter(p=>p.st==='PESAGEM').length;
   const bPes=document.getElementById('badge-pesagem');if(bPes){bPes.textContent=cnt;bPes.style.display=cnt>0?'inline':'none';}
   const congBaixos=db.prods.filter(p=>p.cat==='Congelados'&&p.tipo==='estoque'&&p.est<=p.estMin).length;
@@ -1303,6 +1058,7 @@ function atualizaBadges(){
   const statusAReceber=['PENDENTE','PESAGEM','PAGO','ENTREGUE'];
   const rP=db.peds.filter(p=>statusAReceber.includes(p.st)&&!p.recebido).length+db.atPeds.filter(p=>['PENDENTE','PAGO','ENTREGUE'].includes(p.st)&&!p.recebido).length;
   const bR=document.getElementById('badge-receber');if(bR){bR.textContent=rP;bR.style.display=rP>0?'inline':'none';}
+  // Recorrência: inclui clientes B2B também
   const agora=new Date();
   const cliUlt={};
   [...db.peds,...db.vendas].forEach(p=>{const nome=(p.cli||'?').toLowerCase();const dt=new Date(p.data||0);if(!cliUlt[nome]||dt>cliUlt[nome])cliUlt[nome]=dt;});
@@ -1311,7 +1067,9 @@ function atualizaBadges(){
   const bLix=document.getElementById('badge-lixeira');if(bLix){const n=db.lixeira.length;bLix.textContent=n;bLix.style.display=n>0?'inline':'none';}
 }
 
+// FIX: criarContaAR com deduplicação absoluta por pedidoId
 function criarContaAR(pedidoId,numStr,cliente,total,tipo){
+  // FIX: checar por pedidoId independente do status (evita duplicatas)
   if(db.ar.find(a=>a.pedidoId===pedidoId))return;
   if(total>0){
     db.ar.push({id:uid(),descricao:'Pedido '+numStr+' - '+cliente,cliente,categoria:tipo==='atacado'?'Venda Atacado':'Venda',valor:total,vencimento:today(),pgto:'PIX',obs:'Gerado automaticamente',status:'pendente',pedidoId,criadoEm:new Date().toISOString()});
@@ -1329,6 +1087,7 @@ function abrirPedidosEmAberto(){
 // PAINEL
 // ============================================================
 function rendPainel(){
+  // Debounce para evitar reconstrução dupla de charts
   if(chartRendTimer)clearTimeout(chartRendTimer);
   chartRendTimer=setTimeout(_rendPainelReal,80);
 }
@@ -1361,6 +1120,7 @@ function _rendPainelReal(){
   const cliUlt={};[...db.peds,...db.vendas].forEach(p=>{const nome=(p.cli||'?').toLowerCase();const dt=new Date(p.data||0);if(!cliUlt[nome]||dt>cliUlt[nome])cliUlt[nome]=dt;});
   const inativos=Object.entries(cliUlt).filter(([n,dt])=>Math.floor((agora-dt)/(864e5))>30&&n!=='?');
   document.getElementById('painel-recorrencia-alert').innerHTML=inativos.length?`<div class="alert alert-warn" style="cursor:pointer" onclick="ir('recorrencia')">🔄 ${inativos.length} cliente(s) inativo(s) (+30 dias)</div>`:'';
+  // Gráficos
   const months=[],recArr=[],despArr=[];
   for(let i=5;i>=0;i--){
     const dd=new Date();dd.setMonth(dd.getMonth()-i);
@@ -1375,6 +1135,7 @@ function _rendPainelReal(){
     (db.ap||[]).filter(a=>a.pagaEm&&a.pagaEm.slice(0,7)===mo).forEach(a=>dep+=a.valorPago||a.valor||0);
     despArr.push(dep);
   }
+  // FIX: destruir charts antes de recriar com verificação de instância válida
   if(chartReceita){try{chartReceita.destroy();}catch(e){}chartReceita=null;}
   if(chartCong){try{chartCong.destroy();}catch(e){}chartCong=null;}
   const ctx=document.getElementById('chart-receita');
@@ -1423,6 +1184,7 @@ function pedidoPesado(p){
   return pvItens.length>0&&pvItens.every(it=>it.pesoReal!=null);
 }
 function rendPedidos(){
+  // FIX: sincronizar botão ativo com pedFiltro atual (inclusive caso especial 'ABERTOS')
   document.querySelectorAll('#p-pedidos .filter-btn').forEach(b=>{
     const fn=b.getAttribute('onclick')||'';
     const match=fn.match(/filtrarPeds\('([^']+)'/);
@@ -1466,6 +1228,7 @@ function abrirNovoPedido(){
   if(logList){const logs=[...new Set(db.clis.filter(c=>c.logradouro).map(c=>c.logradouro))];logList.innerHTML=logs.map(e=>`<option value="${x(e)}">`).join('');}
   const condList=document.getElementById('ped-cond-list');
   if(condList){const conds=[...new Set(db.clis.filter(c=>c.condominio).map(c=>c.condominio))];condList.innerHTML=conds.map(e=>`<option value="${x(e)}">`).join('');}
+  // Preencher select de vendedores
   const vSel=document.getElementById('ped-vendedor');
   if(vSel)vSel.innerHTML='<option value="">— Nenhum —</option>'+db.vends.map(v=>`<option value="${x(v.n)}">${x(v.n)}</option>`).join('');
   document.getElementById('ped-prod-sel').innerHTML='<option value="">Selecionar...</option>'+db.prods.map(p=>`<option value="${p.id}">${x(p.n)}</option>`).join('');
@@ -1492,6 +1255,7 @@ function onProdSel(){
   else{document.getElementById('ped-prod-tipo').innerHTML='<option value="peca">Unidade</option>';}
   document.getElementById('ped-prod-sel').dataset.pacoteDetectado=p.pacote||'';
   document.getElementById('ped-prod-desc').value='0';
+  // Mostrar campos de peso inline para produtos com pv:true
   const pvFields=document.getElementById('ped-pv-fields');
   if(p.pv){
     pvFields.style.display='block';
@@ -1531,12 +1295,14 @@ function addItemPed(){
   const descItem=parseFloat(document.getElementById('ped-prod-desc').value)||0;
   const descItemTipo=document.getElementById('ped-prod-desc-tipo').value||'P';
   const pacoteDetectado=document.getElementById('ped-prod-sel').dataset.pacoteDetectado||p.pacote||'';
+  // Captura peso inline (se produto pv:true e usuário preencheu o peso agora)
   let pesoReal=null;
   let pr=parseFloat(document.getElementById('ped-prod-pr').value)||p.pr;
   if(p.pv){
     const pesoInline=parseFloat(document.getElementById('ped-pv-peso')?.value)||0;
     const prkgInline=parseFloat(document.getElementById('ped-pv-prkg')?.value)||0;
     if(pesoInline>0&&prkgInline>0){
+      // Peso já conhecido → registra direto, não precisa ir para PESAGEM
       pesoReal=pesoInline;
       pr=prkgInline;
     }
@@ -1545,6 +1311,7 @@ function addItemPed(){
     toast('⚠️ '+p.n+' — estoque atual: '+(p.est||0),'warn');
   }
   editingPedItems.push({id:uid(),prodId,nome:p.n,qty,pr,sub,tipoLabel,pv:p.pv,pesoReal,pacote:pacoteDetectado,descItem,descItemTipo});
+  // Limpar campos de peso após adicionar
   if(p.pv){
     document.getElementById('ped-pv-peso').value='';
     document.getElementById('ped-pv-prkg').value=p.pr||'';
@@ -1606,6 +1373,10 @@ function calcPedTotal(){
   return tot;
 }
 
+// FIX CRÍTICO: ao editar um pedido, a mudança de status no <select> agora é
+// aplicada de fato (antes era ignorada), e o estoque de itens 'estoque' (congelados)
+// passa a ser debitado/restaurado de forma simétrica também para pedidos WhatsApp,
+// não só no PDV.
 function salvarPedido(){
   const cli=document.getElementById('ped-cli').value.trim();
   if(!cli){toast('Informe o cliente','warn');return;}
@@ -1620,6 +1391,7 @@ function salvarPedido(){
   const frete=parseFloat(document.getElementById('ped-frete').value)||0;
   const desc=parseFloat(document.getElementById('ped-desc').value)||0;
   const temPV=editingPedItems.some(it=>it.pv);
+  // Só precisa ir para PESAGEM se houver itens pv:true SEM peso já informado
   const precisaPesar=editingPedItems.some(it=>it.pv&&(it.pesoReal==null||it.pesoReal<=0));
   let st=document.getElementById('ped-st').value;
   if(precisaPesar&&(st==='PENDENTE'||st==='PAGO')){
@@ -1630,10 +1402,12 @@ function salvarPedido(){
     const antigo=db.peds.find(p=>p.id===editingPedId);
     if(antigo){
       const oldSt=antigo.st;
+      // FIX: restaura estoque dos itens ANTIGOS antes de sobrescrever, se já estava debitado
       if(antigo.estoqueDebitado)restaurarEstoque(antigo.itens);
       Object.assign(antigo,{cli,wa,logradouro,complemento,condominio,horario,obs,vendedor,itens:JSON.parse(JSON.stringify(editingPedItems)),frete,desc,temPV,st,editadoEm:new Date().toISOString()});
       antigo.total=calcTotal(antigo);
       if(!temPV&&antigo.st==='PESAGEM')antigo.st='PENDENTE';
+      // FIX: debita estoque dos itens NOVOS, exceto se o pedido está cancelado
       if(antigo.st==='CANCELADO'){
         antigo.estoqueDebitado=false;
       }else{
@@ -1651,6 +1425,7 @@ function salvarPedido(){
     const ped={id:uid(),num:db.seq++,cli,wa,logradouro,complemento,condominio,horario,obs,vendedor,st,itens:JSON.parse(JSON.stringify(editingPedItems)),frete,desc,temPV,data:new Date().toISOString(),recebido:false};
     ped.total=calcTotal(ped);
     db.peds.push(ped);
+    // FIX: debita estoque local (congelados) também para pedidos criados via WhatsApp
     if(ped.st!=='CANCELADO'){debitarEstoque(ped.itens);ped.estoqueDebitado=true;}
     if(st==='PAGO'||st==='ENTREGUE'){ped.recebido=false;criarContaAR(ped.id,nP(ped.num),ped.cli,ped.total,'whatsapp');}
     upsertCli(cli,wa,logradouro,complemento,condominio);
@@ -1659,6 +1434,7 @@ function salvarPedido(){
   modalPedDirty=false;salvar();fm('mod-ped');rendPedidos();atualizaBadges();if(curPage==='painel')rendPainel();if(curPage==='congelados')rendCongelados();
 }
 
+// FIX: upsertCli só atualiza campos que foram preenchidos, preserva os demais
 function upsertCli(nome,wa,logradouro,complemento,condominio){
   const n=nome.toLowerCase().trim();
   let c=db.clis.find(cl=>cl.n.toLowerCase()===n||(wa&&cl.wa===wa));
@@ -1666,6 +1442,7 @@ function upsertCli(nome,wa,logradouro,complemento,condominio){
     db.clis.push({id:uid(),n:nome,wa:wa||'',logradouro:logradouro||'',complemento:complemento||'',condominio:condominio||'',cid:'',obs:'',tipo:'PF',doc:'',email:'',nasc:''});
   }else{
     if(wa)c.wa=wa;
+    // Só sobrescreve endereço se todos os campos forem fornecidos juntos
     if(logradouro){c.logradouro=logradouro;c.complemento=complemento;c.condominio=condominio;}
   }
 }
@@ -1692,6 +1469,9 @@ function abrirEditPed(id){
   rendPedItensList();calcPedTotal();am('mod-ped');
 }
 
+// ============================================================
+// DETALHE DO PEDIDO
+// ============================================================
 function abrirDetPed(id){
   const p=db.peds.find(pe=>pe.id===id);if(!p)return;
   const total=calcTotal(p);
@@ -1741,6 +1521,7 @@ function abrirDetPed(id){
 
 function enviarMsgHorario(pedId){const p=db.peds.find(pe=>pe.id===pedId);if(!p)return;const msg=`Olá ${p.cli}! 😊\nSou Franklin da *De Minas Pão de Queijaria* 🧀\n\nSeu pedido ${nP(p.num)} está pronto!\n\nQual o *melhor horário* para receber?\nAguardo! 🙏`;const num=(p.wa||cfg.wa1).replace(/\D/g,'');window.open(`https://wa.me/${num.startsWith('55')?num:'55'+num}?text=${encodeURIComponent(msg)}`,'_blank');}
 
+// FIX: alterarStPed agora restaura/debita estoque ao entrar/saír de CANCELADO
 function alterarStPed(id,st){
   const p=db.peds.find(pe=>pe.id===id);if(!p)return;
   const oldSt=p.st;p.st=st;
@@ -1757,6 +1538,7 @@ function alterarStPed(id,st){
   salvar();fm('mod-det');rendPedidos();atualizaBadges();if(curPage==='painel')rendPainel();if(curPage==='congelados')rendCongelados();toast('Status → '+st,'ok');
 }
 
+// FIX: restaura estoque debitado antes de mover para a lixeira
 function excluirPedComPin(id){
   const p=db.peds.find(pe=>pe.id===id);if(!p)return;
   pedirPin(`Excluir pedido ${nP(p.num)} de ${p.cli}?`,()=>{
@@ -1766,7 +1548,8 @@ function excluirPedComPin(id){
     salvar();fm('mod-det');rendPedidos();atualizaBadges();if(curPage==='painel')rendPainel();if(curPage==='congelados')rendCongelados();toast('Pedido movido para lixeira','warn');
   });
 }
-
+</script>
+<script>
 // ============================================================
 // PDV
 // ============================================================
@@ -1919,11 +1702,14 @@ function finalizarVenda(){
   const recebido=pdvPgto==='Dinheiro'?parseFloat(document.getElementById('pdv-recebido')?.value)||0:total;
   if(pdvPgto==='Dinheiro'&&recebido<total){toast('Valor insuficiente','err');return;}
   const vendedor=document.getElementById('pdv-vendedor')?.value||'';
+  // FIX: snapshot do estoque antes, atualizar depois, só então salvar
   const estoqueSnap=pdvCartItems.map(it=>({prodId:it.prodId,qty:it.qty}));
   const num='PDV-'+String(db.vendas.length+1).padStart(4,'0');
   const venda={id:uid(),num,itens:JSON.parse(JSON.stringify(pdvCartItems)),subtotal:sub,desconto:descR,total,pgto:pdvPgto,recebido,troco:Math.max(0,recebido-total),data:new Date().toISOString(),tipo:'pdv',vendedor};
   db.vendas.push(venda);
+  // Atualiza estoque após inserir venda
   estoqueSnap.forEach(({prodId,qty})=>{const prod=gP(prodId);if(prod&&prod.tipo==='estoque')prod.est=Math.max(0,prod.est-qty);});
+  // FIX: verificar se salvar teve sucesso; se falhou, reverter
   const ok=salvar();
   if(!ok){
     db.vendas.pop();
@@ -1931,10 +1717,12 @@ function finalizarVenda(){
     toast('Erro ao salvar venda. Tente novamente.','err');return;
   }
   lastReciboId=venda.id;
+  // FIX: recibo usa ID fixo do momento, não variável global que pode mudar
   const reciboHtml=`<div style="text-align:center;margin-bottom:12px"><strong>🧀 De Minas</strong><div>${venda.num}</div></div>
     ${venda.itens.map(it=>`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--creme2)"><span>${x(it.nome)}</span><span>${it.qty}x ${R(it.pr*it.qty)}</span></div>`).join('')}
     <div style="margin-top:10px;text-align:right"><div style="font-family:Arial;font-size:20px;font-weight:bold;color:var(--vinho)">Total: ${R(total)}</div><div>Pgto: ${venda.pgto}</div></div>`;
   document.getElementById('recibo-body').innerHTML=reciboHtml;
+  // FIX: botão de imprimir captura o ID neste momento
   document.getElementById('recibo-foot').innerHTML=`<button class="btn btn-ghost" onclick="fm('mod-recibo')">Fechar</button><button class="btn btn-primary" onclick="imprimirReciboPDV('${venda.id}')">🖨️ Imprimir</button>`;
   pdvCartItems=[];rendCart();rendPDVGrid();rendPDVHist();am('mod-recibo');if(curPage==='painel')rendPainel();atualizaBadges();
 }
@@ -1952,6 +1740,7 @@ function pdvNavData(d){const inp=document.getElementById('pdv-data-hist');if(!in
 function limparCarrinho(){if(!pdvCartItems.length)return;if(!confirm('Limpar carrinho?'))return;pdvCartItems=[];rendCart();toast('Carrinho limpo','warn');}
 
 function imprimirReciboPDV(vendaId){
+  // FIX: aceita ID por parâmetro, não usa lastReciboId global
   const id=vendaId||lastReciboId;
   const v=db.vendas.find(vd=>vd.id===id);if(!v)return;
   printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial;padding:20px;max-width:300px}@media print{button{display:none}}</style></head><body><h2>🧀 De Minas</h2><p>${v.num} · ${dF(v.data)}</p>${v.itens.map(it=>`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #eee"><span>${it.nome}</span><span>${it.qty}x ${R(it.pr*it.qty)}</span></div>`).join('')}<p style="font-size:18px;font-weight:bold">Total: ${R(v.total)}</p><p>Pgto: ${v.pgto}</p><button onclick="window.print()">Imprimir</button></body></html>`);
@@ -2026,8 +1815,13 @@ function tabAt(t,btn){
   atTab=t;
   ['pedidos','clientes','tabela'].forEach(tb=>{const el=document.getElementById('at-tab-'+tb);if(el)el.style.display=tb===t?'block':'none';});
   document.querySelectorAll('#p-atacado .tab-btn').forEach(b=>b.classList.remove('active'));
+  // FIX: marca o botão ativo mesmo quando btn é null (chamada programática)
   if(btn)btn.classList.add('active');
-  else{const idx={pedidos:0,clientes:1,tabela:2}[t];const btns=document.querySelectorAll('#p-atacado .tab-btn');if(btns[idx])btns[idx].classList.add('active');}
+  else{
+    const idx={pedidos:0,clientes:1,tabela:2}[t];
+    const btns=document.querySelectorAll('#p-atacado .tab-btn');
+    if(btns[idx])btns[idx].classList.add('active');
+  }
   ({pedidos:rendAtPeds,clientes:rendAtClis,tabela:rendAtTabela})[t]?.();
 }
 function rendAtacado(){rendAtPeds();}
@@ -2083,6 +1877,7 @@ function salvarAtPed(){
   const desc=parseFloat(document.getElementById('atp-desc')?.value)||0;
   const ped={id:uid(),num:db.seqAt++,cliId,cliNome:cli?.n||'',pgto,vendedor,obs,itens:JSON.parse(JSON.stringify(atPedItems)),frete,desc,total:calcAtTotal(),st:'PENDENTE',data:new Date().toISOString(),tipo:'atacado',recebido:false};
   db.atPeds.push(ped);
+  // FIX: debita estoque também para pedidos de atacado (B2B)
   debitarEstoque(ped.itens);ped.estoqueDebitado=true;
   salvar();fm('mod-at-ped');rendAtPeds();atualizaBadges();if(curPage==='congelados')rendCongelados();toast('Pedido '+nAt(ped.num)+' criado!','ok');
 }
@@ -2094,6 +1889,7 @@ function abrirDetAt(id){
   document.getElementById('at-det-foot').innerHTML=`<button class="btn btn-ghost" onclick="fm('mod-at-det')">Fechar</button><button class="btn btn-primary" onclick="imprimirAtPed('${p.id}')">🖨️ Imprimir</button><button class="btn btn-danger" onclick="excluirAtPedComPin('${p.id}')">🗑️ Excluir</button>`;
   am('mod-at-det');
 }
+// FIX: alterarStAt agora também ajusta o estoque ao cancelar/reativar pedidos B2B
 function alterarStAt(id,st){
   const p=db.atPeds.find(pe=>pe.id===id);if(!p)return;
   const oldSt=p.st;p.st=st;
@@ -2105,6 +1901,7 @@ function alterarStAt(id,st){
   if((st==='PAGO'||st==='ENTREGUE')&&oldSt!=='PAGO'&&oldSt!=='ENTREGUE'){p.pagEm=new Date().toISOString();criarContaAR(p.id,nAt(p.num),p.cliNome,p.total||0,'atacado');p.recebido=false;}
   salvar();fm('mod-at-det');rendAtPeds();atualizaBadges();if(curPage==='painel')rendPainel();if(curPage==='congelados')rendCongelados();toast('Status → '+st,'ok');
 }
+// NOVO: exclusão de pedido B2B (faltava por completo na versão anterior)
 function excluirAtPedComPin(id){
   const p=db.atPeds.find(pe=>pe.id===id);if(!p)return;
   pedirPin(`Excluir pedido ${nAt(p.num)} de ${p.cliNome}?`,()=>{
@@ -2126,7 +1923,8 @@ function abrirNovoAtCli(){document.getElementById('at-cli-title').textContent='N
 function editAtCli(id){const c=db.atClis.find(cl=>cl.id===id);if(!c)return;document.getElementById('at-cli-title').textContent='Editar Cliente B2B';document.getElementById('ac-n').value=c.n||'';document.getElementById('ac-doc').value=c.doc||'';document.getElementById('ac-wa').value=c.w||'';document.getElementById('ac-cid').value=c.c||'';document.getElementById('ac-end').value=c.e||'';document.getElementById('ac-obs').value=c.obs||'';document.getElementById('ac-id').value=id;am('mod-at-cli');}
 function salvarAtCli(){const n=document.getElementById('ac-n').value.trim();if(!n){toast('Informe o nome','warn');return;}const id=document.getElementById('ac-id').value;const data={n,doc:document.getElementById('ac-doc').value,w:document.getElementById('ac-wa').value,c:document.getElementById('ac-cid').value,e:document.getElementById('ac-end').value,obs:document.getElementById('ac-obs').value};if(id)Object.assign(db.atClis.find(c=>c.id===id),data);else db.atClis.push({id:uid(),...data});salvar();fm('mod-at-cli');rendAtClis();toast('Cliente salvo!','ok');}
 function imprimirAtPed(id){const p=db.atPeds.find(pe=>pe.id===id);if(!p)return;printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial;padding:20px;max-width:600px}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #eee}.total{font-size:20px;font-weight:bold;text-align:right}@media print{button{display:none}}</style></head><body><h2>🧀 De Minas Atacado — ${nAt(p.num)}</h2><p>Cliente: ${x(p.cliNome)} | Pgto: ${x(p.pgto)}</p><table><thead><tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Subtotal</th></tr></thead><tbody>${p.itens.map(it=>`<tr><td>${x(it.nome)}</td><td>${it.qty}x</td><td>${R(it.pr)}</td><td>${R(it.pr*it.qty)}</td></tr>`).join('')}</tbody></table><p class="total">Total: ${R(p.total||0)}</p><p>PIX: ${x(cfg.pix)} (${x(cfg.pixNome)})</p><button onclick="window.print()">Imprimir</button></body></html>`);}
-
+</script>
+<script>
 // ============================================================
 // A RECEBER
 // ============================================================
@@ -2169,15 +1967,19 @@ function confirmarRecebimento(id,tipo){
 }
 
 // ============================================================
-// RECORRÊNCIA
+// RECORRÊNCIA — FIX: inclui clientes B2B e PDV
 // ============================================================
 function filtrarRecorrencia(f,btn){recorrenciaFiltro=f;document.querySelectorAll('#p-recorrencia .filter-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');rendRecorrencia();}
 function rendRecorrencia(){
   const busca=(document.getElementById('busca-recorrencia')?.value||'').toLowerCase();
   const agora=new Date();
+  // FIX: construir mapa de última compra incluindo PDV (por nome se disponível) e Atacado
   const cliUltMap={};
+  // Pedidos WhatsApp
   db.peds.forEach(p=>{if(!p.cli||p.cli==='?')return;const k=p.cli.toLowerCase();const dt=new Date(p.data||0);if(!cliUltMap[k]||dt>cliUltMap[k].dt)cliUltMap[k]={dt,nome:p.cli,wa:p.wa||''};});
+  // Vendas PDV com nome
   db.vendas.forEach(v=>{if(!v.cli||v.cli==='?')return;const k=v.cli.toLowerCase();const dt=new Date(v.data||0);if(!cliUltMap[k]||dt>cliUltMap[k].dt)cliUltMap[k]={dt,nome:v.cli,wa:''};});
+
   let clientes=db.clis.map(c=>{
     const k=c.n.toLowerCase();
     const info=cliUltMap[k];
@@ -2232,7 +2034,7 @@ function dispararWhatsAppInativos(){
 }
 
 // ============================================================
-// PESAGEM
+// PESAGEM — FIX: cálculo de total consistente com calcItemSubFn
 // ============================================================
 function rendPesagem(){
   const peds=db.peds.filter(p=>p.st==='PESAGEM');
@@ -2246,6 +2048,10 @@ function abrirPesagem(pedId){
   if(!pvItens.length){toast('Sem itens de peso variável','warn');return;}
   let html='<p style="margin-bottom:14px;font-size:13px;color:var(--txt3)">Informe o peso real e o preço por kg de cada queijo.</p>';
   pvItens.forEach((it,i)=>{
+    // FIX: o campo Preço/kg só vem pré-preenchido se o item JÁ foi pesado antes
+    // (nesse caso it.pr já é um preço/kg real). Caso contrário fica em branco,
+    // pois it.pr originalmente é o preço da peça/metade inteira — usá-lo direto
+    // como preço/kg gera um total muito acima do correto.
     const prkgVal=(it.pesoReal!=null&&it.pesoReal>0)?it.pr:'';
     html+=`<div class="pesagem-item">
       <div class="pesagem-nome">🧀 ${x(it.nome)}</div>
@@ -2256,6 +2062,7 @@ function abrirPesagem(pedId){
       </div>
     </div>`;
   });
+  // Itens sem peso variável
   const outrosItens=p.itens.filter(it=>!it.pv);
   if(outrosItens.length){
     html+=`<div style="background:var(--creme2);border-radius:var(--radius2);padding:10px 12px;margin-bottom:10px;font-size:13px"><strong>Outros itens:</strong><br>`;
@@ -2267,6 +2074,8 @@ function abrirPesagem(pedId){
   document.getElementById('mod-pesagem').dataset.pedId=pedId;
   am('mod-pesagem');
 }
+
+// FIX: calcPesagemTotalUI recalcula sem modificar o pedido
 function calcPesagemTotalUI(pedId){
   const p=db.peds.find(pe=>pe.id===pedId);if(!p)return;
   const pvItens=p.itens.filter(it=>it.pv);
@@ -2283,10 +2092,13 @@ function calcPesagemTotalUI(pedId){
     sub+=s;
     const el=document.getElementById('pw-sub-'+i);if(el)el.value=s>0?R(s):'—';
   });
+  // Soma itens não-pv com calcItemSubFn para consistência
   p.itens.filter(it=>!it.pv).forEach(it=>sub+=calcItemSubFn(it));
   const tot=Math.max(0,sub+(p.frete||0)-(p.desc||0));
   document.getElementById('pw-total').textContent=R(tot);
 }
+
+// FIX: salvarPesoItens aplica desconto por item ao peso real e exige preço/kg explícito
 function salvarPesoItens(p){
   const pvItens=p.itens.filter(it=>it.pv);
   if(!pvItens.length)return false;
@@ -2297,11 +2109,14 @@ function salvarPesoItens(p){
     if(!peso||!prkg){ok=false;return;}
     it.pesoReal=peso;
     it.pr=prkg;
+    // descItem é preservado, calcItemSubFn usará pesoReal*prF
   });
   if(!ok)return false;
+  // Recalcula total com calcTotal que usa calcItemSubFn (inclui desconto)
   p.total=calcTotal(p);
   return true;
 }
+
 function salvarPesagemSemConfirmar(){
   const pedId=document.getElementById('mod-pesagem').dataset.pedId;
   const p=db.peds.find(pe=>pe.id===pedId);if(!p)return;
@@ -2338,7 +2153,8 @@ function rendLogistica(){
   document.getElementById('log-lista').innerHTML=html;
 }
 function markEntregue(id){const p=db.peds.find(pe=>pe.id===id);if(!p)return;p.st='ENTREGUE';p.entregueEm=new Date().toISOString();salvar();rendLogistica();atualizaBadges();if(curPage==='painel')rendPainel();toast('Marcado como entregue','ok');}
-
+</script>
+<script>
 // ============================================================
 // CLIENTES
 // ============================================================
@@ -2416,6 +2232,7 @@ function editCli(id){
 function salvarCli(){
   const n=document.getElementById('cli-n').value.trim();if(!n){toast('Informe o nome','warn');return;}
   const id=document.getElementById('cli-id').value;
+  // Verifica duplicata ao criar novo
   if(!id){
     const dup=db.clis.find(c=>c.n.toLowerCase()===n.toLowerCase());
     if(dup){if(!confirm(`Já existe cliente com nome "${n}". Continuar?`))return;}
@@ -2574,12 +2391,16 @@ function imprimirTodasEtiquetas(){
 }
 
 // ============================================================
-// IMPRESSÃO EM LOTE
+// IMPRESSÃO EM LOTE — todos os pedidos pendentes, 1 por página
 // ============================================================
 function imprimirTodosPedidos(){
-  const dataFil=(curPage==='etiquetas'?document.getElementById('etiq-data-filtro')?.value:document.getElementById('data-filtro')?.value)||'';
+  // Detecta qual filtro de data usar conforme a página que chamou
+  const dataFil=(curPage==='etiquetas'
+    ? document.getElementById('etiq-data-filtro')?.value
+    : document.getElementById('data-filtro')?.value) || '';
   const busca=curPage==='pedidos'?(document.getElementById('busca-ped')?.value||'').toLowerCase():'';
   let peds=[...db.peds].sort((a,b)=>new Date(b.data)-new Date(a.data));
+  // filtro de status (respeita o botão ativo na página Pedidos; em Etiquetas usa PENDENTE/PESAGEM/PAGO)
   if(curPage==='pedidos'){
     if(pedFiltro==='ABERTOS')peds=peds.filter(p=>['PENDENTE','PESAGEM','PAGO'].includes(p.st));
     else if(pedFiltro!=='TODOS')peds=peds.filter(p=>p.st===pedFiltro);
@@ -2590,23 +2411,125 @@ function imprimirTodosPedidos(){
   if(busca)peds=peds.filter(p=>p.cli?.toLowerCase().includes(busca)||String(p.num).includes(busca)||nP(p.num).toLowerCase().includes(busca));
   if(!peds.length){
     const desc=dataFil?'nenhum pedido nesta data':'nenhum pedido encontrado com os filtros aplicados';
-    toast('⚠️ '+desc.charAt(0).toUpperCase()+desc.slice(1),'warn');return;
+    toast('⚠️ '+desc.charAt(0).toUpperCase()+desc.slice(1),'warn');
+    return;
   }
-  const css=`*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10.5pt;color:#1a1a1a;background:#fff}.pedido{page-break-after:always;padding:14mm 16mm;min-height:100vh}.pedido:last-child{page-break-after:auto}.header{border-bottom:2.5px solid #3d2000;padding-bottom:8px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-end}.brand{font-size:20pt;font-weight:900;color:#3d2000;line-height:1}.brand-sub{font-size:8pt;color:#c8860a;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-top:2px}.num-ped{font-size:18pt;font-weight:900;color:#3d2000}.status{display:inline-block;padding:3px 10px;border-radius:12px;font-size:8pt;font-weight:700;margin-left:8px}.st-PENDENTE{background:#fff3cd;color:#856404}.st-PESAGEM{background:#cfe2ff;color:#084298}.st-PAGO{background:#e8f5ee;color:#1e7e3e}.meta{font-size:9pt;color:#444;margin-bottom:10px;line-height:1.7}table{width:100%;border-collapse:collapse;margin-bottom:10px}thead tr{background:#3d2000;color:#fff}th{padding:6px 10px;font-size:8.5pt;font-weight:600;text-align:left}th.r,td.r{text-align:right}td{padding:6px 10px;font-size:9.5pt;border-bottom:1px solid #eee}.total-box{text-align:right;padding:8px 12px;background:#3d2000;color:#fff;border-radius:4px;margin-bottom:12px}.pix-box{border:1.5px solid #c8860a;border-radius:6px;padding:8px 14px;background:#fffdf5;margin-bottom:10px}.footer{font-size:9pt;color:#3d2000;text-align:center;border-top:1px solid #eee;padding-top:6px;font-weight:600}@media print{.no-print{display:none}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}`;
+
+  const css=`
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10.5pt;color:#1a1a1a;background:#fff}
+    .pedido{page-break-after:always;padding:14mm 16mm;min-height:100vh}
+    .pedido:last-child{page-break-after:auto}
+    .header{border-bottom:2.5px solid #3d2000;padding-bottom:8px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-end}
+    .brand{font-size:20pt;font-weight:900;color:#3d2000;line-height:1}
+    .brand-sub{font-size:8pt;color:#c8860a;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+    .brand-end{font-size:7.5pt;color:#888;margin-top:2px}
+    .num-ped{font-size:18pt;font-weight:900;color:#3d2000}
+    .status{display:inline-block;padding:3px 10px;border-radius:12px;font-size:8pt;font-weight:700;margin-left:8px}
+    .st-PENDENTE{background:#fff3cd;color:#856404}
+    .st-PESAGEM{background:#cfe2ff;color:#084298}
+    .st-PAGO{background:#e8f5ee;color:#1e7e3e}
+    .meta{font-size:9pt;color:#444;margin-bottom:10px;line-height:1.7}
+    .meta strong{color:#1a1a1a;font-size:9.5pt}
+    table{width:100%;border-collapse:collapse;margin-bottom:10px}
+    thead tr{background:#3d2000;color:#fff}
+    th{padding:6px 10px;font-size:8.5pt;font-weight:600;text-align:left}
+    th.r,td.r{text-align:right}
+    tbody tr:nth-child(even){background:#faf7f4}
+    td{padding:6px 10px;font-size:9.5pt;border-bottom:1px solid #eee}
+    .total-box{text-align:right;padding:8px 12px;background:#3d2000;color:#fff;border-radius:4px;margin-bottom:12px}
+    .total-box .label{font-size:8pt;opacity:.75}
+    .total-box .valor{font-size:15pt;font-weight:900}
+    .pix-box{border:1.5px solid #c8860a;border-radius:6px;padding:8px 14px;display:flex;align-items:center;gap:14px;background:#fffdf5;margin-bottom:10px}
+    .pix-label{font-size:7.5pt;font-weight:700;color:#c8860a;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+    .pix-key{font-size:12pt;font-weight:900;color:#3d2000}
+    .pix-name{font-size:8.5pt;color:#888}
+    .sugestao{font-size:8.5pt;color:#3d2000;text-align:center;padding:5px 0;border-top:1px dashed #c8860a;border-bottom:1px dashed #c8860a;margin-bottom:8px}
+    .footer{font-size:9pt;color:#3d2000;text-align:center;border-top:1px solid #eee;padding-top:6px;font-weight:600}
+    .separador{border:none;border-top:1px dashed #ccc;margin:10px 0}
+    @media print{.no-print{display:none}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  `;
+
   const pedsHtml=peds.map(p=>{
-    const total=calcTotal(p);const end=enderecoCompleto(p);
+    const total=calcTotal(p);
+    const end=enderecoCompleto(p);
     const itensHtml=(p.itens||[]).map(it=>{
-      let qtd=it.pv&&it.pesoReal?it.pesoReal.toFixed(3)+' kg':it.sub==='metade'?'½ peça':(it.qty||1)+'x'+(it.pacote&&it.pacote!==''&&it.pacote!=='un'?' ('+it.pacote+')':'');
+      let qtd='';
+      if(it.pv&&it.pesoReal)qtd=it.pesoReal.toFixed(3)+' kg';
+      else if(it.sub==='metade')qtd='½ peça';
+      else qtd=(it.qty||1)+'x'+(it.pacote&&it.pacote!==''&&it.pacote!=='un'?' ('+it.pacote+')':'');
       const sub=calcItemSubFn(it);
-      return`<tr><td>${x(it.nome)}</td><td>${qtd}</td><td>${R(it.pr)}</td><td class="r" style="font-weight:700">${R(sub)}</td></tr>`;
+      const descInfo=(it.descItem&&it.descItem>0)?` <span style="font-size:8pt;color:#c4620a">-${it.descItemTipo==='P'?it.descItem+'%':'R$'+it.descItem}</span>`:'';
+      return`<tr><td>${x(it.nome)}</td><td>${qtd}</td><td>${R(it.pr)}${descInfo}</td><td class="r" style="font-weight:700">${R(sub)}</td></tr>`;
     }).join('');
-    return`<div class="pedido"><div class="header"><div><div class="brand">DE MINAS</div><div class="brand-sub">Pão de Queijaria</div></div><div style="text-align:right"><div class="num-ped">${nP(p.num)}</div><span class="status st-${p.st}">${p.st}</span></div></div><div class="meta"><strong>Cliente:</strong> ${x(p.cli)} ${p.wa?'· '+x(p.wa):''}<br><strong>Endereço:</strong> ${x(end)}<br>${p.horario?'<strong>Horário:</strong> '+x(p.horario)+'<br>':''}${p.obs?'<strong>Obs:</strong> '+x(p.obs)+'<br>':''}<strong>Data:</strong> ${dF(p.data)}</div><table><thead><tr><th>Produto</th><th>Qtd</th><th>Preço Unit.</th><th class="r">Subtotal</th></tr></thead><tbody>${itensHtml}</tbody></table><div class="total-box"><div class="label">Total do Pedido</div><div class="valor">${R(total)}</div></div><div class="pix-box"><div>Pagamento via PIX</div><div style="font-size:12pt;font-weight:900">${x(cfg.pix)}</div><div>${x(cfg.pixNome)}</div></div><div class="footer">A De Minas Pão de Queijaria agradece!</div></div>`;
+    const stClass='st-'+(p.st||'PENDENTE');
+    return`
+    <div class="pedido">
+      <div class="header">
+        <div>
+          <div class="brand">DE MINAS</div>
+          <div class="brand-sub">Pão de Queijaria</div>
+          <div class="brand-end">Rua Engenheiro Pegado 332 · Vila Carrão · São Paulo - SP</div>
+        </div>
+        <div style="text-align:right">
+          <div class="num-ped">${nP(p.num)}</div>
+          <span class="status ${stClass}">${p.st}</span>
+        </div>
+      </div>
+      <div class="meta">
+        <strong>Cliente:</strong> ${x(p.cli)} ${p.wa?'· '+x(p.wa):''}<br>
+        ${p.vendedor?`<strong>Vendedor:</strong> ${x(p.vendedor)}<br>`:''}
+        <strong>Endereço:</strong> ${x(end)}<br>
+        ${p.horario?`<strong>Horário:</strong> <span style="color:#1a5e8a">${x(p.horario)}</span><br>`:''}
+        ${p.obs?`<strong>Obs:</strong> <span style="color:#c4620a">${x(p.obs)}</span><br>`:''}
+        <strong>Data:</strong> ${dF(p.data)}
+      </div>
+      <table>
+        <thead><tr><th>Produto</th><th>Qtd</th><th>Preço Unit.</th><th class="r">Subtotal</th></tr></thead>
+        <tbody>${itensHtml}</tbody>
+      </table>
+      ${(p.frete||0)>0?`<div style="text-align:right;font-size:8.5pt;color:#888;margin-bottom:3px">Frete: ${R(p.frete)}</div>`:''}
+      ${(p.desc||0)>0?`<div style="text-align:right;font-size:8.5pt;color:#888;margin-bottom:3px">Desconto Geral: -${R(p.desc)}</div>`:''}
+      <div class="total-box">
+        <div class="label">Total do Pedido</div>
+        <div class="valor">${R(total)}</div>
+      </div>
+      <div class="pix-box">
+        <div style="flex:1">
+          <div class="pix-label">Pagamento via PIX</div>
+          <div class="pix-key">${x(cfg.pix)}</div>
+          <div class="pix-name">${x(cfg.pixNome)}</div>
+        </div>
+        <div style="font-size:28pt;opacity:.1">◈</div>
+      </div>
+      <div class="sugestao">Já experimentou nossa linha completa? Chipa 3 Queijos · Pão de Queijo Recheado · Biscoito de Queijo · Broa de Milho. Peça na próxima!</div>
+      <div class="footer">A De Minas Pão de Queijaria agradece por adquirir o nosso Autêntico Pão de Queijo Mineiro</div>
+    </div>`;
   }).join('');
+
   const totalGeral=peds.reduce((s,p)=>s+calcTotal(p),0);
-  printBlob(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>De Minas — Pedidos em Lote</title><style>${css}</style></head><body>${pedsHtml}<div class="no-print" style="position:fixed;bottom:20px;right:20px;background:#3d2000;color:#fff;padding:12px 20px;border-radius:8px;font-family:Arial;font-size:13px">📦 ${peds.length} pedido(s) · Total: <strong>${R(totalGeral)}</strong></div><button class="no-print" onclick="window.print()" style="position:fixed;top:20px;right:20px;padding:10px 24px;background:#3d2000;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13pt;font-weight:700">🖨️ Imprimir ${peds.length} Pedido(s)</button></body></html>`);
+  const resumo=`
+    <div class="no-print" style="position:fixed;bottom:20px;right:20px;background:#3d2000;color:#fff;padding:12px 20px;border-radius:8px;font-family:Arial;font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.3);z-index:999">
+      📦 ${peds.length} pedido(s) · Total: <strong>${R(totalGeral)}</strong>
+    </div>`;
+
+  printBlob(`<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>De Minas — Pedidos em Lote</title>
+<style>${css}</style>
+</head>
+<body>
+${pedsHtml}
+${resumo}
+<button class="no-print" onclick="window.print()" style="position:fixed;top:20px;right:20px;padding:10px 24px;background:#3d2000;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13pt;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.3)">🖨️ Imprimir ${peds.length} Pedido(s)</button>
+</body>
+</html>`);
   toast(`${peds.length} pedido(s) prontos para imprimir!`,'ok');
 }
-
+</script>
+<script>
 // ============================================================
 // LISTA UDI
 // ============================================================
@@ -2633,7 +2556,12 @@ function rendExtrasUDI(){
   if(!udiExtras.length){el.innerHTML='<div style="font-size:13px;color:var(--txt3);padding:4px 0">Nenhum extra</div>';return;}
   el.innerHTML=udiExtras.map((e,i)=>{
     const label=e.unidade==='1kg'?e.qty+'kg':e.unidade==='2kg'?(e.qty*2)+'kg':e.qty+' '+e.unidade;
-    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--congelado2);border-radius:6px;margin-bottom:6px;border-left:3px solid var(--congelado)"><span style="flex:1;font-size:13px;font-weight:600">➕ ${x(e.nome.split('—')[0].trim())}</span><span style="font-family:Arial;font-size:16px;font-weight:900;color:var(--congelado)">${label}</span>${e.obs?`<span style="font-size:11px;color:var(--txt3)">${x(e.obs)}</span>`:''}<button onclick="remExtraUDI(${i})" style="background:var(--vermelho2);border:none;border-radius:4px;padding:3px 8px;cursor:pointer;color:var(--vermelho)">✕</button></div>`;
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--congelado2);border-radius:6px;margin-bottom:6px;border-left:3px solid var(--congelado)">
+      <span style="flex:1;font-size:13px;font-weight:600">➕ ${x(e.nome.split('—')[0].trim())}</span>
+      <span style="font-family:Arial;font-size:16px;font-weight:900;color:var(--congelado)">${label}</span>
+      ${e.obs?`<span style="font-size:11px;color:var(--txt3)">${x(e.obs)}</span>`:''}
+      <button onclick="remExtraUDI(${i})" style="background:var(--vermelho2);border:none;border-radius:4px;padding:3px 8px;cursor:pointer;color:var(--vermelho)">✕</button>
+    </div>`;
   }).join('');
 }
 function parsePesoTotal(unidade,qtd){
@@ -2652,8 +2580,10 @@ function rendListaUDI(){
   if(dataFil){peds=peds.filter(p=>isSameDay(p.data,dataFil));atPedsL=atPedsL.filter(p=>isSameDay(p.data,dataFil));}
   const listaMap={};
   [...peds,...atPedsL].forEach(p=>(p.itens||[]).forEach(it=>{
-    const prod=gP(it.prodId);const key=it.prodId||it.nome;
-    const forn=prod?prod.forn:'Sabor da Roça';const unidade=prod?(prod.pacote||it.pacote||'un'):(it.pacote||'un');
+    const prod=gP(it.prodId);
+    const key=it.prodId||it.nome;
+    const forn=prod?prod.forn:'Sabor da Roça';
+    const unidade=prod?(prod.pacote||it.pacote||'un'):(it.pacote||'un');
     if(!listaMap[key])listaMap[key]={nome:it.nome||'?',forn,qtd:0,unidade,pedidos:[],pv:!!it.pv,kgConhecido:0,pecasAPesar:0,isExtra:false};
     const entry=listaMap[key];
     const pedNum=p.num?(p.tipo==='atacado'?nAt(p.num):nP(p.num)):'?';
@@ -2672,6 +2602,7 @@ function rendListaUDI(){
       entry.qtd+=(parseFloat(it.qty)||1);entry.pedidos.push(quem);
     }
   }));
+  // Extras: nunca colapsa com pedidos normais (chave separada proposital para rastreabilidade)
   udiExtras.forEach(e=>{
     const key='extra_'+e.prodId;
     if(!listaMap[key])listaMap[key]={nome:e.nome,forn:e.forn,unidade:e.unidade,qtd:0,pedidos:[],pv:false,kgConhecido:0,pecasAPesar:0,isExtra:true};
@@ -2709,7 +2640,7 @@ function imprimirListaUDI(){
   let atPedsL=db.atPeds.filter(p=>['PENDENTE','PAGO'].includes(p.st));
   if(dataFil){peds=peds.filter(p=>isSameDay(p.data,dataFil));atPedsL=atPedsL.filter(p=>isSameDay(p.data,dataFil));}
   const listaMap={};
-  [...peds,...atPedsL].forEach(p=>(p.itens||[]).forEach(it=>{const prod=gP(it.prodId);const key=it.prodId||it.nome;const forn=prod?prod.forn:'Sabor da Roça';const unidade=prod?(prod.pacote||'un'):'un';if(!listaMap[key])listaMap[key]={nome:it.nome||'?',forn,qtd:0,unidade};listaMap[key].qtd+=(parseFloat(it.qty)||1);}));
+  [...peds,...atPedsL].forEach(p=>(p.itens||[]).forEach(it=>{const prod=gP(it.prodId);const key=it.prodId||it.nome;const forn=prod?prod.forn:'Sabor da Roça';const unidade=prod?(prod.pacote||'un'):'un';if(!listaMap[key])listaMap[key]={nome:it.nome||'?',forn,qtd:0,unidade};const isPacote=unidade==='1kg'||unidade==='2kg';if(isPacote)listaMap[key].qtd+=(parseFloat(it.qty)||1);else listaMap[key].qtd+=(parseFloat(it.qty)||1);}));
   udiExtras.forEach(e=>{const key='extra_'+e.prodId;if(!listaMap[key])listaMap[key]={nome:'➕ '+e.nome,forn:e.forn,qtd:0,unidade:e.unidade};listaMap[key].qtd+=e.qty;});
   if(!Object.keys(listaMap).length){toast('Nenhum produto','warn');return;}
   const fornMap={};Object.values(listaMap).forEach(it=>{if(!fornMap[it.forn])fornMap[it.forn]=[];fornMap[it.forn].push(it);});
@@ -2739,27 +2670,50 @@ function salvarForn(){const n=document.getElementById('forn-n').value.trim();if(
 function excluirForn(id){const f=db.forns.find(fn=>fn.id===id);if(!f)return;if(!confirm('Excluir fornecedor "'+f.n+'"?'))return;db.forns=db.forns.filter(fn=>fn.id!==id);salvar();rendFornecedores();atualizaSelectForn();toast('Fornecedor excluído','warn');}
 
 // ============================================================
-// BUSCA POR PRODUTO
+// VENDEDORES — com relatório de performance
+// ============================================================
+// ============================================================
+// BUSCA POR PRODUTO — "Quem comprou X?"
 // ============================================================
 let prodHistFiltroSt='TODOS';
+
 function abrirBuscaPorProduto(){
   prodHistFiltroSt='TODOS';
-  const sel=`<div style="margin-bottom:16px"><div class="form-group"><label>Selecione o Produto</label><select id="prod-hist-sel" onchange="rendProdHist()" style="padding:10px 12px;border:1.5px solid var(--borda);border-radius:var(--radius2);font-family:'DM Sans',sans-serif;font-size:14px;background:#fff;width:100%"><option value="">— Escolha um produto —</option>${db.prods.map(p=>`<option value="${p.id}">${x(p.n)}</option>`).join('')}</select></div></div>`;
+  const sel=`<div style="margin-bottom:16px">
+    <div class="form-group">
+      <label>Selecione o Produto</label>
+      <select id="prod-hist-sel" onchange="rendProdHist()" style="padding:10px 12px;border:1.5px solid var(--borda);border-radius:var(--radius2);font-family:'DM Sans',sans-serif;font-size:14px;background:#fff;width:100%">
+        <option value="">— Escolha um produto —</option>
+        ${db.prods.map(p=>`<option value="${p.id}">${x(p.n)}</option>`).join('')}
+      </select>
+    </div>
+  </div>`;
   document.getElementById('prod-hist-title').textContent='🔍 Quem comprou?';
   document.getElementById('prod-hist-stats').innerHTML='';
   document.getElementById('prod-hist-filtros').innerHTML='';
   document.getElementById('prod-hist-body').innerHTML=sel+'<div style="text-align:center;padding:30px;color:var(--txt3)">Selecione um produto para ver quem comprou</div>';
   am('mod-prod-hist');
 }
+
 function verQuemComprouProd(prodId){
   prodHistFiltroSt='TODOS';
-  const p=gP(prodId);if(!p)return;
+  const p=gP(prodId);
+  if(!p)return;
   document.getElementById('prod-hist-title').textContent='🔍 Quem comprou?';
-  const sel=`<div style="margin-bottom:16px"><div class="form-group"><label>Selecione o Produto</label><select id="prod-hist-sel" onchange="rendProdHist()" style="padding:10px 12px;border:1.5px solid var(--borda);border-radius:var(--radius2);font-family:'DM Sans',sans-serif;font-size:14px;background:#fff;width:100%"><option value="">— Escolha um produto —</option>${db.prods.map(pr=>`<option value="${pr.id}"${pr.id===prodId?' selected':''}>${x(pr.n)}</option>`).join('')}</select></div></div>`;
+  const sel=`<div style="margin-bottom:16px">
+    <div class="form-group">
+      <label>Selecione o Produto</label>
+      <select id="prod-hist-sel" onchange="rendProdHist()" style="padding:10px 12px;border:1.5px solid var(--borda);border-radius:var(--radius2);font-family:'DM Sans',sans-serif;font-size:14px;background:#fff;width:100%">
+        <option value="">— Escolha um produto —</option>
+        ${db.prods.map(pr=>`<option value="${pr.id}"${pr.id===prodId?' selected':''}>${x(pr.n)}</option>`).join('')}
+      </select>
+    </div>
+  </div>`;
   document.getElementById('prod-hist-body').innerHTML=sel;
   am('mod-prod-hist');
   rendProdHist();
 }
+
 function rendProdHist(){
   const prodId=document.getElementById('prod-hist-sel')?.value;
   const prod=gP(prodId);
@@ -2770,37 +2724,134 @@ function rendProdHist(){
     return;
   }
   document.getElementById('prod-hist-title').textContent='🔍 Quem comprou: '+prod.n.split('—')[0].trim();
+
+  // Coletar todos os pedidos (WhatsApp + Atacado + PDV) que têm este produto
   const encontrados=[];
-  db.peds.forEach(p=>{(p.itens||[]).forEach(it=>{if(it.prodId!==prodId)return;encontrados.push({num:nP(p.num),id:p.id,canal:'WhatsApp',cli:p.cli||'—',data:p.data,st:p.st,qty:it.qty||1,pr:it.pr,pesoReal:it.pesoReal||null,unidade:prod.pacote||'un',pv:it.pv,subtotal:calcItemSubFn(it),_tipo:'whatsapp'});});});
-  db.atPeds.forEach(p=>{(p.itens||[]).forEach(it=>{if(it.prodId!==prodId)return;encontrados.push({num:nAt(p.num),id:p.id,canal:'Atacado',cli:p.cliNome||'—',data:p.data,st:p.st,qty:it.qty||1,pr:it.pr,pesoReal:null,unidade:prod.pacote||'un',pv:false,subtotal:it.pr*(it.qty||1),_tipo:'atacado'});});});
-  db.vendas.filter(v=>!v.cancelado).forEach(v=>{(v.itens||[]).forEach(it=>{if(it.prodId!==prodId)return;encontrados.push({num:v.num,id:v.id,canal:'PDV',cli:'PDV',data:v.data,st:'PDV',qty:it.qty||1,pr:it.pr,pesoReal:null,unidade:prod.pacote||'un',pv:false,subtotal:it.pr*(it.qty||1),_tipo:'pdv'});});});
+
+  // Pedidos WhatsApp
+  db.peds.forEach(p=>{
+    (p.itens||[]).forEach(it=>{
+      if(it.prodId!==prodId)return;
+      encontrados.push({
+        num:nP(p.num),id:p.id,canal:'WhatsApp',cli:p.cli||'—',
+        data:p.data,st:p.st,qty:it.qty||1,
+        pr:it.pr,pesoReal:it.pesoReal||null,
+        unidade:prod.pacote||'un',pv:it.pv,
+        subtotal:calcItemSubFn(it),
+        _tipo:'whatsapp'
+      });
+    });
+  });
+
+  // Pedidos Atacado B2B
+  db.atPeds.forEach(p=>{
+    (p.itens||[]).forEach(it=>{
+      if(it.prodId!==prodId)return;
+      encontrados.push({
+        num:nAt(p.num),id:p.id,canal:'Atacado',cli:p.cliNome||'—',
+        data:p.data,st:p.st,qty:it.qty||1,
+        pr:it.pr,pesoReal:null,
+        unidade:prod.pacote||'un',pv:false,
+        subtotal:it.pr*(it.qty||1),
+        _tipo:'atacado'
+      });
+    });
+  });
+
+  // Vendas PDV
+  db.vendas.filter(v=>!v.cancelado).forEach(v=>{
+    (v.itens||[]).forEach(it=>{
+      if(it.prodId!==prodId)return;
+      encontrados.push({
+        num:v.num,id:v.id,canal:'PDV',cli:'PDV',
+        data:v.data,st:'PDV',qty:it.qty||1,
+        pr:it.pr,pesoReal:null,
+        unidade:prod.pacote||'un',pv:false,
+        subtotal:it.pr*(it.qty||1),
+        _tipo:'pdv'
+      });
+    });
+  });
+
   encontrados.sort((a,b)=>new Date(b.data)-new Date(a.data));
+
+  // Filtrar por status
   const visiveis=prodHistFiltroSt==='TODOS'?encontrados:encontrados.filter(e=>e.st===prodHistFiltroSt);
+
+  // Calcular totais do filtro atual (para revelar divergências)
   const isPacote=prod.pacote==='1kg'||prod.pacote==='2kg';
   const isGramas=prod.pacote&&prod.pacote.endsWith('g')&&!isPacote;
   const totalQty=visiveis.reduce((s,e)=>s+(e.qty||0),0);
   const totalKg=isPacote?parsePesoTotal(prod.pacote,totalQty):isGramas?parsePesoTotal(prod.pacote,totalQty):null;
   const totalRec=visiveis.reduce((s,e)=>s+e.subtotal,0);
+
+  // Totais por status (para entender divergências)
+  const porStatus={};
+  encontrados.forEach(e=>{
+    if(!porStatus[e.st])porStatus[e.st]={qty:0,kg:0};
+    porStatus[e.st].qty+=e.qty||0;
+    if(isPacote)porStatus[e.st].kg+=parsePesoTotal(prod.pacote,e.qty||0);
+    else if(isGramas)porStatus[e.st].kg+=parsePesoTotal(prod.pacote,e.qty||0);
+  });
+
+  // Stats
   const qtdLabel=totalKg!=null?totalQty+' pct ('+(totalKg%1===0?totalKg:parseFloat(totalKg.toFixed(2)))+'kg)':totalQty+' un';
-  document.getElementById('prod-hist-stats').innerHTML=`<div class="stat-card"><div class="stat-label">Pedidos</div><div class="stat-val">${visiveis.length}</div></div><div class="stat-card ouro"><div class="stat-label">Quantidade</div><div class="stat-val sm">${qtdLabel}</div></div><div class="stat-card verde"><div class="stat-label">Faturamento</div><div class="stat-val sm">${R(totalRec)}</div></div>`;
+  const statsHtml=`
+    <div class="stat-card"><div class="stat-label">Pedidos</div><div class="stat-val">${visiveis.length}</div></div>
+    <div class="stat-card ouro"><div class="stat-label">Quantidade</div><div class="stat-val sm">${qtdLabel}</div></div>
+    <div class="stat-card verde"><div class="stat-label">Faturamento</div><div class="stat-val sm">${R(totalRec)}</div></div>`;
+  document.getElementById('prod-hist-stats').innerHTML=statsHtml;
+
+  // Botões de filtro com contagens por status
   const statusOpts=['TODOS',...new Set(encontrados.map(e=>e.st))];
-  const filtrosHtml=statusOpts.map(s=>{const cnt=s==='TODOS'?encontrados.length:encontrados.filter(e=>e.st===s).length;return`<button class="filter-btn${prodHistFiltroSt===s?' active':''}" onclick="prodHistFiltroSt='${s}';rendProdHist()">${s} <span style="font-size:10px">${cnt}</span></button>`;}).join('');
+  const filtrosHtml=statusOpts.map(s=>{
+    const cnt=s==='TODOS'?encontrados.length:encontrados.filter(e=>e.st===s).length;
+    const info=porStatus[s]&&totalKg!=null?' ('+parseFloat(parsePesoTotal(prod.pacote,porStatus[s].qty).toFixed(2))+'kg)':'';
+    return`<button class="filter-btn${prodHistFiltroSt===s?' active':''}" onclick="prodHistFiltroSt='${s}';rendProdHist()">${s} <span style="font-size:10px">${cnt}${info}</span></button>`;
+  }).join('');
   document.getElementById('prod-hist-filtros').innerHTML=filtrosHtml;
+
+  // Alerta de divergência se existirem pedidos PENDENTE/PAGO/PESAGEM antigos
+  const pendentes=encontrados.filter(e=>['PENDENTE','PESAGEM','PAGO'].includes(e.st));
+  const entregues=encontrados.filter(e=>e.st==='ENTREGUE');
+  let alertDiv='';
+  if(pendentes.length&&entregues.length&&isPacote){
+    const kgPend=parsePesoTotal(prod.pacote,pendentes.reduce((s,e)=>s+(e.qty||0),0));
+    const kgEnt=parsePesoTotal(prod.pacote,entregues.reduce((s,e)=>s+(e.qty||0),0));
+    alertDiv=`<div class="alert alert-warn" style="margin-bottom:12px">
+      ⚠️ <strong>Atenção:</strong> existem <strong>${kgPend}kg</strong> em pedidos ainda PENDENTE/PAGO (não entregues) 
+      e <strong>${kgEnt}kg</strong> já ENTREGUES. Se a Lista UDI mostrar mais do que você vendeu hoje, 
+      é porque conta todos os status ativos — filtre por <strong>ENTREGUE</strong> para ver só o que saiu.
+    </div>`;
+  }
+
+  // Lista de pedidos
   const stCls={PENDENTE:'pend',PESAGEM:'pesagem',PAGO:'pago',ENTREGUE:'entregue',CANCELADO:'cancel',PDV:'pago'};
   let listHtml=visiveis.length?'':'<div style="text-align:center;padding:20px;color:var(--txt3)">Nenhum pedido neste filtro</div>';
   visiveis.forEach(e=>{
     const qLabel=e.pv&&e.pesoReal?e.pesoReal.toFixed(3)+' kg':isPacote?e.qty+' pct ('+parsePesoTotal(prod.pacote,e.qty)+'kg)':isGramas?e.qty+'x ('+parsePesoTotal(prod.pacote,e.qty)+'kg)':e.qty+' un';
     const fn=e._tipo==='whatsapp'?`fm('mod-prod-hist');abrirDetPed('${e.id}')`:e._tipo==='atacado'?`fm('mod-prod-hist');abrirDetAt('${e.id}')`:null;
-    listHtml+=`<div class="hist-item" ${fn?`style="cursor:pointer" onclick="${fn}"`:''}><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;align-items:center"><span style="font-weight:700;color:var(--ouro)">${x(e.num)}</span><span class="pill pill-${stCls[e.st]||'pend'}">${e.st}</span><span style="font-size:12px;background:var(--creme2);padding:2px 8px;border-radius:12px;color:var(--txt2)">${e.canal}</span><span style="font-weight:700;color:var(--congelado);font-family:Arial;font-size:15px">${qLabel}</span><span style="font-weight:700">${R(e.subtotal)}</span><span style="font-size:11px;color:var(--txt3)">${dF(e.data)}</span></div><div style="font-size:13px;color:var(--txt2);margin-top:3px">👤 ${x(e.cli)}</div></div>`;
+    listHtml+=`<div class="hist-item" ${fn?`style="cursor:pointer" onclick="${fn}"`:''}>
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;align-items:center">
+        <span style="font-weight:700;color:var(--ouro)">${x(e.num)}</span>
+        <span class="pill pill-${stCls[e.st]||'pend'}">${e.st}</span>
+        <span style="font-size:12px;background:var(--creme2);padding:2px 8px;border-radius:12px;color:var(--txt2)">${e.canal}</span>
+        <span style="font-weight:700;color:var(--congelado);font-family:Arial;font-size:15px">${qLabel}</span>
+        <span style="font-weight:700">${R(e.subtotal)}</span>
+        <span style="font-size:11px;color:var(--txt3)">${dF(e.data)}</span>
+      </div>
+      <div style="font-size:13px;color:var(--txt2);margin-top:3px">👤 ${x(e.cli)}</div>
+    </div>`;
   });
+
+  // Atualiza só o conteúdo abaixo do select (preserva o select)
   const bodyEl=document.getElementById('prod-hist-body');
+  const selectHtml=bodyEl.innerHTML.split('<div style="text-align:center')[0].split('<div class="alert')[0].split('<div class="hist-item')[0].split(alertDiv)[0];
+  // Recria tudo mantendo o select
   const selectPart=`<div style="margin-bottom:16px"><div class="form-group"><label>Selecione o Produto</label><select id="prod-hist-sel" onchange="rendProdHist()" style="padding:10px 12px;border:1.5px solid var(--borda);border-radius:var(--radius2);font-family:'DM Sans',sans-serif;font-size:14px;background:#fff;width:100%"><option value="">— Escolha um produto —</option>${db.prods.map(pr=>`<option value="${pr.id}"${pr.id===prodId?' selected':''}>${x(pr.n)}</option>`).join('')}</select></div></div>`;
-  bodyEl.innerHTML=selectPart+listHtml;
+  bodyEl.innerHTML=selectPart+alertDiv+listHtml;
 }
 
-// ============================================================
-// VENDEDORES
-// ============================================================
 function rendVendedores(){
   const mesAtual=hoje.slice(0,7);
   const content=document.getElementById('vend-content');if(!content)return;
@@ -2813,7 +2864,17 @@ function rendVendedores(){
     const fatMes=pedsMes.reduce((s,p)=>s+calcTotal(p),0)+atPedsMes.reduce((s,p)=>s+(p.total||0),0)+vendasMes.reduce((s,vd)=>s+vd.total,0);
     const pct=v.meta>0?Math.min(100,Math.round(fatMes/v.meta*100)):0;
     const comissao=fatMes*(v.com||0)/100;
-    html+=`<div class="stat-card" style="margin-bottom:12px;padding:16px"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px"><div><div style="font-weight:700;font-size:15px">${x(v.n)}</div><div style="font-size:13px;color:var(--txt3)">${x(v.canal)} · Meta: ${R(v.meta||0)} · Comissão: ${v.com||0}%</div></div><div style="text-align:right"><div style="font-size:18px;font-weight:700;color:var(--ouro)">${R(fatMes)}</div><div style="font-size:11px;color:var(--txt3)">Comissão: ${R(comissao)}</div></div></div>${v.meta>0?`<div style="margin-top:8px"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--txt3);margin-bottom:4px"><span>Progresso da meta</span><span>${pct}%</span></div><div class="storage-bar"><div class="storage-bar-fill${pct>=70?'':pct>=40?' warn':' danger'}" style="width:${pct}%"></div></div></div>`:''}<div style="display:flex;gap:6px;margin-top:10px"><button class="btn btn-ghost btn-sm" onclick="editVendedor('${v.id}')">✏️</button><button class="btn btn-danger btn-sm" onclick="excluirVendedor('${v.id}')">✕</button></div></div>`;
+    html+=`<div class="stat-card" style="margin-bottom:12px;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+        <div><div style="font-weight:700;font-size:15px">${x(v.n)}</div><div style="font-size:13px;color:var(--txt3)">${x(v.canal)} · Meta: ${R(v.meta||0)} · Comissão: ${v.com||0}%</div></div>
+        <div style="text-align:right"><div style="font-size:18px;font-weight:700;color:var(--ouro)">${R(fatMes)}</div><div style="font-size:11px;color:var(--txt3)">Comissão: ${R(comissao)}</div></div>
+      </div>
+      ${v.meta>0?`<div style="margin-top:8px"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--txt3);margin-bottom:4px"><span>Progresso da meta</span><span>${pct}%</span></div><div class="storage-bar"><div class="storage-bar-fill${pct>=70?'':pct>=40?' warn':' danger'}" style="width:${pct}%"></div></div></div>`:''}
+      <div style="display:flex;gap:6px;margin-top:10px">
+        <button class="btn btn-ghost btn-sm" onclick="editVendedor('${v.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="excluirVendedor('${v.id}')">✕</button>
+      </div>
+    </div>`;
   });
   content.innerHTML=html;
 }
@@ -2849,7 +2910,20 @@ function rendFinDashboard(){
   const arPendente=(db.ar||[]).filter(a=>a.status==='pendente').reduce((s,a)=>s+a.valor,0);
   const apPendente=(db.ap||[]).filter(a=>a.status==='pendente').reduce((s,a)=>s+a.valor,0);
   const apVenc=(db.ap||[]).filter(a=>a.status==='pendente'&&a.vencimento<hoje);
-  document.getElementById('fin-tab-dashboard').innerHTML=`<div class="stat-grid"><div class="stat-card ${saldo>=0?'verde':'vermelho'}"><div class="stat-label">Saldo</div><div class="stat-val sm" style="color:${saldo>=0?'var(--verde)':'var(--vermelho)'}">${R(saldo)}</div></div><div class="stat-card ouro"><div class="stat-label">Recebido Total</div><div class="stat-val sm">${R(totalRecebido)}</div></div><div class="stat-card"><div class="stat-label">Despesas Pagas</div><div class="stat-val sm">${R(totalPago)}</div></div><div class="stat-card azul"><div class="stat-label">A Receber</div><div class="stat-val sm">${R(arPendente)}</div></div><div class="stat-card vermelho"><div class="stat-label">A Pagar</div><div class="stat-val sm">${R(apPendente)}</div></div></div>${apVenc.length?`<div class="alert alert-danger">🔴 ${apVenc.length} conta(s) a pagar vencida(s)!</div>`:''}<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><button class="btn btn-danger" onclick="tabFin('pagar');abrirNovaAP()">+ Conta a Pagar</button><button class="btn btn-verde" onclick="tabFin('receber');abrirNovaAR()">+ Conta a Receber</button><button class="btn btn-primary" onclick="tabFin('desps');am('mod-desp')">+ Despesa</button></div>`;
+  document.getElementById('fin-tab-dashboard').innerHTML=`
+    <div class="stat-grid">
+      <div class="stat-card ${saldo>=0?'verde':'vermelho'}"><div class="stat-label">Saldo</div><div class="stat-val sm" style="color:${saldo>=0?'var(--verde)':'var(--vermelho)'}">${R(saldo)}</div></div>
+      <div class="stat-card ouro"><div class="stat-label">Recebido Total</div><div class="stat-val sm">${R(totalRecebido)}</div></div>
+      <div class="stat-card"><div class="stat-label">Despesas Pagas</div><div class="stat-val sm">${R(totalPago)}</div></div>
+      <div class="stat-card azul"><div class="stat-label">A Receber</div><div class="stat-val sm">${R(arPendente)}</div></div>
+      <div class="stat-card vermelho"><div class="stat-label">A Pagar</div><div class="stat-val sm">${R(apPendente)}</div></div>
+    </div>
+    ${apVenc.length?`<div class="alert alert-danger">🔴 ${apVenc.length} conta(s) a pagar vencida(s)!</div>`:''}
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+      <button class="btn btn-danger" onclick="tabFin('pagar');abrirNovaAP()">+ Conta a Pagar</button>
+      <button class="btn btn-verde" onclick="tabFin('receber');abrirNovaAR()">+ Conta a Receber</button>
+      <button class="btn btn-primary" onclick="tabFin('desps');am('mod-desp')">+ Despesa</button>
+    </div>`;
 }
 function rendFinPagar(){
   const ap=(db.ap||[]).sort((a,b)=>a.vencimento.localeCompare(b.vencimento));
@@ -2886,6 +2960,7 @@ function excluirAR(id){if(!confirm('Excluir conta?'))return;db.ar=db.ar.filter(a
 function salvarDesp(){const desc=document.getElementById('desp-desc').value.trim();if(!desc){toast('Informe a descrição','warn');return;}const val=parseFloat(document.getElementById('desp-val').value);if(!val){toast('Informe o valor','warn');return;}db.desps.push({id:uid(),desc,val,tipo:document.getElementById('desp-tipo').value,data:new Date().toISOString()});salvar();fm('mod-desp');rendFinDesps();toast('Despesa registrada!','ok');}
 function excluirDesp(id){if(!confirm('Excluir despesa?'))return;db.desps=db.desps.filter(d=>d.id!==id);salvar();rendFinDesps();}
 
+// RELATÓRIOS
 let relPeriodo='mes';
 function renderRelContent(){const el=document.getElementById('fin-tab-relatorios');if(!el)return;const{de,ate}=getRelDates();const peds=getPedsPeriodo(de,ate);const btns=`<div class="filters">${['mes','trim','sem','ano','tudo'].map(v=>`<button class="filter-btn${relPeriodo===v?' active':''}" onclick="setRelPeriodo('${v}',this)">${{mes:'Mês',trim:'3m',sem:'6m',ano:'Ano',tudo:'Tudo'}[v]}</button>`).join('')}</div>`;if(!peds.length){el.innerHTML=btns+'<div class="alert alert-info">Nenhum pedido no período</div>';return;}const total=peds.reduce((s,p)=>s+calcTotal(p),0);const prodMap={};peds.forEach(p=>(p.itens||[]).forEach(it=>{const key=it.prodId||it.nome;if(!prodMap[key])prodMap[key]={nome:it.nome||'?',qtd:0,rec:0};prodMap[key].qtd+=it.qty||1;prodMap[key].rec+=calcItemSubFn(it);}));const prodRank=Object.values(prodMap).sort((a,b)=>b.rec-a.rec);el.innerHTML=btns+`<div style="background:var(--vinho);color:#fff;border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;display:flex;justify-content:space-between;flex-wrap:wrap"><div><div style="font-size:11px;opacity:.7">Período: ${dFD(de)} — ${dFD(ate)}</div></div><div style="display:flex;gap:24px"><div><div style="font-size:11px;opacity:.7">Pedidos</div><div style="font-size:22px;font-weight:900">${peds.length}</div></div><div><div style="font-size:11px;opacity:.7">Total</div><div style="font-size:22px;font-weight:900">${R(total)}</div></div></div></div><div class="tbl-wrap"><div class="tbl-head"><h3>🏆 Produtos mais vendidos</h3></div><table><thead><tr><th>#</th><th>Produto</th><th>Qtd</th><th>Faturamento</th></tr></thead><tbody>${prodRank.slice(0,10).map((p,i)=>`<tr><td>${i+1}</td><td style="font-weight:600">${x(p.nome)}</td><td>${p.qtd}</td><td style="font-weight:700;color:var(--verde)">${R(p.rec)}</td></tr>`).join('')}</tbody></table></div><button class="btn btn-outline btn-sm" onclick="exportRelCSV()">📥 CSV</button>`;}
 function getRelDates(){const a=hoje.slice(0,4),m=hoje.slice(0,7);if(relPeriodo==='mes')return{de:m+'-01',ate:hoje};if(relPeriodo==='trim'){const dt=new Date();dt.setMonth(dt.getMonth()-3);return{de:dt.toISOString().slice(0,10),ate:hoje};}if(relPeriodo==='sem'){const dt=new Date();dt.setMonth(dt.getMonth()-6);return{de:dt.toISOString().slice(0,10),ate:hoje};}if(relPeriodo==='ano')return{de:a+'-01-01',ate:hoje};return{de:'2000-01-01',ate:hoje};}
@@ -2902,13 +2977,15 @@ function exportRelCSV(){
   setTimeout(()=>URL.revokeObjectURL(url),60000);
   toast('CSV exportado!','ok');
 }
-
+</script>
+<script>
 // ============================================================
-// LIXEIRA
+// LIXEIRA (novo)
 // ============================================================
 function moverParaLixeira(tipo,obj){
   if(!db.lixeira)db.lixeira=[];
   db.lixeira.push({id:uid(),tipo,obj:JSON.parse(JSON.stringify(obj)),excluidoEm:new Date().toISOString()});
+  // Limpar itens com mais de 30 dias
   const limite=new Date();limite.setDate(limite.getDate()-30);
   db.lixeira=db.lixeira.filter(l=>new Date(l.excluidoEm)>limite);
 }
@@ -2922,10 +2999,22 @@ function rendLixeira(){
     const nome=obj.cli||obj.n||obj.cliNome||'—';
     const num=obj.num?` (${item.tipo==='atacado'?nAt(obj.num):nP(obj.num)})` :'';
     const info=obj.itens?` · ${R(calcTotal(obj))}`:(obj.total?` · ${R(obj.total)}`:'');
-    html+=`<div class="lixeira-card"><div><div style="font-weight:600;font-size:14px">${tipoLabel[item.tipo]||item.tipo}${num} — ${x(nome)}</div><div style="font-size:12px;color:var(--txt3)">${info} · Excluído em ${dF(item.excluidoEm)}</div></div><div style="display:flex;gap:6px"><button class="btn btn-verde btn-sm" onclick="restaurarItem('${item.id}')">↩️ Restaurar</button><button class="btn btn-danger btn-sm" onclick="excluirPermanente('${item.id}')">✕</button></div></div>`;
+    html+=`<div class="lixeira-card">
+      <div>
+        <div style="font-weight:600;font-size:14px">${tipoLabel[item.tipo]||item.tipo}${num} — ${x(nome)}</div>
+        <div style="font-size:12px;color:var(--txt3)">${info} · Excluído em ${dF(item.excluidoEm)}</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-verde btn-sm" onclick="restaurarItem('${item.id}')">↩️ Restaurar</button>
+        <button class="btn btn-danger btn-sm" onclick="excluirPermanente('${item.id}')">✕</button>
+      </div>
+    </div>`;
   });
   el.innerHTML=html;
 }
+// FIX: ao restaurar um pedido/atacado que estava com estoqueDebitado=false
+// (porque o estoque já tinha sido devolvido na exclusão), o item volta a debitar
+// o estoque, já que volta a ser um pedido "ativo" consumindo produtos.
 function restaurarItem(lixId){
   const item=db.lixeira.find(l=>l.id===lixId);if(!item)return;
   if(item.tipo==='pedido'){
@@ -2966,19 +3055,7 @@ function rendCfg(){
   const kb=Math.round(dados.length/1024);
   const maxKb=5120;const pct=Math.min(100,Math.round(kb/maxKb*100));
   const cor=pct>80?'var(--vermelho)':pct>60?'var(--laranja)':'var(--verde)';
-  const userEmail=fbUser?fbUser.email:'(não logado)';
   document.getElementById('cfg-content').innerHTML=`
-    <div class="tbl-wrap" style="margin-bottom:16px"><div class="tbl-head"><h3>☁️ Conta na Nuvem</h3></div>
-    <div style="padding:18px">
-      <div class="alert alert-${fbUser?'success':'warn'}" style="margin-bottom:12px">
-        ${fbUser?'✅ Conectado como <strong>'+x(userEmail)+'</strong>':'⚠️ Você está desconectado. Faça login para sincronizar com a nuvem.'}
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        ${fbUser?'<button class="btn btn-danger" onclick="fazerLogout()">Sair da conta</button>':'<button class="btn btn-primary" onclick="fazerLogin()">Entrar com Google</button>'}
-        ${fbUser?'<button class="btn btn-ouro" onclick="forcarSyncNuvem()">🔄 Sincronizar agora</button>':''}
-        ${fbUser?'<button class="btn btn-outline" onclick="migrarManualNuvem()">⬆️ Enviar tudo para nuvem</button>':''}
-      </div>
-    </div></div>
     <div class="tbl-wrap" style="margin-bottom:16px"><div class="tbl-head"><h3>Dados da Empresa</h3></div>
     <div style="padding:18px"><div class="form-grid">
       <div class="form-group"><label>Nome</label><input id="cfg-nome" value="${x(cfg.nome)}"></div>
@@ -2996,7 +3073,7 @@ function rendCfg(){
     <div class="tbl-wrap"><div class="tbl-head"><h3>💾 Backup & Dados</h3></div>
     <div style="padding:18px">
       <div style="margin-bottom:14px">
-        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span>Uso do armazenamento local</span><span style="color:${cor};font-weight:700">${kb}KB / ${maxKb}KB (${pct}%)</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span>Uso do armazenamento</span><span style="color:${cor};font-weight:700">${kb}KB / ${maxKb}KB (${pct}%)</span></div>
         <div class="storage-bar"><div class="storage-bar-fill${pct>80?' danger':pct>60?' warn':''}" style="width:${pct}%"></div></div>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -3018,7 +3095,7 @@ function salvarPin(){
   ['cfg-pin-atual','cfg-pin-novo','cfg-pin-conf'].forEach(id=>document.getElementById(id).value='');
 }
 function exportBackup(){
-  const payload=JSON.stringify({db,cfg,v:'15.0',exportedAt:new Date().toISOString()},null,2);
+  const payload=JSON.stringify({db,cfg,v:'14.0',exportedAt:new Date().toISOString()},null,2);
   const url='data:application/json;charset=utf-8,'+encodeURIComponent(payload);
   const a=document.createElement('a');a.href=url;a.download='deminas_backup_'+hoje+'.json';a.click();
   setTimeout(()=>URL.revokeObjectURL(url),60000);
@@ -3031,7 +3108,8 @@ function importBackup(e){
     try{
       const data=JSON.parse(ev.target.result);
       if(!data.db){toast('Arquivo inválido','err');return;}
-      if(data.v&&data.v!=='15.0'&&!confirm(`Backup versão ${data.v}. Dados podem diferir. Continuar?`))return;
+      // Verificar versão
+      if(data.v&&data.v!=='14.0'&&!confirm(`Backup versão ${data.v}. Dados podem diferir. Continuar?`))return;
       if(!confirm('Substituir TODOS os dados atuais?'))return;
       db=data.db;
       if(!db.ap)db.ap=[];if(!db.ar)db.ar=[];if(!db.lixeira)db.lixeira=[];if(!db.vends)db.vends=[];
@@ -3046,22 +3124,6 @@ function resetTotal(){
     if(!confirm('⚠️ ÚLTIMA CONFIRMAÇÃO — esta ação é irreversível!'))return;
     ['de_minas_erp','de_minas_erp_cfg','dm_v14_0','dm_v14_cfg','dm_v13_7','dm_v13_6','dm_v13_5','dm_v7_cfg'].forEach(k=>localStorage.removeItem(k));location.reload();
   });
-}
-async function forcarSyncNuvem() {
-  if (!fbUser) { toast('Faça login primeiro', 'warn'); return; }
-  await sincronizarDoFirebase();
-}
-async function migrarManualNuvem() {
-  if (!fbUser) { toast('Faça login primeiro', 'warn'); return; }
-  if (!confirm('Isto vai enviar TODOS os dados locais para a nuvem. Continuar?')) return;
-  setCloudStatus('sincronizando', 'Enviando dados locais...');
-  try {
-    await migrarParaNuvem();
-    toast('Migração concluída! ☁️', 'ok');
-  } catch (err) {
-    toast('Erro na migração: ' + err.message, 'err');
-    setCloudStatus('erro', 'Erro na migração');
-  }
 }
 
 // ============================================================
@@ -3122,12 +3184,15 @@ function printBlob(html){
 // ============================================================
 document.getElementById('topbar-date').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});
 document.getElementById('data-filtro').value=hoje;
+// Etiquetas e Lista UDI também arrancam com "hoje" para não misturar com pedidos de outros dias
 document.getElementById('etiq-data-filtro').value=hoje;
 document.getElementById('udi-data-filtro').value=hoje;
 atualizarStorageIndicator();
 verificarStorage();
 ir('painel');
+// FIX: usar um único intervalo com referência para poder limpar se necessário
 const _badgeInterval=setInterval(atualizaBadges,30000);
+// Fechar busca global ao clicar fora
 document.addEventListener('click',e=>{if(!e.target.closest('.busca-global-wrap'))fecharBuscaGlobal();});
 </script>
 </body>
