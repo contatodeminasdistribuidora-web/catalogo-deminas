@@ -44,4 +44,4 @@ window.DM_enviarPedido = async function (pedido) {
 
 // Sinaliza que está pronto
 window.DM_CATALOGO_PRONTO = true;
-document.dispatchEvent(new CustomEvent('dm-catalogo-pronto'));u
+document.dispatchEvent(new CustomEvent('dm-catalogo-pronto'));
