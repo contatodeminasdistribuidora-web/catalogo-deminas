@@ -190,7 +190,7 @@ footer .adm{display:inline-block;margin-top:18px;font-size:12px;color:#c9a98a;te
   <ul id="avisos"></ul>
   <p>Faça sua encomenda: <a id="waLink" href="#" rel="noopener">WhatsApp (11) 98697-5803</a></p>
   <p>Rua Engenheiro Pegado, 332 — Vila Carrão, Zona Leste, São Paulo/SP</p>
-  <a class="adm" href="#admin" id="admLink" style="display:none" aria-hidden="true">⚙</a>
+  <a class="adm" href="#admin" id="admLink">Área do administrador</a>
 </footer>
 
 <div class="cartbar" id="cartbar">
@@ -227,6 +227,7 @@ footer .adm{display:inline-block;margin-top:18px;font-size:12px;color:#c9a98a;te
 
 <dialog id="dlg" class="sheet"></dialog>
 
+<script type="module" src="firebase-catalogo.js"></script>
 <script src="qrcode.js"></script>
 <script>
 (() => {
@@ -252,28 +253,7 @@ const KGMSG = 'Queijos são cobrados por quilo: o valor final é confirmado apó
 const hasKg = list => list.some(p => p.opcoes.some(o => o.kg));
 if (document.body.dataset.hero) $('.hero p').textContent = document.body.dataset.hero;
 const S = { data: null, published: null, admin: false, dirty: false, cart: store.get('dm_cart') || {}, q: '' };
-/* ===== AUTENTICAÇÃO ADMIN ===== */
-const ADMIN_HASH = 'e021a52452fa8a8358e5bcd9ae155076421aa6838430e01f722a517a336f95e8';
-const SESSION_KEY = 'dm_adm_sess';
-const BLOCK_KEY   = 'dm_adm_blk';
-const SESSION_TTL = 4 * 60 * 60 * 1000; // 4 horas
-const BLOCK_TTL   = 5 * 60 * 1000;       // 5 minutos
-const MAX_TRIES   = 3;
-
-async function sha256(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-function isSessionValid() {
-  try { const s = JSON.parse(sessionStorage.getItem(SESSION_KEY)); return s && s.ok && (Date.now() - s.t < SESSION_TTL); } catch { return false; }
-}
-function startSession()  { sessionStorage.setItem(SESSION_KEY, JSON.stringify({ok:true, t:Date.now()})); }
-function clearSession()  { sessionStorage.removeItem(SESSION_KEY); }
-function getBlock()      { try { return JSON.parse(localStorage.getItem(BLOCK_KEY)) || {n:0,until:0}; } catch { return {n:0,until:0}; } }
-function saveBlock(b)    { localStorage.setItem(BLOCK_KEY, JSON.stringify(b)); }
-
-const wantsAdmin = /(^|[#?&])admin\b/.test(location.hash + location.search);
-S.admin = wantsAdmin && isSessionValid();
+S.admin = /(^|[#?&])admin\b/.test(location.hash + location.search);
 
 /* ---------- dados ---------- */
 async function load() {
@@ -466,39 +446,58 @@ function openCart() {
 }
 $('#cbOpen').addEventListener('click', openCart);
 $$('input[name=tipo]').forEach(r => r.addEventListener('change', syncAddr));
+
 $('#orderForm').addEventListener('submit', e => {
   e.preventDefault();
   if (!cartLines().length) return;
-  store.set('dm_cust', {nome: $('#cName').value.trim(), addr: $('#cAddr').value.trim()});
-  const msg = buildMessage();
-  const url = 'https://wa.me/' + waNumber() + '?text=' + encodeURIComponent(msg);
 
-  /* Tenta abrir o WhatsApp */
-  const win = window.open(url, '_blank', 'noopener,noreferrer');
+  const nome = $('#cName').value.trim();
+  const tipo = $('input[name=tipo]:checked').value;
+  const addr = $('#cAddr').value.trim();
+  const obs  = $('#cObs').value.trim();
+  const L    = cartLines();
 
-  /* Fallback: se popup bloqueado (Instagram WebView, etc.), copia a mensagem */
-  if (!win || win.closed || typeof win.closed === 'undefined') {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(msg).then(() => {
-        toast('WhatsApp não abriu. Mensagem copiada! Cole no WhatsApp manualmente.');
-      }).catch(() => {
-        toast('Abra o WhatsApp e envie para (11) 98697-5803');
-      });
-    } else {
-      toast('Abra o WhatsApp e envie para (11) 98697-5803');
+  store.set('dm_cust', {nome, addr});
+
+  // ---- 1) Grava no Firestore (não bloqueia o WhatsApp se falhar) ----
+  const itens = L.map(l => ({
+    nome: l.p.nome,
+    label: l.o.label,
+    qtd: l.q,
+    preco: l.o.preco,
+    kg: !!l.o.kg,
+    subtotal: l.sub
+  }));
+  const total = r2(L.reduce((a, l) => a + l.sub, 0));
+  const pedido = {
+    cliente: nome,
+    whatsapp: waNumber(),
+    endereco: tipo === 'Entrega' ? addr : '',
+    tipo,
+    obs,
+    itens,
+    total,
+    pago: false
+  };
+
+  (async () => {
+    try {
+      if (window.DM_enviarPedido) {
+        await window.DM_enviarPedido(pedido);
+        console.log('✅ Pedido enviado para o ERP:', nome);
+      } else {
+        console.warn('⚠️ Módulo do ERP ainda carregando — pedido só foi pelo WhatsApp.');
+      }
+    } catch (err) {
+      console.error('❌ Falha ao gravar no ERP (WhatsApp segue):', err);
     }
-  }
+  })();
 
-  /* Limpa o carrinho completamente após envio */
-  S.cart = {};
-  store.set('dm_cart', {});
-  $('#cObs').value = '';
-  renderAll();
-  toast('Pedido enviado! Aguarde a confirmação pelo WhatsApp.');
-
-  /* Fecha o drawer do carrinho se estiver aberto */
-  const cartDrawer = document.querySelector('#cartDrawer, .cart-drawer, [data-drawer="cart"]');
-  if (cartDrawer) cartDrawer.removeAttribute('open');
+  // ---- 2) Abre o WhatsApp (sempre, como antes) ----
+  const url = 'https://wa.me/' + waNumber() + '?text=' + encodeURIComponent(buildMessage());
+  const a = document.createElement('a');
+  a.href = url; a.target = '_blank'; a.rel = 'noopener';
+  document.body.appendChild(a); a.click(); a.remove();
 });
 
 /* ---------- eventos do catálogo ---------- */
@@ -531,65 +530,8 @@ document.addEventListener('change', e => {
 $('#q').addEventListener('input', e => { S.q = e.target.value; renderCatalog(); });
 $('#cartDlg').addEventListener('close', () => {});
 $$('dialog').forEach(d => d.addEventListener('click', e => { if (e.target === d) d.close(); }));
-$('#admLink').addEventListener('click', e => { e.preventDefault(); openLogin(); });
+$('#admLink').addEventListener('click', () => setTimeout(() => location.reload(), 0));
 window.addEventListener('hashchange', () => { if (/admin/.test(location.hash) !== S.admin) location.reload(); });
-
-/* ===== MODAL DE LOGIN ===== */
-function openLogin() {
-  if (S.admin) return;
-  const blk = getBlock();
-  const blocked = blk.until > Date.now();
-  const resta = blocked ? Math.ceil((blk.until - Date.now()) / 1000) : 0;
-  const dlgL = $('#dlg');
-  dlgL.innerHTML = `
-    <div class="dh"><h3>Acesso restrito</h3><button class="x-close" type="button" data-close aria-label="Fechar">×</button></div>
-    <div class="db">
-      ${blocked
-        ? `<p style="color:var(--red);font-weight:700;text-align:center;padding:20px 0">⛔ Acesso bloqueado por ${resta}s.<br><small>Tente novamente em alguns minutos.</small></p>`
-        : `<p style="color:var(--muted);font-size:14px;margin-top:0">Esta área é exclusiva para o administrador.</p>
-           <label class="fld"><span>Senha</span><input type="password" id="loginPwd" autocomplete="current-password" autofocus></label>
-           <p id="loginErr" style="color:var(--red);font-size:13px;min-height:18px;margin:6px 0 0"></p>`
-      }
-    </div>
-    ${blocked ? '' : '<div class="df row"><button class="btn ghost" type="button" data-close>Cancelar</button><button class="btn red" type="button" id="loginBtn">Entrar</button></div>'}`;
-  if (!dlgL.open) dlgL.showModal();
-  const pwd = $('#loginPwd');
-  const btn = $('#loginBtn');
-  const err = $('#loginErr');
-  if (!pwd || !btn) return;
-  const attempt = async () => {
-    const val = pwd.value;
-    if (!val) { err.textContent = 'Digite a senha.'; return; }
-    const blkNow = getBlock();
-    if (blkNow.until > Date.now()) { openLogin(); return; }
-    const h = await sha256(val);
-    if (h === ADMIN_HASH) {
-      saveBlock({n:0, until:0});
-      startSession();
-      dlgL.close();
-      S.admin = true;
-      location.hash = 'admin';
-      renderAll();
-      toast('Bem-vindo, administrador!');
-    } else {
-      const b = getBlock();
-      b.n = (b.n || 0) + 1;
-      if (b.n >= MAX_TRIES) { b.until = Date.now() + BLOCK_TTL; b.n = 0; saveBlock(b); openLogin(); }
-      else { saveBlock(b); err.textContent = `Senha incorreta. ${MAX_TRIES - b.n} tentativa(s) restante(s).`; pwd.value = ''; pwd.focus(); }
-    }
-  };
-  btn.addEventListener('click', attempt);
-  pwd.addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); });
-}
-
-/* ===== ATALHO SECRETO: toque 5x no logo ===== */
-let logoTaps = 0, logoTimer;
-document.querySelector('.hero img')?.addEventListener('click', () => {
-  logoTaps++;
-  clearTimeout(logoTimer);
-  logoTimer = setTimeout(() => { logoTaps = 0; }, 2000);
-  if (logoTaps >= 5) { logoTaps = 0; openLogin(); }
-});
 
 let toastT;
 function toast(msg, ms = 3200) {
@@ -616,14 +558,7 @@ function renderAdminBar() {
 }
 $('#adminbar').addEventListener('click', e => {
   const b = e.target.closest('[data-adm]'); if (!b) return;
-  ({publish, cats: openCats, shop: openShop, qr: openQR, export: exportJSON, import: importJSON, gh: openGH, discard: discardDraft, exit: () => {
-    clearSession();
-    S.admin = false;
-    location.hash = '';
-    location.search = '';
-    renderAll();
-    toast('Sessão encerrada.');
-  }})[b.dataset.adm]();
+  ({publish, cats: openCats, shop: openShop, qr: openQR, export: exportJSON, import: importJSON, gh: openGH, discard: discardDraft, exit: () => { location.hash = ''; location.search = ''; location.reload(); }})[b.dataset.adm]();
 });
 
 const dlg = $('#dlg');
@@ -768,12 +703,7 @@ function discardDraft() {
 }
 
 /* --- GitHub: configuração e publicação --- */
-const ghStore = {
-  get() { try { return JSON.parse(sessionStorage.getItem('dm_gh')); } catch { return null; } },
-  set(v) { sessionStorage.setItem('dm_gh', JSON.stringify(v)); },
-  del() { sessionStorage.removeItem('dm_gh'); }
-};
-const gh = () => ghStore.get() || {};
+const gh = () => store.get('dm_gh') || {};
 function openGH() {
   const g = gh();
   showDlg('Conexão com o GitHub', `<p class="note" style="margin-top:0">Necessária só para o botão <b>Publicar</b>. O token fica guardado apenas neste aparelho.</p>
@@ -784,9 +714,9 @@ function openGH() {
     <div class="help"><b>Como criar o token</b><ol><li>GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token.</li><li>Em “Repository access”, escolha só este repositório.</li><li>Em “Permissions → Repository permissions”, deixe <b>Contents: Read and write</b>.</li><li>Gere, copie e cole acima.</li></ol></div>`,
     '<button class="btn ghost" type="button" id="gTest">Testar</button><button class="btn red" type="button" id="gSave">Salvar</button>');
   const read = () => ({owner: $('#gOwner').value.trim(), repo: $('#gRepo').value.trim(), branch: $('#gBranch').value.trim() || 'main', token: $('#gTok').value.trim()});
-  $('#gSave').addEventListener('click', () => { const v = read(); ghStore.set(v); dlg.close(); toast('Conexão salva (válida até fechar o navegador)'); });
+  $('#gSave').addEventListener('click', () => { const v = read(); store.set('dm_gh', v); dlg.close(); toast('Conexão salva'); });
   $('#gTest').addEventListener('click', async () => {
-    ghStore.set(read());
+    store.set('dm_gh', read());
     try { const r = await ghFetch(''); if (!r.ok) throw await apiErr(r); const j = await r.json(); toast(j.permissions && j.permissions.push === false ? 'Conectou, mas o token não tem permissão de escrita.' : 'Conexão OK ✔'); }
     catch (e) { toast(e.message || 'Falha na conexão', 5000); }
   });
@@ -871,22 +801,7 @@ function openQR() {
 }
 
 /* ---------- início ---------- */
-/* Se tentou acessar #admin sem sessão válida → abre login */
-if (wantsAdmin && !isSessionValid()) {
-  history.replaceState(null, '', location.pathname);
-  S.admin = false;
-  setTimeout(openLogin, 400);
-}
-
-/* Atalho secreto: digitar "admin" com teclado físico estando na página */
-let keySeq = '';
-document.addEventListener('keydown', ev => {
-  if (ev.target.matches('input,textarea,select')) return;
-  keySeq += ev.key.toLowerCase();
-  keySeq = keySeq.slice(-5);
-  if (keySeq === 'admin') { keySeq = ''; openLogin(); }
-});
-
+$('#admLink').hidden = S.admin;
 load();
 })();
 </script>
