@@ -113,7 +113,10 @@ function tryFile(name, el) {
   t.src = name + '?v=' + Date.now();
 }
 function pick() {
-  const imgs = [...document.querySelectorAll('#catalog .ph img')].filter(i => i.complete && i.naturalWidth > 200)
+  // só fotos de pão de queijo e afins (evita escolher mel, conserva etc.)
+  const ok = /p[aã]o de queijo|chipa|broa|recheado|biscoito de queijo|dadinho/i;
+  const imgs = [...document.querySelectorAll('#catalog .card')].filter(c => ok.test(($('.nm', c) || {}).textContent || ''))
+    .map(c => $('.ph img', c)).filter(i => i && i.complete && i.naturalWidth > 200)
     .sort((a, b) => b.naturalWidth * b.naturalHeight - a.naturalWidth * a.naturalHeight);
   if (!fixed['banner.jpg'] && imgs[0]) paint($('#banIn'), imgs[0].getAttribute('src'));
   if (!fixed['combos.jpg'] && imgs[1]) paint($('#prIn'), imgs[1].getAttribute('src'));
