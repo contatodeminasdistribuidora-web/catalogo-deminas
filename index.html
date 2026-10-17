@@ -184,7 +184,17 @@ footer .adm{display:none!important} /* <--- ESCONDE O LINK DO RODAPÉ */
 @media (max-width:420px){
   .add{padding:0 12px;font-size:13px}
 }
+
+/* Otimização: Evita o piscar do site antes do tema carregar */
+html.theme-loading body { opacity: 0; transition: opacity 0.2s; }
+html.theme-ready body { opacity: 1; }
 </style>
+
+<script>
+  // Adiciona a classe para esconder a tela
+  document.documentElement.classList.add('theme-loading');
+</script>
+
 <!-- TEMA APP -->
 <link rel="stylesheet" href="tema-mockup.css">
 </head>
@@ -864,6 +874,7 @@ async function publish() {
   } catch (e) { toast(e.message || 'Falha ao publicar', 7000); }
   finally { publishing = false; }
 }
+
 function qrCanvas(text, size = 1000) {
   const qr = qrcode(0, 'M'); qr.addData(text); qr.make();
   const n = qr.getModuleCount(), quiet = 4, cell = Math.max(2, Math.floor(size / (n + quiet * 2))), dim = cell * (n + quiet * 2);
@@ -895,6 +906,9 @@ function openQR() {
 }
 $('#admLink').hidden = S.admin;
 load();
+
+// Adiciona a classe para mostrar a tela quando o catálogo terminar de renderizar
+setTimeout(() => document.documentElement.classList.replace('theme-loading', 'theme-ready'), 400);
 })();
 </script>
 <!-- TEMA APP (Script) -->
