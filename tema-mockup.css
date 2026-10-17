@@ -76,3 +76,30 @@ footer{background:var(--brown)}
 
 /* Área do administrador oculta (sem link visível; acesso só por #admin) */
 #admLink{display:none!important}
+
+/* ===== v3: ícones por categoria + banners com foto nítida ===== */
+.chip::before{display:none!important}
+.chip .ico{width:60px;height:60px;border-radius:50%;background:#fff;border:1px solid var(--line);color:var(--red);display:grid;place-items:center;box-shadow:0 2px 6px #3b0a1010}
+.chip .ico svg{width:28px;height:28px}
+.chip[aria-current="true"] .ico{background:var(--red);border-color:var(--red);color:#fff}
+.chip[aria-current="true"]{color:var(--red)}
+.chips{gap:10px}
+.banner .in,.promo .in{background-color:#3b0a10;background-repeat:no-repeat;background-size:auto,cover;background-position:0 0,right center}
+.banner .in{min-height:230px}
+.promo .in{min-height:150px;background-image:linear-gradient(90deg,#4a0b13 0%,#4a0b13ee 35%,#4a0b1300 85%)}
+.promo span{max-width:16ch}
+@media (min-width:700px){.banner .in{min-height:300px;padding:40px}.banner h1{font-size:44px}.promo .in{min-height:180px;padding:28px 32px}}
+
+/* ===== v4: combos em carrossel ===== */
+.car{position:relative}
+.car .track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding:4px 16px 12px;margin:0 -16px;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.car .track::-webkit-scrollbar{display:none}
+.car .track>.card{flex:0 0 min(78%,280px);scroll-snap-align:start}
+.cnav{position:absolute;top:34%;z-index:3;width:40px;height:40px;border-radius:50%;border:0;background:#fffdf8;color:var(--red);box-shadow:0 2px 10px #3b0a1033;display:none;place-items:center}
+.cnav svg{width:20px;height:20px}
+.cnav.prev{left:-6px}.cnav.next{right:-6px}
+.car.at-start .prev,.car.at-end .next{display:none!important}
+@media (hover:hover) and (min-width:700px){.cnav{display:grid}}
+
+/* marcas dos congelados: iniciais no círculo */
+.chip .ico.mono{font:800 19px 'Fraunces',Georgia,serif;letter-spacing:.02em}
