@@ -7,6 +7,16 @@
 <meta name="theme-color" content="#4a1705">
 <title>De Minas Pão de Queijaria — Faça seu pedido</title>
 <meta name="description" content="Catálogo De Minas Pão de Queijaria: pães de queijo, queijos mineiros, doces, mel e muito mais. Monte seu pedido e envie pelo WhatsApp.">
+<link rel="canonical" href="https://deminaspaodequeijaria.com.br/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="De Minas Pão de Queijaria">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="De Minas Pão de Queijaria — Faça seu pedido">
+<meta property="og:description" content="Pães de queijo, queijos mineiros, doces, mel e muito mais. Monte seu pedido e envie pelo WhatsApp.">
+<meta property="og:url" content="https://deminaspaodequeijaria.com.br/">
+<meta property="og:image" content="https://deminaspaodequeijaria.com.br/logo.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Bakery","name":"De Minas Pão de Queijaria","url":"https://deminaspaodequeijaria.com.br/","image":"https://deminaspaodequeijaria.com.br/logo.jpg","telephone":"+5511986975803","address":{"@type":"PostalAddress","streetAddress":"Rua Engenheiro Pegado, 332","addressLocality":"São Paulo","addressRegion":"SP","addressCountry":"BR"},"servesCuisine":"Mineira"}</script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,6 +65,7 @@ section.cat>h2 svg{width:26px;height:16px;flex:none}
 .ph.empty{cursor:default;background:linear-gradient(160deg,#f5e6c8,#ecd7ab)}
 .ph.empty svg{width:48px;opacity:.55}
 .cbody{flex:1;min-width:0}
+.cod{font-size:11.5px;font-weight:700;letter-spacing:.05em;color:var(--muted);margin:-2px 0 5px}
 .nm{font-weight:600;font-size:16.5px;line-height:1.2;color:var(--brown);margin:2px 0 4px;font-family:'Fraunces',Georgia,serif}
 .badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold-d);border-radius:999px;padding:1px 8px;margin:0 4px 2px 0}
 .badge.off{background:var(--brown);border-color:var(--brown);color:#fff}
@@ -165,7 +176,7 @@ footer .adm{display:inline-block;margin-top:18px;font-size:12px;color:#c9a98a;te
     <div class="search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <label class="sr" for="q">Buscar produto</label>
-      <input id="q" type="search" placeholder="Buscar produto…" autocomplete="off" enterkeyhint="search">
+      <input id="q" type="search" placeholder="Buscar produto ou código…" autocomplete="off" enterkeyhint="search">
     </div>
   </div>
   <nav class="chips" id="chips" aria-label="Categorias"></nav>
@@ -176,7 +187,7 @@ footer .adm{display:inline-block;margin-top:18px;font-size:12px;color:#c9a98a;te
 <footer>
   <div class="serif">De Minas Pão de Queijaria</div>
   <ul id="avisos"></ul>
-  <p>Faça sua encomenda: <a id="waLink" href="#" rel="noopener">WhatsApp (11) 98697-5803</a></p>
+  <p>Faça sua encomenda: <a id="waLink" href="https://wa.me/5511986975803" rel="noopener">WhatsApp (11) 98697-5803</a></p>
   <p>Rua Engenheiro Pegado, 332 — Vila Carrão, Zona Leste, São Paulo/SP</p>
   <a class="adm" href="#admin" id="admLink">Área do administrador</a>
 </footer>
@@ -201,6 +212,7 @@ footer .adm{display:inline-block;margin-top:18px;font-size:12px;color:#c9a98a;te
         <div class="tot"><span id="totLbl">Total dos produtos</span><b id="cartTotal">R$ 0,00</b></div>
         <p class="note" id="cartNote"></p>
         <label class="fld"><span>Seu nome</span><input type="text" id="cName" required autocomplete="name"></label>
+        <label class="fld"><span>Seu WhatsApp (com DDD)</span><input type="tel" id="cTel" required inputmode="tel" autocomplete="tel" placeholder="(11) 90000-0000"></label>
         <div class="seg" role="radiogroup" aria-label="Entrega ou retirada">
           <label><input type="radio" name="tipo" value="Entrega" checked><span>Entrega</span></label>
           <label><input type="radio" name="tipo" value="Retirada"><span>Retirada na loja</span></label>
@@ -263,12 +275,11 @@ const S = { data: null, published: null, admin: false, dirty: false, cart: store
 S.admin = /(^|[#?&])admin\b/.test(location.hash + location.search);
 
 function gerarCodigoPedido(){
-  const hoje = new Date();
-  const ano = hoje.getFullYear();
-  let seq = parseInt(localStorage.getItem('dm_seq_cat') || '0') + 1;
-  if(seq > 9999) seq = 1;
-  localStorage.setItem('dm_seq_cat', String(seq));
-  return 'CAT-' + ano + '-' + String(seq).padStart(4, '0');
+  const d = new Date(), p = n => String(n).padStart(2, '0');
+  let r;
+  try { const a = new Uint32Array(1); crypto.getRandomValues(a); r = a[0].toString(36).toUpperCase().slice(-4).padStart(4, '0'); }
+  catch { r = Math.random().toString(36).slice(2, 6).toUpperCase().padStart(4, '0'); }
+  return 'DM-' + String(d.getFullYear()).slice(2) + p(d.getMonth() + 1) + p(d.getDate()) + '-' + r;
 }
 
 async function load() {
@@ -329,7 +340,7 @@ function cardHTML(p) {
     : `<div class="ph empty" aria-hidden="true">${ROOF}</div>`;
   const badges = (off ? '<span class="badge off">Indisponível</span>' : '') + (p.consultarEstoque && !off ? '<span class="badge">Consultar estoque</span>' : '');
   const admin = S.admin ? `<div class="admin-actions"><button class="btn sm ghost" type="button" data-act="edit" data-pid="${esc(p.id)}">Editar</button><label><input type="checkbox" data-act="avail" data-pid="${esc(p.id)}" ${off ? '' : 'checked'}> Disponível</label></div>` : '';
-  return `<article class="card ${off ? 'off' : ''}" data-pid="${esc(p.id)}">${photo}<div class="cbody"><h3 class="nm">${esc(p.nome)}</h3>${badges ? '<div>' + badges + '</div>' : ''}${p.opcoes.map((o, i) => optHTML(p, o, i)).join('')}${hasKg([p]) ? '<p class="kgnote">Valor final após a pesagem</p>' : ''}${admin}</div></article>`;
+  return `<article class="card ${off ? 'off' : ''}" data-pid="${esc(p.id)}">${photo}<div class="cbody"><h3 class="nm">${esc(p.nome)}</h3>${p.codigo ? `<div class="cod">Cód. ${esc(p.codigo)}</div>` : ''}${badges ? '<div>' + badges + '</div>' : ''}${p.opcoes.map((o, i) => optHTML(p, o, i)).join('')}${hasKg([p]) ? '<p class="kgnote">Valor final após a pesagem</p>' : ''}${admin}</div></article>`;
 }
 const visibleCats = () => S.data.categorias.filter(c => !ONLY.length || ONLY.includes(c.id));
 const visibleProds = () => { const ids = new Set(visibleCats().map(c => c.id)); return S.data.produtos.filter(p => ids.has(p.cat)); };
@@ -339,7 +350,7 @@ function renderCatalog() {
   const cats = visibleCats(), single = cats.length === 1;
   let html = '', any = false, gi = 0; anchors = [];
   for (const c of cats) {
-    const items = S.data.produtos.filter(p => p.cat === c.id && (!q || norm(p.nome + ' ' + (p.grupo || '')).includes(q)));
+    const items = S.data.produtos.filter(p => p.cat === c.id && (!q || norm(p.nome + ' ' + (p.grupo || '') + ' ' + (p.codigo || '')).includes(q)));
     if (!items.length && !(S.admin && !q)) continue;
     any = true;
     const groups = []; const idx = new Map();
@@ -431,6 +442,7 @@ function openCart() {
   const c = store.get('dm_cust') || {};
   if (c.nome && !$('#cName').value) $('#cName').value = c.nome;
   if (c.addr && !$('#cAddr').value) $('#cAddr').value = c.addr;
+  if (c.tel && !$('#cTel').value) $('#cTel').value = c.tel;
   syncAddr();
   if (!cartLines().length) { toast('Adicione produtos primeiro'); return; }
   renderCart();
@@ -446,9 +458,12 @@ function limparCarrinho(){
   closeCart();
   toast('Pedido limpo.');
 }
+// Na mensagem do pedido, congelados levam a marca (ex.: "Broa Doce [Sabor da Roça]") para não haver dúvida.
+function nomeMsg(p) { const base = p.cat === 'congelados' && p.grupo ? `${p.nome} [${p.grupo}]` : p.nome; return (p.codigo ? p.codigo + ' · ' : '') + base; }
 function buildMessage(codigo) {
   const L = cartLines();
   const nome = $('#cName').value.trim();
+  const tel = $('#cTel').value.trim();
   const tipo = $('input[name=tipo]:checked').value;
   const addr = $('#cAddr').value.trim();
   const obs = $('#cObs').value.trim();
@@ -456,19 +471,20 @@ function buildMessage(codigo) {
   const lines = L.map(l => {
     const lab = (l.o.kg || /^unidade$/i.test(l.o.label)) ? '' : ` (${l.o.label})`;
     const qtd = l.o.kg ? '~' + fmtQty(l.q, true) : `${l.q}x`;
-    return `• ${qtd} ${l.p.nome}${lab}${l.p.consultarEstoque ? ' [consultar estoque]' : ''} — ${l.o.kg ? '≈ ' : ''}${brl(l.sub)}${l.o.kg ? ' (valor final após pesagem)' : ''}`;
+    return `• ${qtd} ${nomeMsg(l.p)}${lab}${l.p.consultarEstoque ? ' [consultar estoque]' : ''} — ${l.o.kg ? '≈ ' : ''}${brl(l.sub)}${l.o.kg ? ' (valor final após pesagem)' : ''}`;
   });
   const total = r2(L.reduce((a, l) => a + l.sub, 0));
   let m = `Pedido — De Minas Pão de Queijaria\n\n`;
   m += `Código: ${codigo}\n`;
   m += `Nome: ${nome}\n`;
+  m += `Contato: ${tel}\n`;
   m += `${tipo}${tipo === 'Entrega' && addr ? ': ' + addr : ''}\n`;
   m += `\nItens:\n${lines.join('\n')}\n\n`;
   m += `${kgIn ? 'Total estimado' : 'Total dos produtos'}: ${kgIn ? '≈ ' : ''}${brl(total)}`;
   if (obs) m += `\n\nObs.: ${obs}`;
   m += `\n\nA De Minas agradece! Conheça nossa linha completa, de pães de queijo, Dadinho de Tapioca, sabores especiais e Broas, trem bão demais da conta!`;
   if (kgIn) m += `\n\nQueijos vendidos por kg: o valor final é confirmado após a pesagem.`;
-  m += `\n\nPIX: ${(S.data && S.data.pix) || '910.838.346-49'} (${(S.data && S.data.pixNome) || 'Franklin Rainier'})`;
+  m += `\n\nPIX (celular): ${(S.data && S.data.pix) || '(11) 98697-5803'} (${(S.data && S.data.pixNome) || 'Franklin Rainier'})`;
   return m;
 }
 function syncAddr() {
@@ -495,18 +511,21 @@ $('#orderForm').addEventListener('submit', e => {
   const addr = $('#cAddr').value.trim();
   const obs  = $('#cObs').value.trim();
   const L    = cartLines();
+  const tel = $('#cTel').value.trim();
+  const telDig = tel.replace(/\D/g, '');
+  if (telDig.length < 10 || telDig.length > 13) { toast('Informe seu WhatsApp com DDD, ex.: (11) 98697-5803'); $('#cTel').focus(); return; }
 
-  store.set('dm_cust', {nome, addr});
+  store.set('dm_cust', {nome, addr, tel});
 
   const codigo = gerarCodigoPedido();
 
   const itensFire = L.map(l => ({
-    nome: l.p.nome, label: l.o.label, qtd: l.q,
+    codigo: l.p.codigo || '', nome: l.p.nome, label: l.o.label, qtd: l.q,
     preco: l.o.preco, kg: !!l.o.kg, subtotal: l.sub
   }));
   const totalSnap = r2(L.reduce((a, l) => a + l.sub, 0));
   const pedido = {
-    codigo, cliente: nome, whatsapp: waNumber(),
+    codigo, cliente: nome, whatsapp: telDig.length <= 11 ? '55' + telDig : telDig,
     endereco: tipo === 'Entrega' ? addr : '',
     tipo, obs, itens: itensFire, total: totalSnap, pago: false
   };
@@ -559,7 +578,7 @@ document.addEventListener('change', e => {
 });
 $('#q').addEventListener('input', e => { S.q = e.target.value; renderCatalog(); });
 $('#admLink').addEventListener('click', () => setTimeout(() => location.reload(), 0));
-window.addEventListener('hashchange', () => { if (/admin/.test(location.hash) !== S.admin) location.reload(); });
+window.addEventListener('hashchange', () => { if (/(^|[#?&])admin\b/.test(location.hash + location.search) !== S.admin) location.reload(); });
 
 let toastT;
 function toast(msg, ms = 3200) {
@@ -596,16 +615,24 @@ function showDlg(title, body, foot) {
   $('#dlg').classList.add('on');
 }
 
+function nextCodigo(cat) {
+  const re = /^([A-Z]+)-(\d+)$/; let pre = '', max = 0, w = 3;
+  for (const p of S.data.produtos) { if (p.cat !== cat) continue; const m = re.exec(p.codigo || ''); if (m) { pre = pre || m[1]; max = Math.max(max, +m[2]); w = m[2].length; } }
+  if (!pre) pre = cat.replace(/[^a-z]/gi, '').slice(0, 2).toUpperCase() || 'XX';
+  return pre + '-' + String(max + 1).padStart(w, '0');
+}
 let ep = null, epIsNew = false;
 function openEdit(id, preset) {
   epIsNew = !id;
   ep = id ? clone(findProd(id)) : {id: uid('p-'), cat: (preset && preset.cat) || S.data.categorias[0].id, grupo: '', nome: '', foto: '', opcoes: [{label: 'Unidade', preco: 0}], disponivel: true, consultarEstoque: false};
+  if (epIsNew) ep.codigo = nextCodigo(ep.cat);
   drawEdit();
 }
 function drawEdit() {
   const groups = [...new Set(S.data.produtos.filter(p => p.cat === ep.cat && p.grupo).map(p => p.grupo))];
   const body = `
     <label class="fld"><span>Nome do produto</span><input type="text" id="eNome" value="${esc(ep.nome)}" maxlength="90"></label>
+    <label class="fld"><span>Código do produto (ex.: PQ-001)</span><input type="text" id="eCod" value="${esc(ep.codigo || '')}" maxlength="20" autocapitalize="characters" autocomplete="off"></label>
     <label class="fld"><span>Categoria</span><select id="eCat">${S.data.categorias.map(c => `<option value="${esc(c.id)}" ${c.id === ep.cat ? 'selected' : ''}>${esc(c.nome)}</option>`).join('')}</select></label>
     <label class="fld"><span>Subgrupo / fornecedor (opcional)</span><input type="text" id="eGrupo" list="gl" value="${esc(ep.grupo || '')}" maxlength="60"><datalist id="gl">${groups.map(g => `<option value="${esc(g)}">`).join('')}</datalist></label>
     <div class="photo-ed"><div class="prev">${ep.foto ? `<img src="${esc(ep.foto)}" alt="">` : 'Sem foto'}</div>
@@ -624,7 +651,7 @@ function drawEdit() {
 }
 const optRow = (o, i) => `<div class="orow" data-i="${i}"><input type="text" class="ol" placeholder="Ex.: 1kg, Pote, Peça" value="${esc(o.label)}" aria-label="Embalagem"><input type="number" class="op" step="0.01" min="0" inputmode="decimal" value="${o.preco === 0 ? '' : Number(o.preco).toFixed(2)}" placeholder="0,00" aria-label="Preço"><label><input type="checkbox" class="ok" ${o.kg ? 'checked' : ''}> por kg</label><button class="xx" type="button" aria-label="Remover" data-rm="${i}">×</button></div>`;
 function syncEdit() {
-  ep.nome = $('#eNome').value.trim(); ep.cat = $('#eCat').value; ep.grupo = $('#eGrupo').value.trim();
+  ep.nome = $('#eNome').value.trim(); ep.codigo = $('#eCod').value.trim().toUpperCase(); ep.cat = $('#eCat').value; ep.grupo = $('#eGrupo').value.trim();
   ep.disponivel = $('#eDisp').checked; ep.consultarEstoque = $('#eEst').checked;
   ep.opcoes = $$('#eOpts .orow').map(r => {
     const o = {label: $('.ol', r).value.trim(), preco: r2(parseFloat(String($('.op', r).value).replace(',', '.')) || 0)};
@@ -632,7 +659,7 @@ function syncEdit() {
   });
 }
 function bindEdit() {
-  $('#eCat').addEventListener('change', () => { syncEdit(); drawEdit(); });
+  $('#eCat').addEventListener('change', () => { syncEdit(); if (epIsNew) ep.codigo = nextCodigo(ep.cat); drawEdit(); });
   $('#eAddOpt').addEventListener('click', () => { syncEdit(); ep.opcoes.push({label: '', preco: 0}); drawEdit(); });
   $('#eOpts').addEventListener('click', e => { const b = e.target.closest('[data-rm]'); if (!b) return; syncEdit(); if (ep.opcoes.length > 1) ep.opcoes.splice(+b.dataset.rm, 1); drawEdit(); });
   $('#eFile').addEventListener('change', async e => {
@@ -643,6 +670,7 @@ function bindEdit() {
   $('#eSave').addEventListener('click', () => {
     syncEdit();
     if (!ep.nome) { toast('Informe o nome do produto'); $('#eNome').focus(); return; }
+    if (ep.codigo && S.data.produtos.some(p => p.id !== ep.id && p.codigo === ep.codigo)) { toast('Esse código já existe em outro produto'); $('#eCod').focus(); return; }
     if (ep.opcoes.some(o => !o.label)) { toast('Preencha o nome de todas as embalagens'); return; }
     if (new Set(ep.opcoes.map(o => o.label)).size !== ep.opcoes.length) { toast('Há embalagens com o mesmo nome'); return; }
     commitProduct(); $('#dlg').classList.remove('on'); renderCatalog(); renderCartBar(); toast('Produto salvo (rascunho). Toque em Publicar.');
