@@ -92,7 +92,7 @@ footer{background:var(--brown)}
 
 /* ===== v4: combos em carrossel ===== */
 .car{position:relative; margin-bottom: 24px;}
-/* O segredo está aqui: forçar o track a ser flex e ter rolagem horizontal */
+/* Força o track a ser flex e ter rolagem horizontal em qualquer lugar */
 .car .track{
   display: flex !important; 
   flex-direction: row !important;
