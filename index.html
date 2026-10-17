@@ -86,11 +86,12 @@ section.cat>h2 svg{width:26px;height:16px;flex:none}
 .badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold-d);border-radius:999px;padding:1px 8px;margin:0 4px 2px 0}
 .badge.off{background:var(--brown);border-color:var(--brown);color:#fff}
 
-/* CORREÇÃO DOS BOTÕES */
+/* CORREÇÃO DOS BOTÕES AQUI */
 .opt{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px dashed #dcc590;flex-wrap:wrap}
 .opt:first-of-type{border-top:0}
 .opt > span:first-child{flex:1 1 auto;min-width:0}
 .opt .add, .opt .step{flex-shrink:0;margin-left:auto}
+/* FIM DA CORREÇÃO */
 
 .opt .lb{display:block;font-size:12px;color:var(--muted);font-weight:600;line-height:1.1}
 .opt .pr{font-weight:800;font-size:16.5px;color:var(--red);white-space:nowrap}
@@ -191,7 +192,6 @@ html.theme-ready body { opacity: 1; }
 </style>
 
 <script>
-  // Adiciona a classe para esconder a tela
   document.documentElement.classList.add('theme-loading');
 </script>
 
@@ -385,21 +385,38 @@ function cardHTML(p) {
 const visibleCats = () => S.data.categorias.filter(c => !ONLY.length || ONLY.includes(c.id));
 const visibleProds = () => { const ids = new Set(visibleCats().map(c => c.id)); return S.data.produtos.filter(p => ids.has(p.cat)); };
 let anchors = [];
+
 function renderCatalog() {
   const q = norm(S.q.trim());
-  const cats = visibleCats(), single = cats.length === 1;
+  
+  // Ordena as categorias: Combos vão para o final
+  const cats = visibleCats().sort((a, b) => {
+    const aIsCombo = /combo/i.test(a.nome);
+    const bIsCombo = /combo/i.test(b.nome);
+    if (aIsCombo && !bIsCombo) return 1;
+    if (!aIsCombo && bIsCombo) return -1;
+    return 0;
+  });
+
+  const single = cats.length === 1;
   let html = '', any = false, gi = 0; anchors = [];
+  
+  if (!single) anchors.push({key: 'c0', label: 'Todos'});
+
   for (const c of cats) {
     const items = S.data.produtos.filter(p => p.cat === c.id && (!q || norm(p.nome + ' ' + (p.grupo || '') + ' ' + (p.codigo || '') + ' ' + (p.descricao || '')).includes(q)));
     if (!items.length && !(S.admin && !q)) continue;
     any = true;
     const groups = []; const idx = new Map();
     for (const p of items) { const g = p.grupo || ''; if (!idx.has(g)) { idx.set(g, groups.length); groups.push({g, list: []}); } groups[idx.get(g)].list.push(p); }
-    const ck = 'c' + anchors.length;
+    const ck = 'c' + (anchors.length || 1);
     if (!single) anchors.push({key: ck, label: c.nome});
+    
+    // Adiciona a classe "cat" para o tema identificar e ativar o carrossel
     html += `<section class="cat" id="a-${ck}" ${single ? '' : `data-key="${ck}"`}><h2>${ROOF}${esc(c.nome)}</h2>`;
     if (hasKg(items)) html += `<p class="kgcall"><b>Cobrado por quilo.</b> O valor final muda após a pesagem: cada peça pesa um pouco diferente (por exemplo, 1,5 kg ou 1,625 kg). O preço mostrado é por kg e o total final é confirmado pelo WhatsApp.</p>`;
     if (S.admin) html += `<div class="cat-tools"><button class="btn sm red" type="button" data-act="new" data-cat="${esc(c.id)}">+ Novo produto em ${esc(c.nome)}</button></div>`;
+    
     for (const {g, list} of groups) {
       if (g) {
         const gk = 'g' + (gi++);
@@ -414,6 +431,7 @@ function renderCatalog() {
   renderChips();
   measure();
 }
+
 function renderChips() {
   const box = $('#chips');
   box.hidden = anchors.length < 2;
