@@ -1,12 +1,12 @@
 // ============================================================
 // firebase-api.js
 // Funções de leitura/gravação no Firestore
-// De Minas Pão de Queijaria — v15 Cloud
+// De Minas Pão de Queijaria — v15.1 Cloud
 // ============================================================
 
 import {
   collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc,
-  query, where, orderBy, limit, serverTimestamp, writeBatch, onSnapshot
+  query, where, orderBy, limit, serverTimestamp, writeBatch, onSnapshot, deleteField
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 import { db, auth, googleProvider, signInWithPopup, signOut, ADMIN_EMAIL } from "./firebase-config.js";
@@ -260,7 +260,9 @@ export async function carregarConfig() {
 
 export async function salvarConfig(cfg) {
   const ref = doc(db, "config", "loja");
-  await setDoc(ref, { ...cfg, atualizadoEm: serverTimestamp() }, { merge: true });
+  // o PIN nunca vai para a nuvem; remove também qualquer PIN gravado por versões antigas
+  const { pin, ...resto } = cfg || {};
+  await setDoc(ref, { ...resto, pin: deleteField(), atualizadoEm: serverTimestamp() }, { merge: true });
 }
 
 // ------------------------------------------------------------
@@ -341,4 +343,49 @@ export async function atualizarPedidoCatalogo(id, dados) {
 
 export async function deletarPedidoCatalogo(id) {
   await deleteDoc(doc(db, "pedidosCatalogo", id));
+}
+
+// ------------------------------------------------------------
+// EXCLUSÕES: apagar na nuvem e registrar o "tombstone" para que
+// nenhum aparelho (nem a sincronização) traga o item de volta
+// ------------------------------------------------------------
+
+const MAPA_COL = {
+  prods: "produtos", peds: "pedidos", vendas: "vendas", clis: "clientes",
+  atClis: "atacado_clientes", atPeds: "atacado_pedidos", forns: "fornecedores",
+  vends: "vendedores", ap: "financeiro_ap", ar: "financeiro_ar", desps: "financeiro_despesas"
+};
+const _idSeguro = id => String(id).replace(/\//g, "_");
+
+// lista: [{ c: 'peds', id: '...', em: 1700000000000 }]
+export async function registrarExclusoes(lista) {
+  const itens = (lista || []).filter(e => e && MAPA_COL[e.c] && e.id != null);
+  const TAM = 200; // 2 operações por item → 400 por lote (limite do Firestore: 500)
+  for (let i = 0; i < itens.length; i += TAM) {
+    const batch = writeBatch(db);
+    itens.slice(i, i + TAM).forEach(e => {
+      const id = _idSeguro(e.id);
+      batch.delete(doc(db, MAPA_COL[e.c], id));
+      batch.set(doc(db, "excluidos", `${e.c}__${id}`), { c: e.c, id: String(e.id), em: e.em || Date.now() });
+    });
+    await batch.commit();
+  }
+}
+
+export async function listarExclusoes() {
+  const snap = await getDocs(collection(db, "excluidos"));
+  const lista = [];
+  snap.forEach(d => lista.push(d.data()));
+  return lista;
+}
+
+// Apaga documentos sem registrar tombstone (usado no "Reset Total")
+export async function apagarDocs(lista) {
+  const itens = (lista || []).filter(e => e && MAPA_COL[e.c] && e.id != null);
+  const TAM = 400;
+  for (let i = 0; i < itens.length; i += TAM) {
+    const batch = writeBatch(db);
+    itens.slice(i, i + TAM).forEach(e => batch.delete(doc(db, MAPA_COL[e.c], _idSeguro(e.id))));
+    await batch.commit();
+  }
 }
