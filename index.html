@@ -82,15 +82,15 @@ section.cat>h2 svg{width:26px;height:16px;flex:none}
 .btn.ghost{background:transparent;border:1.5px solid #c9a65d;color:var(--brown)}
 .btn.sm{height:36px;padding:0 14px;font-size:13px}
 .btn.danger{background:#fff;color:var(--red);border:1.5px solid var(--red)}
-.btn-limpar{background:transparent;border:1.5px solid var(--red);color:var(--red);height:34px;padding:0 14px;font-size:13px;font-weight:800;border-radius:999px;cursor:pointer}
+.btn-limpar{background:transparent;border:1.5px solid var(--red);color:var(--red);height:34px;padding:0 14px;font-size:13px;font-weight:800;border-radius:999px;cursor:pointer;flex:none}
 .btn-limpar:hover{background:var(--red);color:#fff}
+.dh-acoes{display:flex;align-items:center;gap:8px;flex:none}
 .cartmodal{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:#2a0d0399;overflow:hidden}
 .cartmodal.on{display:flex}
 .cartmodal-inner{background:var(--cream);color:var(--ink);border-radius:22px 22px 0 0;width:100%;max-width:580px;max-height:92dvh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -8px 40px #00000040}
 @media (min-width:601px){.cartmodal{align-items:center}.cartmodal-inner{border-radius:22px;max-height:88dvh}}
 .dh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px 8px}
-.dh h3{margin:0;font-size:22px;color:var(--brown);font-weight:800;flex:1}
-.dh-acoes{display:flex;align-items:center;gap:8px}
+.dh h3{margin:0;font-size:22px;color:var(--brown);font-weight:800;flex:1;min-width:0}
 .x-close{border:0;background:var(--cream2);width:38px;height:38px;border-radius:50%;font-size:20px;line-height:1;color:var(--brown)}
 .db{overflow:auto;padding:4px 18px 16px;flex:1}
 .df{padding:12px 18px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card);flex-shrink:0}
@@ -235,535 +235,591 @@ footer .adm{display:inline-block;margin-top:18px;font-size:12px;color:#c9a98a;te
 </div>
 
 <script type="module" src="firebase-catalogo.js"></script>
-<script src="qrcode.js"></script><script type="module" src="firebase-catalogo.js"></script>
 <script src="qrcode.js"></script>
-
 <script>
-/* ============================================================
-   DE MINAS PÃO DE QUEIJARIA — CATÁLOGO PÚBLICO
-   Bloco 2 — Lógica do carrinho + botão Limpar
-   ============================================================ */
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const brl = n => n.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+const r2 = n => Math.round(n * 100) / 100;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const clone = o => JSON.parse(JSON.stringify(o));
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+const store = {
+  get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } },
+  del(k){ try { localStorage.removeItem(k); } catch {} }
+};
+const fmtQty = (q, kg) => kg ? q.toLocaleString('pt-BR', {maximumFractionDigits: 1}) + ' kg' : String(q);
+const ROOF = '<svg viewBox="0 0 52 32" aria-hidden="true"><path d="M26 1 L51 28 C41 23 33 26 26 25 C19 24 10 28 1 30 Z" fill="#a7030e"/></svg>';
 
-(function(){
-  'use strict';
+const ONLY = (document.body.dataset.cats || '').split(',').filter(Boolean);
+const KGMSG = 'Queijos são cobrados por quilo: o valor final é confirmado após a pesagem de cada peça (pode ser um pouco maior ou menor que o pedido).';
+const hasKg = list => list.some(p => p.opcoes.some(o => o.kg));
+if (document.body.dataset.hero) $('.hero p').textContent = document.body.dataset.hero;
+const S = { data: null, published: null, admin: false, dirty: false, cart: store.get('dm_cart') || {}, q: '' };
+S.admin = /(^|[#?&])admin\b/.test(location.hash + location.search);
 
-  // ---------- ESTADO ----------
-  var PRODUTOS = [];          // catálogo carregado de produtos.json
-  var carrinho = [];          // itens no carrinho
-  var categorias = [];        // lista de categorias para os chips
-  var catAtiva = 'todos';
-  var busca = '';
+function gerarCodigoPedido(){
+  const hoje = new Date();
+  const ano = hoje.getFullYear();
+  let seq = parseInt(localStorage.getItem('dm_seq_cat') || '0') + 1;
+  if(seq > 9999) seq = 1;
+  localStorage.setItem('dm_seq_cat', String(seq));
+  return 'CAT-' + ano + '-' + String(seq).padStart(4, '0');
+}
 
-  // ---------- HELPERS ----------
-  function $(sel, ctx){ return (ctx||document).querySelector(sel); }
-  function $$(sel, ctx){ return Array.prototype.slice.call((ctx||document).querySelectorAll(sel)); }
-
-  function fmt(v){
-    return 'R$ ' + (Number(v)||0).toFixed(2).replace('.', ',');
+async function load() {
+  let pub = null;
+  try {
+    const r = await fetch('produtos.json?v=' + Date.now(), {cache: 'no-store'});
+    if (!r.ok) throw new Error(r.status);
+    pub = await r.json();
+  } catch (e) { pub = null; }
+  S.published = pub;
+  const draft = S.admin ? store.get('dm_draft') : null;
+  if (draft) { S.data = draft; S.dirty = true; }
+  else S.data = pub ? clone(pub) : null;
+  if (!S.data) {
+    $('#catalog').innerHTML = '<p class="empty-msg">Não foi possível carregar o catálogo agora.<br>Chame a gente no <a href="https://wa.me/5511986975803">WhatsApp (11) 98697-5803</a>.</p>';
+    return;
   }
+  reconcileCart();
+  renderAll();
+}
+function waNumber() { return (S.data && S.data.whatsapp) || '5511986975803'; }
+function saveDraft() {
+  S.dirty = true;
+  if (!store.set('dm_draft', S.data)) toast('Rascunho grande demais para salvar no navegador. Publique agora.');
+  renderAdminBar();
+}
+const findProd = id => S.data.produtos.find(p => p.id === id);
+const keyOf = (p, o) => p.id + '||' + o.label;
+function lookup(key) {
+  const [id, label] = key.split('||');
+  const p = S.data.produtos.find(x => x.id === id);
+  const o = p && p.opcoes.find(x => x.label === label);
+  return p && o ? {p, o} : null;
+}
+function reconcileCart() {
+  for (const k of Object.keys(S.cart)) { const f = lookup(k); if (!f || f.p.disponivel === false) delete S.cart[k]; }
+  store.set('dm_cart', S.cart);
+}
 
-  function esc(s){
-    return String(s==null?'':s)
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+function optHTML(p, o, i) {
+  const k = keyOf(p, o);
+  const lbl = `<span class="lb">${esc(o.label)}</span>`;
+  if (S.admin) {
+    return `<div class="opt">${'<span>' + lbl + '</span>'}<input class="pin" type="number" inputmode="decimal" step="0.01" min="0" value="${Number(o.preco).toFixed(2)}" data-pid="${esc(p.id)}" data-i="${i}" aria-label="Preço — ${esc(p.nome)} ${esc(o.label)}"></div>`;
   }
-
-  function toast(msg){
-    var t = document.createElement('div');
-    t.className = 'toast';
-    t.textContent = msg;
-    document.body.appendChild(t);
-    setTimeout(function(){ t.remove(); }, 2600);
-  }
-
-  // ---------- PERSISTÊNCIA ----------
-  var CHAVE = 'deminas_carrinho_v1';
-
-  function salvarCarrinho(){
-    try{ localStorage.setItem(CHAVE, JSON.stringify(carrinho)); }catch(e){}
-  }
-
-  function carregarCarrinho(){
-    try{
-      var raw = localStorage.getItem(CHAVE);
-      if(raw) carrinho = JSON.parse(raw) || [];
-    }catch(e){ carrinho = []; }
-  }
-
-  // ---------- CARREGAR CATÁLOGO ----------
-  function carregarCatalogo(){
-    fetch('produtos.json?v=' + Date.now())
-      .then(function(r){
-        if(!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
-      .then(function(data){
-        // aceita {produtos:[...]} ou [...]
-        PRODUTOS = Array.isArray(data) ? data : (data.produtos || []);
-        montarChips();
-        renderCatalogo();
-      })
-      .catch(function(err){
-        console.error('Erro ao carregar produtos.json:', err);
-        $('#catalog').innerHTML = '<p class="empty-msg">Não foi possível carregar o catálogo. Recarregue a página.</p>';
-      });
-  }
-
-  // ---------- CHIPS DE CATEGORIA ----------
-  function montarChips(){
-    var mapa = {};
-    PRODUTOS.forEach(function(p){
-      if(p.categoria) mapa[p.categoria] = true;
-    });
-    categorias = Object.keys(mapa).sort();
-
-    var html = '<button class="chip" data-cat="todos" aria-current="true">Todos</button>';
-    categorias.forEach(function(c){
-      html += '<button class="chip" data-cat="'+esc(c)+'">'+esc(c)+'</button>';
-    });
-    $('#chips').innerHTML = html;
-
-    $('#chips').addEventListener('click', function(e){
-      var b = e.target.closest('.chip');
-      if(!b) return;
-      catAtiva = b.getAttribute('data-cat');
-      $$('#chips .chip').forEach(function(x){
-        x.setAttribute('aria-current', x === b ? 'true' : 'false');
-      });
-      renderCatalogo();
-    });
-  }
-
-  // ---------- RENDER DO CATÁLOGO ----------
-  function renderCatalogo(){
-    var termo = busca.trim().toLowerCase();
-
-    var lista = PRODUTOS.filter(function(p){
-      if(catAtiva !== 'todos' && p.categoria !== catAtiva) return false;
-      if(termo){
-        var alvo = ((p.nome||'') + ' ' + (p.categoria||'') + ' ' + (p.descricao||'')).toLowerCase();
-        if(alvo.indexOf(termo) === -1) return false;
+  const q = S.cart[k] || 0;
+  const price = `<span><span class="lb">${esc(o.label)}</span><span class="pr">${brl(o.preco)}${o.kg ? '<small style="font-weight:700;font-size:12px">/kg</small>' : ''}</span></span>`;
+  let ctl;
+  if (p.disponivel === false) ctl = '';
+  else if (!q) ctl = `<button class="add" type="button" data-act="inc" data-k="${esc(k)}">Adicionar</button>`;
+  else ctl = `<span class="step"><button type="button" data-act="dec" data-k="${esc(k)}" aria-label="Diminuir">−</button><output>${fmtQty(q, o.kg)}</output><button type="button" data-act="inc" data-k="${esc(k)}" aria-label="Aumentar">+</button></span>`;
+  return `<div class="opt" data-k="${esc(k)}">${price}${ctl}</div>`;
+}
+function cardHTML(p) {
+  const off = p.disponivel === false;
+  const photo = p.foto
+    ? `<button class="ph" type="button" data-act="zoom" data-pid="${esc(p.id)}" aria-label="Ampliar foto: ${esc(p.nome)}"><img src="${esc(p.foto)}" alt="${esc(p.nome)}" loading="lazy" decoding="async"></button>`
+    : `<div class="ph empty" aria-hidden="true">${ROOF}</div>`;
+  const badges = (off ? '<span class="badge off">Indisponível</span>' : '') + (p.consultarEstoque && !off ? '<span class="badge">Consultar estoque</span>' : '');
+  const admin = S.admin ? `<div class="admin-actions"><button class="btn sm ghost" type="button" data-act="edit" data-pid="${esc(p.id)}">Editar</button><label><input type="checkbox" data-act="avail" data-pid="${esc(p.id)}" ${off ? '' : 'checked'}> Disponível</label></div>` : '';
+  return `<article class="card ${off ? 'off' : ''}" data-pid="${esc(p.id)}">${photo}<div class="cbody"><h3 class="nm">${esc(p.nome)}</h3>${badges ? '<div>' + badges + '</div>' : ''}${p.opcoes.map((o, i) => optHTML(p, o, i)).join('')}${hasKg([p]) ? '<p class="kgnote">Valor final após a pesagem</p>' : ''}${admin}</div></article>`;
+}
+const visibleCats = () => S.data.categorias.filter(c => !ONLY.length || ONLY.includes(c.id));
+const visibleProds = () => { const ids = new Set(visibleCats().map(c => c.id)); return S.data.produtos.filter(p => ids.has(p.cat)); };
+let anchors = [];
+function renderCatalog() {
+  const q = norm(S.q.trim());
+  const cats = visibleCats(), single = cats.length === 1;
+  let html = '', any = false, gi = 0; anchors = [];
+  for (const c of cats) {
+    const items = S.data.produtos.filter(p => p.cat === c.id && (!q || norm(p.nome + ' ' + (p.grupo || '')).includes(q)));
+    if (!items.length && !(S.admin && !q)) continue;
+    any = true;
+    const groups = []; const idx = new Map();
+    for (const p of items) { const g = p.grupo || ''; if (!idx.has(g)) { idx.set(g, groups.length); groups.push({g, list: []}); } groups[idx.get(g)].list.push(p); }
+    const ck = 'c' + anchors.length;
+    if (!single) anchors.push({key: ck, label: c.nome});
+    html += `<section class="cat" id="a-${ck}" ${single ? '' : `data-key="${ck}"`}><h2>${ROOF}${esc(c.nome)}</h2>`;
+    if (hasKg(items)) html += `<p class="kgcall"><b>Cobrado por quilo.</b> O valor final muda após a pesagem: cada peça pesa um pouco diferente (por exemplo, 1,5 kg ou 1,625 kg). O preço mostrado é por kg e o total final é confirmado pelo WhatsApp.</p>`;
+    if (S.admin) html += `<div class="cat-tools"><button class="btn sm red" type="button" data-act="new" data-cat="${esc(c.id)}">+ Novo produto em ${esc(c.nome)}</button></div>`;
+    for (const {g, list} of groups) {
+      if (g) {
+        const gk = 'g' + (gi++);
+        if (single) anchors.push({key: gk, label: g});
+        html += `<div class="grp" id="a-${gk}" ${single ? `data-key="${gk}"` : ''}>${esc(g)}</div>`;
       }
-      return true;
-    });
-
-    if(!lista.length){
-      $('#catalog').innerHTML = '<p class="empty-msg">Nenhum produto encontrado.</p>';
-      return;
+      html += `<div class="grid">${list.map(cardHTML).join('')}</div>`;
     }
-
-    // agrupa por categoria
-    var porCat = {};
-    lista.forEach(function(p){
-      var c = p.categoria || 'Outros';
-      (porCat[c] = porCat[c] || []).push(p);
-    });
-
-    var html = '';
-    Object.keys(porCat).sort().forEach(function(cat){
-      html += '<section class="cat" id="cat-'+esc(cat).replace(/\s+/g,'-')+'">';
-      html += '<h2>'+esc(cat)+'</h2>';
-      html += '<div class="grid">';
-      porCat[cat].forEach(function(p){
-        html += cardProduto(p);
-      });
-      html += '</div></section>';
-    });
-
-    $('#catalog').innerHTML = html;
-    ligarCards();
+    html += '</section>';
   }
+  $('#catalog').innerHTML = any ? html : `<p class="empty-msg">Nenhum produto encontrado para "${esc(S.q)}".</p>`;
+  renderChips();
+  measure();
+}
+function renderChips() {
+  const box = $('#chips');
+  box.hidden = anchors.length < 2;
+  box.innerHTML = anchors.map(a => `<button class="chip" type="button" data-chip="${esc(a.key)}">${esc(a.label)}</button>`).join('');
+  spy(true);
+  measure();
+}
+function renderFooter() {
+  $('#avisos').innerHTML = [...(S.data.avisos || []), ...(hasKg(visibleProds()) ? [KGMSG] : [])].map(a => `<li>${esc(a)}</li>`).join('');
+  const n = waNumber();
+  $('#waLink').href = 'https://wa.me/' + n;
+  const d = n.replace(/^55/, '');
+  $('#waLink').textContent = `WhatsApp (${d.slice(0, 2)}) ${d.slice(2, -4)}-${d.slice(-4)}`;
+}
+function renderAll() { renderCatalog(); renderFooter(); renderCartBar(); renderAdminBar(); }
+function measure() { document.documentElement.style.setProperty('--stickh', ($('#stick').offsetHeight + 8) + 'px'); }
+window.addEventListener('resize', measure);
 
-  function cardProduto(p){
-    var img = p.imagem
-      ? '<img src="'+esc(p.imagem)+'" alt="'+esc(p.nome)+'" loading="lazy">'
-      : '<svg viewBox="0 0 24 24" fill="none" stroke="#7a5a45" stroke-width="1.5"><path d="M4 5h16v14H4z"/><path d="m4 15 4-4 4 4 3-3 5 5"/></svg>';
+let spyOn = '';
+function spy(force) {
+  const els = $$('#catalog [data-key]'); if (!els.length) return;
+  const lim = $('#stick').offsetHeight + 24;
+  let cur = els[0].dataset.key;
+  for (const e of els) if (e.getBoundingClientRect().top <= lim) cur = e.dataset.key;
+  if (cur === spyOn && !force) return;
+  spyOn = cur;
+  $$('.chip').forEach(b => { const on = b.dataset.chip === cur; b.setAttribute('aria-current', on); if (on) b.scrollIntoView({inline: 'center', block: 'nearest'}); });
+}
+let tick = false;
+window.addEventListener('scroll', () => { if (tick) return; tick = true; requestAnimationFrame(() => { tick = false; spy(); }); }, {passive: true});
 
-    var off = p.esgotado || p.disponivel === false;
+function cartLines() {
+  return Object.entries(S.cart).map(([k, q]) => { const f = lookup(k); return f && {...f, q, k, sub: r2(f.o.preco * q)}; }).filter(Boolean);
+}
+function renderCartBar() {
+  const L = cartLines();
+  const total = r2(L.reduce((a, l) => a + l.sub, 0));
+  $('#cbTotal').textContent = brl(total);
+  $('#cbCount').textContent = L.length + (L.length === 1 ? ' item' : ' itens');
+  $('#cartbar').classList.toggle('on', L.length > 0 && !S.admin);
+}
+function setQty(k, q) {
+  const f = lookup(k); if (!f) return;
+  q = r2(q);
+  if (q <= 0) delete S.cart[k]; else S.cart[k] = q;
+  store.set('dm_cart', S.cart);
+  const el = $(`.opt[data-k="${CSS.escape(k)}"]`);
+  if (el) { const i = f.p.opcoes.indexOf(f.o); el.outerHTML = optHTML(f.p, f.o, i); }
+  renderCartBar();
+  if ($('#cartDlg').classList.contains('on')) renderCart();
+}
+const stepOf = o => o.kg ? 0.5 : 1;
+function renderCart() {
+  const L = cartLines();
+  if (!L.length) { closeCart(); return; }
+  $('#cartItems').innerHTML = L.map(l => `<div class="ci"><div><div class="t">${esc(l.p.nome)}</div><div class="s">${esc(l.o.label)} · ${brl(l.o.preco)}${l.o.kg ? '/kg' : ''}</div></div><div class="sub">${l.o.kg ? '≈ ' : ''}${brl(l.sub)}</div>
+    <button class="rm" type="button" data-act="rm" data-k="${esc(l.k)}">Remover</button>
+    <span class="step"><button type="button" data-act="dec" data-k="${esc(l.k)}" aria-label="Diminuir">−</button><output>${fmtQty(l.q, l.o.kg)}</output><button type="button" data-act="inc" data-k="${esc(l.k)}" aria-label="Aumentar">+</button></span></div>`).join('');
+  const kgIn = L.some(l => l.o.kg);
+  $('#totLbl').textContent = kgIn ? 'Total estimado' : 'Total dos produtos';
+  $('#cartTotal').textContent = (kgIn ? '≈ ' : '') + brl(r2(L.reduce((a, l) => a + l.sub, 0)));
+  const est = L.some(l => l.p.consultarEstoque);
+  $('#cartNote').textContent = [(S.data.avisos || [])[0] || '', kgIn ? KGMSG : '', est ? 'Há itens para consultar estoque — confirmaremos pelo WhatsApp.' : ''].filter(Boolean).join(' ');
+}
+function openCart() {
+  const c = store.get('dm_cust') || {};
+  if (c.nome && !$('#cName').value) $('#cName').value = c.nome;
+  if (c.addr && !$('#cAddr').value) $('#cAddr').value = c.addr;
+  syncAddr();
+  if (!cartLines().length) { toast('Adicione produtos primeiro'); return; }
+  renderCart();
+  $('#cartDlg').classList.add('on');
+}
+function closeCart(){ $('#cartDlg').classList.remove('on'); }
+function limparCarrinho(){
+  if (!cartLines().length) { toast('O carrinho já está vazio.'); return; }
+  if (!confirm('Limpar todos os itens do pedido?')) return;
+  S.cart = {};
+  store.set('dm_cart', S.cart);
+  renderCartBar();
+  closeCart();
+  toast('Pedido limpo.');
+}
+function buildMessage(codigo) {
+  const L = cartLines();
+  const nome = $('#cName').value.trim();
+  const tipo = $('input[name=tipo]:checked').value;
+  const addr = $('#cAddr').value.trim();
+  const obs = $('#cObs').value.trim();
+  const kgIn = L.some(l => l.o.kg);
+  const lines = L.map(l => {
+    const lab = (l.o.kg || /^unidade$/i.test(l.o.label)) ? '' : ` (${l.o.label})`;
+    const qtd = l.o.kg ? '~' + fmtQty(l.q, true) : `${l.q}x`;
+    return `• ${qtd} ${l.p.nome}${lab}${l.p.consultarEstoque ? ' [consultar estoque]' : ''} — ${l.o.kg ? '≈ ' : ''}${brl(l.sub)}${l.o.kg ? ' (valor final após pesagem)' : ''}`;
+  });
+  const total = r2(L.reduce((a, l) => a + l.sub, 0));
+  let m = `Pedido — De Minas Pão de Queijaria\n\n`;
+  m += `Código: ${codigo}\n`;
+  m += `Nome: ${nome}\n`;
+  m += `${tipo}${tipo === 'Entrega' && addr ? ': ' + addr : ''}\n`;
+  m += `\nItens:\n${lines.join('\n')}\n\n`;
+  m += `${kgIn ? 'Total estimado' : 'Total dos produtos'}: ${kgIn ? '≈ ' : ''}${brl(total)}`;
+  if (obs) m += `\n\nObs.: ${obs}`;
+  m += `\n\nA De Minas agradece! Conheça nossa linha completa, de pães de queijo, Dadinho de Tapioca, sabores especiais e Broas, trem bão demais da conta!`;
+  if (kgIn) m += `\n\nQueijos vendidos por kg: o valor final é confirmado após a pesagem.`;
+  m += `\n\nPIX: ${(S.data && S.data.pix) || '910.838.346-49'} (${(S.data && S.data.pixNome) || 'Franklin Rainier'})`;
+  return m;
+}
+function syncAddr() {
+  const entrega = $('input[name=tipo]:checked').value === 'Entrega';
+  $('#addrFld').hidden = !entrega; $('#cAddr').required = entrega;
+}
+$('#cbOpen').addEventListener('click', openCart);
+$('#cartClose').addEventListener('click', closeCart);
+$('#btnLimpar').addEventListener('click', limparCarrinho);
+$('#lbClose').addEventListener('click', () => $('#lb').classList.remove('on'));
+$('#dlgClose').addEventListener('click', () => $('#dlg').classList.remove('on'));
+$('#cartDlg').addEventListener('click', e => { if (e.target === $('#cartDlg')) closeCart(); });
+$('#lb').addEventListener('click', e => { if (e.target === $('#lb')) $('#lb').classList.remove('on'); });
+$('#dlg').addEventListener('click', e => { if (e.target === $('#dlg')) $('#dlg').classList.remove('on'); });
 
-    var opcoes = '';
-    if(Array.isArray(p.opcoes) && p.opcoes.length){
-      p.opcoes.forEach(function(o, i){
-        opcoes += '<div class="opt">'+
-          '<div><span class="lb">'+esc(o.label||('Opção '+(i+1)))+'</span>'+
-          '<span class="pr">'+fmt(o.preco)+'</span></div>'+
-          '<button class="add" data-add="'+esc(p.id)+'" data-opt="'+i+'"'+(off?' disabled':'')+'>Adicionar</button>'+
-        '</div>';
-      });
-    } else {
-      opcoes = '<div class="opt">'+
-        '<div><span class="lb">Preço</span>'+
-        '<span class="pr">'+fmt(p.preco)+'</span></div>'+
-        '<button class="add" data-add="'+esc(p.id)+'" data-opt="0"'+(off?' disabled':'')+'>Adicionar</button>'+
-      '</div>';
+$$('input[name=tipo]').forEach(r => r.addEventListener('change', syncAddr));
+
+$('#orderForm').addEventListener('submit', e => {
+  e.preventDefault();
+  if (!cartLines().length) return;
+
+  const nome = $('#cName').value.trim();
+  const tipo = $('input[name=tipo]:checked').value;
+  const addr = $('#cAddr').value.trim();
+  const obs  = $('#cObs').value.trim();
+  const L    = cartLines();
+
+  store.set('dm_cust', {nome, addr});
+
+  const codigo = gerarCodigoPedido();
+
+  const itensFire = L.map(l => ({
+    nome: l.p.nome, label: l.o.label, qtd: l.q,
+    preco: l.o.preco, kg: !!l.o.kg, subtotal: l.sub
+  }));
+  const totalSnap = r2(L.reduce((a, l) => a + l.sub, 0));
+  const pedido = {
+    codigo, cliente: nome, whatsapp: waNumber(),
+    endereco: tipo === 'Entrega' ? addr : '',
+    tipo, obs, itens: itensFire, total: totalSnap, pago: false
+  };
+
+  (async () => {
+    try {
+      if (window.DM_enviarPedido) await window.DM_enviarPedido(pedido);
+    } catch (err) {
+      console.error('Falha ao gravar no ERP (WhatsApp segue):', err);
     }
+  })();
 
-    return '<article class="card'+(off?' off':'')+'" data-id="'+esc(p.id)+'">'+
-      '<button class="ph'+(p.imagem?'':' empty')+'" type="button" data-lb="'+esc(p.imagem||'')+'" data-lbt="'+esc(p.nome)+'">'+img+'</button>'+
-      '<div class="cbody">'+
-        '<h3 class="nm">'+esc(p.nome)+'</h3>'+
-        (p.badge ? '<span class="badge">'+esc(p.badge)+'</span>' : '')+
-        (off ? '<span class="badge off">Esgotado</span>' : '')+
-        opcoes+
-      '</div>'+
-    '</article>';
+  const msg = buildMessage(codigo);
+  const url = 'https://wa.me/' + waNumber() + '?text=' + encodeURIComponent(msg);
+  const a = document.createElement('a');
+  a.href = url; a.target = '_blank'; a.rel = 'noopener';
+  document.body.appendChild(a); a.click(); a.remove();
+
+  S.cart = {};
+  store.set('dm_cart', S.cart);
+  renderCartBar();
+  closeCart();
+});
+
+document.addEventListener('click', e => {
+  const close = e.target.closest('[data-close]');
+  if (close) { const m = close.closest('.cartmodal'); if (m) m.classList.remove('on'); return; }
+  const chip = e.target.closest('[data-chip]');
+  if (chip) { const s = $('#a-' + CSS.escape(chip.dataset.chip)); if (s) s.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth', block: 'start'}); return; }
+  const t = e.target.closest('[data-act]'); if (!t) return;
+  const act = t.dataset.act;
+  if (act === 'inc' || act === 'dec') {
+    const f = lookup(t.dataset.k); if (!f) return;
+    const cur = S.cart[t.dataset.k] || 0, st = stepOf(f.o);
+    setQty(t.dataset.k, act === 'inc' ? cur + (cur ? st : (f.o.kg ? 1 : 1)) : cur - st);
+  } else if (act === 'rm') setQty(t.dataset.k, 0);
+  else if (act === 'zoom') { const p = findProd(t.dataset.pid); $('#lbT').textContent = p.nome; $('#lbImg').src = p.foto; $('#lbImg').alt = p.nome; $('#lb').classList.add('on'); }
+  else if (act === 'edit') openEdit(t.dataset.pid);
+  else if (act === 'new') openEdit(null, {cat: t.dataset.cat});
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.classList.contains('pin')) {
+    const p = findProd(t.dataset.pid); const v = parseFloat(String(t.value).replace(',', '.'));
+    if (!p || !(v >= 0)) { toast('Valor inválido'); t.value = Number(p.opcoes[t.dataset.i].preco).toFixed(2); return; }
+    p.opcoes[+t.dataset.i].preco = r2(v); t.value = r2(v).toFixed(2); saveDraft();
+  } else if (t.dataset.act === 'avail') {
+    const p = findProd(t.dataset.pid); p.disponivel = t.checked; saveDraft(); renderCatalog();
   }
+});
+$('#q').addEventListener('input', e => { S.q = e.target.value; renderCatalog(); });
+$('#admLink').addEventListener('click', () => setTimeout(() => location.reload(), 0));
+window.addEventListener('hashchange', () => { if (/admin/.test(location.hash) !== S.admin) location.reload(); });
 
-  function ligarCards(){
-    // adicionar ao carrinho
-    $$('#catalog .add').forEach(function(b){
-      b.addEventListener('click', function(){
-        var id = b.getAttribute('data-add');
-        var optIdx = Number(b.getAttribute('data-opt'))||0;
-        var p = PRODUTOS.filter(function(x){ return String(x.id) === String(id); })[0];
-        if(!p) return;
-        var opt = (Array.isArray(p.opcoes) && p.opcoes[optIdx]) ? p.opcoes[optIdx] : null;
-        var label = opt ? (opt.label||'') : '';
-        var preco = opt ? opt.preco : p.preco;
-        adicionarAoCarrinho(p, optIdx, label, preco);
-      });
-    });
+let toastT;
+function toast(msg, ms = 3200) {
+  let t = $('.toast'); if (!t) { t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+  t.textContent = msg; clearTimeout(toastT); toastT = setTimeout(() => t.remove(), ms);
+}
 
-    // lightbox da imagem
-    $$('#catalog .ph').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var src = btn.getAttribute('data-lb');
-        if(!src) return;
-        $('#lbImg').src = src;
-        $('#lbT').textContent = btn.getAttribute('data-lbt') || '';
-        $('#lb').classList.add('on');
-      });
-    });
+function renderAdminBar() {
+  const bar = $('#adminbar');
+  if (!S.admin) { bar.hidden = true; return; }
+  bar.hidden = false; bar.className = 'adminbar';
+  bar.innerHTML = `<span class="tag">Modo administrador${S.dirty ? '<span class="dirty">não publicado</span>' : ''}</span>
+    <button class="btn pub" type="button" data-adm="publish">Publicar</button>
+    <button class="btn" type="button" data-adm="cats">Categorias</button>
+    <button class="btn" type="button" data-adm="shop">Loja</button>
+    <button class="btn" type="button" data-adm="qr">QR Code</button>
+    <button class="btn" type="button" data-adm="export">Exportar</button>
+    <button class="btn" type="button" data-adm="import">Importar</button>
+    <button class="btn" type="button" data-adm="gh">GitHub</button>
+    ${S.dirty ? '<button class="btn" type="button" data-adm="discard">Descartar</button>' : ''}
+    <button class="btn" type="button" data-adm="exit">Sair</button>`;
+  measure();
+}
+$('#adminbar').addEventListener('click', e => {
+  const b = e.target.closest('[data-adm]'); if (!b) return;
+  ({publish, cats: openCats, shop: openShop, qr: openQR, export: exportJSON, import: importJSON, gh: openGH, discard: discardDraft, exit: () => { location.hash = ''; location.search = ''; location.reload(); }})[b.dataset.adm]();
+});
+
+function showDlg(title, body, foot) {
+  $('#dlgTitle').textContent = title;
+  $('#dlgBody').innerHTML = body;
+  const footEl = $('#dlgFoot');
+  if (foot) { footEl.innerHTML = foot; footEl.style.display = 'flex'; } else { footEl.innerHTML = ''; footEl.style.display = 'none'; }
+  $('#dlg').classList.add('on');
+}
+
+let ep = null, epIsNew = false;
+function openEdit(id, preset) {
+  epIsNew = !id;
+  ep = id ? clone(findProd(id)) : {id: uid('p-'), cat: (preset && preset.cat) || S.data.categorias[0].id, grupo: '', nome: '', foto: '', opcoes: [{label: 'Unidade', preco: 0}], disponivel: true, consultarEstoque: false};
+  drawEdit();
+}
+function drawEdit() {
+  const groups = [...new Set(S.data.produtos.filter(p => p.cat === ep.cat && p.grupo).map(p => p.grupo))];
+  const body = `
+    <label class="fld"><span>Nome do produto</span><input type="text" id="eNome" value="${esc(ep.nome)}" maxlength="90"></label>
+    <label class="fld"><span>Categoria</span><select id="eCat">${S.data.categorias.map(c => `<option value="${esc(c.id)}" ${c.id === ep.cat ? 'selected' : ''}>${esc(c.nome)}</option>`).join('')}</select></label>
+    <label class="fld"><span>Subgrupo / fornecedor (opcional)</span><input type="text" id="eGrupo" list="gl" value="${esc(ep.grupo || '')}" maxlength="60"><datalist id="gl">${groups.map(g => `<option value="${esc(g)}">`).join('')}</datalist></label>
+    <div class="photo-ed"><div class="prev">${ep.foto ? `<img src="${esc(ep.foto)}" alt="">` : 'Sem foto'}</div>
+      <div class="col"><label class="btn sm red" style="cursor:pointer">Escolher / tirar foto<input type="file" id="eFile" accept="image/*" hidden></label>
+      ${ep.foto ? '<button class="btn sm ghost" type="button" id="eNoPhoto">Remover foto</button>' : ''}</div></div>
+    <div class="fld" style="margin-top:16px"><span>Preços e embalagens</span>
+      <div id="eOpts">${ep.opcoes.map((o, i) => optRow(o, i)).join('')}</div>
+      <button class="btn sm ghost" type="button" id="eAddOpt" style="margin-top:8px">+ Adicionar embalagem / preço</button>
+      <p class="note">Marque "por kg" quando o preço é por quilo.</p></div>
+    <label class="chk"><input type="checkbox" id="eDisp" ${ep.disponivel !== false ? 'checked' : ''}> Disponível para pedido</label>
+    <label class="chk"><input type="checkbox" id="eEst" ${ep.consultarEstoque ? 'checked' : ''}> Mostrar "Consultar estoque"</label>`;
+  const foot = `${epIsNew ? '' : '<button class="btn sm danger" type="button" id="eDel" style="margin-right:auto">Excluir</button><button class="btn sm ghost" type="button" id="eUp" aria-label="Mover para cima">↑</button><button class="btn sm ghost" type="button" id="eDn" aria-label="Mover para baixo">↓</button>'}
+    <button class="btn ghost" type="button" data-close>Cancelar</button><button class="btn red" type="button" id="eSave">Salvar</button>`;
+  showDlg(epIsNew ? 'Novo produto' : 'Editar produto', body, foot);
+  bindEdit();
+}
+const optRow = (o, i) => `<div class="orow" data-i="${i}"><input type="text" class="ol" placeholder="Ex.: 1kg, Pote, Peça" value="${esc(o.label)}" aria-label="Embalagem"><input type="number" class="op" step="0.01" min="0" inputmode="decimal" value="${o.preco === 0 ? '' : Number(o.preco).toFixed(2)}" placeholder="0,00" aria-label="Preço"><label><input type="checkbox" class="ok" ${o.kg ? 'checked' : ''}> por kg</label><button class="xx" type="button" aria-label="Remover" data-rm="${i}">×</button></div>`;
+function syncEdit() {
+  ep.nome = $('#eNome').value.trim(); ep.cat = $('#eCat').value; ep.grupo = $('#eGrupo').value.trim();
+  ep.disponivel = $('#eDisp').checked; ep.consultarEstoque = $('#eEst').checked;
+  ep.opcoes = $$('#eOpts .orow').map(r => {
+    const o = {label: $('.ol', r).value.trim(), preco: r2(parseFloat(String($('.op', r).value).replace(',', '.')) || 0)};
+    if ($('.ok', r).checked) o.kg = true; return o;
+  });
+}
+function bindEdit() {
+  $('#eCat').addEventListener('change', () => { syncEdit(); drawEdit(); });
+  $('#eAddOpt').addEventListener('click', () => { syncEdit(); ep.opcoes.push({label: '', preco: 0}); drawEdit(); });
+  $('#eOpts').addEventListener('click', e => { const b = e.target.closest('[data-rm]'); if (!b) return; syncEdit(); if (ep.opcoes.length > 1) ep.opcoes.splice(+b.dataset.rm, 1); drawEdit(); });
+  $('#eFile').addEventListener('change', async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try { syncEdit(); ep.foto = await fileToDataURL(f); drawEdit(); } catch { toast('Não consegui ler essa imagem.'); }
+  });
+  const np = $('#eNoPhoto'); if (np) np.addEventListener('click', () => { syncEdit(); ep.foto = ''; drawEdit(); });
+  $('#eSave').addEventListener('click', () => {
+    syncEdit();
+    if (!ep.nome) { toast('Informe o nome do produto'); $('#eNome').focus(); return; }
+    if (ep.opcoes.some(o => !o.label)) { toast('Preencha o nome de todas as embalagens'); return; }
+    if (new Set(ep.opcoes.map(o => o.label)).size !== ep.opcoes.length) { toast('Há embalagens com o mesmo nome'); return; }
+    commitProduct(); $('#dlg').classList.remove('on'); renderCatalog(); renderCartBar(); toast('Produto salvo (rascunho). Toque em Publicar.');
+  });
+  const del = $('#eDel'); if (del) del.addEventListener('click', () => {
+    if (!confirm('Excluir "' + ep.nome + '" do catálogo?')) return;
+    S.data.produtos = S.data.produtos.filter(p => p.id !== ep.id); delete_cart_for(ep.id); saveDraft(); $('#dlg').classList.remove('on'); renderCatalog(); renderCartBar();
+  });
+  const mv = d => { syncEdit(); const arr = S.data.produtos; const i = arr.findIndex(p => p.id === ep.id); let j = i + d; while (arr[j] && arr[j].cat !== arr[i].cat) j += d; if (!arr[j]) return; [arr[i], arr[j]] = [arr[j], arr[i]]; saveDraft(); renderCatalog(); toast('Posição alterada'); };
+  const up = $('#eUp'); if (up) { up.addEventListener('click', () => mv(-1)); $('#eDn').addEventListener('click', () => mv(1)); }
+}
+function delete_cart_for(id) { for (const k of Object.keys(S.cart)) if (k.startsWith(id + '||')) delete S.cart[k]; store.set('dm_cart', S.cart); }
+function commitProduct() {
+  const arr = S.data.produtos; const i = arr.findIndex(p => p.id === ep.id);
+  if (i >= 0) arr[i] = clone(ep);
+  else {
+    let at = -1;
+    arr.forEach((p, n) => { if (p.cat === ep.cat && (p.grupo || '') === (ep.grupo || '')) at = n; });
+    if (at < 0) arr.forEach((p, n) => { if (p.cat === ep.cat) at = n; });
+    if (at < 0) arr.push(clone(ep)); else arr.splice(at + 1, 0, clone(ep));
   }
+  reconcileCart(); saveDraft();
+}
+async function fileToDataURL(file, max = 800) {
+  let bmp;
+  try { bmp = await createImageBitmap(file, {imageOrientation: 'from-image'}); }
+  catch { bmp = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = URL.createObjectURL(file); }); }
+  const w = bmp.width, h = bmp.height, s = Math.min(1, max / Math.max(w, h));
+  const c = document.createElement('canvas'); c.width = Math.round(w * s); c.height = Math.round(h * s);
+  const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(bmp, 0, 0, c.width, c.height);
+  return c.toDataURL('image/jpeg', 0.82);
+}
 
-  // ---------- CARRINHO ----------
-  function chaveItem(p, optIdx){
-    return String(p.id) + '::' + optIdx;
-  }
+function openCats() {
+  const rows = () => S.data.categorias.map((c, i) => `<div class="catrow" data-i="${i}"><input type="text" value="${esc(c.nome)}" aria-label="Nome da categoria"><button type="button" data-mv="-1" aria-label="Subir">↑</button><button type="button" data-mv="1" aria-label="Descer">↓</button><button type="button" data-del="${i}" aria-label="Excluir" style="color:var(--red)">×</button></div>`).join('');
+  showDlg('Categorias', `<div id="cList">${rows()}</div><button class="btn sm ghost" type="button" id="cAdd" style="margin-top:12px">+ Nova categoria</button><p class="note">Os nomes aparecem nos botões do topo e como título de cada seção.</p>`,
+    '<button class="btn ghost" type="button" data-close>Cancelar</button><button class="btn red" type="button" id="cSave">Salvar</button>');
+  const list = $('#cList');
+  const read = () => $$('.catrow', list).map((r, i) => ({...S.data.categorias[i], nome: $('input', r).value.trim() || S.data.categorias[i].nome}));
+  const redraw = cats => { S.data.categorias = cats; list.innerHTML = rows(); };
+  list.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    let cats = read();
+    if (b.dataset.mv) { const i = +b.closest('.catrow').dataset.i, j = i + +b.dataset.mv; if (!cats[j]) return; [cats[i], cats[j]] = [cats[j], cats[i]]; redraw(cats); }
+    if (b.dataset.del) { const c = cats[+b.dataset.del]; if (S.data.produtos.some(p => p.cat === c.id)) { toast('Mova ou exclua os produtos desta categoria primeiro.'); return; } cats.splice(+b.dataset.del, 1); redraw(cats); }
+  });
+  $('#cAdd').addEventListener('click', () => { const cats = read(); cats.push({id: uid('c-'), nome: 'Nova categoria'}); redraw(cats); const ins = $$('.catrow input', list); ins[ins.length - 1].select(); });
+  $('#cSave').addEventListener('click', () => { S.data.categorias = read(); saveDraft(); $('#dlg').classList.remove('on'); renderAll(); });
+}
 
-  function adicionarAoCarrinho(p, optIdx, label, preco){
-    var k = chaveItem(p, optIdx);
-    var existente = carrinho.filter(function(it){ return it.k === k; })[0];
-    if(existente){
-      existente.qtd += 1;
-    } else {
-      carrinho.push({
-        k: k,
-        id: p.id,
-        nome: p.nome,
-        label: label,
-        preco: Number(preco)||0,
-        qtd: 1,
-        kg: p.kg || null
-      });
+function openShop() {
+  showDlg('Dados da loja', `<label class="fld"><span>WhatsApp que recebe os pedidos (com 55 + DDD)</span><input type="tel" id="sWa" value="${esc(waNumber())}" inputmode="numeric"></label>
+    <label class="fld"><span>Avisos no rodapé e no pedido (um por linha)</span><textarea id="sAv" style="min-height:110px">${esc((S.data.avisos || []).join('\n'))}</textarea></label>`,
+    '<button class="btn ghost" type="button" data-close>Cancelar</button><button class="btn red" type="button" id="sSave">Salvar</button>');
+  $('#sSave').addEventListener('click', () => {
+    const n = $('#sWa').value.replace(/\D/g, '');
+    if (n.length < 12) { toast('Informe o número completo, ex.: 5511986975803'); return; }
+    S.data.whatsapp = n; S.data.avisos = $('#sAv').value.split('\n').map(s => s.trim()).filter(Boolean);
+    saveDraft(); $('#dlg').classList.remove('on'); renderFooter();
+  });
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(S.data, null, 1)], {type: 'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'produtos.json'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast('produtos.json baixado');
+}
+function importJSON() {
+  const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'application/json,.json';
+  inp.onchange = async () => {
+    try {
+      const d = JSON.parse(await inp.files[0].text());
+      if (!Array.isArray(d.categorias) || !Array.isArray(d.produtos)) throw 0;
+      if (!confirm('Substituir o catálogo atual (rascunho) pelo arquivo importado?')) return;
+      S.data = d; reconcileCart(); saveDraft(); renderAll(); toast('Importado como rascunho');
+    } catch { toast('Arquivo inválido.'); }
+  };
+  inp.click();
+}
+function discardDraft() {
+  if (!confirm('Descartar todas as alterações não publicadas?')) return;
+  store.del('dm_draft'); S.dirty = false; S.data = S.published ? clone(S.published) : S.data; reconcileCart(); renderAll(); toast('Rascunho descartado');
+}
+
+const gh = () => store.get('dm_gh') || {};
+function openGH() {
+  const g = gh();
+  showDlg('Conexão com o GitHub', `<p class="note" style="margin-top:0">Necessária só para o botão <b>Publicar</b>. O token fica guardado apenas neste aparelho.</p>
+    <label class="fld"><span>Usuário (ou organização) do GitHub</span><input type="text" id="gOwner" value="${esc(g.owner || '')}" autocapitalize="off" autocomplete="off"></label>
+    <label class="fld"><span>Nome do repositório</span><input type="text" id="gRepo" value="${esc(g.repo || '')}" autocapitalize="off" autocomplete="off"></label>
+    <label class="fld"><span>Branch</span><input type="text" id="gBranch" value="${esc(g.branch || 'main')}" autocapitalize="off" autocomplete="off"></label>
+    <label class="fld"><span>Token de acesso (fine-grained)</span><input type="password" id="gTok" value="${esc(g.token || '')}" autocomplete="off"></label>`,
+    '<button class="btn ghost" type="button" id="gTest">Testar</button><button class="btn red" type="button" id="gSave">Salvar</button>');
+  const read = () => ({owner: $('#gOwner').value.trim(), repo: $('#gRepo').value.trim(), branch: $('#gBranch').value.trim() || 'main', token: $('#gTok').value.trim()});
+  $('#gSave').addEventListener('click', () => { const v = read(); store.set('dm_gh', v); $('#dlg').classList.remove('on'); toast('Conexão salva'); });
+  $('#gTest').addEventListener('click', async () => {
+    store.set('dm_gh', read());
+    try { const r = await ghFetch(''); if (!r.ok) throw await apiErr(r); const j = await r.json(); toast(j.permissions && j.permissions.push === false ? 'Sem permissão de escrita.' : 'Conexão OK'); }
+    catch (e) { toast(e.message || 'Falha na conexão', 5000); }
+  });
+}
+async function ghFetch(path, opts = {}) {
+  const g = gh();
+  return fetch(`https://api.github.com/repos/${encodeURIComponent(g.owner)}/${encodeURIComponent(g.repo)}${path ? '/' + path : ''}`, {...opts, headers: {Authorization: 'Bearer ' + g.token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', ...(opts.headers || {})}});
+}
+async function apiErr(r) {
+  let m = ''; try { m = (await r.json()).message; } catch {}
+  if (r.status === 401) return new Error('Token inválido ou expirado.');
+  if (r.status === 403 || r.status === 404) return new Error('Sem acesso ao repositório. ' + (m || ''));
+  if (r.status === 409 || r.status === 422) return new Error('Conflito. Tente novamente. ' + (m || ''));
+  return new Error('Erro do GitHub (' + r.status + '). ' + (m || ''));
+}
+const b64utf8 = s => btoa(unescape(encodeURIComponent(s)));
+async function putFile(path, b64, message, branch) {
+  let sha;
+  const r0 = await ghFetch(`contents/${path}?ref=${encodeURIComponent(branch)}`);
+  if (r0.ok) sha = (await r0.json()).sha; else if (r0.status !== 404) throw await apiErr(r0);
+  const r = await ghFetch(`contents/${path}`, {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message, content: b64, branch, ...(sha ? {sha} : {})})});
+  if (!r.ok) throw await apiErr(r);
+}
+let publishing = false;
+async function publish() {
+  const g = gh();
+  if (!g.owner || !g.repo || !g.token) { toast('Configure a conexão com o GitHub primeiro.'); openGH(); return; }
+  if (publishing) return; publishing = true;
+  const d = clone(S.data);
+  try {
+    const pend = d.produtos.filter(p => p.foto && p.foto.startsWith('data:'));
+    let n = 0;
+    for (const p of pend) {
+      toast(`Enviando fotos… ${++n}/${pend.length}`, 20000);
+      const path = `${p.id}-${Date.now().toString(36)}.jpg`;
+      await putFile(path, p.foto.split(',')[1], 'Foto: ' + p.nome, g.branch || 'main');
+      p.foto = path;
     }
-    salvarCarrinho();
-    atualizarBarraCarrinho();
-    toast(p.nome + (label? ' — '+label : '') + ' adicionado.');
-  }
+    toast('Publicando catálogo…', 20000);
+    d.atualizadoEm = new Date().toISOString();
+    await putFile('produtos.json', b64utf8(JSON.stringify(d, null, 1)), 'Atualiza catálogo', g.branch || 'main');
+    S.data = d; S.published = clone(d); S.dirty = false; store.del('dm_draft');
+    renderAll();
+    toast('Publicado!', 6000);
+  } catch (e) { toast(e.message || 'Falha ao publicar', 7000); }
+  finally { publishing = false; }
+}
 
-  function removerDoCarrinho(k){
-    carrinho = carrinho.filter(function(it){ return it.k !== k; });
-    salvarCarrinho();
-    atualizarBarraCarrinho();
-    renderCarrinho();
-  }
+function qrCanvas(text, size = 1000) {
+  const qr = qrcode(0, 'M'); qr.addData(text); qr.make();
+  const n = qr.getModuleCount(), quiet = 4, cell = Math.max(2, Math.floor(size / (n + quiet * 2))), dim = cell * (n + quiet * 2);
+  const c = document.createElement('canvas'); c.width = c.height = dim;
+  const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, dim, dim); x.fillStyle = '#4a1705';
+  for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (qr.isDark(r, k)) x.fillRect((k + quiet) * cell, (r + quiet) * cell, cell, cell);
+  return c;
+}
+function baseURL() { return location.origin + location.pathname.replace(/index\.html$/, ''); }
+function openQR() {
+  showDlg('QR Code do catálogo', `<label class="fld"><span>Endereço do catálogo</span><input type="url" id="qUrl" value="${esc(baseURL())}"></label>
+    <div class="qrbox" id="qBox" style="margin-top:14px"></div>`,
+    '<button class="btn ghost" type="button" id="qPng">Baixar QR (PNG)</button><button class="btn red" type="button" id="qArt">Baixar arte</button>');
+  const draw = () => { const box = $('#qBox'); box.innerHTML = ''; try { const c = qrCanvas($('#qUrl').value.trim() || baseURL(), 700); c.style.width = 'min(320px,100%)'; box.appendChild(c); } catch { box.textContent = 'Endereço longo demais.'; } };
+  draw(); $('#qUrl').addEventListener('input', draw);
+  const dl = (cv, name) => cv.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); });
+  $('#qPng').addEventListener('click', () => dl(qrCanvas($('#qUrl').value.trim() || baseURL(), 1400), 'qrcode-de-minas.png'));
+  $('#qArt').addEventListener('click', () => {
+    const W = 1200, H = 1650, a = document.createElement('canvas'); a.width = W; a.height = H; const x = a.getContext('2d');
+    x.fillStyle = '#fcf3e2'; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#4a1705'; x.fillRect(0, 0, W, 26); x.fillRect(0, H - 26, W, 26);
+    x.fillStyle = '#fff'; x.strokeStyle = '#b98410'; x.lineWidth = 8; const qx = 190, qy = 460, qs = 820;
+    x.fillRect(qx, qy, qs, qs); x.strokeRect(qx, qy, qs, qs);
+    x.drawImage(qrCanvas($('#qUrl').value.trim() || baseURL(), 1400), qx + 40, qy + 40, qs - 80, qs - 80);
+    x.textAlign = 'center'; x.fillStyle = '#4a1705'; x.font = '800 76px Fraunces, Georgia, serif'; x.fillText(document.body.dataset.qr1 || 'Escaneie e faça seu pedido', W / 2, 1420);
+    x.fillStyle = '#b98410'; x.font = '700 40px "Nunito Sans", sans-serif'; x.fillText(document.body.dataset.qr2 || 'direto pelo WhatsApp', W / 2, 1490);
+    dl(a, (ONLY.length ? 'qrcode-de-minas-congelados-arte.png' : 'qrcode-de-minas-arte.png'));
+  });
+}
 
-  function alterarQtd(k, delta){
-    var it = carrinho.filter(function(x){ return x.k === k; })[0];
-    if(!it) return;
-    it.qtd += delta;
-    if(it.qtd <= 0){
-      removerDoCarrinho(k);
-      return;
-    }
-    salvarCarrinho();
-    atualizarBarraCarrinho();
-    renderCarrinho();
-  }
-
-  function totalCarrinho(){
-    return carrinho.reduce(function(s, it){ return s + (it.preco * it.qtd); }, 0);
-  }
-
-  function qtdTotalCarrinho(){
-    return carrinho.reduce(function(s, it){ return s + it.qtd; }, 0);
-  }
-
-  function atualizarBarraCarrinho(){
-    var qtd = qtdTotalCarrinho();
-    var tot = totalCarrinho();
-    $('#cbTotal').textContent = fmt(tot);
-    $('#cbCount').textContent = qtd + (qtd === 1 ? ' item' : ' itens');
-    var bar = $('#cartbar');
-    if(qtd > 0) bar.classList.add('on');
-    else bar.classList.remove('on');
-  }
-
-  function renderCarrinho(){
-    var box = $('#cartItems');
-    if(!carrinho.length){
-      box.innerHTML = '<p class="empty-msg">Seu carrinho está vazio.</p>';
-      $('#cartTotal').textContent = fmt(0);
-      $('#cartNote').textContent = '';
-      return;
-    }
-    var html = '';
-    carrinho.forEach(function(it){
-      html += '<div class="ci" data-k="'+esc(it.k)+'">'+
-        '<div>'+
-          '<div class="t">'+esc(it.nome)+(it.label?' — '+esc(it.label):'')+'</div>'+
-          '<div class="s">'+fmt(it.preco)+' cada</div>'+
-        '</div>'+
-        '<div class="sub" data-sub="'+esc(it.k)+'">'+fmt(it.preco*it.qtd)+'</div>'+
-        '<div class="step" style="grid-column:1/-1;justify-self:start;margin-top:6px">'+
-          '<button type="button" data-dec="'+esc(it.k)+'" aria-label="Diminuir">−</button>'+
-          '<output>'+it.qtd+'</output>'+
-          '<button type="button" data-inc="'+esc(it.k)+'" aria-label="Aumentar">+</button>'+
-        '</div>'+
-        '<button class="rm" type="button" data-rm="'+esc(it.k)+'">Remover</button>'+
-      '</div>';
-    });
-    box.innerHTML = html;
-    $('#cartTotal').textContent = fmt(totalCarrinho());
-    $('#cartNote').textContent = carrinho.length + (carrinho.length===1?' item':' itens') + ' no pedido';
-
-    // listeners
-    $$('#cartItems [data-inc]').forEach(function(b){
-      b.addEventListener('click', function(){ alterarQtd(b.getAttribute('data-inc'), +1); });
-    });
-    $$('#cartItems [data-dec]').forEach(function(b){
-      b.addEventListener('click', function(){ alterarQtd(b.getAttribute('data-dec'), -1); });
-    });
-    $$('#cartItems [data-rm]').forEach(function(b){
-      b.addEventListener('click', function(){ removerDoCarrinho(b.getAttribute('data-rm')); });
-    });
-  }
-
-  // ---------- ABRIR / FECHAR PAINEL ----------
-  function abrirCarrinho(){
-    renderCarrinho();
-    $('#cartDlg').classList.add('on');
-  }
-  function fecharCarrinho(){
-    $('#cartDlg').classList.remove('on');
-  }
-
-  // ============================================================
-  // ✅ BOTÃO LIMPAR — implementação nova
-  // ============================================================
-  function limparCarrinho(){
-    if(!carrinho.length){
-      toast('O carrinho já está vazio.');
-      return;
-    }
-    if(confirm('Limpar todos os itens do pedido?')){
-      carrinho = [];
-      salvarCarrinho();
-      atualizarBarraCarrinho();
-      renderCarrinho();
-      fecharCarrinho();
-      toast('Pedido limpo.');
-    }
-  }
-
-  // ---------- BUSCA ----------
-  function ligarBusca(){
-    var input = $('#q');
-    if(!input) return;
-    var t = null;
-    input.addEventListener('input', function(){
-      clearTimeout(t);
-      t = setTimeout(function(){
-        busca = input.value || '';
-        renderCatalogo();
-      }, 180);
-    });
-  }
-
-  // ---------- SUBMIT DO PEDIDO ----------
-  function ligarSubmit(){
-    var form = $('#orderForm');
-    if(!form) return;
-
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-
-      if(!carrinho.length){
-        toast('Adicione itens antes de enviar.');
-        return;
-      }
-
-      var nome = ($('#cName').value || '').trim();
-      if(!nome){
-        toast('Preencha seu nome.');
-        $('#cName').focus();
-        return;
-      }
-
-      var tipoEl = document.querySelector('input[name="tipo"]:checked');
-      var tipo = tipoEl ? tipoEl.value : 'Entrega';
-      var endereco = ($('#cAddr').value || '').trim();
-      if(tipo === 'Entrega' && !endereco){
-        toast('Informe o endereço de entrega.');
-        $('#cAddr').focus();
-        return;
-      }
-
-      var obs = ($('#cObs').value || '').trim();
-      var total = totalCarrinho();
-
-      var pedido = {
-        cliente: nome,
-        tipo: tipo,
-        endereco: endereco,
-        obs: obs,
-        itens: carrinho.map(function(it){
-          return {
-            nome: it.nome,
-            label: it.label || '',
-            qtd: it.qtd,
-            preco: it.preco,
-            kg: it.kg,
-            subtotal: it.preco * it.qtd
-          };
-        }),
-        total: total
-      };
-
-      // 1) tenta gravar no Firestore via firebase-catalogo.js
-      var gravouNuvem = false;
-      if(typeof window.DM_enviarPedido === 'function'){
-        try{
-          window.DM_enviarPedido(pedido);
-          gravouNuvem = true;
-        }catch(err){
-          console.warn('Falha ao gravar no Firestore, seguindo só com WhatsApp:', err);
-        }
-      }
-
-      // 2) abre WhatsApp
-      enviarWhatsApp(pedido);
-
-      // 3) limpa carrinho (o bug principal)
-      carrinho = [];
-      salvarCarrinho();
-      atualizarBarraCarrinho();
-      renderCarrinho();
-      fecharCarrinho();
-
-      // 4) reseta form
-      try{ form.reset(); }catch(e){}
-
-      if(gravouNuvem){
-        toast('Pedido enviado! Abrindo WhatsApp…');
-      } else {
-        toast('Pedido enviado pelo WhatsApp.');
-      }
-    });
-  }
-
-  // ---------- WHATSAPP ----------
-  var NUMERO_LOJA = '5511986975803';
-
-  function enviarWhatsApp(pedido){
-    var linhas = [];
-    linhas.push('*Novo pedido — De Minas Pão de Queijaria*');
-    linhas.push('');
-    linhas.push('*Cliente:* ' + pedido.cliente);
-    linhas.push('*Tipo:* ' + pedido.tipo);
-    if(pedido.tipo === 'Entrega'){
-      linhas.push('*Endereço:* ' + pedido.endereco);
-    }
-    linhas.push('');
-    linhas.push('*Itens:*');
-    pedido.itens.forEach(function(it){
-      linhas.push('• ' + it.qtd + 'x ' + it.nome + (it.label ? ' — ' + it.label : '') +
-        ' = ' + fmt(it.subtotal));
-    });
-    linhas.push('');
-    linhas.push('*Total:* ' + fmt(pedido.total));
-    if(pedido.obs){
-      linhas.push('');
-      linhas.push('*Observações:* ' + pedido.obs);
-    }
-    linhas.push('');
-    linhas.push('_Valores sujeitos a alteração conforme reajuste do fornecedor._');
-
-    var url = 'https://wa.me/' + NUMERO_LOJA + '?text=' + encodeURIComponent(linhas.join('\n'));
-    window.open(url, '_blank');
-  }
-
-  // ---------- LIGHTBOX FECHAR ----------
-  function ligarLightbox(){
-    var lb = $('#lb');
-    if(!lb) return;
-    $('#lbClose').addEventListener('click', function(){ lb.classList.remove('on'); });
-    lb.addEventListener('click', function(e){
-      if(e.target === lb) lb.classList.remove('on');
-    });
-  }
-
-  // ---------- FORM: MOSTRAR/ESCONDER ENDEREÇO ----------
-  function ligarTipoPedido(){
-    var radios = $$('input[name="tipo"]');
-    if(!radios.length) return;
-    function atualiza(){
-      var v = (document.querySelector('input[name="tipo"]:checked')||{}).value;
-      var fld = $('#addrFld');
-      if(!fld) return;
-      if(v === 'Retirada'){ fld.style.display = 'none'; }
-      else { fld.style.display = ''; }
-    }
-    radios.forEach(function(r){ r.addEventListener('change', atualiza); });
-    atualiza();
-  }
-
-  // ---------- INICIALIZAÇÃO ----------
-  function init(){
-    carregarCarrinho();
-    atualizarBarraCarrinho();
-    ligarBusca();
-    ligarSubmit();
-    ligarLightbox();
-    ligarTipoPedido();
-    ligarBotoesPrincipais();
-    carregarCatalogo();
-  }
-
-  function ligarBotoesPrincipais(){
-    // abrir carrinho
-    var bOpen = $('#cbOpen');
-    if(bOpen) bOpen.addEventListener('click', abrirCarrinho);
-
-    // fechar carrinho (X)
-    var bClose = $('#cartClose');
-    if(bClose) bClose.addEventListener('click', fecharCarrinho);
-
-    // clicar fora fecha
-    var dlg = $('#cartDlg');
-    if(dlg){
-      dlg.addEventListener('click', function(e){
-        if(e.target === dlg) fecharCarrinho();
-      });
-    }
-
-    // ✅ BOTÃO LIMPAR
-    var bLimpar = $('#btnLimpar');
-    if(bLimpar) bLimpar.addEventListener('click', limparCarrinho);
-
-    // esc fecha
-    document.addEventListener('keydown', function(e){
-      if(e.key === 'Escape') fecharCarrinho();
-    });
-  }
-
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-
+$('#admLink').hidden = S.admin;
+load();
 })();
 </script>
 </body>
