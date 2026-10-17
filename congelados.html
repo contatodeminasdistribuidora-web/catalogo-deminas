@@ -187,6 +187,8 @@ footer .adm{display:none!important} /* <--- ESCONDE O LINK DO RODAPÉ */
   .add{padding:0 12px;font-size:13px}
 }
 </style>
+<!-- TEMA APP -->
+<link rel="stylesheet" href="tema-mockup.css">
 </head>
 
 <!-- ⚠️ ATENÇÃO: troque "congelados" pelo ID exato da categoria no seu produtos.json -->
@@ -505,7 +507,6 @@ function limparCarrinho(){
   closeCart();
   toast('Pedido limpo.');
 }
-// Na mensagem do pedido, congelados levam a marca (ex.: "Broa Doce [Sabor da Roça]") para não haver dúvida.
 function nomeMsg(p) { const base = p.cat === 'congelados' && p.grupo ? `${p.nome} [${p.grupo}]` : p.nome; return (p.codigo ? p.codigo + ' · ' : '') + base; }
 function buildMessage(codigo) {
   const L = cartLines();
@@ -867,7 +868,6 @@ async function publish() {
   } catch (e) { toast(e.message || 'Falha ao publicar', 7000); }
   finally { publishing = false; }
 }
-
 function qrCanvas(text, size = 1000) {
   const qr = qrcode(0, 'M'); qr.addData(text); qr.make();
   const n = qr.getModuleCount(), quiet = 4, cell = Math.max(2, Math.floor(size / (n + quiet * 2))), dim = cell * (n + quiet * 2);
@@ -897,10 +897,11 @@ function openQR() {
     dl(a, 'qrcode-de-minas-congelados-arte.png');
   });
 }
-
 $('#admLink').hidden = S.admin;
 load();
 })();
 </script>
+<!-- TEMA APP (Script) -->
+<script src="tema-mockup.js" defer></script>
 </body>
 </html>
