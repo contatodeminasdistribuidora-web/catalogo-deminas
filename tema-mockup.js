@@ -27,7 +27,7 @@ top.after(ban);
 
 const promo = document.createElement('div');
 promo.className = 'promo';
-promo.innerHTML = `<div class="in"><b>Combos especiais</b><span>Uma seleção de sabores para cada momento.</span><button type="button" id="prGo">Ver todos os combos</button></div>`;
+promo.innerHTML = `<div class="in" id="prIn"><b>Combos especiais</b><span>Uma seleção de sabores para cada momento.</span><button type="button" id="prGo">Ver todos os combos</button></div>`;
 $('#stick').after(promo);
 
 const tabs = document.createElement('nav');
@@ -41,7 +41,7 @@ const fire = (v) => { const q = $('#q'); q.value = v; q.dispatchEvent(new Event(
 $('#tCart').onclick = openCart;
 $('#tMenu').onclick = () => $('footer').scrollIntoView({behavior: 'smooth'});
 $('#banGo').onclick = () => { fire(''); $('#catalog').scrollIntoView({behavior: 'smooth'}); };
-$('#prGo').onclick = () => { fire('combo'); $('#catalog').scrollIntoView({behavior: 'smooth'}); };
+$('#prGo').onclick = () => { fire(''); const c = document.querySelector('#catalog [data-combos]'); (c || $('#catalog')).scrollIntoView({behavior: 'smooth'}); if (!c) fire('combo'); };
 tabs.onclick = e => {
   const b = e.target.closest('[data-t]'); if (!b) return;
   if (b.dataset.t === 'home') scrollTo({top: 0, behavior: 'smooth'});
@@ -60,9 +60,104 @@ function decorate() {
     c.insertAdjacentHTML('afterbegin', `<button class="fav" type="button" aria-label="Favoritar" aria-pressed="${favs.has(id)}">${I.heart}</button>`);
     const nm = $('.nm', c); if (nm) nm.insertAdjacentHTML('afterend', '<div class="frz">❄ Congelado · Pronto para assar</div>');
   });
-  const img = $('#catalog .ph img');
-  if (img) $('#banIn').style.backgroundImage = `linear-gradient(90deg,#3b0a10 38%,#3b0a1066),url("${img.getAttribute('src')}")`;
+  carousel();
+  pick();
 }
+
+/* ---- Combos em carrossel (arrastar no celular, setas no computador) ---- */
+const AR = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
+function carousel() {
+  document.querySelectorAll('#catalog section.cat').forEach(sec => {
+    // combos e congelados viram carrossel; durante uma busca, volta à grade para mostrar todos os resultados
+    const alvo = /combo|congelad/i.test(($('h2', sec) || {}).textContent || '') || /congelad/i.test(document.body.dataset.cats || '');
+    if (!alvo || ($('#q') && $('#q').value.trim())) return;
+    if (/combo/i.test(($('h2', sec) || {}).textContent || '')) sec.dataset.combos = 1;
+    sec.querySelectorAll('.grid:not([data-car])').forEach(g => {
+      g.dataset.car = 1;
+      if (g.children.length < 2) return;
+      const w = document.createElement('div'); w.className = 'car';
+      g.before(w); w.appendChild(g); g.classList.add('track');
+      w.insertAdjacentHTML('beforeend', `<button type="button" class="cnav prev" aria-label="Anterior">${AR('m15 5-7 7 7 7')}</button><button type="button" class="cnav next" aria-label="Próximo">${AR('m9 5 7 7-7 7')}</button>`);
+      const upd = () => { w.classList.toggle('at-start', g.scrollLeft < 8); w.classList.toggle('at-end', g.scrollLeft + g.clientWidth >= g.scrollWidth - 8); };
+      // rolagem automática: pausa ao tocar/passar o mouse, fora da tela, aba oculta ou "reduzir movimento"
+      if (!matchMedia('(prefers-reduced-motion:reduce)').matches) {
+        let last = 0, hover = false, vis = false;
+        const touch = () => { last = Date.now(); };
+        ['pointerdown', 'touchstart', 'wheel', 'keydown', 'focusin'].forEach(ev => w.addEventListener(ev, touch, {passive: true}));
+        w.addEventListener('mouseenter', () => hover = true); w.addEventListener('mouseleave', () => { hover = false; touch(); });
+        new IntersectionObserver(en => { vis = en[0].isIntersecting; }, {threshold: 0.5}).observe(w);
+        const tm = setInterval(() => {
+          if (!w.isConnected) { clearInterval(tm); return; }
+          if (!vis || hover || document.hidden || Date.now() - last < 6000) return;
+          const atEnd = g.scrollLeft + g.clientWidth >= g.scrollWidth - 8;
+          if (atEnd) g.scrollTo({left: 0, behavior: 'smooth'});
+          else g.scrollBy({left: g.firstElementChild.offsetWidth + 12, behavior: 'smooth'});
+        }, 4000);
+      }
+      g.addEventListener('scroll', upd, {passive: true}); addEventListener('resize', upd); setTimeout(upd, 300);
+      w.addEventListener('click', e => {
+        const b = e.target.closest('.cnav'); if (!b) return;
+        g.scrollBy({left: (b.classList.contains('next') ? 1 : -1) * (g.firstElementChild.offsetWidth + 12), behavior: 'smooth'});
+      });
+    });
+  });
+}
+
+/* ---- Banners: usa banner.jpg / combos.jpg se existirem; senão, as fotos mais nítidas do catálogo ---- */
+const fade = 'linear-gradient(90deg,#3b0a10 0%,#3b0a10ee 30%,#3b0a1000 80%)';
+const fixed = {};
+function paint(el, src) { el.style.backgroundImage = `${fade},url("${src}")`; }
+function tryFile(name, el) {
+  const t = new Image();
+  t.onload = () => { fixed[name] = 1; paint(el, name); };
+  t.src = name + '?v=' + Date.now();
+}
+function pick() {
+  const imgs = [...document.querySelectorAll('#catalog .ph img')].filter(i => i.complete && i.naturalWidth > 200)
+    .sort((a, b) => b.naturalWidth * b.naturalHeight - a.naturalWidth * a.naturalHeight);
+  if (!fixed['banner.jpg'] && imgs[0]) paint($('#banIn'), imgs[0].getAttribute('src'));
+  if (!fixed['combos.jpg'] && imgs[1]) paint($('#prIn'), imgs[1].getAttribute('src'));
+}
+tryFile('banner.jpg', $('#banIn'));
+tryFile('combos.jpg', $('#prIn'));
+addEventListener('load', () => { pick(); setTimeout(pick, 1500); });
+
+/* ---- Ícones por categoria ---- */
+const P = {
+  gift: '<rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M3 7h18v3H3zM12 7v13M12 7c-2-3.500-5-3-5-1s3 1 5 1zM12 7c2-3.500 5-3 5-1s-3 1-5 1z"/>',
+  bread: '<path d="M4 13h16a8 6 0 0 1-16 0z"/><circle cx="9" cy="9.500" r="3"/><circle cx="15" cy="9.500" r="3"/>',
+  cheese: '<path d="M3 9l9-4 9 4v8H3z"/><circle cx="8" cy="13" r="1.200"/><circle cx="13.500" cy="12" r="1"/><circle cx="17" cy="15" r="1.200"/>',
+  candy: '<circle cx="12" cy="12" r="4"/><path d="M8.500 10 3 7v10l5.500-3M15.500 10 21 7v10l-5.500-3"/>',
+  honey: '<rect x="6" y="8" width="12" height="12" rx="3"/><path d="M8 8V5h8v3M9 13h6M9 16h6"/>',
+  basket: '<path d="M3 10h18l-2 10H5zM8 10l3-6M16 10l-3-6"/>',
+  cookie: '<circle cx="12" cy="12" r="8"/><circle cx="9" cy="10" r="1"/><circle cx="14.500" cy="9" r="1"/><circle cx="12" cy="14" r="1"/><circle cx="16" cy="14" r="1"/>',
+  star: '<path d="m12 3 2.700 5.600 6.100.9-4.400 4.300 1 6.100L12 17l-5.400 2.900 1-6.100L3.200 9.500l6.100-.9z"/>',
+  all: '<rect x="4" y="4" width="6" height="6" rx="1.500"/><rect x="14" y="4" width="6" height="6" rx="1.500"/><rect x="4" y="14" width="6" height="6" rx="1.500"/><rect x="14" y="14" width="6" height="6" rx="1.500"/>'
+};
+function iconFor(t) {
+  t = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  if (/combo|kit|cesta/.test(t)) return P.gift;
+  if (/pao de queijo|chipa|broa|tradicional|recheado/.test(t)) return P.bread;
+  if (/queijo/.test(t)) return P.cheese;
+  if (/doce|goiabada|compota|cocada|bala/.test(t)) return P.candy;
+  if (/mel|melado/.test(t)) return P.honey;
+  if (/mercearia|cafe|graos|geleia/.test(t)) return P.basket;
+  if (/biscoito|petisco|bolacha/.test(t)) return P.cookie;
+  if (/todos/.test(t)) return P.all;
+  return null;
+}
+const ini = t => { const w = t.replace(/[^\p{L}\p{N} ]/gu, '').trim().split(/\s+/).filter(x => x.length > 2 || /^\d/.test(x)); return ((w[0] || t)[0] + ((w[1] || '')[0] || (w[0] || '').slice(1, 2))).toUpperCase(); }
+function iconize() {
+  document.querySelectorAll('#chips .chip:not(:has(.ico))').forEach(b => {
+    const t = b.textContent, d = iconFor(t);
+    // marcas (congelados) não têm desenho próprio: círculo com as iniciais
+    b.insertAdjacentHTML('afterbegin', d
+      ? `<span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg></span>`
+      : `<span class="ico mono">${/congelad/i.test(document.body.dataset.cats || '') ? ini(t).replace(/</g, '') : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${P.star}</svg>`}</span>`);
+  });
+}
+new MutationObserver(iconize).observe($('#chips'), {childList: true});
+iconize();
 function badge() {
   const n = (($('#cbCount') || {}).textContent || '0').match(/\d+/);
   const v = n ? +n[0] : 0;
