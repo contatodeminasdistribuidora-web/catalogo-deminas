@@ -68,32 +68,45 @@ function decorate() {
 const AR = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
 function carousel() {
   document.querySelectorAll('#catalog section.cat').forEach(sec => {
-    // combos e congelados viram carrossel; durante uma busca, volta à grade para mostrar todos os resultados
+    // Força a seção de combos ou a página de congelados a virar carrossel.
+    // O restante (pães de queijo, etc) continua em grade normal.
     const alvo = /combo|congelad/i.test(($('h2', sec) || {}).textContent || '') || /congelad/i.test(document.body.dataset.cats || '');
     if (!alvo || ($('#q') && $('#q').value.trim())) return;
+    
+    // Marca a seção para o botão "Ver todos os combos" achar
     if (/combo/i.test(($('h2', sec) || {}).textContent || '')) sec.dataset.combos = 1;
+    
     sec.querySelectorAll('.grid:not([data-car])').forEach(g => {
       g.dataset.car = 1;
-      if (g.children.length < 2) return;
+      if (g.children.length < 2) return; // Se tiver só 1 produto, não faz carrossel
+      
       const w = document.createElement('div'); w.className = 'car';
       g.before(w); w.appendChild(g); g.classList.add('track');
+      
+      // Adiciona as setas de navegação (só aparecem no PC)
       w.insertAdjacentHTML('beforeend', `<button type="button" class="cnav prev" aria-label="Anterior">${AR('m15 5-7 7 7 7')}</button><button type="button" class="cnav next" aria-label="Próximo">${AR('m9 5 7 7-7 7')}</button>`);
+      
       const upd = () => { w.classList.toggle('at-start', g.scrollLeft < 8); w.classList.toggle('at-end', g.scrollLeft + g.clientWidth >= g.scrollWidth - 8); };
-      // rolagem automática: pausa ao tocar/passar o mouse, fora da tela, aba oculta ou "reduzir movimento"
+      
+      // Lógica de rolagem automática (autoplay)
       if (!matchMedia('(prefers-reduced-motion:reduce)').matches) {
         let last = 0, hover = false, vis = false;
         const touch = () => { last = Date.now(); };
+        // Se o usuário interagir, pausa o autoplay por 6 segundos
         ['pointerdown', 'touchstart', 'wheel', 'keydown', 'focusin'].forEach(ev => w.addEventListener(ev, touch, {passive: true}));
         w.addEventListener('mouseenter', () => hover = true); w.addEventListener('mouseleave', () => { hover = false; touch(); });
+        
         new IntersectionObserver(en => { vis = en[0].isIntersecting; }, {threshold: 0.5}).observe(w);
+        
         const tm = setInterval(() => {
           if (!w.isConnected) { clearInterval(tm); return; }
           if (!vis || hover || document.hidden || Date.now() - last < 6000) return;
           const atEnd = g.scrollLeft + g.clientWidth >= g.scrollWidth - 8;
           if (atEnd) g.scrollTo({left: 0, behavior: 'smooth'});
           else g.scrollBy({left: g.firstElementChild.offsetWidth + 12, behavior: 'smooth'});
-        }, 4000);
+        }, 4000); // Rola a cada 4 segundos
       }
+      
       g.addEventListener('scroll', upd, {passive: true}); addEventListener('resize', upd); setTimeout(upd, 300);
       w.addEventListener('click', e => {
         const b = e.target.closest('.cnav'); if (!b) return;
@@ -113,7 +126,6 @@ function tryFile(name, el) {
   t.src = name + '?v=' + Date.now();
 }
 function pick() {
-  // só fotos de pão de queijo e afins (evita escolher mel, conserva etc.)
   const ok = /p[aã]o de queijo|chipa|broa|recheado|biscoito de queijo|dadinho/i;
   const imgs = [...document.querySelectorAll('#catalog .card')].filter(c => ok.test(($('.nm', c) || {}).textContent || ''))
     .map(c => $('.ph img', c)).filter(i => i && i.complete && i.naturalWidth > 200)
@@ -153,7 +165,6 @@ const ini = t => { const w = t.replace(/[^\p{L}\p{N} ]/gu, '').trim().split(/\s+
 function iconize() {
   document.querySelectorAll('#chips .chip:not(:has(.ico))').forEach(b => {
     const t = b.textContent, d = iconFor(t);
-    // marcas (congelados) não têm desenho próprio: círculo com as iniciais
     b.insertAdjacentHTML('afterbegin', d
       ? `<span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg></span>`
       : `<span class="ico mono">${/congelad/i.test(document.body.dataset.cats || '') ? ini(t).replace(/</g, '') : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${P.star}</svg>`}</span>`);
