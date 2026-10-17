@@ -2,13 +2,14 @@
  "versao": 1,
  "whatsapp": "5511986975803",
  "avisos": [
+  "Pedidos: pão de queijo congelado e recheados até sábado; doces, queijos e demais produtos até domingo. Entregas às terças-feiras, a partir das 18h.",
   "Valores sujeitos a alteração conforme reajuste do fornecedor.",
   "Recheados, linha especial e gourmet: consultar estoque."
  ],
  "categorias": [
   {
    "id": "congelados",
-   "nome": "Pães de Queijo e Congelados"
+   "nome": "Pão de Queijo Mineiro"
   },
   {
    "id": "queijos",
@@ -34,6 +35,7 @@
  "produtos": [
   {
    "id": "sabor-da-roca-pao-de-queijo-tradicional-30g",
+   "codigo": "PQ-001",
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Pão de Queijo Tradicional 30g",
@@ -53,6 +55,7 @@
   },
   {
    "id": "sabor-da-roca-pao-de-queijo-coquetel-15g",
+   "codigo": "PQ-002",
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Pão de Queijo Coquetel 15g",
@@ -68,6 +71,7 @@
   },
   {
    "id": "sabor-da-roca-pao-de-queijo-lanche-80g",
+   "codigo": "PQ-003",
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Pão de Queijo Lanche 80g",
@@ -83,6 +87,7 @@
   },
   {
    "id": "sabor-da-roca-pao-de-queijo-super-lanche-100g",
+   "codigo": "PQ-004",
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Pão de Queijo Super Lanche 100g",
@@ -98,6 +103,7 @@
   },
   {
    "id": "sabor-da-roca-chipa-com-3-queijos",
+   "codigo": "PQ-005",
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Chipa com 3 Queijos",
@@ -113,6 +119,7 @@
   },
   {
    "id": "sabor-da-roca-biscoito-de-queijo-com-2-queijos",
+   "codigo": "PQ-006",
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Biscoito de Queijo com 2 Queijos",
@@ -128,6 +135,7 @@
   },
   {
    "id": "sabor-da-roca-broa-doce",
+   "codigo": "PQ-007",
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Broa Doce",
@@ -143,6 +151,7 @@
   },
   {
    "id": "sabor-da-roca-broa-doce-com-ervas",
+   "codigo": "PQ-008",
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Broa Doce com Ervas",
@@ -158,6 +167,7 @@
   },
   {
    "id": "sabor-da-roca-broa-salgada-temperada",
+   "codigo": "PQ-009",
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Broa Salgada Temperada",
@@ -173,6 +183,7 @@
   },
   {
    "id": "bem-de-minas-pao-de-queijo-tradicional-25g",
+   "codigo": "PQ-010",
    "cat": "congelados",
    "grupo": "Bem de Minas",
    "nome": "Pão de Queijo Tradicional 25g",
@@ -192,6 +203,7 @@
   },
   {
    "id": "bem-de-minas-biscoito-chipa",
+   "codigo": "PQ-011",
    "cat": "congelados",
    "grupo": "Bem de Minas",
    "nome": "Biscoito (Chipa)",
@@ -207,6 +219,7 @@
   },
   {
    "id": "garcia-de-minas-recheado-costela",
+   "codigo": "PQ-012",
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Costela",
@@ -222,6 +235,7 @@
   },
   {
    "id": "garcia-de-minas-recheado-goiabada",
+   "codigo": "PQ-013",
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Goiabada",
@@ -237,6 +251,7 @@
   },
   {
    "id": "garcia-de-minas-recheado-frango",
+   "codigo": "PQ-014",
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Frango",
@@ -252,6 +267,7 @@
   },
   {
    "id": "garcia-de-minas-recheado-calabresa",
+   "codigo": "PQ-015",
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Calabresa",
@@ -267,6 +283,7 @@
   },
   {
    "id": "garcia-de-minas-recheado-requeijao",
+   "codigo": "PQ-016",
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Requeijão",
@@ -282,6 +299,7 @@
   },
   {
    "id": "garcia-de-minas-recheado-doce-de-leite",
+   "codigo": "PQ-017",
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Doce de Leite",
@@ -297,6 +315,7 @@
   },
   {
    "id": "garcia-de-minas-pao-de-queijo-tradicional",
+   "codigo": "PQ-018",
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Pão de Queijo Tradicional",
@@ -316,6 +335,7 @@
   },
   {
    "id": "garcia-de-minas-broas",
+   "codigo": "PQ-019",
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Broas",
@@ -331,6 +351,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-brasil-mineiro",
+   "codigo": "PQ-020",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Brasil Mineiro",
@@ -350,6 +371,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-encanto-tradicional",
+   "codigo": "PQ-021",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Encanto Tradicional",
@@ -373,6 +395,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-temperado",
+   "codigo": "PQ-022",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Temperado",
@@ -380,7 +403,7 @@
    "opcoes": [
     {
      "label": "1kg",
-     "preco": 33.66
+     "preco": 33.9
     }
    ],
    "disponivel": true,
@@ -388,6 +411,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-calabresa",
+   "codigo": "PQ-023",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Calabresa",
@@ -395,7 +419,7 @@
    "opcoes": [
     {
      "label": "1kg",
-     "preco": 35.82
+     "preco": 35.9
     }
    ],
    "disponivel": true,
@@ -403,6 +427,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-multigraos",
+   "codigo": "PQ-024",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Multigrãos",
@@ -410,7 +435,7 @@
    "opcoes": [
     {
      "label": "1kg",
-     "preco": 30.06
+     "preco": 30.9
     }
    ],
    "disponivel": true,
@@ -418,6 +443,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-gourmet-4-queijos",
+   "codigo": "PQ-025",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Gourmet 4 Queijos",
@@ -437,6 +463,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-palitinho-provolone",
+   "codigo": "PQ-026",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Palitinho Provolone",
@@ -456,6 +483,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-doce-de-leite-empanado",
+   "codigo": "PQ-027",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Doce de Leite Empanado",
@@ -471,6 +499,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-requeijao-empanado",
+   "codigo": "PQ-028",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Requeijão Empanado",
@@ -486,6 +515,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-goiabada-empanado",
+   "codigo": "PQ-029",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Goiabada Empanado",
@@ -501,6 +531,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-frango-empanado",
+   "codigo": "PQ-030",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Frango Empanado",
@@ -516,6 +547,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-goiabada-artesanal",
+   "codigo": "PQ-031",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Goiabada Artesanal",
@@ -531,6 +563,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-requeijao-artesanal",
+   "codigo": "PQ-032",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Requeijão Artesanal",
@@ -546,6 +579,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-frango-artesanal",
+   "codigo": "PQ-033",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Frango Artesanal",
@@ -561,6 +595,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-dadinho-de-tapioca",
+   "codigo": "PQ-034",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Dadinho de Tapioca",
@@ -576,6 +611,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-broa-doce",
+   "codigo": "PQ-035",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Broa Doce",
@@ -591,6 +627,7 @@
   },
   {
    "id": "encanto-de-minas-brasil-mineiro-broa-salgada",
+   "codigo": "PQ-036",
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Broa Salgada",
@@ -606,6 +643,7 @@
   },
   {
    "id": "canastra-e-meia-cura-kit-4-parmesao-canastra",
+   "codigo": "QJ-001",
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Kit 4 Parmesão Canastra",
@@ -621,6 +659,7 @@
   },
   {
    "id": "canastra-e-meia-cura-kit-4-queijos-serra-da-canastra",
+   "codigo": "QJ-002",
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Kit 4 Queijos Serra da Canastra",
@@ -636,6 +675,7 @@
   },
   {
    "id": "canastra-e-meia-cura-queijo-fresco",
+   "codigo": "QJ-003",
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Fresco",
@@ -651,6 +691,7 @@
   },
   {
    "id": "canastra-e-meia-cura-queijo-meia-cura-monte-carmelo",
+   "codigo": "QJ-004",
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Meia Cura Monte Carmelo",
@@ -667,6 +708,7 @@
   },
   {
    "id": "canastra-e-meia-cura-queijo-canastra-medeiros",
+   "codigo": "QJ-005",
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Canastra Medeiros",
@@ -683,6 +725,7 @@
   },
   {
    "id": "canastra-e-meia-cura-queijo-meia-cura-cruzeiro-da-fortaleza",
+   "codigo": "QJ-006",
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Meia Cura Cruzeiro da Fortaleza",
@@ -699,6 +742,7 @@
   },
   {
    "id": "canastra-e-meia-cura-queijo-meia-cura-serra-do-salitre",
+   "codigo": "QJ-007",
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Meia Cura Serra do Salitre",
@@ -715,6 +759,7 @@
   },
   {
    "id": "canastra-e-meia-cura-queijo-serra-da-canastra",
+   "codigo": "QJ-008",
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Serra da Canastra",
@@ -731,6 +776,7 @@
   },
   {
    "id": "canastra-e-meia-cura-queijo-meia-cura-araxa",
+   "codigo": "QJ-009",
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Meia Cura Araxá",
@@ -747,6 +793,7 @@
   },
   {
    "id": "canastra-e-meia-cura-queijo-malacaxeta",
+   "codigo": "QJ-010",
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo Malacaxeta",
@@ -762,6 +809,7 @@
   },
   {
    "id": "canastra-e-meia-cura-queijo-da-santa",
+   "codigo": "QJ-011",
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
    "nome": "Queijo da Santa",
@@ -777,6 +825,7 @@
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-tranca-provolone",
+   "codigo": "QJ-012",
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Trança Provolone",
@@ -792,6 +841,7 @@
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-tranca-com-alho",
+   "codigo": "QJ-013",
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Trança com Alho",
@@ -807,6 +857,7 @@
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-tranca-ao-vinho",
+   "codigo": "QJ-014",
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Trança ao Vinho",
@@ -822,6 +873,7 @@
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-nozinho-provolone-defumado",
+   "codigo": "QJ-015",
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Nozinho Provolone Defumado",
@@ -837,6 +889,7 @@
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-palito-temperado",
+   "codigo": "QJ-016",
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Palito Temperado",
@@ -852,6 +905,7 @@
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-nozinho-temperado",
+   "codigo": "QJ-017",
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Nozinho Temperado",
@@ -867,6 +921,7 @@
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-tranca",
+   "codigo": "QJ-018",
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Trança",
@@ -882,6 +937,7 @@
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-provolone-fresco-defumado",
+   "codigo": "QJ-019",
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Provolone Fresco Defumado",
@@ -898,6 +954,7 @@
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-provolone-desidratado",
+   "codigo": "QJ-020",
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Provolone Desidratado",
@@ -913,6 +970,7 @@
   },
   {
    "id": "coalho-e-requeijao-requeijao-moreno",
+   "codigo": "QJ-021",
    "cat": "queijos",
    "grupo": "Coalho e Requeijão",
    "nome": "Requeijão Moreno",
@@ -929,6 +987,7 @@
   },
   {
    "id": "coalho-e-requeijao-queijo-coalho",
+   "codigo": "QJ-022",
    "cat": "queijos",
    "grupo": "Coalho e Requeijão",
    "nome": "Queijo Coalho",
@@ -945,6 +1004,7 @@
   },
   {
    "id": "doces-de-leite-doce-de-leite-moreno",
+   "codigo": "DC-001",
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce de Leite Moreno",
@@ -960,6 +1020,7 @@
   },
   {
    "id": "doces-de-leite-doce-de-leite-claro",
+   "codigo": "DC-002",
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce de Leite Claro",
@@ -975,6 +1036,7 @@
   },
   {
    "id": "doces-de-leite-doce-de-leite-vicosa-400g",
+   "codigo": "DC-003",
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce de Leite Viçosa 400g",
@@ -990,6 +1052,7 @@
   },
   {
    "id": "doces-de-leite-doce-de-leite-dona-lazara",
+   "codigo": "DC-004",
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce de Leite Dona Lázara",
@@ -1005,6 +1068,7 @@
   },
   {
    "id": "doces-de-leite-doce-de-leite-barra-tablete",
+   "codigo": "DC-005",
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce de Leite Barra (tablete)",
@@ -1020,6 +1084,7 @@
   },
   {
    "id": "doces-de-leite-barra-doce-de-leite",
+   "codigo": "DC-006",
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Barra Doce de Leite",
@@ -1039,6 +1104,7 @@
   },
   {
    "id": "doces-de-leite-doce-de-leite-na-palha",
+   "codigo": "DC-007",
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce de Leite na Palha",
@@ -1054,6 +1120,7 @@
   },
   {
    "id": "doces-de-leite-doce-de-leite-na-palha-dona-lazara",
+   "codigo": "DC-008",
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce de Leite na Palha Dona Lázara",
@@ -1069,6 +1136,7 @@
   },
   {
    "id": "doces-de-leite-doce-pingo-de-leite",
+   "codigo": "DC-009",
    "cat": "doces",
    "grupo": "Doces de Leite",
    "nome": "Doce Pingo de Leite",
@@ -1084,6 +1152,7 @@
   },
   {
    "id": "goiabadas-marmelada-e-bananada-goiabada-cascao-corte",
+   "codigo": "DC-010",
    "cat": "doces",
    "grupo": "Goiabadas, Marmelada e Bananada",
    "nome": "Goiabada Cascão Corte",
@@ -1107,6 +1176,7 @@
   },
   {
    "id": "goiabadas-marmelada-e-bananada-goiabada-cascao-de-corte",
+   "codigo": "DC-011",
    "cat": "doces",
    "grupo": "Goiabadas, Marmelada e Bananada",
    "nome": "Goiabada Cascão de Corte",
@@ -1122,6 +1192,7 @@
   },
   {
    "id": "goiabadas-marmelada-e-bananada-goiabada-cascao-de-colher",
+   "codigo": "DC-012",
    "cat": "doces",
    "grupo": "Goiabadas, Marmelada e Bananada",
    "nome": "Goiabada Cascão de Colher",
@@ -1137,6 +1208,7 @@
   },
   {
    "id": "goiabadas-marmelada-e-bananada-goiabada-cremosa-zelia",
+   "codigo": "DC-013",
    "cat": "doces",
    "grupo": "Goiabadas, Marmelada e Bananada",
    "nome": "Goiabada Cremosa Zélia",
@@ -1152,6 +1224,7 @@
   },
   {
    "id": "goiabadas-marmelada-e-bananada-goiabada-cascao-na-palha",
+   "codigo": "DC-014",
    "cat": "doces",
    "grupo": "Goiabadas, Marmelada e Bananada",
    "nome": "Goiabada Cascão na Palha",
@@ -1167,6 +1240,7 @@
   },
   {
    "id": "goiabadas-marmelada-e-bananada-bananada-na-palha",
+   "codigo": "DC-015",
    "cat": "doces",
    "grupo": "Goiabadas, Marmelada e Bananada",
    "nome": "Bananada na Palha",
@@ -1182,6 +1256,7 @@
   },
   {
    "id": "goiabadas-marmelada-e-bananada-marmelada",
+   "codigo": "DC-016",
    "cat": "doces",
    "grupo": "Goiabadas, Marmelada e Bananada",
    "nome": "Marmelada",
@@ -1197,6 +1272,7 @@
   },
   {
    "id": "cremosos-e-doces-em-calda-doce-ambrosia",
+   "codigo": "DC-017",
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Doce Ambrosia",
@@ -1212,6 +1288,7 @@
   },
   {
    "id": "cremosos-e-doces-em-calda-doce-de-manga",
+   "codigo": "DC-018",
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Doce de Manga",
@@ -1227,6 +1304,7 @@
   },
   {
    "id": "cremosos-e-doces-em-calda-cocada-morena-cremosa",
+   "codigo": "DC-019",
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Cocada Morena Cremosa",
@@ -1242,6 +1320,7 @@
   },
   {
    "id": "cremosos-e-doces-em-calda-cocada-branca-cremosa",
+   "codigo": "DC-020",
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Cocada Branca Cremosa",
@@ -1257,6 +1336,7 @@
   },
   {
    "id": "cremosos-e-doces-em-calda-doce-pastoso-com-leite",
+   "codigo": "DC-021",
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Doce Pastoso com Leite",
@@ -1272,6 +1352,7 @@
   },
   {
    "id": "cremosos-e-doces-em-calda-doce-de-mamao-ralado",
+   "codigo": "DC-022",
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Doce de Mamão Ralado",
@@ -1287,6 +1368,7 @@
   },
   {
    "id": "cremosos-e-doces-em-calda-doce-de-figo",
+   "codigo": "DC-023",
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Doce de Figo",
@@ -1302,6 +1384,7 @@
   },
   {
    "id": "cremosos-e-doces-em-calda-doce-de-abobora-em-pedacos",
+   "codigo": "DC-024",
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Doce de Abóbora em Pedaços",
@@ -1317,6 +1400,7 @@
   },
   {
    "id": "cremosos-e-doces-em-calda-figo-ramy-caramelizado-ao-conhaque-frances",
+   "codigo": "DC-025",
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Figo Ramy Caramelizado ao Conhaque Francês",
@@ -1332,6 +1416,7 @@
   },
   {
    "id": "cremosos-e-doces-em-calda-doce-de-queijo-em-calda",
+   "codigo": "DC-026",
    "cat": "doces",
    "grupo": "Cremosos e Doces em Calda",
    "nome": "Doce de Queijo em Calda",
@@ -1347,6 +1432,7 @@
   },
   {
    "id": "balas-bala-doce-de-leite",
+   "codigo": "DC-027",
    "cat": "doces",
    "grupo": "Balas",
    "nome": "Bala Doce de Leite",
@@ -1362,6 +1448,7 @@
   },
   {
    "id": "balas-bala-doce-de-leite-pacote-maior",
+   "codigo": "DC-028",
    "cat": "doces",
    "grupo": "Balas",
    "nome": "Bala Doce de Leite (pacote maior)",
@@ -1377,6 +1464,7 @@
   },
   {
    "id": "balas-bala-quebra-queixo",
+   "codigo": "DC-029",
    "cat": "doces",
    "grupo": "Balas",
    "nome": "Bala Quebra Queixo",
@@ -1392,6 +1480,7 @@
   },
   {
    "id": "mel-florada-silvestre",
+   "codigo": "ML-001",
    "cat": "mel",
    "grupo": "",
    "nome": "Mel Florada Silvestre",
@@ -1415,6 +1504,7 @@
   },
   {
    "id": "mel-florada-laranjeira",
+   "codigo": "ML-002",
    "cat": "mel",
    "grupo": "",
    "nome": "Mel Florada Laranjeira",
@@ -1438,6 +1528,7 @@
   },
   {
    "id": "mel-florada-eucalipto",
+   "codigo": "ML-003",
    "cat": "mel",
    "grupo": "",
    "nome": "Mel Florada Eucalipto",
@@ -1461,6 +1552,7 @@
   },
   {
    "id": "mel-com-favo",
+   "codigo": "ML-004",
    "cat": "mel",
    "grupo": "",
    "nome": "Mel com Favo",
@@ -1480,6 +1572,7 @@
   },
   {
    "id": "mel-silvestre-330g",
+   "codigo": "ML-005",
    "cat": "mel",
    "grupo": "",
    "nome": "Mel Silvestre 330g",
@@ -1495,6 +1588,7 @@
   },
   {
    "id": "mel-com-favo-150g",
+   "codigo": "ML-006",
    "cat": "mel",
    "grupo": "",
    "nome": "Mel com Favo 150g",
@@ -1510,6 +1604,7 @@
   },
   {
    "id": "melado",
+   "codigo": "ML-007",
    "cat": "mel",
    "grupo": "",
    "nome": "Melado",
@@ -1525,6 +1620,7 @@
   },
   {
    "id": "melado-de-cana-248g",
+   "codigo": "ML-008",
    "cat": "mel",
    "grupo": "",
    "nome": "Melado de Cana 248g",
@@ -1540,6 +1636,7 @@
   },
   {
    "id": "manteiga-canastra-500g",
+   "codigo": "MC-001",
    "cat": "mercearia",
    "grupo": "",
    "nome": "Manteiga Canastra 500g",
@@ -1555,6 +1652,7 @@
   },
   {
    "id": "manteiga-de-garrafa",
+   "codigo": "MC-002",
    "cat": "mercearia",
    "grupo": "",
    "nome": "Manteiga de Garrafa",
@@ -1570,6 +1668,7 @@
   },
   {
    "id": "geleias-de-pimenta-250g",
+   "codigo": "MC-003",
    "cat": "mercearia",
    "grupo": "",
    "nome": "Geleias de Pimenta 250g",
@@ -1585,6 +1684,7 @@
   },
   {
    "id": "farinha-de-mandioca-biju-800g",
+   "codigo": "MC-004",
    "cat": "mercearia",
    "grupo": "",
    "nome": "Farinha de Mandioca Biju 800g",
@@ -1600,6 +1700,7 @@
   },
   {
    "id": "farinha-temperada-sem-pimenta",
+   "codigo": "MC-005",
    "cat": "mercearia",
    "grupo": "",
    "nome": "Farinha Temperada sem Pimenta",
@@ -1615,6 +1716,7 @@
   },
   {
    "id": "farinha-temperada-de-alho",
+   "codigo": "MC-006",
    "cat": "mercearia",
    "grupo": "",
    "nome": "Farinha Temperada de Alho",
@@ -1630,6 +1732,7 @@
   },
   {
    "id": "picles",
+   "codigo": "MC-007",
    "cat": "mercearia",
    "grupo": "",
    "nome": "Picles",
@@ -1645,6 +1748,7 @@
   },
   {
    "id": "casadinho-de-goiabada",
+   "codigo": "BP-001",
    "cat": "biscoitos",
    "grupo": "",
    "nome": "Casadinho de Goiabada",
@@ -1660,6 +1764,7 @@
   },
   {
    "id": "sequilho-de-goiabada",
+   "codigo": "BP-002",
    "cat": "biscoitos",
    "grupo": "",
    "nome": "Sequilho de Goiabada",
@@ -1675,6 +1780,7 @@
   },
   {
    "id": "bolacha-de-nata",
+   "codigo": "BP-003",
    "cat": "biscoitos",
    "grupo": "",
    "nome": "Bolacha de Nata",
@@ -1690,6 +1796,7 @@
   },
   {
    "id": "biscoito-de-queijo-canastra",
+   "codigo": "BP-004",
    "cat": "biscoitos",
    "grupo": "",
    "nome": "Biscoito de Queijo Canastra",
@@ -1705,6 +1812,7 @@
   },
   {
    "id": "suspiro",
+   "codigo": "BP-005",
    "cat": "biscoitos",
    "grupo": "",
    "nome": "Suspiro",
