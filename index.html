@@ -85,8 +85,14 @@ section.cat>h2 svg{width:26px;height:16px;flex:none}
 .nm{font-weight:600;font-size:16.5px;line-height:1.2;color:var(--brown);margin:2px 0 4px;font-family:'Fraunces',Georgia,serif}
 .badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold-d);border-radius:999px;padding:1px 8px;margin:0 4px 2px 0}
 .badge.off{background:var(--brown);border-color:var(--brown);color:#fff}
-.opt{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px dashed #dcc590}
+
+/* CORREÇÃO DOS BOTÕES AQUI */
+.opt{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px dashed #dcc590;flex-wrap:wrap}
 .opt:first-of-type{border-top:0}
+.opt > span:first-child{flex:1 1 auto;min-width:0}
+.opt .add, .opt .step{flex-shrink:0;margin-left:auto}
+/* FIM DA CORREÇÃO */
+
 .opt .lb{display:block;font-size:12px;color:var(--muted);font-weight:600;line-height:1.1}
 .opt .pr{font-weight:800;font-size:16.5px;color:var(--red);white-space:nowrap}
 .add{background:var(--red);color:#fff;border:0;border-radius:999px;height:38px;padding:0 18px;font-weight:800;font-size:14px}
@@ -176,6 +182,11 @@ footer .adm{display:inline-block;margin-top:18px;font-size:12px;color:#c9a98a;te
 .qrbox{text-align:center}
 .qrbox canvas{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--line)}
 @media (prefers-reduced-motion:reduce){.cartbar{transition:none}.cartmodal-inner{transition:none}}
+
+/* Ajuste para telas menores garantirem que o botão fique bonito */
+@media (max-width:420px){
+  .add{padding:0 12px;font-size:13px}
+}
 </style>
 </head>
 <body>
