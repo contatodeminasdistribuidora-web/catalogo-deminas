@@ -83,11 +83,20 @@ $('#btnFavs').onclick = () => {
     // Restaura o catálogo
     document.querySelectorAll('#catalog .card').forEach(c => c.style.display = '');
     document.querySelectorAll('#catalog section').forEach(s => s.style.display = '');
+    document.querySelectorAll('#catalog .grp').forEach(s => s.style.display = '');
   }
 };
 function renderFavs() {
   document.querySelectorAll('#catalog .card').forEach(c => {
     c.style.display = favs.has(c.dataset.pid) ? '' : 'none';
+  });
+  document.querySelectorAll('#catalog .grid').forEach(g => {
+    const vis = [...g.querySelectorAll('.card')].some(c => c.style.display !== 'none');
+    g.style.display = vis ? '' : 'none';
+    // Oculta o grupo (grp) se não houver cards visíveis
+    if (g.previousElementSibling && g.previousElementSibling.classList.contains('grp')) {
+      g.previousElementSibling.style.display = vis ? '' : 'none';
+    }
   });
   document.querySelectorAll('#catalog section').forEach(s => {
     const vis = [...s.querySelectorAll('.card')].some(c => c.style.display !== 'none');
@@ -115,17 +124,24 @@ function decorate() {
 const AR = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
 function carousel() {
   document.querySelectorAll('#catalog section.cat').forEach(sec => {
-    // Transforma em carrossel APENAS se for Combo, ou se estiver na página de congelados
     const txt = ($('h2', sec) || {}).textContent || '';
-    const isCombo = /combo/i.test(txt);
     const isCongelados = /congelad/i.test(document.body.dataset.cats || '');
+    const isComboSection = /combo/i.test(txt);
     
-    if (!isCombo && !isCongelados) return;
-    if ($('#q') && $('#q').value.trim()) return;
-    
-    if (isCombo) sec.dataset.combos = 1;
+    // AQUI ESTÁ A CORREÇÃO: Ele marca a seção e também verifica os grupos (.grp) dentro dela
+    if (isComboSection) sec.dataset.combos = 1;
     
     sec.querySelectorAll('.grid:not([data-car])').forEach(g => {
+      const prev = g.previousElementSibling;
+      const grpTxt = prev && prev.classList.contains('grp') ? prev.textContent : '';
+      const isComboGroup = /combo/i.test(grpTxt);
+      
+      if (isComboGroup) prev.dataset.combos = 1;
+
+      // Ativa o carrossel se for a página de congelados, se a seção for combo, ou se o grupo for combo
+      if (!isCongelados && !isComboSection && !isComboGroup) return;
+      if ($('#q') && $('#q').value.trim()) return;
+      
       g.dataset.car = 1;
       if (g.children.length < 2) return;
       
