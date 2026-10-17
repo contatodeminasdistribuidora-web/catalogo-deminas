@@ -30,6 +30,19 @@ promo.className = 'promo';
 promo.innerHTML = `<div class="in" id="prIn"><b>Combos especiais</b><span>Uma seleção de sabores para cada momento.</span><button type="button" id="prGo">Ver todos os combos</button></div>`;
 $('#stick').after(promo);
 
+// --- NOVO: BARRA DE RECORRÊNCIA E FAVORITOS ---
+const recur = document.createElement('div');
+recur.style.cssText = 'max-width:1100px;margin:10px auto 0;padding:0 16px;display:flex;gap:8px;';
+recur.innerHTML = `
+  <button type="button" id="btnRepeat" style="flex:1;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px;font-size:13px;font-weight:800;color:var(--red);display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 2px 6px #3b0a1010">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg> Repetir última compra
+  </button>
+  <button type="button" id="btnFavs" style="flex:1;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px;font-size:13px;font-weight:800;color:var(--red);display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 2px 6px #3b0a1010">
+    ${I.heart.replace('width="24"','width="18"').replace('height="24"','height="18"')} Meus Favoritos
+  </button>
+`;
+promo.after(recur);
+
 const tabs = document.createElement('nav');
 tabs.className = 'tabs';
 tabs.setAttribute('aria-label', 'Navegação');
@@ -48,6 +61,40 @@ tabs.onclick = e => {
   if (b.dataset.t === 'cats') $('#stick').scrollIntoView({behavior: 'smooth'});
   if (b.dataset.t === 'cart') openCart();
 };
+
+// --- NOVO: Lógica de Repetir e Favoritos ---
+let showOnlyFavs = false;
+$('#btnRepeat').onclick = () => {
+  const last = JSON.parse(localStorage.getItem('dm_last_order') || '{}');
+  if (!last || !Object.keys(last).length) { alert('Você ainda não fez nenhum pedido neste aparelho.'); return; }
+  // Repõe no carrinho
+  localStorage.setItem('dm_cart', JSON.stringify(last));
+  alert('Sua última compra foi adicionada ao carrinho!');
+  openCart();
+};
+$('#btnFavs').onclick = () => {
+  showOnlyFavs = !showOnlyFavs;
+  const btn = $('#btnFavs');
+  if (showOnlyFavs) {
+    btn.style.background = 'var(--red)'; btn.style.color = '#fff';
+    renderFavs();
+  } else {
+    btn.style.background = '#fff'; btn.style.color = 'var(--red)';
+    // Restaura o catálogo
+    document.querySelectorAll('#catalog .card').forEach(c => c.style.display = '');
+    document.querySelectorAll('#catalog section').forEach(s => s.style.display = '');
+  }
+};
+function renderFavs() {
+  document.querySelectorAll('#catalog .card').forEach(c => {
+    c.style.display = favs.has(c.dataset.pid) ? '' : 'none';
+  });
+  document.querySelectorAll('#catalog section').forEach(s => {
+    const vis = [...s.querySelectorAll('.card')].some(c => c.style.display !== 'none');
+    s.style.display = vis ? '' : 'none';
+  });
+}
+// --------------------------------------------
 
 const favs = new Set(JSON.parse(localStorage.getItem('dm_fav') || '[]'));
 function decorate() {
@@ -68,43 +115,40 @@ function decorate() {
 const AR = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
 function carousel() {
   document.querySelectorAll('#catalog section.cat').forEach(sec => {
-    // Força a seção de combos ou a página de congelados a virar carrossel.
-    // O restante (pães de queijo, etc) continua em grade normal.
-    const alvo = /combo|congelad/i.test(($('h2', sec) || {}).textContent || '') || /congelad/i.test(document.body.dataset.cats || '');
-    if (!alvo || ($('#q') && $('#q').value.trim())) return;
+    // Transforma em carrossel APENAS se for Combo, ou se estiver na página de congelados
+    const txt = ($('h2', sec) || {}).textContent || '';
+    const isCombo = /combo/i.test(txt);
+    const isCongelados = /congelad/i.test(document.body.dataset.cats || '');
     
-    // Marca a seção para o botão "Ver todos os combos" achar
-    if (/combo/i.test(($('h2', sec) || {}).textContent || '')) sec.dataset.combos = 1;
+    if (!isCombo && !isCongelados) return;
+    if ($('#q') && $('#q').value.trim()) return;
+    
+    if (isCombo) sec.dataset.combos = 1;
     
     sec.querySelectorAll('.grid:not([data-car])').forEach(g => {
       g.dataset.car = 1;
-      if (g.children.length < 2) return; // Se tiver só 1 produto, não faz carrossel
+      if (g.children.length < 2) return;
       
       const w = document.createElement('div'); w.className = 'car';
       g.before(w); w.appendChild(g); g.classList.add('track');
       
-      // Adiciona as setas de navegação (só aparecem no PC)
       w.insertAdjacentHTML('beforeend', `<button type="button" class="cnav prev" aria-label="Anterior">${AR('m15 5-7 7 7 7')}</button><button type="button" class="cnav next" aria-label="Próximo">${AR('m9 5 7 7-7 7')}</button>`);
       
       const upd = () => { w.classList.toggle('at-start', g.scrollLeft < 8); w.classList.toggle('at-end', g.scrollLeft + g.clientWidth >= g.scrollWidth - 8); };
       
-      // Lógica de rolagem automática (autoplay)
       if (!matchMedia('(prefers-reduced-motion:reduce)').matches) {
         let last = 0, hover = false, vis = false;
         const touch = () => { last = Date.now(); };
-        // Se o usuário interagir, pausa o autoplay por 6 segundos
         ['pointerdown', 'touchstart', 'wheel', 'keydown', 'focusin'].forEach(ev => w.addEventListener(ev, touch, {passive: true}));
         w.addEventListener('mouseenter', () => hover = true); w.addEventListener('mouseleave', () => { hover = false; touch(); });
-        
         new IntersectionObserver(en => { vis = en[0].isIntersecting; }, {threshold: 0.5}).observe(w);
-        
         const tm = setInterval(() => {
           if (!w.isConnected) { clearInterval(tm); return; }
           if (!vis || hover || document.hidden || Date.now() - last < 6000) return;
           const atEnd = g.scrollLeft + g.clientWidth >= g.scrollWidth - 8;
           if (atEnd) g.scrollTo({left: 0, behavior: 'smooth'});
           else g.scrollBy({left: g.firstElementChild.offsetWidth + 12, behavior: 'smooth'});
-        }, 4000); // Rola a cada 4 segundos
+        }, 4000);
       }
       
       g.addEventListener('scroll', upd, {passive: true}); addEventListener('resize', upd); setTimeout(upd, 300);
@@ -184,6 +228,7 @@ document.addEventListener('click', e => {
   favs.has(id) ? favs.delete(id) : favs.add(id);
   f.setAttribute('aria-pressed', favs.has(id));
   try { localStorage.setItem('dm_fav', JSON.stringify([...favs])); } catch {}
+  if (showOnlyFavs) renderFavs();
 });
 new MutationObserver(decorate).observe($('#catalog'), {childList: true, subtree: true});
 new MutationObserver(badge).observe($('#cartbar'), {attributes: true, childList: true, subtree: true, characterData: true});
