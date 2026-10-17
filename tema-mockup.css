@@ -92,7 +92,6 @@ footer{background:var(--brown)}
 
 /* ===== v4: combos em carrossel ===== */
 .car{position:relative; margin-bottom: 24px;}
-/* Força o track a ser flex e ter rolagem horizontal em qualquer lugar */
 .car .track{
   display: flex !important; 
   flex-direction: row !important;
@@ -106,7 +105,6 @@ footer{background:var(--brown)}
   overscroll-behavior-x: contain;
 }
 .car .track::-webkit-scrollbar{display:none}
-/* Força os cards dentro do carrossel a terem largura fixa (ex: 75% da tela) */
 .car .track > .card{
   flex: 0 0 75% !important; 
   max-width: 300px;
