@@ -192,6 +192,7 @@ html.theme-ready body { opacity: 1; }
 </style>
 
 <script>
+  // Adiciona a classe para esconder a tela
   document.documentElement.classList.add('theme-loading');
 </script>
 
@@ -386,15 +387,16 @@ const visibleCats = () => S.data.categorias.filter(c => !ONLY.length || ONLY.inc
 const visibleProds = () => { const ids = new Set(visibleCats().map(c => c.id)); return S.data.produtos.filter(p => ids.has(p.cat)); };
 let anchors = [];
 
+// --- INÍCIO DA MELHORIA: Reordenar categorias no index ---
 function renderCatalog() {
   const q = norm(S.q.trim());
   
-  // Ordena as categorias: Combos vão para o final
+  // Pega as categorias e as ordena. Se a categoria for "Combo", ela vai pro final.
   const cats = visibleCats().sort((a, b) => {
     const aIsCombo = /combo/i.test(a.nome);
     const bIsCombo = /combo/i.test(b.nome);
-    if (aIsCombo && !bIsCombo) return 1;
-    if (!aIsCombo && bIsCombo) return -1;
+    if (aIsCombo && !bIsCombo) return 1; // Combos para o fim
+    if (!aIsCombo && bIsCombo) return -1; // Pães e outros para o começo
     return 0;
   });
 
@@ -411,12 +413,9 @@ function renderCatalog() {
     for (const p of items) { const g = p.grupo || ''; if (!idx.has(g)) { idx.set(g, groups.length); groups.push({g, list: []}); } groups[idx.get(g)].list.push(p); }
     const ck = 'c' + (anchors.length || 1);
     if (!single) anchors.push({key: ck, label: c.nome});
-    
-    // Adiciona a classe "cat" para o tema identificar e ativar o carrossel
     html += `<section class="cat" id="a-${ck}" ${single ? '' : `data-key="${ck}"`}><h2>${ROOF}${esc(c.nome)}</h2>`;
     if (hasKg(items)) html += `<p class="kgcall"><b>Cobrado por quilo.</b> O valor final muda após a pesagem: cada peça pesa um pouco diferente (por exemplo, 1,5 kg ou 1,625 kg). O preço mostrado é por kg e o total final é confirmado pelo WhatsApp.</p>`;
     if (S.admin) html += `<div class="cat-tools"><button class="btn sm red" type="button" data-act="new" data-cat="${esc(c.id)}">+ Novo produto em ${esc(c.nome)}</button></div>`;
-    
     for (const {g, list} of groups) {
       if (g) {
         const gk = 'g' + (gi++);
@@ -431,6 +430,7 @@ function renderCatalog() {
   renderChips();
   measure();
 }
+// --- FIM DA MELHORIA ---
 
 function renderChips() {
   const box = $('#chips');
@@ -892,7 +892,6 @@ async function publish() {
   } catch (e) { toast(e.message || 'Falha ao publicar', 7000); }
   finally { publishing = false; }
 }
-
 function qrCanvas(text, size = 1000) {
   const qr = qrcode(0, 'M'); qr.addData(text); qr.make();
   const n = qr.getModuleCount(), quiet = 4, cell = Math.max(2, Math.floor(size / (n + quiet * 2))), dim = cell * (n + quiet * 2);
