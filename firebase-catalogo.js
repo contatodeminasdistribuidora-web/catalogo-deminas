@@ -22,11 +22,12 @@ const fdb = getFirestore(app);
 
 /**
  * Envia um pedido do catálogo para o Firestore.
- * O id é determinístico (baseado em timestamp + random)
- * para evitar duplicar se o usuário clicar 2x.
+ * O id do documento é o próprio código do pedido (ex.: DM-261017-A3F9),
+ * o mesmo que o cliente vê no WhatsApp. Se o cliente clicar 2x, o segundo
+ * envio é recusado pelas regras (só admin pode alterar) e não duplica.
  */
 window.DM_enviarPedido = async function (pedido) {
-  const id = 'cat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+  const id = pedido.codigo || ('DM-' + Date.now().toString(36).toUpperCase());
 
   // Remove undefined (Firestore rejeita)
   const limpo = JSON.parse(JSON.stringify(pedido));
