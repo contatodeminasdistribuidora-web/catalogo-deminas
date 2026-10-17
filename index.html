@@ -185,18 +185,13 @@ footer .adm{display:none!important} /* <--- ESCONDE O LINK DO RODAPÉ */
 @media (max-width:420px){
   .add{padding:0 12px;font-size:13px}
 }
-
 /* Otimização: Evita o piscar do site antes do tema carregar */
 html.theme-loading body { opacity: 0; transition: opacity 0.2s; }
 html.theme-ready body { opacity: 1; }
 </style>
-
 <script>
-  // Adiciona a classe para esconder a tela
   document.documentElement.classList.add('theme-loading');
 </script>
-
-<!-- TEMA APP -->
 <link rel="stylesheet" href="tema-mockup.css">
 </head>
 <body>
@@ -589,6 +584,9 @@ $('#orderForm').addEventListener('submit', e => {
   if (telDig.length < 10 || telDig.length > 13) { toast('Informe seu WhatsApp com DDD, ex.: (11) 98697-5803'); $('#cTel').focus(); return; }
 
   store.set('dm_cust', {nome, addr, tel});
+
+  // Salva o carrinho como "Última Compra" antes de limpar
+  store.set('dm_last_order', S.cart);
 
   const codigo = gerarCodigoPedido();
 
