@@ -134,10 +134,8 @@ function carousel() {
       
       if (isComboGroup) prev.dataset.combos = 1;
 
-      // NOVO GATILHO: Se tiver mais de 4 itens, força o carrossel
-      const manyItems = g.children.length > 4;
-
-      if (!isCongelados && !isComboSection && !isComboGroup && !manyItems) return;
+      // Mantém o gatilho original
+      if (!isCongelados && !isComboSection && !isComboGroup) return;
       if ($('#q') && $('#q').value.trim()) return;
       
       g.dataset.car = 1;
