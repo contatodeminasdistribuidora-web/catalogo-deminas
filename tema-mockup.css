@@ -91,10 +91,27 @@ footer{background:var(--brown)}
 @media (min-width:700px){.banner .in{min-height:300px;padding:40px}.banner h1{font-size:44px}.promo .in{min-height:180px;padding:28px 32px}}
 
 /* ===== v4: combos em carrossel ===== */
-.car{position:relative}
-.car .track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding:4px 16px 12px;margin:0 -16px;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.car{position:relative; margin-bottom: 24px;}
+/* O segredo está aqui: forçar o track a ser flex e ter rolagem horizontal */
+.car .track{
+  display: flex !important; 
+  flex-direction: row !important;
+  overflow-x: auto !important; 
+  scroll-snap-type: x mandatory; 
+  gap: 12px; 
+  padding: 4px 16px 12px; 
+  margin: 0 -16px; 
+  scrollbar-width: none; 
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
 .car .track::-webkit-scrollbar{display:none}
-.car .track>.card{flex:0 0 min(78%,280px);scroll-snap-align:start}
+/* Força os cards dentro do carrossel a terem largura fixa (ex: 75% da tela) */
+.car .track > .card{
+  flex: 0 0 75% !important; 
+  max-width: 300px;
+  scroll-snap-align: start;
+}
 .cnav{position:absolute;top:34%;z-index:3;width:40px;height:40px;border-radius:50%;border:0;background:#fffdf8;color:var(--red);box-shadow:0 2px 10px #3b0a1033;display:none;place-items:center}
 .cnav svg{width:20px;height:20px}
 .cnav.prev{left:-6px}.cnav.next{right:-6px}
