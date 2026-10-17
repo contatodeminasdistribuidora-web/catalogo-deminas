@@ -10,7 +10,7 @@
 
 <script type="module">
 import { onAuthStateChanged, auth } from './firebase-config.js';
-import * as _API from './firebase-api.js';
+import * as _API from './firebase-api.js?v=151';
 
   // Import por namespace: se o firebase-api.js publicado estiver desatualizado,
   // o login continua funcionando e o app avisa quais funções faltam.
@@ -746,11 +746,19 @@ document.addEventListener('fb-ready', () => {
   fbReady = true;
   setCloudStatus('desconectado', 'Firebase pronto — clique em "Entrar com Google"');
 });
-setTimeout(() => {
-  if (!fbReady) {
-    const el = document.getElementById('login-erro');
-    if (el) { el.textContent = 'Não foi possível carregar o Firebase (verifique a internet e se firebase-config.js e firebase-api.js estão na mesma pasta). Recarregue a página.'; el.classList.add('on'); }
-  }
+window.__errosJS = [];
+window.addEventListener('error', ev => { if (ev && ev.message) window.__errosJS.push(ev.message); });
+window.addEventListener('unhandledrejection', ev => { window.__errosJS.push(String((ev.reason && ev.reason.message) || ev.reason)); });
+setTimeout(async () => {
+  if (fbReady) return;
+  const el = document.getElementById('login-erro');
+  if (!el) return;
+  let det = '';
+  try { await import('./firebase-config.js'); } catch (e) { det = 'firebase-config.js: ' + ((e && e.message) || e); }
+  if (!det) { try { await import('./firebase-api.js?v=151'); } catch (e) { det = 'firebase-api.js: ' + ((e && e.message) || e); } }
+  if (!det && window.__errosJS.length) det = window.__errosJS[window.__errosJS.length - 1];
+  el.textContent = 'Não foi possível carregar o Firebase. ' + (det ? 'Detalhe: ' + det : 'Os arquivos carregaram, mas o módulo principal falhou — abra o Console (F12) e veja o erro em vermelho.');
+  el.classList.add('on');
 }, 8000);
 
 document.addEventListener('fb-auth-change', (e) => {
