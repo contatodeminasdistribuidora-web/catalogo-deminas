@@ -64,6 +64,22 @@ section.cat>h2 svg{width:26px;height:16px;flex:none}
 .ph.empty{cursor:default;background:linear-gradient(160deg,#f5e6c8,#ecd7ab)}
 .ph.empty svg{width:48px;opacity:.55}
 .cbody{flex:1;min-width:0}
+[hidden]{display:none!important}
+.addmore{display:flex;width:100%;align-items:center;justify-content:center;gap:8px;margin-top:12px;height:46px;border:1.5px dashed #c9a65d;background:#fffdf6;color:var(--brown);border-radius:12px;font-weight:800;font-size:15px}
+.addmore:hover{background:var(--cream2)}
+.upsell{margin-top:16px}
+.upsell h4{margin:0 0 8px;font:700 16px 'Fraunces',Georgia,serif;color:var(--brown)}
+.ups-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory}
+.ups{flex:0 0 152px;scroll-snap-align:start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:4px}
+.ups img{width:100%;height:72px;object-fit:cover;border-radius:9px;margin-bottom:2px}
+.ups .un{font-weight:700;font-size:14px;line-height:1.2;color:var(--brown)}
+.ups .up{font-weight:800;color:var(--red);font-size:14px}
+.ups .up small{font-weight:600;color:var(--muted);font-size:12px}
+.ups .add{height:34px;font-size:13px;padding:0 12px;margin-top:auto}
+.de{color:var(--muted);font-weight:600;font-size:13px;margin-right:6px;text-decoration:line-through}
+.sv{display:block;font-size:12px;font-weight:800;color:var(--wa-d)}
+.desc{margin:0 0 6px;font-size:13px;line-height:1.35;color:var(--muted)}
+.ci .d{font-size:12.5px;color:var(--muted);line-height:1.3}
 .cod{font-size:11.5px;font-weight:700;letter-spacing:.05em;color:var(--muted);margin:-2px 0 5px}
 .nm{font-weight:600;font-size:16.5px;line-height:1.2;color:var(--brown);margin:2px 0 4px;font-family:'Fraunces',Georgia,serif}
 .badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold-d);border-radius:999px;padding:1px 8px;margin:0 4px 2px 0}
@@ -210,8 +226,10 @@ footer .adm{display:inline-block;margin-top:18px;font-size:12px;color:#c9a98a;te
     <form id="orderForm" style="display:flex;flex-direction:column;min-height:0;flex:1;overflow:hidden">
       <div class="db">
         <div id="cartItems"></div>
+        <button class="addmore" type="button" id="addMore">＋ Adicionar mais produtos</button>
         <div class="tot"><span id="totLbl">Total dos produtos</span><b id="cartTotal">R$ 0,00</b></div>
         <p class="note" id="cartNote"></p>
+        <div class="upsell" id="upsell" hidden></div>
         <label class="fld"><span>Seu nome</span><input type="text" id="cName" required autocomplete="name"></label>
         <label class="fld"><span>Seu WhatsApp (com DDD)</span><input type="tel" id="cTel" required inputmode="tel" autocomplete="tel" placeholder="(11) 90000-0000"></label>
         <div class="seg" role="radiogroup" aria-label="Entrega ou retirada">
@@ -219,12 +237,13 @@ footer .adm{display:inline-block;margin-top:18px;font-size:12px;color:#c9a98a;te
           <label><input type="radio" name="tipo" value="Retirada"><span>Retirada na loja</span></label>
         </div>
         <label class="fld" id="addrFld"><span>Endereço de entrega</span><textarea id="cAddr" autocomplete="street-address" placeholder="Rua, número, complemento, bairro"></textarea></label>
+        <p class="note" id="pickNote" hidden>Retirada na loja: Rua Engenheiro Pegado, 332 — Vila Carrão. Combinamos o horário pelo WhatsApp.</p>
         <label class="fld"><span>Observações (opcional)</span><textarea id="cObs" placeholder="Ex.: horário preferido, troca de sabor"></textarea></label>
       </div>
       <div class="df">
         <button class="btn wa" type="submit">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.25-1.5A9.9 9.9 0 1 0 12.04 2Zm5.8 14c-.25.7-1.45 1.33-2 1.4-.5.07-1.13.1-1.8-.12-.42-.13-.95-.31-1.64-.6-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3s.75-2.12 1.02-2.4c.26-.3.57-.37.76-.37h.55c.18 0 .42-.07.65.5.25.58.83 2.02.9 2.17.07.14.12.31.02.5-.1.2-.14.31-.29.48-.14.17-.3.38-.43.5-.14.15-.29.3-.12.6.17.28.74 1.22 1.6 1.97 1.1.98 2.03 1.28 2.32 1.43.29.14.46.12.63-.07.17-.2.72-.84.91-1.12.2-.29.38-.24.65-.14.26.1 1.7.8 1.99.95.3.14.48.22.55.34.07.12.07.7-.18 1.4Z"/></svg>
-          Enviar pedido pelo WhatsApp
+          <span id="sendTxt">Enviar pedido pelo WhatsApp</span>
         </button>
         <p class="note" style="text-align:center">Você será levado ao WhatsApp para confirmar o pedido e combinar pagamento e entrega.</p>
       </div>
@@ -327,7 +346,8 @@ function optHTML(p, o, i) {
     return `<div class="opt">${'<span>' + lbl + '</span>'}<input class="pin" type="number" inputmode="decimal" step="0.01" min="0" value="${Number(o.preco).toFixed(2)}" data-pid="${esc(p.id)}" data-i="${i}" aria-label="Preço — ${esc(p.nome)} ${esc(o.label)}"></div>`;
   }
   const q = S.cart[k] || 0;
-  const price = `<span><span class="lb">${esc(o.label)}</span><span class="pr">${brl(o.preco)}${o.kg ? '<small style="font-weight:700;font-size:12px">/kg</small>' : ''}</span></span>`;
+  const sav = o.de > o.preco ? r2(o.de - o.preco) : 0;
+  const price = `<span><span class="lb">${esc(o.label)}</span><span class="pr">${sav ? `<s class="de">${brl(o.de)}</s>` : ''}${brl(o.preco)}${o.kg ? '<small style="font-weight:700;font-size:12px">/kg</small>' : ''}</span>${sav ? `<span class="sv">Economize ${brl(sav)}</span>` : ''}</span>`;
   let ctl;
   if (p.disponivel === false) ctl = '';
   else if (!q) ctl = `<button class="add" type="button" data-act="inc" data-k="${esc(k)}">Adicionar</button>`;
@@ -341,7 +361,7 @@ function cardHTML(p) {
     : `<div class="ph empty" aria-hidden="true">${ROOF}</div>`;
   const badges = (off ? '<span class="badge off">Indisponível</span>' : '') + (p.consultarEstoque && !off ? '<span class="badge">Consultar estoque</span>' : '');
   const admin = S.admin ? `<div class="admin-actions"><button class="btn sm ghost" type="button" data-act="edit" data-pid="${esc(p.id)}">Editar</button><label><input type="checkbox" data-act="avail" data-pid="${esc(p.id)}" ${off ? '' : 'checked'}> Disponível</label></div>` : '';
-  return `<article class="card ${off ? 'off' : ''}" data-pid="${esc(p.id)}">${photo}<div class="cbody"><h3 class="nm">${esc(p.nome)}</h3>${p.codigo ? `<div class="cod">Cód. ${esc(p.codigo)}</div>` : ''}${badges ? '<div>' + badges + '</div>' : ''}${p.opcoes.map((o, i) => optHTML(p, o, i)).join('')}${hasKg([p]) ? '<p class="kgnote">Valor final após a pesagem</p>' : ''}${admin}</div></article>`;
+  return `<article class="card ${off ? 'off' : ''}" data-pid="${esc(p.id)}">${photo}<div class="cbody"><h3 class="nm">${esc(p.nome)}</h3>${p.codigo ? `<div class="cod">Cód. ${esc(p.codigo)}</div>` : ''}${p.descricao ? `<p class="desc">${esc(p.descricao)}</p>` : ''}${badges ? '<div>' + badges + '</div>' : ''}${p.opcoes.map((o, i) => optHTML(p, o, i)).join('')}${hasKg([p]) ? '<p class="kgnote">Valor final após a pesagem</p>' : ''}${admin}</div></article>`;
 }
 const visibleCats = () => S.data.categorias.filter(c => !ONLY.length || ONLY.includes(c.id));
 const visibleProds = () => { const ids = new Set(visibleCats().map(c => c.id)); return S.data.produtos.filter(p => ids.has(p.cat)); };
@@ -351,7 +371,7 @@ function renderCatalog() {
   const cats = visibleCats(), single = cats.length === 1;
   let html = '', any = false, gi = 0; anchors = [];
   for (const c of cats) {
-    const items = S.data.produtos.filter(p => p.cat === c.id && (!q || norm(p.nome + ' ' + (p.grupo || '') + ' ' + (p.codigo || '')).includes(q)));
+    const items = S.data.produtos.filter(p => p.cat === c.id && (!q || norm(p.nome + ' ' + (p.grupo || '') + ' ' + (p.codigo || '') + ' ' + (p.descricao || '')).includes(q)));
     if (!items.length && !(S.admin && !q)) continue;
     any = true;
     const groups = []; const idx = new Map();
@@ -427,15 +447,30 @@ function setQty(k, q) {
   if ($('#cartDlg').classList.contains('on')) renderCart();
 }
 const stepOf = o => o.kg ? 0.5 : 1;
+function renderUpsell(L) {
+  const box = $('#upsell'); if (!box) return;
+  const inCart = new Set(L.map(l => l.p.id));
+  const list = (S.data.sugestoes || []).map(c => S.data.produtos.find(p => p.codigo === c))
+    .filter(p => p && p.disponivel !== false && p.opcoes.length && !inCart.has(p.id)).slice(0, 3);
+  if (!list.length) { box.hidden = true; box.innerHTML = ''; return; }
+  box.hidden = false;
+  box.innerHTML = `<h4>Que tal levar também?</h4><div class="ups-row">${list.map(p => {
+    const o = p.opcoes[0], k = keyOf(p, o);
+    return `<div class="ups">${p.foto ? `<img src="${esc(p.foto)}" alt="" loading="lazy">` : ''}<div class="un">${esc(p.nome)}</div><div class="up">${brl(o.preco)}${o.kg ? '/kg' : ` <small>${esc(o.label)}</small>`}</div><button class="add" type="button" data-act="inc" data-k="${esc(k)}">+ Adicionar</button></div>`;
+  }).join('')}</div>`;
+}
 function renderCart() {
   const L = cartLines();
   if (!L.length) { closeCart(); return; }
-  $('#cartItems').innerHTML = L.map(l => `<div class="ci"><div><div class="t">${esc(l.p.nome)}</div><div class="s">${esc(l.o.label)} · ${brl(l.o.preco)}${l.o.kg ? '/kg' : ''}</div></div><div class="sub">${l.o.kg ? '≈ ' : ''}${brl(l.sub)}</div>
+  $('#cartTitle').textContent = 'Seu pedido · ' + L.length + (L.length === 1 ? ' item' : ' itens');
+  $('#cartItems').innerHTML = L.map(l => `<div class="ci"><div><div class="t">${esc(l.p.nome)}</div><div class="s">${esc(l.o.label)} · ${brl(l.o.preco)}${l.o.kg ? '/kg' : ''}</div>${l.p.descricao ? `<div class="d">${esc(l.p.descricao)}</div>` : ''}</div><div class="sub">${l.o.kg ? '≈ ' : ''}${brl(l.sub)}</div>
     <button class="rm" type="button" data-act="rm" data-k="${esc(l.k)}">Remover</button>
     <span class="step"><button type="button" data-act="dec" data-k="${esc(l.k)}" aria-label="Diminuir">−</button><output>${fmtQty(l.q, l.o.kg)}</output><button type="button" data-act="inc" data-k="${esc(l.k)}" aria-label="Aumentar">+</button></span></div>`).join('');
   const kgIn = L.some(l => l.o.kg);
   $('#totLbl').textContent = kgIn ? 'Total estimado' : 'Total dos produtos';
   $('#cartTotal').textContent = (kgIn ? '≈ ' : '') + brl(r2(L.reduce((a, l) => a + l.sub, 0)));
+  $('#sendTxt').textContent = 'Enviar pedido · ' + (kgIn ? '≈ ' : '') + brl(r2(L.reduce((a, l) => a + l.sub, 0)));
+  renderUpsell(L);
   const est = L.some(l => l.p.consultarEstoque);
   $('#cartNote').textContent = [(S.data.avisos || [])[0] || '', kgIn ? KGMSG : '', est ? 'Há itens para consultar estoque — confirmaremos pelo WhatsApp.' : ''].filter(Boolean).join(' ');
 }
@@ -472,7 +507,7 @@ function buildMessage(codigo) {
   const lines = L.map(l => {
     const lab = (l.o.kg || /^unidade$/i.test(l.o.label)) ? '' : ` (${l.o.label})`;
     const qtd = l.o.kg ? '~' + fmtQty(l.q, true) : `${l.q}x`;
-    return `• ${qtd} ${nomeMsg(l.p)}${lab}${l.p.consultarEstoque ? ' [consultar estoque]' : ''} — ${l.o.kg ? '≈ ' : ''}${brl(l.sub)}${l.o.kg ? ' (valor final após pesagem)' : ''}`;
+    return `• ${qtd} ${nomeMsg(l.p)}${lab}${l.p.consultarEstoque ? ' [consultar estoque]' : ''} — ${l.o.kg ? '≈ ' : ''}${brl(l.sub)}${l.o.kg ? ' (valor final após pesagem)' : ''}${l.p.descricao ? '\n   ↳ ' + l.p.descricao : ''}`;
   });
   const total = r2(L.reduce((a, l) => a + l.sub, 0));
   let m = `Pedido — De Minas Pão de Queijaria\n\n`;
@@ -490,11 +525,12 @@ function buildMessage(codigo) {
 }
 function syncAddr() {
   const entrega = $('input[name=tipo]:checked').value === 'Entrega';
-  $('#addrFld').hidden = !entrega; $('#cAddr').required = entrega;
+  $('#addrFld').hidden = !entrega; $('#pickNote').hidden = entrega; $('#cAddr').required = entrega;
 }
 $('#cbOpen').addEventListener('click', openCart);
 $('#cartClose').addEventListener('click', closeCart);
 $('#btnLimpar').addEventListener('click', limparCarrinho);
+$('#addMore').addEventListener('click', () => { closeCart(); toast('Seu pedido está salvo. Toque em "Ver pedido" quando quiser finalizar.', 2600); });
 $('#lbClose').addEventListener('click', () => $('#lb').classList.remove('on'));
 $('#dlgClose').addEventListener('click', () => $('#dlg').classList.remove('on'));
 $('#cartDlg').addEventListener('click', e => { if (e.target === $('#cartDlg')) closeCart(); });
@@ -617,9 +653,10 @@ function showDlg(title, body, foot) {
 }
 
 function nextCodigo(cat) {
-  const re = /^([A-Z]+)-(\d+)$/; let pre = '', max = 0, w = 3;
-  for (const p of S.data.produtos) { if (p.cat !== cat) continue; const m = re.exec(p.codigo || ''); if (m) { pre = pre || m[1]; max = Math.max(max, +m[2]); w = m[2].length; } }
-  if (!pre) pre = cat.replace(/[^a-z]/gi, '').slice(0, 2).toUpperCase() || 'XX';
+  const re = /^([A-Z]+)-(\d+)$/, cnt = {}; let w = 3;
+  for (const p of S.data.produtos) { if (p.cat !== cat) continue; const m = re.exec(p.codigo || ''); if (m) { cnt[m[1]] = (cnt[m[1]] || 0) + 1; w = m[2].length; } }
+  let pre = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a])[0] || cat.replace(/[^a-z]/gi, '').slice(0, 2).toUpperCase() || 'XX', max = 0;
+  for (const p of S.data.produtos) { const m = re.exec(p.codigo || ''); if (m && m[1] === pre) max = Math.max(max, +m[2]); }
   return pre + '-' + String(max + 1).padStart(w, '0');
 }
 let ep = null, epIsNew = false;
@@ -633,6 +670,7 @@ function drawEdit() {
   const groups = [...new Set(S.data.produtos.filter(p => p.cat === ep.cat && p.grupo).map(p => p.grupo))];
   const body = `
     <label class="fld"><span>Nome do produto</span><input type="text" id="eNome" value="${esc(ep.nome)}" maxlength="90"></label>
+    <label class="fld"><span>Descrição / o que vem no combo (opcional)</span><textarea id="eDesc" maxlength="220" style="min-height:60px">${esc(ep.descricao || '')}</textarea></label>
     <label class="fld"><span>Código do produto (ex.: PQ-001)</span><input type="text" id="eCod" value="${esc(ep.codigo || '')}" maxlength="20" autocapitalize="characters" autocomplete="off"></label>
     <label class="fld"><span>Categoria</span><select id="eCat">${S.data.categorias.map(c => `<option value="${esc(c.id)}" ${c.id === ep.cat ? 'selected' : ''}>${esc(c.nome)}</option>`).join('')}</select></label>
     <label class="fld"><span>Subgrupo / fornecedor (opcional)</span><input type="text" id="eGrupo" list="gl" value="${esc(ep.grupo || '')}" maxlength="60"><datalist id="gl">${groups.map(g => `<option value="${esc(g)}">`).join('')}</datalist></label>
@@ -652,10 +690,12 @@ function drawEdit() {
 }
 const optRow = (o, i) => `<div class="orow" data-i="${i}"><input type="text" class="ol" placeholder="Ex.: 1kg, Pote, Peça" value="${esc(o.label)}" aria-label="Embalagem"><input type="number" class="op" step="0.01" min="0" inputmode="decimal" value="${o.preco === 0 ? '' : Number(o.preco).toFixed(2)}" placeholder="0,00" aria-label="Preço"><label><input type="checkbox" class="ok" ${o.kg ? 'checked' : ''}> por kg</label><button class="xx" type="button" aria-label="Remover" data-rm="${i}">×</button></div>`;
 function syncEdit() {
-  ep.nome = $('#eNome').value.trim(); ep.codigo = $('#eCod').value.trim().toUpperCase(); ep.cat = $('#eCat').value; ep.grupo = $('#eGrupo').value.trim();
+  ep.nome = $('#eNome').value.trim(); ep.codigo = $('#eCod').value.trim().toUpperCase(); ep.descricao = $('#eDesc').value.trim(); if (!ep.descricao) delete ep.descricao; ep.cat = $('#eCat').value; ep.grupo = $('#eGrupo').value.trim();
   ep.disponivel = $('#eDisp').checked; ep.consultarEstoque = $('#eEst').checked;
-  ep.opcoes = $$('#eOpts .orow').map(r => {
+  const prevOp = ep.opcoes;
+  ep.opcoes = $$('#eOpts .orow').map((r, i) => {
     const o = {label: $('.ol', r).value.trim(), preco: r2(parseFloat(String($('.op', r).value).replace(',', '.')) || 0)};
+    if (prevOp[i] && prevOp[i].de > o.preco) o.de = prevOp[i].de;
     if ($('.ok', r).checked) o.kg = true; return o;
   });
 }
