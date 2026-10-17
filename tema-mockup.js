@@ -67,7 +67,6 @@ let showOnlyFavs = false;
 $('#btnRepeat').onclick = () => {
   const last = JSON.parse(localStorage.getItem('dm_last_order') || '{}');
   if (!last || !Object.keys(last).length) { alert('Você ainda não fez nenhum pedido neste aparelho.'); return; }
-  // Repõe no carrinho
   localStorage.setItem('dm_cart', JSON.stringify(last));
   alert('Sua última compra foi adicionada ao carrinho!');
   openCart();
@@ -80,7 +79,6 @@ $('#btnFavs').onclick = () => {
     renderFavs();
   } else {
     btn.style.background = '#fff'; btn.style.color = 'var(--red)';
-    // Restaura o catálogo
     document.querySelectorAll('#catalog .card').forEach(c => c.style.display = '');
     document.querySelectorAll('#catalog section').forEach(s => s.style.display = '');
     document.querySelectorAll('#catalog .grp').forEach(s => s.style.display = '');
@@ -93,7 +91,6 @@ function renderFavs() {
   document.querySelectorAll('#catalog .grid').forEach(g => {
     const vis = [...g.querySelectorAll('.card')].some(c => c.style.display !== 'none');
     g.style.display = vis ? '' : 'none';
-    // Oculta o grupo (grp) se não houver cards visíveis
     if (g.previousElementSibling && g.previousElementSibling.classList.contains('grp')) {
       g.previousElementSibling.style.display = vis ? '' : 'none';
     }
@@ -128,7 +125,6 @@ function carousel() {
     const isCongelados = /congelad/i.test(document.body.dataset.cats || '');
     const isComboSection = /combo/i.test(txt);
     
-    // AQUI ESTÁ A CORREÇÃO: Ele marca a seção e também verifica os grupos (.grp) dentro dela
     if (isComboSection) sec.dataset.combos = 1;
     
     sec.querySelectorAll('.grid:not([data-car])').forEach(g => {
@@ -138,8 +134,10 @@ function carousel() {
       
       if (isComboGroup) prev.dataset.combos = 1;
 
-      // Ativa o carrossel se for a página de congelados, se a seção for combo, ou se o grupo for combo
-      if (!isCongelados && !isComboSection && !isComboGroup) return;
+      // NOVO GATILHO: Se tiver mais de 4 itens, força o carrossel
+      const manyItems = g.children.length > 4;
+
+      if (!isCongelados && !isComboSection && !isComboGroup && !manyItems) return;
       if ($('#q') && $('#q').value.trim()) return;
       
       g.dataset.car = 1;
@@ -207,46 +205,4 @@ const P = {
   basket: '<path d="M3 10h18l-2 10H5zM8 10l3-6M16 10l-3-6"/>',
   cookie: '<circle cx="12" cy="12" r="8"/><circle cx="9" cy="10" r="1"/><circle cx="14.500" cy="9" r="1"/><circle cx="12" cy="14" r="1"/><circle cx="16" cy="14" r="1"/>',
   star: '<path d="m12 3 2.700 5.600 6.100.9-4.400 4.300 1 6.100L12 17l-5.400 2.900 1-6.100L3.200 9.500l6.100-.9z"/>',
-  all: '<rect x="4" y="4" width="6" height="6" rx="1.500"/><rect x="14" y="4" width="6" height="6" rx="1.500"/><rect x="4" y="14" width="6" height="6" rx="1.500"/><rect x="14" y="14" width="6" height="6" rx="1.500"/>'
-};
-function iconFor(t) {
-  t = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  if (/combo|kit|cesta/.test(t)) return P.gift;
-  if (/pao de queijo|chipa|broa|tradicional|recheado/.test(t)) return P.bread;
-  if (/queijo/.test(t)) return P.cheese;
-  if (/doce|goiabada|compota|cocada|bala/.test(t)) return P.candy;
-  if (/mel|melado/.test(t)) return P.honey;
-  if (/mercearia|cafe|graos|geleia/.test(t)) return P.basket;
-  if (/biscoito|petisco|bolacha/.test(t)) return P.cookie;
-  if (/todos/.test(t)) return P.all;
-  return null;
-}
-const ini = t => { const w = t.replace(/[^\p{L}\p{N} ]/gu, '').trim().split(/\s+/).filter(x => x.length > 2 || /^\d/.test(x)); return ((w[0] || t)[0] + ((w[1] || '')[0] || (w[0] || '').slice(1, 2))).toUpperCase(); }
-function iconize() {
-  document.querySelectorAll('#chips .chip:not(:has(.ico))').forEach(b => {
-    const t = b.textContent, d = iconFor(t);
-    b.insertAdjacentHTML('afterbegin', d
-      ? `<span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg></span>`
-      : `<span class="ico mono">${/congelad/i.test(document.body.dataset.cats || '') ? ini(t).replace(/</g, '') : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${P.star}</svg>`}</span>`);
-  });
-}
-new MutationObserver(iconize).observe($('#chips'), {childList: true});
-iconize();
-function badge() {
-  const n = (($('#cbCount') || {}).textContent || '0').match(/\d+/);
-  const v = n ? +n[0] : 0;
-  const on = $('#cartbar').classList.contains('on');
-  ['#tBdg', '#nBdg'].forEach(s => { const e = $(s); e.dataset.n = on ? v : 0; e.textContent = on ? v : ''; });
-}
-document.addEventListener('click', e => {
-  const f = e.target.closest('.fav'); if (!f) return;
-  const id = f.closest('.card').dataset.pid;
-  favs.has(id) ? favs.delete(id) : favs.add(id);
-  f.setAttribute('aria-pressed', favs.has(id));
-  try { localStorage.setItem('dm_fav', JSON.stringify([...favs])); } catch {}
-  if (showOnlyFavs) renderFavs();
-});
-new MutationObserver(decorate).observe($('#catalog'), {childList: true, subtree: true});
-new MutationObserver(badge).observe($('#cartbar'), {attributes: true, childList: true, subtree: true, characterData: true});
-decorate(); badge();
-})();
+  all: '<rect x="4" y="4" width="6" height="6" rx
