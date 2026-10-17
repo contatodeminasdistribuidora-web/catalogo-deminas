@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#4a1705">
 <title>Congelados — De Minas Pão de Queijaria</title>
-<meta name="description" content="Pães de queijo, biscoitos, chipas e broas congelados da De Minas Pão de Queijaria. Monte seu pedido e envie pelo WhatsApp.">
+<meta name="description" content="Congelados De Minas Pão de Queijaria: pães de queijo e salgados congelados para assar em casa. Monte seu pedido e envie pelo WhatsApp.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,16 +82,18 @@ section.cat>h2 svg{width:26px;height:16px;flex:none}
 .btn.ghost{background:transparent;border:1.5px solid #c9a65d;color:var(--brown)}
 .btn.sm{height:36px;padding:0 14px;font-size:13px}
 .btn.danger{background:#fff;color:var(--red);border:1.5px solid var(--red)}
-dialog{border:0;padding:0;background:var(--cream);color:var(--ink);border-radius:22px;width:calc(100% - 24px);max-width:580px;max-height:92dvh;box-shadow:0 20px 60px #2a0d0380;overflow:hidden}
-dialog[open]{display:flex;flex-direction:column}
-dialog::backdrop{background:#2a0d0399}
+.btn-limpar{background:transparent;border:1.5px solid var(--red);color:var(--red);height:34px;padding:0 14px;font-size:13px;font-weight:800;border-radius:999px;cursor:pointer;flex:none}
+.btn-limpar:hover{background:var(--red);color:#fff}
+.dh-acoes{display:flex;align-items:center;gap:8px;flex:none}
+.cartmodal{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:#2a0d0399;overflow:hidden}
+.cartmodal.on{display:flex}
+.cartmodal-inner{background:var(--cream);color:var(--ink);border-radius:22px 22px 0 0;width:100%;max-width:580px;max-height:92dvh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -8px 40px #00000040}
+@media (min-width:601px){.cartmodal{align-items:center}.cartmodal-inner{border-radius:22px;max-height:88dvh}}
 .dh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px 8px}
-.dh h3{margin:0;font-size:22px;color:var(--brown);font-weight:800}
+.dh h3{margin:0;font-size:22px;color:var(--brown);font-weight:800;flex:1;min-width:0}
 .x-close{border:0;background:var(--cream2);width:38px;height:38px;border-radius:50%;font-size:20px;line-height:1;color:var(--brown)}
 .db{overflow:auto;padding:4px 18px 16px;flex:1}
-.df{padding:12px 18px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card)}
-.df.row{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
-@media (max-width:600px){dialog.sheet{margin:auto 0 0;width:100%;max-width:none;border-radius:22px 22px 0 0}}
+.df{padding:12px 18px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card);flex-shrink:0}
 .fld{display:block;margin-top:12px}
 .fld>span{display:block;font-size:13px;font-weight:800;color:var(--brown2);margin-bottom:4px}
 .fld input[type=text],.fld input[type=number],.fld input[type=tel],.fld input[type=password],.fld input[type=url],.fld select,.fld textarea{width:100%;border:1.5px solid #d9bf85;background:#fffdf6;border-radius:12px;padding:11px 12px;font-size:16px}
@@ -146,14 +148,16 @@ footer .adm{display:inline-block;margin-top:18px;font-size:12px;color:#c9a98a;te
 .catrow button{border:0;background:var(--cream2);width:34px;height:34px;border-radius:50%;color:var(--brown);font-weight:800}
 .qrbox{text-align:center}
 .qrbox canvas{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--line)}
-@media (prefers-reduced-motion:reduce){.cartbar{transition:none}}
+@media (prefers-reduced-motion:reduce){.cartbar{transition:none}.cartmodal-inner{transition:none}}
 </style>
 </head>
-<body data-cats="congelados" data-hero="Congelados De Minas: monte seu pedido e envie pelo WhatsApp" data-qr1="Escaneie e peça seus congelados" data-qr2="direto pelo WhatsApp">
+
+<!-- ⚠️ ATENÇÃO: troque "congelados" pelo ID exato da categoria no seu produtos.json -->
+<body data-cats="congelados" data-hero="Congelados para assar em casa — direto no WhatsApp" data-qr1="Escaneie e veja os congelados" data-qr2="direto pelo WhatsApp">
 
 <header class="hero">
-  <img src="logo.jpg" alt="De Minas Pão de Queijaria — O autêntico pão de queijo mineiro" width="720" height="455">
-  <p>Escolha seus produtos e envie o pedido direto pelo WhatsApp</p>
+  <img src="logo.jpg" alt="De Minas Pão de Queijaria — Congelados" width="720" height="455">
+  <p>Congelados para assar em casa — direto no WhatsApp</p>
   <div class="rule"></div>
 </header>
 
@@ -163,7 +167,7 @@ footer .adm{display:inline-block;margin-top:18px;font-size:12px;color:#c9a98a;te
     <div class="search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <label class="sr" for="q">Buscar produto</label>
-      <input id="q" type="search" placeholder="Buscar produto…" autocomplete="off" enterkeyhint="search">
+      <input id="q" type="search" placeholder="Buscar congelado…" autocomplete="off" enterkeyhint="search">
     </div>
   </div>
   <nav class="chips" id="chips" aria-label="Categorias"></nav>
@@ -181,37 +185,56 @@ footer .adm{display:inline-block;margin-top:18px;font-size:12px;color:#c9a98a;te
 
 <div class="cartbar" id="cartbar">
   <div><b id="cbTotal">R$ 0,00</b><small id="cbCount">0 itens</small></div>
-  <button class="btn gold" id="cbOpen" type="button">Ver pedido →</button>
+  <button class="btn gold" id="cbOpen" type="button">Ver pedido</button>
 </div>
 
-<dialog id="cartDlg" class="sheet" aria-labelledby="cartTitle">
-  <div class="dh"><h3 id="cartTitle">Seu pedido</h3><button class="x-close" type="button" data-close aria-label="Fechar">×</button></div>
-  <form id="orderForm" method="dialog" style="display:flex;flex-direction:column;min-height:0;flex:1">
-    <div class="db">
-      <div id="cartItems"></div>
-      <div class="tot"><span id="totLbl">Total dos produtos</span><b id="cartTotal">R$ 0,00</b></div>
-      <p class="note" id="cartNote"></p>
-      <label class="fld"><span>Seu nome</span><input type="text" id="cName" required autocomplete="name"></label>
-      <div class="seg" role="radiogroup" aria-label="Entrega ou retirada">
-        <label><input type="radio" name="tipo" value="Entrega" checked><span>Entrega</span></label>
-        <label><input type="radio" name="tipo" value="Retirada"><span>Retirada na loja</span></label>
+<div class="cartmodal" id="cartDlg">
+  <div class="cartmodal-inner">
+    <div class="dh">
+      <h3 id="cartTitle">Seu pedido</h3>
+      <div class="dh-acoes">
+        <button class="btn-limpar" type="button" id="btnLimpar">Limpar</button>
+        <button class="x-close" type="button" id="cartClose" aria-label="Fechar">×</button>
       </div>
-      <label class="fld" id="addrFld"><span>Endereço de entrega</span><textarea id="cAddr" autocomplete="street-address" placeholder="Rua, número, complemento, bairro"></textarea></label>
-      <label class="fld"><span>Observações (opcional)</span><textarea id="cObs" placeholder="Ex.: horário preferido, troca de sabor…"></textarea></label>
     </div>
-    <div class="df">
-      <button class="btn wa" type="submit">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.25-1.5A9.9 9.9 0 1 0 12.04 2Zm5.8 14c-.25.7-1.45 1.33-2 1.4-.5.07-1.13.1-1.8-.12-.42-.13-.95-.31-1.64-.6-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3s.75-2.12 1.02-2.4c.26-.3.57-.37.76-.37h.55c.18 0 .42-.07.65.5.25.58.83 2.02.9 2.17.07.14.12.31.02.5-.1.2-.14.31-.29.48-.14.17-.3.38-.43.5-.14.15-.29.3-.12.6.17.28.74 1.22 1.6 1.97 1.1.98 2.03 1.28 2.32 1.43.29.14.46.12.63-.07.17-.2.72-.84.91-1.12.2-.29.38-.24.65-.14.26.1 1.7.8 1.99.95.3.14.48.22.55.34.07.12.07.7-.18 1.4Z"/></svg>
-        Enviar pedido pelo WhatsApp
-      </button>
-      <p class="note" style="text-align:center">Você será levado ao WhatsApp para confirmar o pedido e combinar pagamento e entrega.</p>
-    </div>
-  </form>
-</dialog>
+    <form id="orderForm" style="display:flex;flex-direction:column;min-height:0;flex:1;overflow:hidden">
+      <div class="db">
+        <div id="cartItems"></div>
+        <div class="tot"><span id="totLbl">Total dos produtos</span><b id="cartTotal">R$ 0,00</b></div>
+        <p class="note" id="cartNote"></p>
+        <label class="fld"><span>Seu nome</span><input type="text" id="cName" required autocomplete="name"></label>
+        <div class="seg" role="radiogroup" aria-label="Entrega ou retirada">
+          <label><input type="radio" name="tipo" value="Entrega" checked><span>Entrega</span></label>
+          <label><input type="radio" name="tipo" value="Retirada"><span>Retirada na loja</span></label>
+        </div>
+        <label class="fld" id="addrFld"><span>Endereço de entrega</span><textarea id="cAddr" autocomplete="street-address" placeholder="Rua, número, complemento, bairro"></textarea></label>
+        <label class="fld"><span>Observações (opcional)</span><textarea id="cObs" placeholder="Ex.: horário preferido, troca de sabor"></textarea></label>
+      </div>
+      <div class="df">
+        <button class="btn wa" type="submit">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.25-1.5A9.9 9.9 0 1 0 12.04 2Zm5.8 14c-.25.7-1.45 1.33-2 1.4-.5.07-1.13.1-1.8-.12-.42-.13-.95-.31-1.64-.6-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3s.75-2.12 1.02-2.4c.26-.3.57-.37.76-.37h.55c.18 0 .42-.07.65.5.25.58.83 2.02.9 2.17.07.14.12.31.02.5-.1.2-.14.31-.29.48-.14.17-.3.38-.43.5-.14.15-.29.3-.12.6.17.28.74 1.22 1.6 1.97 1.1.98 2.03 1.28 2.32 1.43.29.14.46.12.63-.07.17-.2.72-.84.91-1.12.2-.29.38-.24.65-.14.26.1 1.7.8 1.99.95.3.14.48.22.55.34.07.12.07.7-.18 1.4Z"/></svg>
+          Enviar pedido pelo WhatsApp
+        </button>
+        <p class="note" style="text-align:center">Você será levado ao WhatsApp para confirmar o pedido e combinar pagamento e entrega.</p>
+      </div>
+    </form>
+  </div>
+</div>
 
-<dialog id="lb" aria-label="Foto do produto"><div class="dh"><h3 id="lbT" style="font-size:18px"></h3><button class="x-close" type="button" data-close aria-label="Fechar">×</button></div><img id="lbImg" alt=""></dialog>
+<div class="cartmodal" id="lb">
+  <div class="cartmodal-inner">
+    <div class="dh"><h3 id="lbT" style="font-size:18px"></h3><button class="x-close" type="button" id="lbClose" aria-label="Fechar">×</button></div>
+    <img id="lbImg" alt="" style="display:block;width:100%;max-height:72dvh;object-fit:contain;background:#000">
+  </div>
+</div>
 
-<dialog id="dlg" class="sheet"></dialog>
+<div class="cartmodal" id="dlg">
+  <div class="cartmodal-inner">
+    <div class="dh"><h3 id="dlgTitle">Título</h3><button class="x-close" type="button" id="dlgClose" aria-label="Fechar">×</button></div>
+    <div class="db" id="dlgBody" style="padding:18px"></div>
+    <div class="df" id="dlgFoot" style="display:none"></div>
+  </div>
+</div>
 
 <script type="module" src="firebase-catalogo.js"></script>
 <script src="qrcode.js"></script>
@@ -223,7 +246,7 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const brl = n => n.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
 const r2 = n => Math.round(n * 100) / 100;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const norm = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const norm = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const clone = o => JSON.parse(JSON.stringify(o));
 const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
 const store = {
@@ -241,35 +264,15 @@ if (document.body.dataset.hero) $('.hero p').textContent = document.body.dataset
 const S = { data: null, published: null, admin: false, dirty: false, cart: store.get('dm_cart') || {}, q: '' };
 S.admin = /(^|[#?&])admin\b/.test(location.hash + location.search);
 
-/* ---------- histórico local de pedidos (para "Editar pedido" estilo iFood) ---------- */
-function salvarPedidoHistorico(id, pedido){
-  const hist = store.get('dm_pedidos') || {};
-  hist[id] = { ...pedido, salvoEm: new Date().toISOString() };
-  const ids = Object.keys(hist);
-  if(ids.length > 30){ ids.slice(0, ids.length - 30).forEach(k => delete hist[k]); }
-  store.set('dm_pedidos', hist);
+function gerarCodigoPedido(){
+  const hoje = new Date();
+  const ano = hoje.getFullYear();
+  let seq = parseInt(localStorage.getItem('dm_seq_cat') || '0') + 1;
+  if(seq > 9999) seq = 1;
+  localStorage.setItem('dm_seq_cat', String(seq));
+  return 'CAT-' + ano + '-' + String(seq).padStart(4, '0');
 }
-function lerPedidoHistorico(id){ const hist = store.get('dm_pedidos') || {}; return hist[id] || null; }
 
-/* ---------- restaura carrinho se vier ?edit=ID ---------- */
-function restaurarCarrinhoSeEdit(){
-  const params = new URLSearchParams(location.search);
-  const editId = params.get('edit');
-  if(!editId) return;
-  const ped = lerPedidoHistorico(editId);
-  if(!ped){ toast('Pedido não encontrado neste aparelho. Refaça o pedido.'); return; }
-  S.cart = {};
-  (ped.itens || []).forEach(it => { if(it.key) S.cart[it.key] = it.qtd; });
-  store.set('dm_cart', S.cart);
-  const nome = $('#cName'); if(nome && ped.cliente) nome.value = ped.cliente;
-  const addr = $('#cAddr'); if(addr && ped.endereco) addr.value = ped.endereco;
-  const obs = $('#cObs'); if(obs && ped.obs) obs.value = ped.obs;
-  const tipoEl = document.querySelector(`input[name=tipo][value="${ped.tipo}"]`);
-  if(tipoEl) tipoEl.checked = true;
-  setTimeout(() => { if(typeof openCart === 'function') openCart(); }, 400);
-  toast('Pedido restaurado. Altere e envie novamente!');
-  history.replaceState({}, '', location.pathname);
-}
 async function load() {
   let pub = null;
   try {
@@ -287,7 +290,6 @@ async function load() {
   }
   reconcileCart();
   renderAll();
-  restaurarCarrinhoSeEdit();
 }
 function waNumber() { return (S.data && S.data.whatsapp) || '5511986975803'; }
 function saveDraft() {
@@ -359,7 +361,7 @@ function renderCatalog() {
     }
     html += '</section>';
   }
-  $('#catalog').innerHTML = any ? html : `<p class="empty-msg">Nenhum produto encontrado para “${esc(S.q)}”.</p>`;
+  $('#catalog').innerHTML = any ? html : `<p class="empty-msg">Nenhum produto encontrado para "${esc(S.q)}".</p>`;
   renderChips();
   measure();
 }
@@ -412,12 +414,12 @@ function setQty(k, q) {
   const el = $(`.opt[data-k="${CSS.escape(k)}"]`);
   if (el) { const i = f.p.opcoes.indexOf(f.o); el.outerHTML = optHTML(f.p, f.o, i); }
   renderCartBar();
-  if ($('#cartDlg').open) renderCart();
+  if ($('#cartDlg').classList.contains('on')) renderCart();
 }
 const stepOf = o => o.kg ? 0.5 : 1;
 function renderCart() {
   const L = cartLines();
-  if (!L.length) { $('#cartDlg').close(); return; }
+  if (!L.length) { closeCart(); return; }
   $('#cartItems').innerHTML = L.map(l => `<div class="ci"><div><div class="t">${esc(l.p.nome)}</div><div class="s">${esc(l.o.label)} · ${brl(l.o.preco)}${l.o.kg ? '/kg' : ''}</div></div><div class="sub">${l.o.kg ? '≈ ' : ''}${brl(l.sub)}</div>
     <button class="rm" type="button" data-act="rm" data-k="${esc(l.k)}">Remover</button>
     <span class="step"><button type="button" data-act="dec" data-k="${esc(l.k)}" aria-label="Diminuir">−</button><output>${fmtQty(l.q, l.o.kg)}</output><button type="button" data-act="inc" data-k="${esc(l.k)}" aria-label="Aumentar">+</button></span></div>`).join('');
@@ -427,7 +429,26 @@ function renderCart() {
   const est = L.some(l => l.p.consultarEstoque);
   $('#cartNote').textContent = [(S.data.avisos || [])[0] || '', kgIn ? KGMSG : '', est ? 'Há itens para consultar estoque — confirmaremos pelo WhatsApp.' : ''].filter(Boolean).join(' ');
 }
-function buildMessage() {
+function openCart() {
+  const c = store.get('dm_cust') || {};
+  if (c.nome && !$('#cName').value) $('#cName').value = c.nome;
+  if (c.addr && !$('#cAddr').value) $('#cAddr').value = c.addr;
+  syncAddr();
+  if (!cartLines().length) { toast('Adicione produtos primeiro'); return; }
+  renderCart();
+  $('#cartDlg').classList.add('on');
+}
+function closeCart(){ $('#cartDlg').classList.remove('on'); }
+function limparCarrinho(){
+  if (!cartLines().length) { toast('O carrinho já está vazio.'); return; }
+  if (!confirm('Limpar todos os itens do pedido?')) return;
+  S.cart = {};
+  store.set('dm_cart', S.cart);
+  renderCartBar();
+  closeCart();
+  toast('Pedido limpo.');
+}
+function buildMessage(codigo) {
   const L = cartLines();
   const nome = $('#cName').value.trim();
   const tipo = $('input[name=tipo]:checked').value;
@@ -440,24 +461,31 @@ function buildMessage() {
     return `• ${qtd} ${l.p.nome}${lab}${l.p.consultarEstoque ? ' [consultar estoque]' : ''} — ${l.o.kg ? '≈ ' : ''}${brl(l.sub)}${l.o.kg ? ' (valor final após pesagem)' : ''}`;
   });
   const total = r2(L.reduce((a, l) => a + l.sub, 0));
-  let m = `*Pedido — De Minas Pão de Queijaria*\n\n*Nome:* ${nome}\n*${tipo}*${tipo === 'Entrega' && addr ? ': ' + addr : ''}\n\n*Itens:*\n${lines.join('\n')}\n\n*${kgIn ? 'Total estimado' : 'Total dos produtos'}:* ${kgIn ? '≈ ' : ''}${brl(total)}`;
-  if (obs) m += `\n\n*Obs.:* ${obs}`;
-  m += '\n\nA De Minas agradece! Conheça nossa linha completa, de pães de queijo, Dadinho de Tapioca, sabores especiais e Broas, trem bão demais da conta!';
-  if (kgIn) m += '\n\nQueijos vendidos por kg: o valor final é confirmado após a pesagem.';
+  let m = `Pedido — De Minas Pão de Queijaria\n\n`;
+  m += `Código: ${codigo}\n`;
+  m += `Nome: ${nome}\n`;
+  m += `${tipo}${tipo === 'Entrega' && addr ? ': ' + addr : ''}\n`;
+  m += `\nItens:\n${lines.join('\n')}\n\n`;
+  m += `${kgIn ? 'Total estimado' : 'Total dos produtos'}: ${kgIn ? '≈ ' : ''}${brl(total)}`;
+  if (obs) m += `\n\nObs.: ${obs}`;
+  m += `\n\nA De Minas agradece! Conheça nossa linha completa, de pães de queijo, Dadinho de Tapioca, sabores especiais e Broas, trem bão demais da conta!`;
+  if (kgIn) m += `\n\nQueijos vendidos por kg: o valor final é confirmado após a pesagem.`;
+  m += `\n\nPIX: ${(S.data && S.data.pix) || '910.838.346-49'} (${(S.data && S.data.pixNome) || 'Franklin Rainier'})`;
   return m;
 }
 function syncAddr() {
   const entrega = $('input[name=tipo]:checked').value === 'Entrega';
   $('#addrFld').hidden = !entrega; $('#cAddr').required = entrega;
 }
-function openCart() {
-  const c = store.get('dm_cust') || {};
-  if (c.nome && !$('#cName').value) $('#cName').value = c.nome;
-  if (c.addr && !$('#cAddr').value) $('#cAddr').value = c.addr;
-  syncAddr(); renderCart();
-  if ($('#cartDlg').isConnected && cartLines().length) $('#cartDlg').showModal();
-}
 $('#cbOpen').addEventListener('click', openCart);
+$('#cartClose').addEventListener('click', closeCart);
+$('#btnLimpar').addEventListener('click', limparCarrinho);
+$('#lbClose').addEventListener('click', () => $('#lb').classList.remove('on'));
+$('#dlgClose').addEventListener('click', () => $('#dlg').classList.remove('on'));
+$('#cartDlg').addEventListener('click', e => { if (e.target === $('#cartDlg')) closeCart(); });
+$('#lb').addEventListener('click', e => { if (e.target === $('#lb')) $('#lb').classList.remove('on'); });
+$('#dlg').addEventListener('click', e => { if (e.target === $('#dlg')) $('#dlg').classList.remove('on'); });
+
 $$('input[name=tipo]').forEach(r => r.addEventListener('change', syncAddr));
 
 $('#orderForm').addEventListener('submit', e => {
@@ -472,48 +500,28 @@ $('#orderForm').addEventListener('submit', e => {
 
   store.set('dm_cust', {nome, addr});
 
-  const editId = uid('p_');
-  const itensSnap = L.map(l => ({
-    key: l.k,
-    nome: l.p.nome,
-    label: l.o.label,
-    qtd: l.q,
-    preco: l.o.preco,
-    kg: !!l.o.kg,
-    subtotal: l.sub
-  }));
-  const totalSnap = r2(L.reduce((a, l) => a + l.sub, 0));
-
-  salvarPedidoHistorico(editId, {
-    cliente: nome, tipo, endereco: tipo === 'Entrega' ? addr : '', obs,
-    itens: itensSnap, total: totalSnap
-  });
+  const codigo = gerarCodigoPedido();
 
   const itensFire = L.map(l => ({
     nome: l.p.nome, label: l.o.label, qtd: l.q,
     preco: l.o.preco, kg: !!l.o.kg, subtotal: l.sub
   }));
+  const totalSnap = r2(L.reduce((a, l) => a + l.sub, 0));
   const pedido = {
-    cliente: nome,
-    whatsapp: waNumber(),
+    codigo, cliente: nome, whatsapp: waNumber(),
     endereco: tipo === 'Entrega' ? addr : '',
     tipo, obs, itens: itensFire, total: totalSnap, pago: false
   };
 
   (async () => {
     try {
-      if (window.DM_enviarPedido) {
-        await window.DM_enviarPedido(pedido);
-      }
+      if (window.DM_enviarPedido) await window.DM_enviarPedido(pedido);
     } catch (err) {
       console.error('Falha ao gravar no ERP (WhatsApp segue):', err);
     }
   })();
 
-  const base = location.origin + location.pathname.replace(/\/?$/, '/');
-  const linkEditar = base + '?edit=' + encodeURIComponent(editId);
-  const msg = buildMessage() + `\n\n✏️ *Editar pedido:* ${linkEditar}`;
-
+  const msg = buildMessage(codigo);
   const url = 'https://wa.me/' + waNumber() + '?text=' + encodeURIComponent(msg);
   const a = document.createElement('a');
   a.href = url; a.target = '_blank'; a.rel = 'noopener';
@@ -522,12 +530,12 @@ $('#orderForm').addEventListener('submit', e => {
   S.cart = {};
   store.set('dm_cart', S.cart);
   renderCartBar();
-  $('#cartDlg').close();
+  closeCart();
 });
 
 document.addEventListener('click', e => {
   const close = e.target.closest('[data-close]');
-  if (close) { close.closest('dialog').close(); return; }
+  if (close) { const m = close.closest('.cartmodal'); if (m) m.classList.remove('on'); return; }
   const chip = e.target.closest('[data-chip]');
   if (chip) { const s = $('#a-' + CSS.escape(chip.dataset.chip)); if (s) s.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth', block: 'start'}); return; }
   const t = e.target.closest('[data-act]'); if (!t) return;
@@ -537,7 +545,7 @@ document.addEventListener('click', e => {
     const cur = S.cart[t.dataset.k] || 0, st = stepOf(f.o);
     setQty(t.dataset.k, act === 'inc' ? cur + (cur ? st : (f.o.kg ? 1 : 1)) : cur - st);
   } else if (act === 'rm') setQty(t.dataset.k, 0);
-  else if (act === 'zoom') { const p = findProd(t.dataset.pid); $('#lbT').textContent = p.nome; $('#lbImg').src = p.foto; $('#lbImg').alt = p.nome; $('#lb').showModal(); }
+  else if (act === 'zoom') { const p = findProd(t.dataset.pid); $('#lbT').textContent = p.nome; $('#lbImg').src = p.foto; $('#lbImg').alt = p.nome; $('#lb').classList.add('on'); }
   else if (act === 'edit') openEdit(t.dataset.pid);
   else if (act === 'new') openEdit(null, {cat: t.dataset.cat});
 });
@@ -552,8 +560,6 @@ document.addEventListener('change', e => {
   }
 });
 $('#q').addEventListener('input', e => { S.q = e.target.value; renderCatalog(); });
-$('#cartDlg').addEventListener('close', () => {});
-$$('dialog').forEach(d => d.addEventListener('click', e => { if (e.target === d) d.close(); }));
 $('#admLink').addEventListener('click', () => setTimeout(() => location.reload(), 0));
 window.addEventListener('hashchange', () => { if (/admin/.test(location.hash) !== S.admin) location.reload(); });
 
@@ -584,10 +590,12 @@ $('#adminbar').addEventListener('click', e => {
   ({publish, cats: openCats, shop: openShop, qr: openQR, export: exportJSON, import: importJSON, gh: openGH, discard: discardDraft, exit: () => { location.hash = ''; location.search = ''; location.reload(); }})[b.dataset.adm]();
 });
 
-const dlg = $('#dlg');
-function showDlg(title, body, foot, wide) {
-  dlg.innerHTML = `<div class="dh"><h3>${title}</h3><button class="x-close" type="button" data-close aria-label="Fechar">×</button></div><div class="db">${body}</div>${foot ? `<div class="df row">${foot}</div>` : ''}`;
-  if (!dlg.open) dlg.showModal();
+function showDlg(title, body, foot) {
+  $('#dlgTitle').textContent = title;
+  $('#dlgBody').innerHTML = body;
+  const footEl = $('#dlgFoot');
+  if (foot) { footEl.innerHTML = foot; footEl.style.display = 'flex'; } else { footEl.innerHTML = ''; footEl.style.display = 'none'; }
+  $('#dlg').classList.add('on');
 }
 
 let ep = null, epIsNew = false;
@@ -608,9 +616,9 @@ function drawEdit() {
     <div class="fld" style="margin-top:16px"><span>Preços e embalagens</span>
       <div id="eOpts">${ep.opcoes.map((o, i) => optRow(o, i)).join('')}</div>
       <button class="btn sm ghost" type="button" id="eAddOpt" style="margin-top:8px">+ Adicionar embalagem / preço</button>
-      <p class="note">Marque “por kg” quando o preço é por quilo (o cliente escolhe de 0,5 em 0,5 kg).</p></div>
+      <p class="note">Marque "por kg" quando o preço é por quilo.</p></div>
     <label class="chk"><input type="checkbox" id="eDisp" ${ep.disponivel !== false ? 'checked' : ''}> Disponível para pedido</label>
-    <label class="chk"><input type="checkbox" id="eEst" ${ep.consultarEstoque ? 'checked' : ''}> Mostrar “Consultar estoque”</label>`;
+    <label class="chk"><input type="checkbox" id="eEst" ${ep.consultarEstoque ? 'checked' : ''}> Mostrar "Consultar estoque"</label>`;
   const foot = `${epIsNew ? '' : '<button class="btn sm danger" type="button" id="eDel" style="margin-right:auto">Excluir</button><button class="btn sm ghost" type="button" id="eUp" aria-label="Mover para cima">↑</button><button class="btn sm ghost" type="button" id="eDn" aria-label="Mover para baixo">↓</button>'}
     <button class="btn ghost" type="button" data-close>Cancelar</button><button class="btn red" type="button" id="eSave">Salvar</button>`;
   showDlg(epIsNew ? 'Novo produto' : 'Editar produto', body, foot);
@@ -637,13 +645,13 @@ function bindEdit() {
   $('#eSave').addEventListener('click', () => {
     syncEdit();
     if (!ep.nome) { toast('Informe o nome do produto'); $('#eNome').focus(); return; }
-    if (ep.opcoes.some(o => !o.label)) { toast('Preencha o nome de todas as embalagens (ex.: 1kg, Pote)'); return; }
+    if (ep.opcoes.some(o => !o.label)) { toast('Preencha o nome de todas as embalagens'); return; }
     if (new Set(ep.opcoes.map(o => o.label)).size !== ep.opcoes.length) { toast('Há embalagens com o mesmo nome'); return; }
-    commitProduct(); dlg.close(); renderCatalog(); renderCartBar(); toast('Produto salvo (rascunho). Toque em Publicar para colocar no ar.');
+    commitProduct(); $('#dlg').classList.remove('on'); renderCatalog(); renderCartBar(); toast('Produto salvo (rascunho). Toque em Publicar.');
   });
   const del = $('#eDel'); if (del) del.addEventListener('click', () => {
-    if (!confirm('Excluir “' + ep.nome + '” do catálogo?')) return;
-    S.data.produtos = S.data.produtos.filter(p => p.id !== ep.id); delete_cart_for(ep.id); saveDraft(); dlg.close(); renderCatalog(); renderCartBar();
+    if (!confirm('Excluir "' + ep.nome + '" do catálogo?')) return;
+    S.data.produtos = S.data.produtos.filter(p => p.id !== ep.id); delete_cart_for(ep.id); saveDraft(); $('#dlg').classList.remove('on'); renderCatalog(); renderCartBar();
   });
   const mv = d => { syncEdit(); const arr = S.data.produtos; const i = arr.findIndex(p => p.id === ep.id); let j = i + d; while (arr[j] && arr[j].cat !== arr[i].cat) j += d; if (!arr[j]) return; [arr[i], arr[j]] = [arr[j], arr[i]]; saveDraft(); renderCatalog(); toast('Posição alterada'); };
   const up = $('#eUp'); if (up) { up.addEventListener('click', () => mv(-1)); $('#eDn').addEventListener('click', () => mv(1)); }
@@ -672,7 +680,7 @@ async function fileToDataURL(file, max = 800) {
 
 function openCats() {
   const rows = () => S.data.categorias.map((c, i) => `<div class="catrow" data-i="${i}"><input type="text" value="${esc(c.nome)}" aria-label="Nome da categoria"><button type="button" data-mv="-1" aria-label="Subir">↑</button><button type="button" data-mv="1" aria-label="Descer">↓</button><button type="button" data-del="${i}" aria-label="Excluir" style="color:var(--red)">×</button></div>`).join('');
-  showDlg('Categorias', `<div id="cList">${rows()}</div><button class="btn sm ghost" type="button" id="cAdd" style="margin-top:12px">+ Nova categoria</button><p class="note">Os nomes aparecem nos botões do topo e como título de cada seção. Para excluir uma categoria, ela precisa estar vazia.</p>`,
+  showDlg('Categorias', `<div id="cList">${rows()}</div><button class="btn sm ghost" type="button" id="cAdd" style="margin-top:12px">+ Nova categoria</button><p class="note">Os nomes aparecem nos botões do topo e como título de cada seção.</p>`,
     '<button class="btn ghost" type="button" data-close>Cancelar</button><button class="btn red" type="button" id="cSave">Salvar</button>');
   const list = $('#cList');
   const read = () => $$('.catrow', list).map((r, i) => ({...S.data.categorias[i], nome: $('input', r).value.trim() || S.data.categorias[i].nome}));
@@ -684,7 +692,7 @@ function openCats() {
     if (b.dataset.del) { const c = cats[+b.dataset.del]; if (S.data.produtos.some(p => p.cat === c.id)) { toast('Mova ou exclua os produtos desta categoria primeiro.'); return; } cats.splice(+b.dataset.del, 1); redraw(cats); }
   });
   $('#cAdd').addEventListener('click', () => { const cats = read(); cats.push({id: uid('c-'), nome: 'Nova categoria'}); redraw(cats); const ins = $$('.catrow input', list); ins[ins.length - 1].select(); });
-  $('#cSave').addEventListener('click', () => { S.data.categorias = read(); saveDraft(); dlg.close(); renderAll(); });
+  $('#cSave').addEventListener('click', () => { S.data.categorias = read(); saveDraft(); $('#dlg').classList.remove('on'); renderAll(); });
 }
 
 function openShop() {
@@ -695,7 +703,7 @@ function openShop() {
     const n = $('#sWa').value.replace(/\D/g, '');
     if (n.length < 12) { toast('Informe o número completo, ex.: 5511986975803'); return; }
     S.data.whatsapp = n; S.data.avisos = $('#sAv').value.split('\n').map(s => s.trim()).filter(Boolean);
-    saveDraft(); dlg.close(); renderFooter();
+    saveDraft(); $('#dlg').classList.remove('on'); renderFooter();
   });
 }
 
@@ -712,7 +720,7 @@ function importJSON() {
       if (!Array.isArray(d.categorias) || !Array.isArray(d.produtos)) throw 0;
       if (!confirm('Substituir o catálogo atual (rascunho) pelo arquivo importado?')) return;
       S.data = d; reconcileCart(); saveDraft(); renderAll(); toast('Importado como rascunho');
-    } catch { toast('Arquivo inválido. Use um produtos.json exportado daqui.'); }
+    } catch { toast('Arquivo inválido.'); }
   };
   inp.click();
 }
@@ -728,14 +736,13 @@ function openGH() {
     <label class="fld"><span>Usuário (ou organização) do GitHub</span><input type="text" id="gOwner" value="${esc(g.owner || '')}" autocapitalize="off" autocomplete="off"></label>
     <label class="fld"><span>Nome do repositório</span><input type="text" id="gRepo" value="${esc(g.repo || '')}" autocapitalize="off" autocomplete="off"></label>
     <label class="fld"><span>Branch</span><input type="text" id="gBranch" value="${esc(g.branch || 'main')}" autocapitalize="off" autocomplete="off"></label>
-    <label class="fld"><span>Token de acesso (fine-grained)</span><input type="password" id="gTok" value="${esc(g.token || '')}" autocomplete="off"></label>
-    <div class="help"><b>Como criar o token</b><ol><li>GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token.</li><li>Em “Repository access”, escolha só este repositório.</li><li>Em “Permissions → Repository permissions”, deixe <b>Contents: Read and write</b>.</li><li>Gere, copie e cole acima.</li></ol></div>`,
+    <label class="fld"><span>Token de acesso (fine-grained)</span><input type="password" id="gTok" value="${esc(g.token || '')}" autocomplete="off"></label>`,
     '<button class="btn ghost" type="button" id="gTest">Testar</button><button class="btn red" type="button" id="gSave">Salvar</button>');
   const read = () => ({owner: $('#gOwner').value.trim(), repo: $('#gRepo').value.trim(), branch: $('#gBranch').value.trim() || 'main', token: $('#gTok').value.trim()});
-  $('#gSave').addEventListener('click', () => { const v = read(); store.set('dm_gh', v); dlg.close(); toast('Conexão salva'); });
+  $('#gSave').addEventListener('click', () => { const v = read(); store.set('dm_gh', v); $('#dlg').classList.remove('on'); toast('Conexão salva'); });
   $('#gTest').addEventListener('click', async () => {
     store.set('dm_gh', read());
-    try { const r = await ghFetch(''); if (!r.ok) throw await apiErr(r); const j = await r.json(); toast(j.permissions && j.permissions.push === false ? 'Conectou, mas o token não tem permissão de escrita.' : 'Conexão OK ✔'); }
+    try { const r = await ghFetch(''); if (!r.ok) throw await apiErr(r); const j = await r.json(); toast(j.permissions && j.permissions.push === false ? 'Sem permissão de escrita.' : 'Conexão OK'); }
     catch (e) { toast(e.message || 'Falha na conexão', 5000); }
   });
 }
@@ -746,8 +753,8 @@ async function ghFetch(path, opts = {}) {
 async function apiErr(r) {
   let m = ''; try { m = (await r.json()).message; } catch {}
   if (r.status === 401) return new Error('Token inválido ou expirado.');
-  if (r.status === 403 || r.status === 404) return new Error('Sem acesso ao repositório (confira usuário, repositório e permissão Contents: Read and write). ' + (m || ''));
-  if (r.status === 409 || r.status === 422) return new Error('Conflito ao salvar no GitHub. Tente Publicar de novo. ' + (m || ''));
+  if (r.status === 403 || r.status === 404) return new Error('Sem acesso ao repositório. ' + (m || ''));
+  if (r.status === 409 || r.status === 422) return new Error('Conflito. Tente novamente. ' + (m || ''));
   return new Error('Erro do GitHub (' + r.status + '). ' + (m || ''));
 }
 const b64utf8 = s => btoa(unescape(encodeURIComponent(s)));
@@ -775,10 +782,10 @@ async function publish() {
     }
     toast('Publicando catálogo…', 20000);
     d.atualizadoEm = new Date().toISOString();
-    await putFile('produtos.json', b64utf8(JSON.stringify(d, null, 1)), 'Atualiza catálogo pelo painel', g.branch || 'main');
+    await putFile('produtos.json', b64utf8(JSON.stringify(d, null, 1)), 'Atualiza catálogo', g.branch || 'main');
     S.data = d; S.published = clone(d); S.dirty = false; store.del('dm_draft');
     renderAll();
-    toast('Publicado! Pode levar 1 a 2 minutos para aparecer para os clientes.', 6000);
+    toast('Publicado!', 6000);
   } catch (e) { toast(e.message || 'Falha ao publicar', 7000); }
   finally { publishing = false; }
 }
@@ -791,29 +798,25 @@ function qrCanvas(text, size = 1000) {
   for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (qr.isDark(r, k)) x.fillRect((k + quiet) * cell, (r + quiet) * cell, cell, cell);
   return c;
 }
-function baseURL() { return location.origin + location.pathname.replace(/index\.html$/, ''); }
+function baseURL() { return location.origin + location.pathname.replace(/congelados\.html$/, '').replace(/index\.html$/, ''); }
 function openQR() {
   showDlg('QR Code do catálogo', `<label class="fld"><span>Endereço do catálogo</span><input type="url" id="qUrl" value="${esc(baseURL())}"></label>
-    <div class="qrbox" id="qBox" style="margin-top:14px"></div>
-    <p class="note">Confira se o endereço é o do site publicado (ex.: https://seuusuario.github.io/nome-do-repositorio/). Teste o QR com a câmera do celular antes de imprimir.</p>`,
-    '<button class="btn ghost" type="button" id="qPng">Baixar QR (PNG)</button><button class="btn red" type="button" id="qArt">Baixar arte De Minas</button>');
+    <div class="qrbox" id="qBox" style="margin-top:14px"></div>`,
+    '<button class="btn ghost" type="button" id="qPng">Baixar QR (PNG)</button><button class="btn red" type="button" id="qArt">Baixar arte</button>');
   const draw = () => { const box = $('#qBox'); box.innerHTML = ''; try { const c = qrCanvas($('#qUrl').value.trim() || baseURL(), 700); c.style.width = 'min(320px,100%)'; box.appendChild(c); } catch { box.textContent = 'Endereço longo demais.'; } };
   draw(); $('#qUrl').addEventListener('input', draw);
   const dl = (cv, name) => cv.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); });
-  $('#qPng').addEventListener('click', () => dl(qrCanvas($('#qUrl').value.trim() || baseURL(), 1400), 'qrcode-de-minas.png'));
-  $('#qArt').addEventListener('click', async () => {
-    try { await Promise.all([document.fonts.load('800 64px Fraunces'), document.fonts.load('700 40px "Nunito Sans"')]); } catch {}
-    const logo = await new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = 'logo.jpg'; });
+  $('#qPng').addEventListener('click', () => dl(qrCanvas($('#qUrl').value.trim() || baseURL(), 1400), 'qrcode-de-minas-congelados.png'));
+  $('#qArt').addEventListener('click', () => {
     const W = 1200, H = 1650, a = document.createElement('canvas'); a.width = W; a.height = H; const x = a.getContext('2d');
     x.fillStyle = '#fcf3e2'; x.fillRect(0, 0, W, H);
     x.fillStyle = '#4a1705'; x.fillRect(0, 0, W, 26); x.fillRect(0, H - 26, W, 26);
-    if (logo) x.drawImage(logo, (W - 720) / 2, 70, 720, 455);
-    x.fillStyle = '#fff'; x.strokeStyle = '#b98410'; x.lineWidth = 8; const qx = 190, qy = 560, qs = 820;
-    x.beginPath(); x.roundRect(qx, qy, qs, qs, 40); x.fill(); x.stroke();
+    x.fillStyle = '#fff'; x.strokeStyle = '#b98410'; x.lineWidth = 8; const qx = 190, qy = 460, qs = 820;
+    x.fillRect(qx, qy, qs, qs); x.strokeRect(qx, qy, qs, qs);
     x.drawImage(qrCanvas($('#qUrl').value.trim() || baseURL(), 1400), qx + 40, qy + 40, qs - 80, qs - 80);
-    x.textAlign = 'center'; x.fillStyle = '#4a1705'; x.font = '800 76px Fraunces, Georgia, serif'; x.fillText(document.body.dataset.qr1 || 'Escaneie e faça seu pedido', W / 2, 1500);
-    x.fillStyle = '#b98410'; x.font = '700 40px "Nunito Sans", sans-serif'; x.fillText(document.body.dataset.qr2 || 'direto pelo WhatsApp', W / 2, 1566);
-    dl(a, (ONLY.length ? 'qrcode-de-minas-congelados-arte.png' : 'qrcode-de-minas-arte.png'));
+    x.textAlign = 'center'; x.fillStyle = '#4a1705'; x.font = '800 76px Fraunces, Georgia, serif'; x.fillText(document.body.dataset.qr1 || 'Escaneie e veja os congelados', W / 2, 1420);
+    x.fillStyle = '#b98410'; x.font = '700 40px "Nunito Sans", sans-serif'; x.fillText(document.body.dataset.qr2 || 'direto pelo WhatsApp', W / 2, 1490);
+    dl(a, 'qrcode-de-minas-congelados-arte.png');
   });
 }
 
