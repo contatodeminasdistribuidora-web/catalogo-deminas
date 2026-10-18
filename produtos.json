@@ -57,7 +57,7 @@
     {
      "label": "Combo",
      "preco": 79.9,
-     "de": 88.0
+     "de": 88
     }
    ],
    "disponivel": true,
@@ -75,7 +75,7 @@
     {
      "label": "Combo",
      "preco": 66.9,
-     "de": 74.0
+     "de": 74
     }
    ],
    "disponivel": true,
@@ -93,7 +93,7 @@
     {
      "label": "Combo",
      "preco": 99.9,
-     "de": 111.0
+     "de": 111
     }
    ],
    "disponivel": true,
@@ -106,12 +106,12 @@
    "grupo": "Combos de Pão de Queijo",
    "nome": "Combo Café da Tarde (2 kg)",
    "descricao": "1 kg de Pão de Queijo Tradicional 30g + 1 kg de Recheado de Goiabada",
-   "foto": "",
+   "foto": "combo-cafe-da-tarde-pq-mve4krz5.jpg",
    "opcoes": [
     {
      "label": "Combo",
      "preco": 62.9,
-     "de": 68.0
+     "de": 68
     }
    ],
    "disponivel": true,
@@ -124,12 +124,12 @@
    "grupo": "Combos de Pão de Queijo",
    "nome": "Combo Família (3 kg)",
    "descricao": "2 kg de Pão de Queijo Tradicional 30g + 1 kg de Chipa com 3 Queijos",
-   "foto": "",
+   "foto": "combo-familia-pq-mve4kteq.jpg",
    "opcoes": [
     {
      "label": "Combo",
      "preco": 85.9,
-     "de": 94.0
+     "de": 94
     }
    ],
    "disponivel": true,
@@ -142,12 +142,12 @@
    "grupo": "Combos de Pão de Queijo",
    "nome": "Combo Recheados (3 kg)",
    "descricao": "1 kg de Recheado de Goiabada + 1 kg de Recheado de Frango + 1 kg de Recheado de Requeijão",
-   "foto": "",
+   "foto": "combo-recheados-pq-mve4kuoh.jpg",
    "opcoes": [
     {
      "label": "Combo",
      "preco": 104.9,
-     "de": 114.0
+     "de": 114
     }
    ],
    "disponivel": true,
@@ -160,12 +160,12 @@
    "grupo": "Combos de Pão de Queijo",
    "nome": "Combo Festa (6 kg)",
    "descricao": "4 kg de Pão de Queijo Tradicional 30g + 1 kg de Chipa com 3 Queijos + 1 kg de Recheado de Frango",
-   "foto": "",
+   "foto": "combo-festa-pq-mve4kw07.jpg",
    "opcoes": [
     {
      "label": "Combo",
      "preco": 169.9,
-     "de": 192.0
+     "de": 192
     }
    ],
    "disponivel": true,
@@ -177,15 +177,15 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Pão de Queijo Tradicional 30g",
-   "foto": "pao-de-queijo.jpg",
+   "foto": "sabor-da-roca-pao-de-queijo-tradicional-30g-mve4kx69.jpg",
    "opcoes": [
     {
      "label": "1kg",
-     "preco": 30.0
+     "preco": 30
     },
     {
      "label": "2kgs",
-     "preco": 60.0
+     "preco": 60
     }
    ],
    "disponivel": true,
@@ -197,11 +197,11 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Pão de Queijo Coquetel 15g",
-   "foto": "pao-de-queijo-coquetel.jpg",
+   "foto": "sabor-da-roca-pao-de-queijo-coquetel-15g-mve4kyd0.jpg",
    "opcoes": [
     {
      "label": "2kgs",
-     "preco": 60.0
+     "preco": 60
     }
    ],
    "disponivel": true,
@@ -217,7 +217,7 @@
    "opcoes": [
     {
      "label": "2kgs",
-     "preco": 60.0
+     "preco": 60
     }
    ],
    "disponivel": true,
@@ -229,11 +229,11 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Pão de Queijo Super Lanche 100g",
-   "foto": "pao-de-queijo.jpg",
+   "foto": "sabor-da-roca-pao-de-queijo-super-lanche-100g-mve4kzlw.jpg",
    "opcoes": [
     {
      "label": "2kgs",
-     "preco": 60.0
+     "preco": 60
     }
    ],
    "disponivel": true,
@@ -245,11 +245,11 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Chipa com 3 Queijos",
-   "foto": "chipa.jpg",
+   "foto": "sabor-da-roca-chipa-com-3-queijos-mve4l0yy.jpg",
    "opcoes": [
     {
      "label": "1kg",
-     "preco": 34.0
+     "preco": 34
     }
    ],
    "disponivel": true,
@@ -261,11 +261,11 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Biscoito de Queijo com 2 Queijos",
-   "foto": "biscoito-de-queijo.jpg",
+   "foto": "sabor-da-roca-biscoito-de-queijo-com-2-queijos-mve4l26d.jpg",
    "opcoes": [
     {
      "label": "1kg",
-     "preco": 32.0
+     "preco": 32
     }
    ],
    "disponivel": true,
@@ -277,7 +277,7 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Broa Doce",
-   "foto": "broa.jpg",
+   "foto": "sabor-da-roca-broa-doce-mve4l3gz.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -293,7 +293,7 @@
    "cat": "congelados",
    "grupo": "Sabor da Roça",
    "nome": "Broa Doce com Ervas",
-   "foto": "broa.jpg",
+   "foto": "sabor-da-roca-broa-doce-com-ervas-mve4l4ki.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -333,7 +333,7 @@
     },
     {
      "label": "500g",
-     "preco": 17.0
+     "preco": 17
     }
    ],
    "disponivel": true,
@@ -345,11 +345,11 @@
    "cat": "congelados",
    "grupo": "Bem de Minas",
    "nome": "Biscoito (Chipa)",
-   "foto": "chipa.jpg",
+   "foto": "bem-de-minas-biscoito-chipa-mve4l5vn.jpg",
    "opcoes": [
     {
      "label": "500g",
-     "preco": 18.0
+     "preco": 18
     }
    ],
    "disponivel": true,
@@ -361,11 +361,11 @@
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Costela",
-   "foto": "",
+   "foto": "garcia-de-minas-recheado-costela-mve4l700.jpg",
    "opcoes": [
     {
      "label": "1kg",
-     "preco": 42.0
+     "preco": 42
     }
    ],
    "disponivel": true,
@@ -377,11 +377,11 @@
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Goiabada",
-   "foto": "recheado-goiabada.jpg",
+   "foto": "garcia-de-minas-recheado-goiabada-mve4l8b2.jpg",
    "opcoes": [
     {
      "label": "1kg",
-     "preco": 38.0
+     "preco": 38
     }
    ],
    "disponivel": true,
@@ -393,11 +393,11 @@
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Frango",
-   "foto": "recheado-frango.jpg",
+   "foto": "garcia-de-minas-recheado-frango-mve4l9mn.jpg",
    "opcoes": [
     {
      "label": "1kg",
-     "preco": 38.0
+     "preco": 38
     }
    ],
    "disponivel": true,
@@ -409,11 +409,11 @@
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Calabresa",
-   "foto": "recheado-calabresa.jpg",
+   "foto": "garcia-de-minas-recheado-calabresa-mve4laws.jpg",
    "opcoes": [
     {
      "label": "1kg",
-     "preco": 38.0
+     "preco": 38
     }
    ],
    "disponivel": true,
@@ -425,11 +425,11 @@
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Requeijão",
-   "foto": "recheado-requeijao.jpg",
+   "foto": "garcia-de-minas-recheado-requeijao-mve4lc2z.jpg",
    "opcoes": [
     {
      "label": "1kg",
-     "preco": 38.0
+     "preco": 38
     }
    ],
    "disponivel": true,
@@ -441,11 +441,11 @@
    "cat": "congelados",
    "grupo": "Garcia de Minas",
    "nome": "Recheado Doce de Leite",
-   "foto": "",
+   "foto": "garcia-de-minas-recheado-doce-de-leite-mve4ldey.jpg",
    "opcoes": [
     {
      "label": "1kg",
-     "preco": 38.0
+     "preco": 38
     }
    ],
    "disponivel": true,
@@ -513,7 +513,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Encanto Tradicional",
-   "foto": "pao-de-queijo.jpg",
+   "foto": "encanto-de-minas-brasil-mineiro-encanto-tradicional-mve4lenj.jpg",
    "opcoes": [
     {
      "label": "400g",
@@ -537,7 +537,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Temperado",
-   "foto": "",
+   "foto": "encanto-de-minas-brasil-mineiro-temperado-mve4lfuh.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -553,7 +553,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Calabresa",
-   "foto": "",
+   "foto": "encanto-de-minas-brasil-mineiro-calabresa-mve4lh6y.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -569,7 +569,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Multigrãos",
-   "foto": "",
+   "foto": "encanto-de-minas-brasil-mineiro-multigraos-mve4lic7.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -585,7 +585,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Gourmet 4 Queijos",
-   "foto": "",
+   "foto": "encanto-de-minas-brasil-mineiro-gourmet-4-queijos-mve4ljfk.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -605,7 +605,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Palitinho Provolone",
-   "foto": "",
+   "foto": "encanto-de-minas-brasil-mineiro-palitinho-provolone-mve4lkk8.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -625,7 +625,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Doce de Leite Empanado",
-   "foto": "",
+   "foto": "encanto-de-minas-brasil-mineiro-doce-de-leite-empanado-mve4llnn.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -641,7 +641,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Requeijão Empanado",
-   "foto": "",
+   "foto": "encanto-de-minas-brasil-mineiro-requeijao-empanado-mve4lmv5.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -657,7 +657,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Goiabada Empanado",
-   "foto": "",
+   "foto": "encanto-de-minas-brasil-mineiro-goiabada-empanado-mve4lo2d.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -673,7 +673,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Frango Empanado",
-   "foto": "",
+   "foto": "encanto-de-minas-brasil-mineiro-frango-empanado-mve4lp4n.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -689,7 +689,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Goiabada Artesanal",
-   "foto": "",
+   "foto": "encanto-de-minas-brasil-mineiro-goiabada-artesanal-mve4lq9d.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -705,7 +705,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Requeijão Artesanal",
-   "foto": "",
+   "foto": "encanto-de-minas-brasil-mineiro-requeijao-artesanal-mve4lrib.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -721,7 +721,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Frango Artesanal",
-   "foto": "",
+   "foto": "encanto-de-minas-brasil-mineiro-frango-artesanal-mve4lsuc.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -737,7 +737,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Dadinho de Tapioca",
-   "foto": "",
+   "foto": "encanto-de-minas-brasil-mineiro-dadinho-de-tapioca-mve4ltz9.jpg",
    "opcoes": [
     {
      "label": "500g",
@@ -753,7 +753,7 @@
    "cat": "congelados",
    "grupo": "Encanto de Minas / Brasil Mineiro",
    "nome": "Broa Doce",
-   "foto": "broa.jpg",
+   "foto": "encanto-de-minas-brasil-mineiro-broa-doce-mve4lv7e.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -789,7 +789,7 @@
    "opcoes": [
     {
      "label": "Kit",
-     "preco": 60.0
+     "preco": 60
     }
    ],
    "disponivel": true,
@@ -805,7 +805,7 @@
    "opcoes": [
     {
      "label": "Kit",
-     "preco": 60.0
+     "preco": 60
     }
    ],
    "disponivel": true,
@@ -821,7 +821,7 @@
    "opcoes": [
     {
      "label": "Peça",
-     "preco": 50.0
+     "preco": 50
     }
    ],
    "disponivel": true,
@@ -837,7 +837,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 65.0,
+     "preco": 65,
      "kg": true
     }
    ],
@@ -854,7 +854,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 80.0,
+     "preco": 80,
      "kg": true
     }
    ],
@@ -871,7 +871,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 65.0,
+     "preco": 65,
      "kg": true
     }
    ],
@@ -888,7 +888,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 67.0,
+     "preco": 67,
      "kg": true
     }
    ],
@@ -905,7 +905,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 67.0,
+     "preco": 67,
      "kg": true
     }
    ],
@@ -922,7 +922,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 75.0,
+     "preco": 75,
      "kg": true
     }
    ],
@@ -939,7 +939,7 @@
    "opcoes": [
     {
      "label": "Peça",
-     "preco": 90.0
+     "preco": 90
     }
    ],
    "disponivel": true,
@@ -955,7 +955,7 @@
    "opcoes": [
     {
      "label": "Peça",
-     "preco": 90.0
+     "preco": 90
     }
    ],
    "disponivel": true,
@@ -971,7 +971,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40.0
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -987,7 +987,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40.0
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1003,7 +1003,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40.0
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1019,7 +1019,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40.0
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1035,7 +1035,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40.0
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1051,7 +1051,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40.0
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1067,7 +1067,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40.0
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1083,7 +1083,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 100.0,
+     "preco": 100,
      "kg": true
     }
    ],
@@ -1100,7 +1100,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 40.0
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1116,7 +1116,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 75.0,
+     "preco": 75,
      "kg": true
     }
    ],
@@ -1133,7 +1133,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 80.0,
+     "preco": 80,
      "kg": true
     }
    ],
@@ -1150,7 +1150,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 36.0
+     "preco": 36
     }
    ],
    "disponivel": true,
@@ -1166,7 +1166,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 36.0
+     "preco": 36
     }
    ],
    "disponivel": true,
@@ -1182,7 +1182,7 @@
    "opcoes": [
     {
      "label": "400g",
-     "preco": 35.0
+     "preco": 35
     }
    ],
    "disponivel": true,
@@ -1198,7 +1198,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 25.0
+     "preco": 25
     }
    ],
    "disponivel": true,
@@ -1214,7 +1214,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 22.0
+     "preco": 22
     }
    ],
    "disponivel": true,
@@ -1230,11 +1230,11 @@
    "opcoes": [
     {
      "label": "400g",
-     "preco": 35.0
+     "preco": 35
     },
     {
      "label": "700g",
-     "preco": 50.0
+     "preco": 50
     }
    ],
    "disponivel": true,
@@ -1250,7 +1250,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 30.0
+     "preco": 30
     }
    ],
    "disponivel": true,
@@ -1266,7 +1266,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 28.0
+     "preco": 28
     }
    ],
    "disponivel": true,
@@ -1282,7 +1282,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 25.0
+     "preco": 25
     }
    ],
    "disponivel": true,
@@ -1298,15 +1298,15 @@
    "opcoes": [
     {
      "label": "250g",
-     "preco": 18.0
+     "preco": 18
     },
     {
      "label": "400g",
-     "preco": 24.0
+     "preco": 24
     },
     {
      "label": "500g",
-     "preco": 30.0
+     "preco": 30
     }
    ],
    "disponivel": true,
@@ -1322,7 +1322,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 35.0
+     "preco": 35
     }
    ],
    "disponivel": true,
@@ -1338,7 +1338,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 42.0
+     "preco": 42
     }
    ],
    "disponivel": true,
@@ -1354,7 +1354,7 @@
    "opcoes": [
     {
      "label": "Lata",
-     "preco": 28.0
+     "preco": 28
     }
    ],
    "disponivel": true,
@@ -1370,7 +1370,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 30.0
+     "preco": 30
     }
    ],
    "disponivel": true,
@@ -1386,7 +1386,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 30.0
+     "preco": 30
     }
    ],
    "disponivel": true,
@@ -1402,7 +1402,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 35.0
+     "preco": 35
     }
    ],
    "disponivel": true,
@@ -1418,7 +1418,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 30.0
+     "preco": 30
     }
    ],
    "disponivel": true,
@@ -1434,7 +1434,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 35.0
+     "preco": 35
     }
    ],
    "disponivel": true,
@@ -1450,7 +1450,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 38.0
+     "preco": 38
     }
    ],
    "disponivel": true,
@@ -1466,7 +1466,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 38.0
+     "preco": 38
     }
    ],
    "disponivel": true,
@@ -1482,7 +1482,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 35.0
+     "preco": 35
     }
    ],
    "disponivel": true,
@@ -1498,7 +1498,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 35.0
+     "preco": 35
     }
    ],
    "disponivel": true,
@@ -1514,7 +1514,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 38.0
+     "preco": 38
     }
    ],
    "disponivel": true,
@@ -1530,7 +1530,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 38.0
+     "preco": 38
     }
    ],
    "disponivel": true,
@@ -1546,7 +1546,7 @@
    "opcoes": [
     {
      "label": "Lata",
-     "preco": 50.0
+     "preco": 50
     }
    ],
    "disponivel": true,
@@ -1562,7 +1562,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 60.0
+     "preco": 60
     }
    ],
    "disponivel": true,
@@ -1578,7 +1578,7 @@
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 35.0
+     "preco": 35
     }
    ],
    "disponivel": true,
@@ -1594,7 +1594,7 @@
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 40.0
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1610,7 +1610,7 @@
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 40.0
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1626,15 +1626,15 @@
    "opcoes": [
     {
      "label": "250g",
-     "preco": 25.0
+     "preco": 25
     },
     {
      "label": "500g",
-     "preco": 40.0
+     "preco": 40
     },
     {
      "label": "1,4kg",
-     "preco": 100.0
+     "preco": 100
     }
    ],
    "disponivel": true,
@@ -1650,15 +1650,15 @@
    "opcoes": [
     {
      "label": "250g",
-     "preco": 28.0
+     "preco": 28
     },
     {
      "label": "500g",
-     "preco": 45.0
+     "preco": 45
     },
     {
      "label": "1,4kg",
-     "preco": 110.0
+     "preco": 110
     }
    ],
    "disponivel": true,
@@ -1674,15 +1674,15 @@
    "opcoes": [
     {
      "label": "250g",
-     "preco": 25.0
+     "preco": 25
     },
     {
      "label": "500g",
-     "preco": 40.0
+     "preco": 40
     },
     {
      "label": "1,4kg",
-     "preco": 100.0
+     "preco": 100
     }
    ],
    "disponivel": true,
@@ -1698,11 +1698,11 @@
    "opcoes": [
     {
      "label": "500g",
-     "preco": 50.0
+     "preco": 50
     },
     {
      "label": "800g",
-     "preco": 70.0
+     "preco": 70
     }
    ],
    "disponivel": true,
@@ -1718,7 +1718,7 @@
    "opcoes": [
     {
      "label": "330g",
-     "preco": 39.0
+     "preco": 39
     }
    ],
    "disponivel": true,
@@ -1734,7 +1734,7 @@
    "opcoes": [
     {
      "label": "150g",
-     "preco": 25.0
+     "preco": 25
     }
    ],
    "disponivel": true,
@@ -1750,7 +1750,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 28.0
+     "preco": 28
     }
    ],
    "disponivel": true,
@@ -1766,7 +1766,7 @@
    "opcoes": [
     {
      "label": "248g",
-     "preco": 28.0
+     "preco": 28
     }
    ],
    "disponivel": true,
@@ -1782,7 +1782,7 @@
    "opcoes": [
     {
      "label": "500g",
-     "preco": 35.0
+     "preco": 35
     }
    ],
    "disponivel": true,
@@ -1798,7 +1798,7 @@
    "opcoes": [
     {
      "label": "Garrafa",
-     "preco": 30.0
+     "preco": 30
     }
    ],
    "disponivel": true,
@@ -1814,7 +1814,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 30.0
+     "preco": 30
     }
    ],
    "disponivel": true,
@@ -1830,7 +1830,7 @@
    "opcoes": [
     {
      "label": "800g",
-     "preco": 28.0
+     "preco": 28
     }
    ],
    "disponivel": true,
@@ -1846,7 +1846,7 @@
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 25.0
+     "preco": 25
     }
    ],
    "disponivel": true,
@@ -1862,7 +1862,7 @@
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 25.0
+     "preco": 25
     }
    ],
    "disponivel": true,
@@ -1878,7 +1878,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 25.0
+     "preco": 25
     }
    ],
    "disponivel": true,
@@ -1894,7 +1894,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 20.0
+     "preco": 20
     }
    ],
    "disponivel": true,
@@ -1910,7 +1910,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 20.0
+     "preco": 20
     }
    ],
    "disponivel": true,
@@ -1926,7 +1926,7 @@
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 13.0
+     "preco": 13
     }
    ],
    "disponivel": true,
@@ -1942,7 +1942,7 @@
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 22.0
+     "preco": 22
     }
    ],
    "disponivel": true,
@@ -1958,11 +1958,12 @@
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 12.0
+     "preco": 12
     }
    ],
    "disponivel": true,
    "consultarEstoque": false
   }
- ]
+ ],
+ "atualizadoEm": "2026-10-18T17:55:29.194Z"
 }
