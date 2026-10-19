@@ -261,7 +261,6 @@ html.theme-ready body { opacity: 1; }
           </select>
         </label>
         <label class="fld" id="addrFld"><span>Endereço completo</span><textarea id="cAddr" autocomplete="street-address" placeholder="Rua, número, complemento"></textarea></label>
-        <p class="note" id="pickNote" hidden>Retirada na loja: Rua Engenheiro Pegado, 332 — Vila Carrão. Combinamos o horário pelo WhatsApp.</p>
         
         <label class="fld">
           <span>Forma de pagamento</span>
@@ -302,7 +301,38 @@ html.theme-ready body { opacity: 1; }
   </div>
 </div>
 
-<script type="module" src="firebase-catalogo.js"></script>
+<!-- FIREBASE E ENVIO PARA O ERP -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+  // Configuração do Firebase (deminas-pedidos)
+  const firebaseConfig = {
+    apiKey: "AIzaSyC3... (sua chave)", // Se você já tem a config exata no firebase-api.js, pode copiar de lá
+    authDomain: "deminas-pedidos.firebaseapp.com",
+    projectId: "deminas-pedidos",
+    storageBucket: "deminas-pedidos.appspot.com",
+    messagingSenderId: "...",
+    appId: "..."
+  };
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.DM_enviarPedido = async (pedido) => {
+      await addDoc(collection(db, "pedidos_catalogo"), {
+        ...pedido,
+        status: 'novo',
+        criadoEm: serverTimestamp()
+      });
+      console.log("Pedido enviado para o ERP com sucesso!");
+    };
+  } catch (e) {
+    console.warn("Firebase não inicializado. Verifique a chave de API.", e);
+  }
+</script>
+
 <script src="qrcode.js"></script>
 <script>
 (() => {
@@ -580,7 +610,6 @@ function buildMessage(codigo) {
   return m;
 }
 
-// FUNÇÃO CORRIGIDA COM ESCUDO DE SEGURANÇA
 function syncAddr() {
   const tipoEl = $('input[name=tipo]:checked');
   if (!tipoEl) return;
@@ -588,9 +617,6 @@ function syncAddr() {
   
   const addrFld = $('#addrFld');
   if (addrFld) addrFld.hidden = !entrega;
-  
-  const pickNote = $('#pickNote');
-  if (pickNote) pickNote.hidden = entrega;
   
   const cAddr = $('#cAddr');
   if (cAddr) cAddr.required = entrega;
@@ -607,7 +633,6 @@ if (cPagEl) {
   });
 }
 
-// CORREÇÃO DO BOTÃO VER PEDIDO
 document.addEventListener('click', e => {
   if (e.target.closest('#cbOpen') || e.target.closest('.cartbar .btn')) {
     e.preventDefault();
