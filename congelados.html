@@ -85,12 +85,10 @@ section.cat>h2 svg{width:26px;height:16px;flex:none}
 .badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold-d);border-radius:999px;padding:1px 8px;margin:0 4px 2px 0}
 .badge.off{background:var(--brown);border-color:var(--brown);color:#fff}
 
-/* CORREÇÃO DOS BOTÕES AQUI */
 .opt{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px dashed #dcc590;flex-wrap:wrap}
 .opt:first-of-type{border-top:0}
 .opt > span:first-child{flex:1 1 auto;min-width:0}
 .opt .add, .opt .step{flex-shrink:0;margin-left:auto}
-/* FIM DA CORREÇÃO */
 
 .opt .lb{display:block;font-size:12px;color:var(--muted);font-weight:600;line-height:1.1}
 .opt .pr{font-weight:800;font-size:16.5px;color:var(--red);white-space:nowrap}
@@ -151,7 +149,7 @@ footer .serif{font-size:20px;color:var(--gold-l);font-weight:800}
 footer ul{list-style:none;margin:12px auto;padding:0;max-width:60ch}
 footer li{margin:4px 0}
 footer a{color:var(--gold-l);font-weight:800}
-footer .adm{display:none!important} /* <--- ESCONDE O LINK DO RODAPÉ */
+footer .adm{display:none!important}
 .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;z-index:100;max-width:92vw;font-weight:700;box-shadow:0 6px 20px #0006;text-align:center}
 .adminbar{background:var(--gold-l);color:var(--brown);padding:8px 16px;display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
 .adminbar .tag{font-weight:800;font-size:13px;margin-right:auto}
@@ -181,25 +179,20 @@ footer .adm{display:none!important} /* <--- ESCONDE O LINK DO RODAPÉ */
 .qrbox{text-align:center}
 .qrbox canvas{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--line)}
 @media (prefers-reduced-motion:reduce){.cartbar{transition:none}.cartmodal-inner{transition:none}}
-@media (max-width:420px){
-  .add{padding:0 12px;font-size:13px}
-}
+@media (max-width:420px){.add{padding:0 12px;font-size:13px}}
 
-/* Otimização: Evita o piscar do site antes do tema carregar */
 html.theme-loading body { opacity: 0; transition: opacity 0.2s; }
 html.theme-ready body { opacity: 1; }
+.marcas-parceiras { font-size: 13px; color: var(--muted); text-align: center; margin: 16px auto; max-width: 600px; line-height: 1.4; }
 </style>
 
 <script>
-  // Adiciona a classe para esconder a tela
   document.documentElement.classList.add('theme-loading');
 </script>
 
-<!-- TEMA APP -->
 <link rel="stylesheet" href="tema-mockup.css">
 </head>
 
-<!-- ⚠️ ATENÇÃO: troque "congelados" pelo ID exato da categoria no seu produtos.json -->
 <body data-cats="congelados" data-hero="Pão de queijo mineiro para assar em casa — direto no WhatsApp" data-qr1="Escaneie e peça seu pão de queijo" data-qr2="direto pelo WhatsApp">
 
 <header class="hero">
@@ -225,6 +218,7 @@ html.theme-ready body { opacity: 1; }
 <footer>
   <div class="serif">De Minas Pão de Queijaria</div>
   <ul id="avisos"></ul>
+  <p class="marcas-parceiras"><b>Nossas Marcas Parceiras:</b> Temos orgulho de trabalhar com a melhor qualidade de Minas. Nossa principal parceira é a <b>Sabor da Roça</b>, além de Garcia, Encanto, Bem de Minas e outras. Se tiver preferência por alguma marca, basta escrever nas observações!</p>
   <p>Faça sua encomenda: <a id="waLink" href="https://wa.me/5511986975803" rel="noopener">WhatsApp (11) 98697-5803</a></p>
   <p>Rua Engenheiro Pegado, 332 — Vila Carrão, Zona Leste, São Paulo/SP</p>
   <a class="adm" href="#admin" id="admLink">Área do administrador</a>
@@ -251,22 +245,46 @@ html.theme-ready body { opacity: 1; }
         <div class="tot"><span id="totLbl">Total dos produtos</span><b id="cartTotal">R$ 0,00</b></div>
         <p class="note" id="cartNote"></p>
         <div class="upsell" id="upsell" hidden></div>
+        
         <label class="fld"><span>Seu nome</span><input type="text" id="cName" required autocomplete="name"></label>
         <label class="fld"><span>Seu WhatsApp (com DDD)</span><input type="tel" id="cTel" required inputmode="tel" autocomplete="tel" placeholder="(11) 90000-0000"></label>
+        
         <div class="seg" role="radiogroup" aria-label="Entrega ou retirada">
           <label><input type="radio" name="tipo" value="Entrega" checked><span>Entrega</span></label>
           <label><input type="radio" name="tipo" value="Retirada"><span>Retirada na loja</span></label>
         </div>
-        <label class="fld" id="addrFld"><span>Endereço de entrega</span><textarea id="cAddr" autocomplete="street-address" placeholder="Rua, número, complemento, bairro"></textarea></label>
-        <p class="note" id="pickNote" hidden>Retirada na loja: Rua Engenheiro Pegado, 332 — Vila Carrão. Combinamos o horário pelo WhatsApp.</p>
-        <label class="fld"><span>Observações (opcional)</span><textarea id="cObs" placeholder="Ex.: horário preferido, troca de sabor"></textarea></label>
+
+        <!-- FRETE -->
+        <label class="fld" id="freteFld">
+          <span>Bairro de entrega (Frete)</span>
+          <select id="cFrete">
+            <option value="8|Vila Carrão">Vila Carrão (R$ 8,00)</option>
+            <option value="12|Tatuapé">Tatuapé (R$ 12,00)</option>
+            <option value="15|Anália Franco">Anália Franco (R$ 15,00)</option>
+            <option value="0|A combinar">Outro bairro (A combinar)</option>
+          </select>
+        </label>
+        <label class="fld" id="addrFld"><span>Endereço completo</span><textarea id="cAddr" autocomplete="street-address" placeholder="Rua, número, complemento"></textarea></label>
+        
+        <!-- PAGAMENTO -->
+        <label class="fld">
+          <span>Forma de pagamento</span>
+          <select id="cPag">
+            <option value="PIX">PIX</option>
+            <option value="Cartão de Crédito">Cartão de Crédito</option>
+            <option value="Cartão de Débito">Cartão de Débito</option>
+            <option value="Dinheiro">Dinheiro</option>
+          </select>
+        </label>
+        <label class="fld" id="trocoFld" hidden><span>Troco para quanto?</span><input type="text" id="cTroco" placeholder="Ex: R$ 100,00 (ou deixe em branco se não precisar)"></label>
+
+        <label class="fld"><span>Observações (opcional)</span><textarea id="cObs" placeholder="Ex.: marca preferida, horário, troca de sabor"></textarea></label>
       </div>
       <div class="df">
         <button class="btn wa" type="submit">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.25-1.5A9.9 9.9 0 1 0 12.04 2Zm5.8 14c-.25.7-1.45 1.33-2 1.4-.5.07-1.13.1-1.8-.12-.42-.13-.95-.31-1.64-.6-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3s.75-2.12 1.02-2.4c.26-.3.57-.37.76-.37h.55c.18 0 .42-.07.65.5.25.58.83 2.02.9 2.17.07.14.12.31.02.5-.1.2-.14.31-.29.48-.14.17-.3.38-.43.5-.14.15-.29.3-.12.6.17.28.74 1.22 1.6 1.97 1.1.98 2.03 1.28 2.32 1.43.29.14.46.12.63-.07.17-.2.72-.84.91-1.12.2-.29.38-.24.65-.14.26.1 1.7.8 1.99.95.3.14.48.22.55.34.07.12.07.7-.18 1.4Z"/></svg>
           <span id="sendTxt">Enviar pedido pelo WhatsApp</span>
         </button>
-        <p class="note" style="text-align:center">Você será levado ao WhatsApp para confirmar o pedido e combinar pagamento e entrega.</p>
       </div>
     </form>
   </div>
@@ -321,9 +339,7 @@ function gerarCodigoPedido(){
   try { const a = new Uint32Array(1); crypto.getRandomValues(a); r = a[0].toString(36).toUpperCase().slice(-4).padStart(4, '0'); }
   catch { r = Math.random().toString(36).slice(2, 6).toUpperCase().padStart(4, '0'); }
   return 'DM-' + String(d.getFullYear()).slice(2) + p(d.getMonth() + 1) + p(d.getDate()) + '-' + r;
-}
-
-async function load() {
+}async function load() {
   let pub = null;
   try {
     const r = await fetch('produtos.json?v=' + Date.now(), {cache: 'no-store'});
@@ -524,30 +540,54 @@ function buildMessage(codigo) {
   const tipo = $('input[name=tipo]:checked').value;
   const addr = $('#cAddr').value.trim();
   const obs = $('#cObs').value.trim();
+  
+  const freteVal = parseFloat($('#cFrete').value.split('|')[0]) || 0;
+  const freteNome = $('#cFrete').value.split('|')[1];
+  
+  const pag = $('#cPag').value;
+  const troco = $('#cTroco').value.trim();
+
   const kgIn = L.some(l => l.o.kg);
   const lines = L.map(l => {
     const lab = (l.o.kg || /^unidade$/i.test(l.o.label)) ? '' : ` (${l.o.label})`;
     const qtd = l.o.kg ? '~' + fmtQty(l.q, true) : `${l.q}x`;
     return `• ${qtd} ${nomeMsg(l.p)}${lab}${l.p.consultarEstoque ? ' [consultar estoque]' : ''} — ${l.o.kg ? '≈ ' : ''}${brl(l.sub)}${l.o.kg ? ' (valor final após pesagem)' : ''}${l.p.descricao ? '\n   ↳ ' + l.p.descricao : ''}`;
   });
-  const total = r2(L.reduce((a, l) => a + l.sub, 0));
+  
+  const subtotal = r2(L.reduce((a, l) => a + l.sub, 0));
+  const totalFinal = r2(subtotal + freteVal);
+  
   let m = `Pedido — De Minas Pão de Queijaria\n\n`;
   m += `Código: ${codigo}\n`;
   m += `Nome: ${nome}\n`;
   m += `Contato: ${tel}\n`;
   m += `${tipo}${tipo === 'Entrega' && addr ? ': ' + addr : ''}\n`;
   m += `\nItens:\n${lines.join('\n')}\n\n`;
-  m += `${kgIn ? 'Total estimado' : 'Total dos produtos'}: ${kgIn ? '≈ ' : ''}${brl(total)}`;
-  if (obs) m += `\n\nObs.: ${obs}`;
+  m += `${kgIn ? 'Total estimado' : 'Subtotal'}: ${kgIn ? '≈ ' : ''}${brl(subtotal)}`;
+  
+  if (tipo === 'Entrega') {
+    m += `\nFrete (${freteNome}): ${freteVal > 0 ? brl(freteVal) : 'A combinar'}`;
+    if (freteVal > 0) m += `\n*Total com frete:* ${kgIn ? '≈ ' : ''}${brl(totalFinal)}`;
+  }
+
+  m += `\n\n*Pagamento:* ${pag}`;
+  if (pag === 'Dinheiro' && troco) m += ` (Troco para: ${troco})`;
+  
+  if (obs) m += `\n\n*Obs.:* ${obs}`;
   m += `\n\nA De Minas agradece! Conheça nossa linha completa, de pães de queijo, Dadinho de Tapioca, sabores especiais e Broas, trem bão demais da conta!`;
   if (kgIn) m += `\n\nQueijos vendidos por kg: o valor final é confirmado após a pesagem.`;
-  m += `\n\nPIX (celular): ${(S.data && S.data.pix) || '(11) 98697-5803'} (${(S.data && S.data.pixNome) || 'Franklin Rainier'})`;
+  if (pag === 'PIX') m += `\n\nPIX (celular): ${(S.data && S.data.pix) || '(11) 98697-5803'} (${(S.data && S.data.pixNome) || 'Franklin Rainier'})`;
   return m;
 }
 function syncAddr() {
   const entrega = $('input[name=tipo]:checked').value === 'Entrega';
   $('#addrFld').hidden = !entrega; $('#pickNote').hidden = entrega; $('#cAddr').required = entrega;
+  $('#freteFld').hidden = !entrega;
 }
+$('#cPag').addEventListener('change', e => {
+  $('#trocoFld').hidden = e.target.value !== 'Dinheiro';
+});
+
 $('#cbOpen').addEventListener('click', openCart);
 $('#cartClose').addEventListener('click', closeCart);
 $('#btnLimpar').addEventListener('click', limparCarrinho);
@@ -575,20 +615,25 @@ $('#orderForm').addEventListener('submit', e => {
 
   store.set('dm_cust', {nome, addr, tel});
 
-  // Salva o carrinho como "Última Compra" antes de limpar
   store.set('dm_last_order', S.cart);
 
   const codigo = gerarCodigoPedido();
+  
+  const freteVal = parseFloat($('#cFrete').value.split('|')[0]) || 0;
+  const freteNome = $('#cFrete').value.split('|')[1];
+  const pag = $('#cPag').value;
+  const troco = $('#cTroco').value.trim();
 
   const itensFire = L.map(l => ({
     codigo: l.p.codigo || '', nome: l.p.nome, label: l.o.label, qtd: l.q,
     preco: l.o.preco, kg: !!l.o.kg, subtotal: l.sub
   }));
-  const totalSnap = r2(L.reduce((a, l) => a + l.sub, 0));
+  const totalSnap = r2(L.reduce((a, l) => a + l.sub, 0) + freteVal);
   const pedido = {
     codigo, cliente: nome, whatsapp: telDig.length <= 11 ? '55' + telDig : telDig,
     endereco: tipo === 'Entrega' ? addr : '',
-    tipo, obs, itens: itensFire, total: totalSnap, pago: false
+    tipo, obs, itens: itensFire, total: totalSnap, pago: false,
+    frete: freteNome, taxaFrete: freteVal, pagamento: pag, troco: troco
   };
 
   (async () => {
@@ -912,7 +957,6 @@ function openQR() {
 $('#admLink').hidden = S.admin;
 load();
 
-// Adiciona a classe para mostrar a tela quando o catálogo terminar de renderizar
 setTimeout(() => document.documentElement.classList.replace('theme-loading', 'theme-ready'), 400);
 })();
 </script>
