@@ -314,7 +314,154 @@ const store = { get(k){ try{return JSON.parse(localStorage.getItem(k))}catch{ret
 const fmtQty = (q, kg) => kg ? q.toLocaleString('pt-BR', {maximumFractionDigits: 1}) + ' kg' : String(q);
 const ROOF = '<svg viewBox="0 0 52 32" aria-hidden="true"><path d="M26 1 L51 28 C41 23 33 26 26 25 C19 24 10 28 1 30 Z" fill="#a7030e"/></svg>';
 
-const S = { data: null, cart: store.get('dm_cart') || {}, q: '' };
+// PRODUTOS EMBUTIDOS DIRETO NO CÓDIGO
+const PRODUTOS_EMBUTIDOS = [
+  // COMBOS
+  { id:"combo-cafe-da-manha", codigo:"CB-001", cat:"combos", grupo:"", nome:"Combo Café da Manhã Mineiro", descricao:"1 kg de Pão de Queijo Tradicional 30g + 1 Doce de Leite Moreno (pote) + 1 Biscoito de Queijo Canastra (pacote)", foto:"", opcoes:[{label:"Combo",preco:79.9,de:88}], disponivel:true, consultarEstoque:false },
+  { id:"combo-romeu-e-julieta", codigo:"CB-002", cat:"combos", grupo:"", nome:"Combo Romeu e Julieta", descricao:"1 Queijo Fresco (peça) + 1 Goiabada Cascão de Corte 400g", foto:"", opcoes:[{label:"Combo",preco:66.9,de:74}], disponivel:true, consultarEstoque:false },
+  { id:"combo-presente-mineiro", codigo:"CB-003", cat:"combos", grupo:"", nome:"Combo Presente Mineiro", descricao:"1 Mel Silvestre 250g + 1 Doce de Leite Moreno + 1 Geleia de Pimenta 250g + 1 Casadinho de Goiabada", foto:"", opcoes:[{label:"Combo",preco:99.9,de:111}], disponivel:true, consultarEstoque:false },
+  
+  // CONGELADOS
+  { id:"pq-tradicional-30g", codigo:"PQ-001", cat:"congelados", grupo:"Sabor da Roça", nome:"Pão de Queijo Tradicional 30g", foto:"sabor-da-roca-pao-de-queijo-tradicional-30g-mve4kx69.jpg", opcoes:[{label:"1kg",preco:30},{label:"2kgs",preco:60}], disponivel:true, consultarEstoque:false },
+  { id:"pq-coquetel-15g", codigo:"PQ-002", cat:"congelados", grupo:"Sabor da Roça", nome:"Pão de Queijo Coquetel 15g", foto:"sabor-da-roca-pao-de-queijo-coquetel-15g-mve4kyd0.jpg", opcoes:[{label:"2kgs",preco:60}], disponivel:true, consultarEstoque:false },
+  { id:"pq-lanche-80g", codigo:"PQ-003", cat:"congelados", grupo:"Sabor da Roça", nome:"Pão de Queijo Lanche 80g", foto:"pao-de-queijo.jpg", opcoes:[{label:"2kgs",preco:60}], disponivel:true, consultarEstoque:false },
+  { id:"pq-super-lanche-100g", codigo:"PQ-004", cat:"congelados", grupo:"Sabor da Roça", nome:"Pão de Queijo Super Lanche 100g", foto:"sabor-da-roca-pao-de-queijo-super-lanche-100g-mve4kzlw.jpg", opcoes:[{label:"2kgs",preco:60}], disponivel:true, consultarEstoque:false },
+  { id:"chipa-3-queijos", codigo:"PQ-005", cat:"congelados", grupo:"Sabor da Roça", nome:"Chipa com 3 Queijos", foto:"sabor-da-roca-chipa-com-3-queijos-mve4l0yy.jpg", opcoes:[{label:"1kg",preco:34}], disponivel:true, consultarEstoque:false },
+  { id:"biscoito-queijo-2-queijos", codigo:"PQ-006", cat:"congelados", grupo:"Sabor da Roça", nome:"Biscoito de Queijo com 2 Queijos", foto:"sabor-da-roca-biscoito-de-queijo-com-2-queijos-mve4l26d.jpg", opcoes:[{label:"1kg",preco:32}], disponivel:true, consultarEstoque:false },
+  { id:"broa-doce", codigo:"PQ-007", cat:"congelados", grupo:"Sabor da Roça", nome:"Broa Doce", foto:"sabor-da-roca-broa-doce-mve4l3gz.jpg", opcoes:[{label:"1kg",preco:28.9}], disponivel:true, consultarEstoque:false },
+  { id:"broa-doce-erva", codigo:"PQ-008", cat:"congelados", grupo:"Sabor da Roça", nome:"Broa Doce com Ervas", foto:"sabor-da-roca-broa-doce-com-ervas-mve4l4ki.jpg", opcoes:[{label:"1kg",preco:28.9}], disponivel:true, consultarEstoque:false },
+  { id:"broa-salgada", codigo:"PQ-009", cat:"congelados", grupo:"Sabor da Roça", nome:"Broa Salgada Temperada", foto:"broa.jpg", opcoes:[{label:"1kg",preco:28.9}], disponivel:true, consultarEstoque:false },
+  { id:"pq-trad-25g", codigo:"PQ-010", cat:"congelados", grupo:"Bem de Minas", nome:"Pão de Queijo Tradicional 25g", foto:"pao-de-queijo.jpg", opcoes:[{label:"1kg",preco:32.9},{label:"500g",preco:17}], disponivel:true, consultarEstoque:false },
+  { id:"biscoito-chipa", codigo:"PQ-011", cat:"congelados", grupo:"Bem de Minas", nome:"Biscoito (Chipa)", foto:"bem-de-minas-biscoito-chipa-mve4l5vn.jpg", opcoes:[{label:"500g",preco:18}], disponivel:true, consultarEstoque:false },
+  { id:"recheado-costela", codigo:"PQ-012", cat:"congelados", grupo:"Garcia de Minas", nome:"Recheado Costela", foto:"garcia-de-minas-recheado-costela-mve4l700.jpg", opcoes:[{label:"1kg",preco:42}], disponivel:true, consultarEstoque:true },
+  { id:"recheado-goiabada", codigo:"PQ-013", cat:"congelados", grupo:"Garcia de Minas", nome:"Recheado Goiabada", foto:"garcia-de-minas-recheado-goiabada-mve4l8b2.jpg", opcoes:[{label:"1kg",preco:38}], disponivel:true, consultarEstoque:true },
+  { id:"recheado-frango", codigo:"PQ-014", cat:"congelados", grupo:"Garcia de Minas", nome:"Recheado Frango", foto:"garcia-de-minas-recheado-frango-mve4l9mn.jpg", opcoes:[{label:"1kg",preco:38}], disponivel:true, consultarEstoque:true },
+  { id:"recheado-calabresa", codigo:"PQ-015", cat:"congelados", grupo:"Garcia de Minas", nome:"Recheado Calabresa", foto:"garcia-de-minas-recheado-calabresa-mve4laws.jpg", opcoes:[{label:"1kg",preco:38}], disponivel:true, consultarEstoque:true },
+  { id:"recheado-requeijao", codigo:"PQ-016", cat:"congelados", grupo:"Garcia de Minas", nome:"Recheado Requeijão", foto:"garcia-de-minas-recheado-requeijao-mve4lc2z.jpg", opcoes:[{label:"1kg",preco:38}], disponivel:true, consultarEstoque:true },
+  { id:"recheado-doce-leite", codigo:"PQ-017", cat:"congelados", grupo:"Garcia de Minas", nome:"Recheado Doce de Leite", foto:"garcia-de-minas-recheado-doce-de-leite-mve4ldey.jpg", opcoes:[{label:"1kg",preco:38}], disponivel:true, consultarEstoque:true },
+  { id:"pq-trad-garcia", codigo:"PQ-018", cat:"congelados", grupo:"Garcia de Minas", nome:"Pão de Queijo Tradicional", foto:"pao-de-queijo.jpg", opcoes:[{label:"1kg",preco:29.9},{label:"2kgs",preco:59.8}], disponivel:true, consultarEstoque:false },
+  { id:"broas-garcia", codigo:"PQ-019", cat:"congelados", grupo:"Garcia de Minas", nome:"Broas", foto:"broa.jpg", opcoes:[{label:"1kg",preco:29.9}], disponivel:true, consultarEstoque:false },
+  { id:"brasil-mineiro", codigo:"PQ-020", cat:"congelados", grupo:"Encanto de Minas", nome:"Brasil Mineiro", foto:"pao-de-queijo.jpg", opcoes:[{label:"1kg",preco:29.9},{label:"2kgs",preco:59.8}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-tradicional", codigo:"PQ-021", cat:"congelados", grupo:"Encanto de Minas", nome:"Encanto Tradicional", foto:"encanto-de-minas-brasil-mineiro-encanto-tradicional-mve4lenj.jpg", opcoes:[{label:"400g",preco:16.9},{label:"1kg",preco:30.9},{label:"2kgs",preco:59.9}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-temperado", codigo:"PQ-022", cat:"congelados", grupo:"Encanto de Minas", nome:"Temperado", foto:"encanto-de-minas-brasil-mineiro-temperado-mve4lfuh.jpg", opcoes:[{label:"1kg",preco:33.9}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-calabresa", codigo:"PQ-023", cat:"congelados", grupo:"Encanto de Minas", nome:"Calabresa", foto:"encanto-de-minas-brasil-mineiro-calabresa-mve4lh6y.jpg", opcoes:[{label:"1kg",preco:35.9}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-multigraos", codigo:"PQ-024", cat:"congelados", grupo:"Encanto de Minas", nome:"Multigrãos", foto:"encanto-de-minas-brasil-mineiro-multigraos-mve4lic7.jpg", opcoes:[{label:"1kg",preco:30.9}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-gourmet", codigo:"PQ-025", cat:"congelados", grupo:"Encanto de Minas", nome:"Gourmet 4 Queijos", foto:"encanto-de-minas-brasil-mineiro-gourmet-4-queijos-mve4ljfk.jpg", opcoes:[{label:"1kg",preco:54.9},{label:"2kgs",preco:98.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-palitinho", codigo:"PQ-026", cat:"congelados", grupo:"Encanto de Minas", nome:"Palitinho Provolone", foto:"encanto-de-minas-brasil-mineiro-palitinho-provolone-mve4lkk8.jpg", opcoes:[{label:"1kg",preco:39.9},{label:"2kgs",preco:79.8}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-doce-empanado", codigo:"PQ-027", cat:"congelados", grupo:"Encanto de Minas", nome:"Doce de Leite Empanado", foto:"encanto-de-minas-brasil-mineiro-doce-de-leite-empanado-mve4llnn.jpg", opcoes:[{label:"1kg",preco:48.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-requeijao-empanado", codigo:"PQ-028", cat:"congelados", grupo:"Encanto de Minas", nome:"Requeijão Empanado", foto:"encanto-de-minas-brasil-mineiro-requeijao-empanado-mve4lmv5.jpg", opcoes:[{label:"1kg",preco:48.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-goiabada-empanado", codigo:"PQ-029", cat:"congelados", grupo:"Encanto de Minas", nome:"Goiabada Empanado", foto:"encanto-de-minas-brasil-mineiro-goiabada-empanado-mve4lo2d.jpg", opcoes:[{label:"1kg",preco:48.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-frango-empanado", codigo:"PQ-030", cat:"congelados", grupo:"Encanto de Minas", nome:"Frango Empanado", foto:"encanto-de-minas-brasil-mineiro-frango-empanado-mve4lp4n.jpg", opcoes:[{label:"1kg",preco:49.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-goiabada-artesanal", codigo:"PQ-031", cat:"congelados", grupo:"Encanto de Minas", nome:"Goiabada Artesanal", foto:"encanto-de-minas-brasil-mineiro-goiabada-artesanal-mve4lq9d.jpg", opcoes:[{label:"1kg",preco:45.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-requeijao-artesanal", codigo:"PQ-032", cat:"congelados", grupo:"Encanto de Minas", nome:"Requeijão Artesanal", foto:"encanto-de-minas-brasil-mineiro-requeijao-artesanal-mve4lrib.jpg", opcoes:[{label:"1kg",preco:45.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-frango-artesanal", codigo:"PQ-033", cat:"congelados", grupo:"Encanto de Minas", nome:"Frango Artesanal", foto:"encanto-de-minas-brasil-mineiro-frango-artesanal-mve4lsuc.jpg", opcoes:[{label:"1kg",preco:49.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-dadinho", codigo:"PQ-034", cat:"congelados", grupo:"Encanto de Minas", nome:"Dadinho de Tapioca", foto:"encanto-de-minas-brasil-mineiro-dadinho-de-tapioca-mve4ltz9.jpg", opcoes:[{label:"500g",preco:29.9}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-broa-doce", codigo:"PQ-035", cat:"congelados", grupo:"Encanto de Minas", nome:"Broa Doce", foto:"encanto-de-minas-brasil-mineiro-broa-doce-mve4lv7e.jpg", opcoes:[{label:"1kg",preco:34.9}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-broa-salgada", codigo:"PQ-036", cat:"congelados", grupo:"Encanto de Minas", nome:"Broa Salgada", foto:"broa.jpg", opcoes:[{label:"1kg",preco:34.9}], disponivel:true, consultarEstoque:false },
+
+  // QUEIJOS
+  { id:"kit-parmesao", codigo:"QJ-001", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Kit 4 Parmesão Canastra", foto:"kit-parmesao-canastra.jpg", opcoes:[{label:"Kit",preco:60}], disponivel:true, consultarEstoque:false },
+  { id:"kit-queijos-canastra", codigo:"QJ-002", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Kit 4 Queijos Serra da Canastra", foto:"kit-queijos-serra-da-canastra.jpg", opcoes:[{label:"Kit",preco:60}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-fresco", codigo:"QJ-003", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Fresco", foto:"queijo-fresco.jpg", opcoes:[{label:"Peça",preco:50}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-monte-carmelo", codigo:"QJ-004", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Meia Cura Monte Carmelo", foto:"meia-cura-monte-carmelo.jpg", opcoes:[{label:"Preço por kg",preco:65,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-canastra-medeiros", codigo:"QJ-005", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Canastra Medeiros", foto:"canastra-medeiros.jpg", opcoes:[{label:"Preço por kg",preco:80,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-cruzeiro", codigo:"QJ-006", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Meia Cura Cruzeiro da Fortaleza", foto:"meia-cura-cruzeiro-da-fortaleza.jpg", opcoes:[{label:"Preço por kg",preco:65,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-serra-salitre", codigo:"QJ-007", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Meia Cura Serra do Salitre", foto:"meia-cura-serra-do-salitre.jpg", opcoes:[{label:"Preço por kg",preco:67,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-serra-canastra", codigo:"QJ-008", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Serra da Canastra", foto:"serra-da-canastra.jpg", opcoes:[{label:"Preço por kg",preco:67,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-araxa", codigo:"QJ-009", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Meia Cura Araxá", foto:"meia-cura-araxa.jpg", opcoes:[{label:"Preço por kg",preco:75,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-malacaxeta", codigo:"QJ-010", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Malacaxeta", foto:"malacaxeta.jpg", opcoes:[{label:"Peça",preco:90}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-da-santa", codigo:"QJ-011", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo da Santa", foto:"queijo-da-santa.jpg", opcoes:[{label:"Peça",preco:90}], disponivel:true, consultarEstoque:false },
+  { id:"tranca-provolone", codigo:"QJ-012", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Trança Provolone", foto:"tranca-provolone.jpg", opcoes:[{label:"Unidade",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"tranca-alho", codigo:"QJ-013", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Trança com Alho", foto:"tranca-alho.jpg", opcoes:[{label:"Unidade",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"tranca-vinho", codigo:"QJ-014", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Trança ao Vinho", foto:"tranca-vinho.jpg", opcoes:[{label:"Unidade",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"nozinho-defumado", codigo:"QJ-015", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Nozinho Provolone Defumado", foto:"nozinho-provolone-defumado.jpg", opcoes:[{label:"Unidade",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"palito-temperado", codigo:"QJ-016", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Palito Temperado", foto:"palito-temperado.jpg", opcoes:[{label:"Unidade",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"nozinho-temperado", codigo:"QJ-017", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Nozinho Temperado", foto:"nozinho-temperado.jpg", opcoes:[{label:"Unidade",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-tranca", codigo:"QJ-018", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Trança", foto:"tranca.jpg", opcoes:[{label:"Unidade",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"provolone-defumado", codigo:"QJ-019", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Provolone Fresco Defumado", foto:"provolone-fresco-defumado.jpg", opcoes:[{label:"Preço por kg",preco:100,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"provolone-desidratado", codigo:"QJ-020", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Provolone Desidratado", foto:"provolone-desidratado.jpg", opcoes:[{label:"Pote",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"requeijao-moreno", codigo:"QJ-021", cat:"queijos", grupo:"Coalho e Requeijão", nome:"Requeijão Moreno", foto:"requeijao-moreno.jpg", opcoes:[{label:"Preço por kg",preco:75,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-coalho", codigo:"QJ-022", cat:"queijos", grupo:"Coalho e Requeijão", nome:"Queijo Coalho", foto:"queijo-coalho.jpg", opcoes:[{label:"Preço por kg",preco:80,kg:true}], disponivel:true, consultarEstoque:false },
+
+  // DOCES
+  { id:"doce-leite-moreno", codigo:"DC-001", cat:"doces", grupo:"Doces de Leite", nome:"Doce de Leite Moreno", foto:"dl-moreno.jpg", opcoes:[{label:"Pote",preco:36}], disponivel:true, consultarEstoque:false },
+  { id:"doce-leite-claro", codigo:"DC-002", cat:"doces", grupo:"Doces de Leite", nome:"Doce de Leite Claro", foto:"dl-claro.jpg", opcoes:[{label:"Pote",preco:36}], disponivel:true, consultarEstoque:false },
+  { id:"doce-leite-vicosa", codigo:"DC-003", cat:"doces", grupo:"Doces de Leite", nome:"Doce de Leite Viçosa 400g", foto:"dl-vicosa.jpg", opcoes:[{label:"400g",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"doce-leite-lazara", codigo:"DC-004", cat:"doces", grupo:"Doces de Leite", nome:"Doce de Leite Dona Lázara", foto:"dl-dona-lazara.jpg", opcoes:[{label:"Pote",preco:25}], disponivel:true, consultarEstoque:false },
+  { id:"doce-leite-barra", codigo:"DC-005", cat:"doces", grupo:"Doces de Leite", nome:"Doce de Leite Barra (tablete)", foto:"dl-barra-tablete.jpg", opcoes:[{label:"Unidade",preco:22}], disponivel:true, consultarEstoque:false },
+  { id:"barra-doce-leite", codigo:"DC-006", cat:"doces", grupo:"Doces de Leite", nome:"Barra Doce de Leite", foto:"barra-dl.jpg", opcoes:[{label:"400g",preco:35},{label:"700g",preco:50}], disponivel:true, consultarEstoque:false },
+  { id:"doce-leite-palha", codigo:"DC-007", cat:"doces", grupo:"Doces de Leite", nome:"Doce de Leite na Palha", foto:"dl-na-palha.jpg", opcoes:[{label:"Unidade",preco:30}], disponivel:true, consultarEstoque:false },
+  { id:"doce-leite-palha-lazara", codigo:"DC-008", cat:"doces", grupo:"Doces de Leite", nome:"Doce de Leite na Palha Dona Lázara", foto:"dl-na-palha-dona-lazara.jpg", opcoes:[{label:"Unidade",preco:28}], disponivel:true, consultarEstoque:false },
+  { id:"pingo-leite", codigo:"DC-009", cat:"doces", grupo:"Doces de Leite", nome:"Doce Pingo de Leite", foto:"pingo-de-leite.jpg", opcoes:[{label:"Pote",preco:25}], disponivel:true, consultarEstoque:false },
+  { id:"goiabada-corte", codigo:"DC-010", cat:"doces", grupo:"Goiabadas e Bananada", nome:"Goiabada Cascão Corte", foto:"goiabada-cascao-corte.jpg", opcoes:[{label:"250g",preco:18},{label:"400g",preco:24},{label:"500g",preco:30}], disponivel:true, consultarEstoque:false },
+  { id:"goiabada-corte-cascao", codigo:"DC-011", cat:"doces", grupo:"Goiabadas e Bananada", nome:"Goiabada Cascão de Corte", foto:"goiabada-corte-cascao.jpg", opcoes:[{label:"Unidade",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"goiabada-colher", codigo:"DC-012", cat:"doces", grupo:"Goiabadas e Bananada", nome:"Goiabada Cascão de Colher", foto:"goiabada-colher.jpg", opcoes:[{label:"Pote",preco:42}], disponivel:true, consultarEstoque:false },
+  { id:"goiabada-zelia", codigo:"DC-013", cat:"doces", grupo:"Goiabadas e Bananada", nome:"Goiabada Cremosa Zélia", foto:"goiabada-cremosa-zelia.jpg", opcoes:[{label:"Lata",preco:28}], disponivel:true, consultarEstoque:false },
+  { id:"goiabada-palha", codigo:"DC-014", cat:"doces", grupo:"Goiabadas e Bananada", nome:"Goiabada Cascão na Palha", foto:"goiabada-na-palha.jpg", opcoes:[{label:"Unidade",preco:30}], disponivel:true, consultarEstoque:false },
+  { id:"bananada-palha", codigo:"DC-015", cat:"doces", grupo:"Goiabadas e Bananada", nome:"Bananada na Palha", foto:"bananada-na-palha.jpg", opcoes:[{label:"Unidade",preco:30}], disponivel:true, consultarEstoque:false },
+  { id:"marmelada", codigo:"DC-016", cat:"doces", grupo:"Goiabadas e Bananada", nome:"Marmelada", foto:"marmelada.jpg", opcoes:[{label:"Unidade",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"ambrosia", codigo:"DC-017", cat:"doces", grupo:"Cremosos e em Calda", nome:"Doce Ambrosia", foto:"ambrosia.jpg", opcoes:[{label:"Pote",preco:30}], disponivel:true, consultarEstoque:false },
+  { id:"doce-manga", codigo:"DC-018", cat:"doces", grupo:"Cremosos e em Calda", nome:"Doce de Manga", foto:"doce-de-manga.jpg", opcoes:[{label:"Pote",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"cocada-morena", codigo:"DC-019", cat:"doces", grupo:"Cremosos e em Calda", nome:"Cocada Morena Cremosa", foto:"cocada-morena.jpg", opcoes:[{label:"Pote",preco:38}], disponivel:true, consultarEstoque:false },
+  { id:"cocada-branca", codigo:"DC-020", cat:"doces", grupo:"Cremosos e em Calda", nome:"Cocada Branca Cremosa", foto:"cocada-branca.jpg", opcoes:[{label:"Pote",preco:38}], disponivel:true, consultarEstoque:false },
+  { id:"doce-pastoso", codigo:"DC-021", cat:"doces", grupo:"Cremosos e em Calda", nome:"Doce Pastoso com Leite", foto:"doce-pastoso-leite.jpg", opcoes:[{label:"Pote",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"doce-mamao", codigo:"DC-022", cat:"doces", grupo:"Cremosos e em Calda", nome:"Doce de Mamão Ralado", foto:"doce-de-mamao.jpg", opcoes:[{label:"Pote",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"doce-figo", codigo:"DC-023", cat:"doces", grupo:"Cremosos e em Calda", nome:"Doce de Figo", foto:"doce-de-figo.jpg", opcoes:[{label:"Pote",preco:38}], disponivel:true, consultarEstoque:false },
+  { id:"doce-abobora", codigo:"DC-024", cat:"doces", grupo:"Cremosos e em Calda", nome:"Doce de Abóbora em Pedaços", foto:"doce-de-abobora.jpg", opcoes:[{label:"Pote",preco:38}], disponivel:true, consultarEstoque:false },
+  { id:"figo-ramy", codigo:"DC-025", cat:"doces", grupo:"Cremosos e em Calda", nome:"Figo Ramy Caramelizado", foto:"figo-ramy.jpg", opcoes:[{label:"Lata",preco:50}], disponivel:true, consultarEstoque:false },
+  { id:"doce-queijo-calda", codigo:"DC-026", cat:"doces", grupo:"Cremosos e em Calda", nome:"Doce de Queijo em Calda", foto:"doce-de-queijo-calda.jpg", opcoes:[{label:"Pote",preco:60}], disponivel:true, consultarEstoque:false },
+  { id:"bala-leite-35", codigo:"DC-027", cat:"doces", grupo:"Balas", nome:"Bala Doce de Leite", foto:"bala-dl-35.jpg", opcoes:[{label:"Pacote",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"bala-leite-40", codigo:"DC-028", cat:"doces", grupo:"Balas", nome:"Bala Doce de Leite (maior)", foto:"bala-dl-40.jpg", opcoes:[{label:"Pacote",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"bala-quebra-queixo", codigo:"DC-029", cat:"doces", grupo:"Balas", nome:"Bala Quebra Queixo", foto:"quebra-queixo.jpg", opcoes:[{label:"Pacote",preco:40}], disponivel:true, consultarEstoque:false },
+
+  // MEL
+  { id:"mel-silvestre", codigo:"ML-001", cat:"mel", grupo:"", nome:"Mel Florada Silvestre", foto:"mel-silvestre.jpg", opcoes:[{label:"250g",preco:25},{label:"500g",preco:40},{label:"1,4kg",preco:100}], disponivel:true, consultarEstoque:false },
+  { id:"mel-laranjeira", codigo:"ML-002", cat:"mel", grupo:"", nome:"Mel Florada Laranjeira", foto:"mel-laranjeira.jpg", opcoes:[{label:"250g",preco:28},{label:"500g",preco:45},{label:"1,4kg",preco:110}], disponivel:true, consultarEstoque:false },
+  { id:"mel-eucalipto", codigo:"ML-003", cat:"mel", grupo:"", nome:"Mel Florada Eucalipto", foto:"mel-eucalipto.jpg", opcoes:[{label:"250g",preco:25},{label:"500g",preco:40},{label:"1,4kg",preco:100}], disponivel:true, consultarEstoque:false },
+  { id:"mel-favo", codigo:"ML-004", cat:"mel", grupo:"", nome:"Mel com Favo", foto:"mel-com-favo.jpg", opcoes:[{label:"500g",preco:50},{label:"800g",preco:70}], disponivel:true, consultarEstoque:false },
+  { id:"mel-silvestre-330", codigo:"ML-005", cat:"mel", grupo:"", nome:"Mel Silvestre 330g", foto:"mel-silvestre-330.jpg", opcoes:[{label:"330g",preco:39}], disponivel:true, consultarEstoque:false },
+  { id:"mel-favo-150", codigo:"ML-006", cat:"mel", grupo:"", nome:"Mel com Favo 150g", foto:"mel-com-favo-150.jpg", opcoes:[{label:"150g",preco:25}], disponivel:true, consultarEstoque:false },
+  { id:"melado", codigo:"ML-007", cat:"mel", grupo:"", nome:"Melado", foto:"melado.jpg", opcoes:[{label:"Pote",preco:28}], disponivel:true, consultarEstoque:false },
+  { id:"melado-cana", codigo:"ML-008", cat:"mel", grupo:"", nome:"Melado de Cana 248g", foto:"melado-de-cana.jpg", opcoes:[{label:"248g",preco:28}], disponivel:true, consultarEstoque:false },
+
+  // MERCEARIA
+  { id:"manteiga-canastra", codigo:"MC-001", cat:"mercearia", grupo:"", nome:"Manteiga Canastra 500g", foto:"manteiga-canastra.jpg", opcoes:[{label:"500g",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"manteiga-garrafa", codigo:"MC-002", cat:"mercearia", grupo:"", nome:"Manteiga de Garrafa", foto:"manteiga-garrafa.jpg", opcoes:[{label:"Garrafa",preco:30}], disponivel:true, consultarEstoque:false },
+  { id:"geleia-pimenta", codigo:"MC-003", cat:"mercearia", grupo:"", nome:"Geleias de Pimenta 250g", foto:"geleias-pimenta.jpg", opcoes:[{label:"Unidade",preco:30}], disponivel:true, consultarEstoque:false },
+  { id:"farinha-biju", codigo:"MC-004", cat:"mercearia", grupo:"", nome:"Farinha de Mandioca Biju 800g", foto:"farinha-biju.jpg", opcoes:[{label:"800g",preco:28}], disponivel:true, consultarEstoque:false },
+  { id:"farinha-sem-pimenta", codigo:"MC-005", cat:"mercearia", grupo:"", nome:"Farinha Temperada sem Pimenta", foto:"farinha-temperada.jpg", opcoes:[{label:"Pacote",preco:25}], disponivel:true, consultarEstoque:false },
+  { id:"farinha-alho", codigo:"MC-006", cat:"mercearia", grupo:"", nome:"Farinha Temperada de Alho", foto:"farinha-alho.jpg", opcoes:[{label:"Pacote",preco:25}], disponivel:true, consultarEstoque:false },
+  { id:"picles", codigo:"MC-007", cat:"mercearia", grupo:"", nome:"Picles", foto:"picles.jpg", opcoes:[{label:"Pote",preco:25}], disponivel:true, consultarEstoque:false },
+
+  // BISCOITOS
+  { id:"casadinho", codigo:"BP-001", cat:"biscoitos", grupo:"", nome:"Casadinho de Goiabada", foto:"casadinho.jpg", opcoes:[{label:"Pote",preco:20}], disponivel:true, consultarEstoque:false },
+  { id:"sequilho", codigo:"BP-002", cat:"biscoitos", grupo:"", nome:"Sequilho de Goiabada", foto:"sequilho.jpg", opcoes:[{label:"Pote",preco:20}], disponivel:true, consultarEstoque:false },
+  { id:"bolacha-nata", codigo:"BP-003", cat:"biscoitos", grupo:"", nome:"Bolacha de Nata", foto:"bolacha-de-nata.jpg", opcoes:[{label:"Pacote",preco:13}], disponivel:true, consultarEstoque:false },
+  { id:"biscoito-canastra", codigo:"BP-004", cat:"biscoitos", grupo:"", nome:"Biscoito de Queijo Canastra", foto:"biscoito-canastra.jpg", opcoes:[{label:"Pacote",preco:22}], disponivel:true, consultarEstoque:false },
+  { id:"suspiro", codigo:"BP-005", cat:"biscoitos", grupo:"", nome:"Suspiro", foto:"suspiro.jpg", opcoes:[{label:"Pacote",preco:12}], disponivel:true, consultarEstoque:false }
+];
+
+const DADOS_EMBUTIDOS = {
+  whatsapp: "5511986975803",
+  avisos: [
+    "Pedidos: pão de queijo congelado e recheados até sábado; doces, queijos e demais produtos até domingo. Entregas às terças-feiras, a partir das 18h.",
+    "Valores sujeitos a alteração conforme reajuste do fornecedor.",
+    "Recheados, linha especial e gourmet: consultar estoque."
+  ],
+  sugestoes: ["PQ-034", "DC-001", "BP-004", "BP-001", "ML-001", "MC-002"],
+  categorias: [
+    { id: "combos", nome: "Combos Mineiros" },
+    { id: "congelados", nome: "Pão de Queijo Mineiro" },
+    { id: "queijos", nome: "Queijos" },
+    { id: "doces", nome: "Doces" },
+    { id: "mel", nome: "Mel e Melado" },
+    { id: "mercearia", nome: "Mercearia Mineira" },
+    { id: "biscoitos", nome: "Biscoitos e Petiscos" }
+  ],
+  produtos: PRODUTOS_EMBUTIDOS
+};
+
+const S = { data: DADOS_EMBUTIDOS, cart: store.get('dm_cart') || {}, q: '' };
 
 function gerarCodigoPedido(){
   const d = new Date(), p = n => String(n).padStart(2, '0');
@@ -324,13 +471,9 @@ function gerarCodigoPedido(){
   return 'DM-' + String(d.getFullYear()).slice(2) + p(d.getMonth() + 1) + p(d.getDate()) + '-' + r;
 }
 
-async function load() {
-  try {
-    const r = await fetch('produtos.json?v=' + Date.now(), {cache: 'no-store'});
-    S.data = await r.json();
-    reconcileCart();
-    renderAll();
-  } catch(e) { $('#catalog').innerHTML = '<p class="empty-msg">Não foi possível carregar o catálogo.</p>'; }
+function load() {
+  reconcileCart();
+  renderAll();
 }
 function waNumber() { return (S.data && S.data.whatsapp) || '5511986975803'; }
 const findProd = id => S.data.produtos.find(p => p.id === id);
