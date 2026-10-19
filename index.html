@@ -301,38 +301,7 @@ html.theme-ready body { opacity: 1; }
   </div>
 </div>
 
-<!-- FIREBASE E ENVIO PARA O ERP -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
-  // Configuração do Firebase (deminas-pedidos)
-  const firebaseConfig = {
-    apiKey: "AIzaSyC3... (sua chave)", // Se você já tem a config exata no firebase-api.js, pode copiar de lá
-    authDomain: "deminas-pedidos.firebaseapp.com",
-    projectId: "deminas-pedidos",
-    storageBucket: "deminas-pedidos.appspot.com",
-    messagingSenderId: "...",
-    appId: "..."
-  };
-
-  try {
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    window.DM_enviarPedido = async (pedido) => {
-      await addDoc(collection(db, "pedidos_catalogo"), {
-        ...pedido,
-        status: 'novo',
-        criadoEm: serverTimestamp()
-      });
-      console.log("Pedido enviado para o ERP com sucesso!");
-    };
-  } catch (e) {
-    console.warn("Firebase não inicializado. Verifique a chave de API.", e);
-  }
-</script>
-
+<script type="module" src="firebase-catalogo.js"></script>
 <script src="qrcode.js"></script>
 <script>
 (() => {
@@ -535,6 +504,19 @@ function renderUpsell(L) {
     return `<div class="ups">${p.foto ? `<img src="${esc(p.foto)}" alt="" loading="lazy">` : ''}<div class="un">${esc(p.nome)}</div><div class="up">${brl(o.preco)}${o.kg ? '/kg' : ` <small>${esc(o.label)}</small>`}</div><button class="add" type="button" data-act="inc" data-k="${esc(k)}">+ Adicionar</button></div>`;
   }).join('')}</div>`;
 }
+
+function atualizarTotais() {
+  const L = cartLines();
+  if (!L.length) return;
+  const kgIn = L.some(l => l.o.kg);
+  const subtotal = r2(L.reduce((a, l) => a + l.sub, 0));
+  const tipo = $('input[name=tipo]:checked').value;
+  const frete = tipo === 'Entrega' ? (parseFloat($('#cFrete').value.split('|')[0]) || 0) : 0;
+  const total = r2(subtotal + frete);
+  $('#cartTotal').textContent = (kgIn ? '≈ ' : '') + brl(total);
+  $('#sendTxt').textContent = 'Enviar pedido · ' + (kgIn ? '≈ ' : '') + brl(total);
+}
+
 function renderCart() {
   const L = cartLines();
   if (!L.length) { closeCart(); return; }
@@ -542,12 +524,12 @@ function renderCart() {
   $('#cartItems').innerHTML = L.map(l => `<div class="ci"><div><div class="t">${esc(l.p.nome)}</div><div class="s">${esc(l.o.label)} · ${brl(l.o.preco)}${l.o.kg ? '/kg' : ''}</div>${l.p.descricao ? `<div class="d">${esc(l.p.descricao)}</div>` : ''}</div><div class="sub">${l.o.kg ? '≈ ' : ''}${brl(l.sub)}</div>
     <button class="rm" type="button" data-act="rm" data-k="${esc(l.k)}">Remover</button>
     <span class="step"><button type="button" data-act="dec" data-k="${esc(l.k)}" aria-label="Diminuir">−</button><output>${fmtQty(l.q, l.o.kg)}</output><button type="button" data-act="inc" data-k="${esc(l.k)}" aria-label="Aumentar">+</button></span></div>`).join('');
-  const kgIn = L.some(l => l.o.kg);
-  $('#totLbl').textContent = kgIn ? 'Total estimado' : 'Total dos produtos';
-  $('#cartTotal').textContent = (kgIn ? '≈ ' : '') + brl(r2(L.reduce((a, l) => a + l.sub, 0)));
-  $('#sendTxt').textContent = 'Enviar pedido · ' + (kgIn ? '≈ ' : '') + brl(r2(L.reduce((a, l) => a + l.sub, 0)));
+  
+  atualizarTotais();
+  
   renderUpsell(L);
   const est = L.some(l => l.p.consultarEstoque);
+  const kgIn = L.some(l => l.o.kg);
   $('#cartNote').textContent = [(S.data.avisos || [])[0] || '', kgIn ? KGMSG : '', est ? 'Há itens para consultar estoque — confirmaremos pelo WhatsApp.' : ''].filter(Boolean).join(' ');
 }
 function openCart() {
@@ -623,6 +605,8 @@ function syncAddr() {
   
   const freteFld = $('#freteFld');
   if (freteFld) freteFld.hidden = !entrega;
+
+  atualizarTotais();
 }
 
 const cPagEl = $('#cPag');
@@ -631,6 +615,11 @@ if (cPagEl) {
     const trocoFld = $('#trocoFld');
     if (trocoFld) trocoFld.hidden = e.target.value !== 'Dinheiro';
   });
+}
+
+const cFreteEl = $('#cFrete');
+if (cFreteEl) {
+  cFreteEl.addEventListener('change', atualizarTotais);
 }
 
 document.addEventListener('click', e => {
@@ -690,7 +679,8 @@ if (orderFormEl) {
       codigo: l.p.codigo || '', nome: l.p.nome, label: l.o.label, qtd: l.q,
       preco: l.o.preco, kg: !!l.o.kg, subtotal: l.sub
     }));
-    const totalSnap = r2(L.reduce((a, l) => a + l.sub, 0) + freteVal);
+    const subtotal = r2(L.reduce((a, l) => a + l.sub, 0));
+    const totalSnap = r2(subtotal + freteVal);
     const pedido = {
       codigo, cliente: nome, whatsapp: telDig.length <= 11 ? '55' + telDig : telDig,
       endereco: tipo === 'Entrega' ? addr : '',
@@ -700,6 +690,7 @@ if (orderFormEl) {
     (async () => {
       try {
         if (window.DM_enviarPedido) await window.DM_enviarPedido(pedido);
+        else if (window.dmEnviarPedido) await window.dmEnviarPedido(pedido); // Compatibilidade
       } catch (err) {
         console.error('Falha ao gravar no ERP (WhatsApp segue):', err);
       }
