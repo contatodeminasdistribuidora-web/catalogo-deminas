@@ -239,7 +239,7 @@ html.theme-ready body { opacity: 1; }
       <div class="db">
         <div id="cartItems"></div>
         <button class="addmore" type="button" id="addMore">＋ Adicionar mais produtos</button>
-        <div class="tot"><span id="totLbl">Total dos produtos</span><b id="cartTotal">R$ 0,00</b></div>
+        <div class="tot"><span id="totLbl">Valor da entrega</span><b id="cartTotal">R$ 0,00</b></div>
         <p class="note" id="cartNote"></p>
         <div class="upsell" id="upsell" hidden></div>
         
@@ -523,9 +523,15 @@ function atualizarTotais() {
   const total = r2(subtotal + frete);
   const totEl = $('#cartTotal');
   const btnTxt = $('#sendTxt');
+  const lblTot = $('#totLbl');
   
   if (totEl) totEl.textContent = (kgIn ? '≈ ' : '') + brl(total);
   if (btnTxt) btnTxt.textContent = 'Enviar pedido · ' + (kgIn ? '≈ ' : '') + brl(total);
+  
+  // Alterar o texto do título do total
+  if (lblTot) {
+    lblTot.textContent = (tipo === 'Entrega') ? 'Total a pagar (com frete)' : 'Valor da entrega';
+  }
 }
 
 function renderCart() {
