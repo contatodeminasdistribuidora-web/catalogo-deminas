@@ -82,7 +82,7 @@ $('#prGo').onclick = () => { fire(''); const c = document.querySelector('#catalo
 tabs.onclick = e => {
   const b = e.target.closest('[data-t]'); if (!b) return;
   if (b.dataset.t === 'home') scrollTo({top: 0, behavior: 'smooth'});
-  if (b.dataset.t === 'cats') $('#stick').scrollIntoView({behavior: 'smooth'});
+  if (b.dataset.t === 'cats') openDr();
   if (b.dataset.t === 'cart') openCart();
 };
 
