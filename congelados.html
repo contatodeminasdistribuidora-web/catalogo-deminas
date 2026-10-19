@@ -254,7 +254,6 @@ html.theme-ready body { opacity: 1; }
           <label><input type="radio" name="tipo" value="Retirada"><span>Retirada na loja</span></label>
         </div>
 
-        <!-- FRETE -->
         <label class="fld" id="freteFld">
           <span>Bairro de entrega (Frete)</span>
           <select id="cFrete">
@@ -266,7 +265,6 @@ html.theme-ready body { opacity: 1; }
         </label>
         <label class="fld" id="addrFld"><span>Endereço completo</span><textarea id="cAddr" autocomplete="street-address" placeholder="Rua, número, complemento"></textarea></label>
         
-        <!-- PAGAMENTO -->
         <label class="fld">
           <span>Forma de pagamento</span>
           <select id="cPag">
@@ -419,11 +417,6 @@ function renderCatalog() {
     if (hasKg(items)) html += `<p class="kgcall"><b>Cobrado por quilo.</b> O valor final muda após a pesagem: cada peça pesa um pouco diferente (por exemplo, 1,5 kg ou 1,625 kg). O preço mostrado é por kg e o total final é confirmado pelo WhatsApp.</p>`;
     if (S.admin) html += `<div class="cat-tools"><button class="btn sm red" type="button" data-act="new" data-cat="${esc(c.id)}">+ Novo produto em ${esc(c.nome)}</button></div>`;
     for (const {g, list} of groups) {
-      if (g) {
-        const gk = 'g' + (gi++);
-        if (single) anchors.push({key: gk, label: g});
-        html += `<div class="grp" id="a-${gk}" ${single ? `data-key="${gk}"` : ''}>${esc(g)}</div>`;
-      }
       html += `<div class="grid">${list.map(cardHTML).join('')}</div>`;
     }
     html += '</section>';
@@ -531,7 +524,7 @@ function limparCarrinho(){
   closeCart();
   toast('Pedido limpo.');
 }
-// Na mensagem do pedido, congelados levam a marca (ex.: "Broa Doce [Sabor da Roça]") para não haver dúvida.
+// Na mensagem do pedido, congelados levam a marca para o lojista saber de quem comprar
 function nomeMsg(p) { const base = p.cat === 'congelados' && p.grupo ? `${p.nome} [${p.grupo}]` : p.nome; return (p.codigo ? p.codigo + ' · ' : '') + base; }
 function buildMessage(codigo) {
   const L = cartLines();
@@ -614,7 +607,6 @@ $('#orderForm').addEventListener('submit', e => {
   if (telDig.length < 10 || telDig.length > 13) { toast('Informe seu WhatsApp com DDD, ex.: (11) 98697-5803'); $('#cTel').focus(); return; }
 
   store.set('dm_cust', {nome, addr, tel});
-
   store.set('dm_last_order', S.cart);
 
   const codigo = gerarCodigoPedido();
