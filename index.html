@@ -86,12 +86,10 @@ section.cat>h2 svg{width:26px;height:16px;flex:none}
 .badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold-d);border-radius:999px;padding:1px 8px;margin:0 4px 2px 0}
 .badge.off{background:var(--brown);border-color:var(--brown);color:#fff}
 
-/* CORREÇÃO DOS BOTÕES AQUI */
 .opt{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px dashed #dcc590;flex-wrap:wrap}
 .opt:first-of-type{border-top:0}
 .opt > span:first-child{flex:1 1 auto;min-width:0}
 .opt .add, .opt .step{flex-shrink:0;margin-left:auto}
-/* FIM DA CORREÇÃO */
 
 .opt .lb{display:block;font-size:12px;color:var(--muted);font-weight:600;line-height:1.1}
 .opt .pr{font-weight:800;font-size:16.5px;color:var(--red);white-space:nowrap}
@@ -263,6 +261,7 @@ html.theme-ready body { opacity: 1; }
           </select>
         </label>
         <label class="fld" id="addrFld"><span>Endereço completo</span><textarea id="cAddr" autocomplete="street-address" placeholder="Rua, número, complemento"></textarea></label>
+        <p class="note" id="pickNote" hidden>Retirada na loja: Rua Engenheiro Pegado, 332 — Vila Carrão. Combinamos o horário pelo WhatsApp.</p>
         
         <label class="fld">
           <span>Forma de pagamento</span>
@@ -580,79 +579,117 @@ function buildMessage(codigo) {
   if (pag === 'PIX') m += `\n\nPIX (celular): ${(S.data && S.data.pix) || '(11) 98697-5803'} (${(S.data && S.data.pixNome) || 'Franklin Rainier'})`;
   return m;
 }
+
+// FUNÇÃO CORRIGIDA COM ESCUDO DE SEGURANÇA
 function syncAddr() {
-  const entrega = $('input[name=tipo]:checked').value === 'Entrega';
-  $('#addrFld').hidden = !entrega; $('#pickNote').hidden = entrega; $('#cAddr').required = entrega;
-  $('#freteFld').hidden = !entrega;
+  const tipoEl = $('input[name=tipo]:checked');
+  if (!tipoEl) return;
+  const entrega = tipoEl.value === 'Entrega';
+  
+  const addrFld = $('#addrFld');
+  if (addrFld) addrFld.hidden = !entrega;
+  
+  const pickNote = $('#pickNote');
+  if (pickNote) pickNote.hidden = entrega;
+  
+  const cAddr = $('#cAddr');
+  if (cAddr) cAddr.required = entrega;
+  
+  const freteFld = $('#freteFld');
+  if (freteFld) freteFld.hidden = !entrega;
 }
-$('#cPag').addEventListener('change', e => {
-  $('#trocoFld').hidden = e.target.value !== 'Dinheiro';
-});
+
+const cPagEl = $('#cPag');
+if (cPagEl) {
+  cPagEl.addEventListener('change', e => {
+    const trocoFld = $('#trocoFld');
+    if (trocoFld) trocoFld.hidden = e.target.value !== 'Dinheiro';
+  });
+}
 
 // CORREÇÃO DO BOTÃO VER PEDIDO
 document.addEventListener('click', e => {
   if (e.target.closest('#cbOpen') || e.target.closest('.cartbar .btn')) {
+    e.preventDefault();
     openCart();
   }
 });
 
-$('#cartClose').addEventListener('click', closeCart);
-$('#btnLimpar').addEventListener('click', limparCarrinho);
-$('#addMore').addEventListener('click', () => { closeCart(); toast('Seu pedido está salvo. Toque em "Ver pedido" quando quiser finalizar.', 2600); });
-$('#lbClose').addEventListener('click', () => $('#lb').classList.remove('on'));
-$('#dlgClose').addEventListener('click', () => $('#dlg').classList.remove('on'));
-$('#cartDlg').addEventListener('click', e => { if (e.target === $('#cartDlg')) closeCart(); });
-$('#lb').addEventListener('click', e => { if (e.target === $('#lb')) $('#lb').classList.remove('on'); });
-$('#dlg').addEventListener('click', e => { if (e.target === $('#dlg')) $('#dlg').classList.remove('on'); });
+const cartCloseEl = $('#cartClose');
+if (cartCloseEl) cartCloseEl.addEventListener('click', closeCart);
+
+const btnLimparEl = $('#btnLimpar');
+if (btnLimparEl) btnLimparEl.addEventListener('click', limparCarrinho);
+
+const addMoreEl = $('#addMore');
+if (addMoreEl) addMoreEl.addEventListener('click', () => { closeCart(); toast('Seu pedido está salvo. Toque em "Ver pedido" quando quiser finalizar.', 2600); });
+
+const lbCloseEl = $('#lbClose');
+if (lbCloseEl) lbCloseEl.addEventListener('click', () => $('#lb').classList.remove('on'));
+
+const dlgCloseEl = $('#dlgClose');
+if (dlgCloseEl) dlgCloseEl.addEventListener('click', () => $('#dlg').classList.remove('on'));
+
+const cartDlgEl = $('#cartDlg');
+if (cartDlgEl) cartDlgEl.addEventListener('click', e => { if (e.target === $('#cartDlg')) closeCart(); });
+
+const lbEl = $('#lb');
+if (lbEl) lbEl.addEventListener('click', e => { if (e.target === $('#lb')) $('#lb').classList.remove('on'); });
+
+const dlgEl = $('#dlg');
+if (dlgEl) dlgEl.addEventListener('click', e => { if (e.target === $('#dlg')) $('#dlg').classList.remove('on'); });
 
 $$('input[name=tipo]').forEach(r => r.addEventListener('change', syncAddr));
 
-$('#orderForm').addEventListener('submit', e => {
-  e.preventDefault();
-  if (!cartLines().length) return;
-  const nome = $('#cName').value.trim();
-  const tipo = $('input[name=tipo]:checked').value;
-  const addr = $('#cAddr').value.trim();
-  const obs  = $('#cObs').value.trim();
-  const L    = cartLines();
-  const tel = $('#cTel').value.trim();
-  const telDig = tel.replace(/\D/g, '');
-  if (telDig.length < 10 || telDig.length > 13) { toast('Informe seu WhatsApp com DDD, ex.: (11) 98697-5803'); $('#cTel').focus(); return; }
-  store.set('dm_cust', {nome, addr, tel});
-  store.set('dm_last_order', S.cart);
-  const codigo = gerarCodigoPedido();
-  const freteVal = parseFloat($('#cFrete').value.split('|')[0]) || 0;
-  const freteNome = $('#cFrete').value.split('|')[1];
-  const pag = $('#cPag').value;
-  const troco = $('#cTroco').value.trim();
-  const itensFire = L.map(l => ({
-    codigo: l.p.codigo || '', nome: l.p.nome, label: l.o.label, qtd: l.q,
-    preco: l.o.preco, kg: !!l.o.kg, subtotal: l.sub
-  }));
-  const totalSnap = r2(L.reduce((a, l) => a + l.sub, 0) + freteVal);
-  const pedido = {
-    codigo, cliente: nome, whatsapp: telDig.length <= 11 ? '55' + telDig : telDig,
-    endereco: tipo === 'Entrega' ? addr : '',
-    tipo, obs, itens: itensFire, total: totalSnap, pago: false,
-    frete: freteNome, taxaFrete: freteVal, pagamento: pag, troco: troco
-  };
-  (async () => {
-    try {
-      if (window.DM_enviarPedido) await window.DM_enviarPedido(pedido);
-    } catch (err) {
-      console.error('Falha ao gravar no ERP (WhatsApp segue):', err);
-    }
-  })();
-  const msg = buildMessage(codigo);
-  const url = 'https://wa.me/' + waNumber() + '?text=' + encodeURIComponent(msg);
-  const a = document.createElement('a');
-  a.href = url; a.target = '_blank'; a.rel = 'noopener';
-  document.body.appendChild(a); a.click(); a.remove();
-  S.cart = {};
-  store.set('dm_cart', S.cart);
-  renderCartBar();
-  closeCart();
-});
+const orderFormEl = $('#orderForm');
+if (orderFormEl) {
+  orderFormEl.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!cartLines().length) return;
+    const nome = $('#cName').value.trim();
+    const tipo = $('input[name=tipo]:checked').value;
+    const addr = $('#cAddr').value.trim();
+    const obs  = $('#cObs').value.trim();
+    const L    = cartLines();
+    const tel = $('#cTel').value.trim();
+    const telDig = tel.replace(/\D/g, '');
+    if (telDig.length < 10 || telDig.length > 13) { toast('Informe seu WhatsApp com DDD, ex.: (11) 98697-5803'); $('#cTel').focus(); return; }
+    store.set('dm_cust', {nome, addr, tel});
+    store.set('dm_last_order', S.cart);
+    const codigo = gerarCodigoPedido();
+    const freteVal = parseFloat($('#cFrete').value.split('|')[0]) || 0;
+    const freteNome = $('#cFrete').value.split('|')[1];
+    const pag = $('#cPag').value;
+    const troco = $('#cTroco').value.trim();
+    const itensFire = L.map(l => ({
+      codigo: l.p.codigo || '', nome: l.p.nome, label: l.o.label, qtd: l.q,
+      preco: l.o.preco, kg: !!l.o.kg, subtotal: l.sub
+    }));
+    const totalSnap = r2(L.reduce((a, l) => a + l.sub, 0) + freteVal);
+    const pedido = {
+      codigo, cliente: nome, whatsapp: telDig.length <= 11 ? '55' + telDig : telDig,
+      endereco: tipo === 'Entrega' ? addr : '',
+      tipo, obs, itens: itensFire, total: totalSnap, pago: false,
+      frete: freteNome, taxaFrete: freteVal, pagamento: pag, troco: troco
+    };
+    (async () => {
+      try {
+        if (window.DM_enviarPedido) await window.DM_enviarPedido(pedido);
+      } catch (err) {
+        console.error('Falha ao gravar no ERP (WhatsApp segue):', err);
+      }
+    })();
+    const msg = buildMessage(codigo);
+    const url = 'https://wa.me/' + waNumber() + '?text=' + encodeURIComponent(msg);
+    const a = document.createElement('a');
+    a.href = url; a.target = '_blank'; a.rel = 'noopener';
+    document.body.appendChild(a); a.click(); a.remove();
+    S.cart = {};
+    store.set('dm_cart', S.cart);
+    renderCartBar();
+    closeCart();
+  });
+}
 
 document.addEventListener('click', e => {
   const close = e.target.closest('[data-close]');
@@ -680,8 +717,12 @@ document.addEventListener('change', e => {
     const p = findProd(t.dataset.pid); p.disponivel = t.checked; saveDraft(); renderCatalog();
   }
 });
-$('#q').addEventListener('input', e => { S.q = e.target.value; renderCatalog(); });
-$('#admLink').addEventListener('click', () => setTimeout(() => location.reload(), 0));
+const qEl = $('#q');
+if (qEl) qEl.addEventListener('input', e => { S.q = e.target.value; renderCatalog(); });
+
+const admLinkEl = $('#admLink');
+if (admLinkEl) admLinkEl.addEventListener('click', () => setTimeout(() => location.reload(), 0));
+
 window.addEventListener('hashchange', () => { if (/(^|[#?&])admin\b/.test(location.hash + location.search) !== S.admin) location.reload(); });
 
 let toastT;
@@ -692,6 +733,7 @@ function toast(msg, ms = 3200) {
 
 function renderAdminBar() {
   const bar = $('#adminbar');
+  if (!bar) return;
   if (!S.admin) { bar.hidden = true; return; }
   bar.hidden = false; bar.className = 'adminbar';
   bar.innerHTML = `<span class="tag">Modo administrador${S.dirty ? '<span class="dirty">não publicado</span>' : ''}</span>
@@ -706,10 +748,13 @@ function renderAdminBar() {
     <button class="btn" type="button" data-adm="exit">Sair</button>`;
   measure();
 }
-$('#adminbar').addEventListener('click', e => {
-  const b = e.target.closest('[data-adm]'); if (!b) return;
-  ({publish, cats: openCats, shop: openShop, qr: openQR, export: exportJSON, import: importJSON, gh: openGH, discard: discardDraft, exit: () => { location.hash = ''; location.search = ''; location.reload(); }})[b.dataset.adm]();
-});
+const adminBarEl = $('#adminbar');
+if (adminBarEl) {
+  adminBarEl.addEventListener('click', e => {
+    const b = e.target.closest('[data-adm]'); if (!b) return;
+    ({publish, cats: openCats, shop: openShop, qr: openQR, export: exportJSON, import: importJSON, gh: openGH, discard: discardDraft, exit: () => { location.hash = ''; location.search = ''; location.reload(); }})[b.dataset.adm]();
+  });
+}
 
 function showDlg(title, body, foot) {
   $('#dlgTitle').textContent = title;
@@ -952,7 +997,8 @@ function openQR() {
     dl(a, (ONLY.length ? 'qrcode-de-minas-congelados-arte.png' : 'qrcode-de-minas-arte.png'));
   });
 }
-$('#admLink').hidden = S.admin;
+const admLinkEl2 = $('#admLink');
+if (admLinkEl2) admLinkEl2.hidden = S.admin;
 load();
 
 setTimeout(() => document.documentElement.classList.replace('theme-loading', 'theme-ready'), 400);
@@ -960,6 +1006,5 @@ setTimeout(() => document.documentElement.classList.replace('theme-loading', 'th
 </script>
 <!-- TEMA APP (Script) -->
 <script src="tema-mockup.js" defer></script>
-<script src="tema-extra.js" defer></script>
 </body>
 </html>
