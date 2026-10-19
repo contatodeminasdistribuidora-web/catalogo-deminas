@@ -10,7 +10,7 @@
 
 <script type="module">
 import { onAuthStateChanged, auth } from './firebase-config.js';
-import * as _API from './firebase-api.js?v=151';
+import * as _API from './firebase-api.js?v=152';
 
   // Import por namespace: se o firebase-api.js publicado estiver desatualizado,
   // o login continua funcionando e o app avisa quais funções faltam.
@@ -18,7 +18,7 @@ import * as _API from './firebase-api.js?v=151';
     'listarPedidos','criarPedido','listarVendas','listarClientes','listarAtClis',
     'listarAtPeds','listarFornecedores','listarVendedores','listarAP','listarAR',
     'listarDespesas','migrarTudoParaNuvem',
-    'listarPedidosCatalogo','atualizarPedidoCatalogo','deletarPedidoCatalogo',
+    'listarPedidosCatalogo','atualizarPedidoCatalogo','deletarPedidoCatalogo','observarPedidosCatalogo',
     'registrarExclusoes','listarExclusoes','apagarDocs'];
   const _FB = {};
   window.FB_FALTANDO = [];
@@ -296,6 +296,17 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
 .venc-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
 .venc-ok{background:#e8f5ee;color:var(--verde)}.venc-warn{background:#fff3cd;color:#856404}.venc-red{background:var(--vermelho2);color:var(--vermelho)}
 .vend-sel-wrap{display:flex;align-items:center;gap:8px}
+</style>
+<style>
+#novos-flut{position:fixed;right:16px;bottom:16px;z-index:900;width:340px;max-width:calc(100vw - 32px);background:#fff;border:2px solid var(--verde);border-radius:12px;box-shadow:var(--shadow2);display:none;font-size:13px}
+#novos-flut.on{display:block}
+#novos-flut .nf-h{background:var(--verde);color:#fff;padding:9px 12px;border-radius:9px 9px 0 0;font-weight:700;display:flex;justify-content:space-between;cursor:pointer}
+#novos-flut .nf-b{max-height:50vh;overflow:auto;padding:4px 8px 8px}
+#novos-flut .nf-row{padding:8px 4px;border-bottom:1px solid var(--borda)}
+#novos-flut .nf-row:last-child{border-bottom:0}
+#novos-flut .nf-row b{display:block;font-size:14px}
+#novos-flut .nf-row span{color:var(--txt2)}
+#novos-flut .nf-btns{display:flex;gap:6px;margin-top:6px}
 </style>
 </head>
 <body>
@@ -778,10 +789,11 @@ document.addEventListener('fb-auth-change', (e) => {
     btnSair.style.display = 'inline-flex';
     setCloudStatus('sincronizado', 'Conectado como ' + u.email);
     sincronizarDoFirebase();
-    setTimeout(() => rendNovosPedidos(), 1500);
+    iniciarObservadorCatalogo();
     if (window.FB_FALTANDO && window.FB_FALTANDO.length) setTimeout(() => toast('⚠️ firebase-api.js desatualizado no servidor (faltam: ' + window.FB_FALTANDO.join(', ') + '). Suba a versão nova.', 'warn'), 3500);
     if (cfg.pin === '1234') setTimeout(() => toast('⚠️ Você ainda usa o PIN padrão (1234). Troque em Configurações.', 'warn'), 2500);
   } else {
+    pararObservadorCatalogo();
     overlay.classList.add('on');
     btnSair.style.display = 'none';
     setCloudStatus('desconectado', 'Desconectado — faça login para sincronizar');
@@ -1463,12 +1475,25 @@ async function rendNovosPedidos() {
     return;
   }
 
+  if (_obsUnsub) { desenharNovosPedidos(); return; }   // em tempo real: usa a lista que já está na memória
   el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt3)">Carregando...</div>';
 
   try {
     const todos = await window.FB.listarPedidosCatalogo();
     novosPedidosCache = todos.filter(p => p.status === 'novo');
+    desenharNovosPedidos();
+    desenharFlutuante();
+  } catch (e) {
+    console.error(e);
+    el.innerHTML = '<div class="alert alert-danger">Erro ao carregar: ' + x(e.message) + '</div>';
+  }
+}
 
+
+function desenharNovosPedidos() {
+  const el = document.getElementById('lista-novos-pedidos');
+  if (!el) return;
+  try {
     const badge = document.getElementById('badge-catalogo');
     if (badge) {
       badge.textContent = novosPedidosCache.length;
@@ -1497,6 +1522,7 @@ async function rendNovosPedidos() {
         </div>
         <div class="ped-card-mid">📱 ${x(p.whatsapp || '—')} · ${x(p.tipo || 'Entrega')}</div>
         <div class="ped-card-mid" style="font-size:12px">📍 ${x(p.endereco || '—')}</div>
+        <div class="ped-card-mid" style="font-size:12px">💳 ${x(p.pagamento || '—')}${p.troco ? ' · troco para ' + x(p.troco) : ''}${p.taxaFrete ? ' · 🚚 ' + x(p.frete || 'Entrega') + ' ' + R(p.taxaFrete) : ''}</div>
         ${p.obs ? `<div class="ped-card-mid" style="font-size:12px;color:var(--laranja)">💬 ${x(p.obs)}</div>` : ''}
         <div style="background:var(--creme);border-radius:6px;padding:8px 10px;margin:8px 0;font-size:12.5px">${itens}</div>
         <div class="ped-card-bot">
@@ -1515,9 +1541,74 @@ async function rendNovosPedidos() {
     }).join('');
   } catch (e) {
     console.error(e);
-    el.innerHTML = '<div class="alert alert-danger">Erro ao carregar: ' + x(e.message) + '</div>';
+    el.innerHTML = '<div class="alert alert-danger">Erro ao mostrar os pedidos: ' + x(e.message) + '</div>';
   }
 }
+
+// ------------------------------------------------------------
+// TEMPO REAL: pedidos novos do catálogo aparecem sozinhos
+// ------------------------------------------------------------
+let _obsUnsub = null, _obsPrimeira = true, _obsPoll = null;
+const _titulo0 = document.title;
+function iniciarObservadorCatalogo() {
+  pararObservadorCatalogo();
+  if (window.FB && window.FB.observarPedidosCatalogo) {
+    _obsPrimeira = true;
+    _obsUnsub = window.FB.observarPedidosCatalogo(lista => {
+      const antes = new Set(novosPedidosCache.map(p => p.id));
+      const novos = lista.filter(p => !antes.has(p.id));
+      novosPedidosCache = lista;
+      desenharNovosPedidos();
+      desenharFlutuante();
+      if (!_obsPrimeira && novos.length) avisarNovosPedidos(novos);
+      _obsPrimeira = false;
+    }, err => {
+      console.error('Observador de pedidos:', err);
+      toast('Não consegui acompanhar os pedidos em tempo real: ' + (err && err.message ? err.message : err), 'err');
+    });
+  } else {
+    _obsPoll = setInterval(() => { if (fbUser) rendNovosPedidos(); }, 20000);
+    rendNovosPedidos();
+  }
+}
+function pararObservadorCatalogo() {
+  if (_obsUnsub) { try { _obsUnsub(); } catch (e) {} _obsUnsub = null; }
+  if (_obsPoll) { clearInterval(_obsPoll); _obsPoll = null; }
+  novosPedidosCache = [];
+  desenharFlutuante();
+}
+function avisarNovosPedidos(novos) {
+  beepNovoPedido();
+  const n = novos[0];
+  toast('🆕 Novo pedido de ' + (n.cliente || 'cliente') + ' — ' + R(n.total || 0) + (novos.length > 1 ? ' (+' + (novos.length - 1) + ' outro' + (novos.length > 2 ? 's' : '') + ')' : ''), 'ok');
+}
+function beepNovoPedido() {
+  try {
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+    const ctx = new C();
+    [880, 1175].forEach((f, i) => {
+      const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime + i * 0.18;
+      o.frequency.value = f; o.connect(g); g.connect(ctx.destination);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.25, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+      o.start(t); o.stop(t + 0.17);
+    });
+    setTimeout(() => ctx.close(), 900);
+  } catch (e) {}
+}
+function desenharFlutuante() {
+  const box = document.getElementById('novos-flut'); if (!box) return;
+  const n = novosPedidosCache.length;
+  document.title = n ? '(' + n + ') Novos pedidos — ' + _titulo0 : _titulo0;
+  const badge = document.getElementById('badge-catalogo');
+  if (badge) { badge.textContent = n; badge.style.display = n > 0 ? 'inline' : 'none'; }
+  if (!n) { box.classList.remove('on'); box.innerHTML = ''; return; }
+  const aberto = box.dataset.min !== '1';
+  box.classList.add('on');
+  box.innerHTML = `<div class="nf-h" onclick="alternarFlutuante()"><span>🆕 ${n} novo${n > 1 ? 's' : ''} pedido${n > 1 ? 's' : ''}</span><span>${aberto ? '▾' : '▴'}</span></div>` +
+    (aberto ? `<div class="nf-b">` + novosPedidosCache.map(p => `<div class="nf-row"><b>${x(p.cliente || 'Sem nome')}</b><span>${R(p.total || 0)} · ${x(p.tipo || 'Entrega')}${p.pagamento ? ' · ' + x(p.pagamento) : ''}${p.troco ? ' (troco p/ ' + x(p.troco) + ')' : ''}</span><div class="nf-btns"><button class="btn btn-verde btn-sm" onclick="aprovarPedidoCatalogo('${p.id}')">✅ Aceitar</button><button class="btn btn-ouro btn-sm" onclick="ir('novos-pedidos')">Ver</button></div></div>`).join('') + `</div>` : '');
+}
+function alternarFlutuante() { const b = document.getElementById('novos-flut'); if (!b) return; b.dataset.min = b.dataset.min === '1' ? '0' : '1'; desenharFlutuante(); }
+function removerDoCacheCatalogo(id) { novosPedidosCache = novosPedidosCache.filter(p => p.id !== id); desenharNovosPedidos(); desenharFlutuante(); }
 
 async function aprovarPedidoCatalogo(id) {
   const ped = novosPedidosCache.find(p => p.id === id);
@@ -1550,7 +1641,7 @@ async function aprovarPedidoCatalogo(id) {
     let msg = `Criar pedido no ERP para "${ped.cliente}"?`;
     if (temPV) msg += '\n\n⚖️ Tem item de peso variável: o pedido entra em PESAGEM.';
     if (avisos.length) msg += '\n\n⚠️ Confira os preços (será mantido o preço do site):\n' + avisos.join('\n');
-    if (!confirm(msg)) return;
+    if (avisos.length) setTimeout(() => toast('⚠️ ' + avisos.length + ' aviso(s) neste pedido: ' + avisos.slice(0, 2).join(' · '), 'warn'), 700);
 
     novoPed = {
       id: uid(),
@@ -1562,11 +1653,11 @@ async function aprovarPedidoCatalogo(id) {
       complemento: '',
       condominio: '',
       horario: '',
-      obs: String(ped.obs || '').slice(0, 500) + ' [via catálogo]',
+      obs: [String(ped.obs || '').slice(0, 380), ped.pagamento ? 'Pgto: ' + String(ped.pagamento).slice(0, 30) + (ped.troco ? ' (troco p/ ' + String(ped.troco).slice(0, 20) + ')' : '') : '', '[via catálogo]'].filter(Boolean).join(' | '),
       vendedor: '',
       st: temPV ? 'PESAGEM' : 'PENDENTE',
       itens: itensERP,
-      frete: 0,
+      frete: Math.max(0, Number(ped.taxaFrete) || 0),
       desc: 0,
       temPV,
       data: new Date().toISOString(),
@@ -1588,8 +1679,8 @@ async function aprovarPedidoCatalogo(id) {
       aprovadoEm: new Date().toISOString(),
       pedidoERP: novoPed.num
     });
-    rendNovosPedidos();
-    toast('✅ Pedido ' + nP(novoPed.num) + ' criado no ERP!', 'ok');
+    removerDoCacheCatalogo(id);
+    toast('✅ Pedido ' + nP(novoPed.num) + ' criado no ERP!' + (novoPed.temPV ? ' (entra em PESAGEM)' : ''), 'ok');
   } catch (e) {
     console.error(e);
     toast('Pedido ' + nP(novoPed.num) + ' foi criado no ERP, mas não deu para marcar como aprovado no catálogo. Clique em Aprovar de novo (não duplica).', 'warn');
@@ -1603,7 +1694,7 @@ async function rejeitarPedidoCatalogo(id) {
       status: 'rejeitado',
       rejeitadoEm: new Date().toISOString()
     });
-    rendNovosPedidos();
+    removerDoCacheCatalogo(id);
     toast('Pedido rejeitado', 'warn');
   } catch (e) {
     toast('Erro: ' + e.message, 'err');
@@ -3457,5 +3548,6 @@ ir('painel');
 const _badgeInterval=setInterval(atualizaBadges,30000);
 document.addEventListener('click',e=>{if(!e.target.closest('.busca-global-wrap'))fecharBuscaGlobal();});
 </script>
+<div id="novos-flut"></div>
 </body>
 </html>
