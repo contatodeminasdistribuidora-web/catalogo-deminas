@@ -262,6 +262,22 @@
    "consultarEstoque": false
   },
   {
+   "id": "pq-022",
+   "codigo": "PQ-022",
+   "cat": "congelados",
+   "grupo": "Pão de Queijo Tradicional",
+   "nome": "Chipa Tradicional",
+   "foto": "bem-de-minas-biscoito-chipa-mve4l5vn.jpg",
+   "opcoes": [
+    {
+     "label": "500g",
+     "preco": 18.0
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
    "id": "pq-002",
    "codigo": "PQ-002",
    "cat": "congelados",
@@ -287,10 +303,6 @@
    "foto": "sabor-da-roca-chipa-com-3-queijos-mve4l0yy.jpg",
    "descricao": "Queijo Minas, Provolone e Parmesão.",
    "opcoes": [
-    {
-     "label": "500g",
-     "preco": 18.0
-    },
     {
      "label": "1kg",
      "preco": 34.9
@@ -592,32 +604,6 @@
      "preco": 29.9
     }
    ],
-   "disponivel": true,
-   "consultarEstoque": false
-  },
-  {
-   "id": "pq-eb-vegano",
-   "codigo": "EB-001",
-   "cat": "congelados",
-   "grupo": "Em Breve",
-   "nome": "Pão de Queijo Vegano",
-   "foto": "",
-   "descricao": "Novidade chegando. Toque em Avise-me para saber quando chegar.",
-   "opcoes": [],
-   "emBreve": true,
-   "disponivel": true,
-   "consultarEstoque": false
-  },
-  {
-   "id": "pq-eb-proteico",
-   "codigo": "EB-002",
-   "cat": "congelados",
-   "grupo": "Em Breve",
-   "nome": "Pão de Queijo Proteico",
-   "foto": "",
-   "descricao": "Novidade chegando. Toque em Avise-me para saber quando chegar.",
-   "opcoes": [],
-   "emBreve": true,
    "disponivel": true,
    "consultarEstoque": false
   },
@@ -1807,7 +1793,7 @@
    "consultarEstoque": false
   }
  ],
- "atualizadoEm": "2026-10-19T20:22:40.174936Z",
+ "atualizadoEm": "2026-10-19T20:38:01.431523Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
