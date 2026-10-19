@@ -191,7 +191,7 @@ html.theme-ready body { opacity: 1; }
   document.documentElement.classList.add('theme-loading');
 </script>
 
-<link rel="stylesheet" href="tema-mockup.css">
+<link rel="stylesheet" href="tema-mockup.css?v=20261019b">
 </head>
 
 <body>
@@ -697,7 +697,7 @@ document.addEventListener('click', e => {
   const close = e.target.closest('[data-close]');
   if (close) { const m = close.closest('.cartmodal'); if (m) m.classList.remove('on'); return; }
   const chip = e.target.closest('[data-chip]');
-  if (chip) { const s = $('#a-' + CSS.escape(chip.dataset.chip)); if (s) s.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth', block: 'start'}); return; }
+  if (chip) { const s = chip.dataset.chip === 'c0' ? $('#catalog') : $('#a-' + CSS.escape(chip.dataset.chip)); if (s) s.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth', block: 'start'}); return; }
   const t = e.target.closest('[data-act]'); if (!t) return;
   const act = t.dataset.act;
   if (act === 'inc' || act === 'dec') {
@@ -1001,6 +1001,6 @@ setTimeout(() => document.documentElement.classList.replace('theme-loading', 'th
 })();
 </script>
 <!-- TEMA APP (Script) -->
-<script src="tema-mockup.js" defer></script>
+<script src="tema-mockup.js?v=20261019b" defer></script>
 </body>
 </html>
