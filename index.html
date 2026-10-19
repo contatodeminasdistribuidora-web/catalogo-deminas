@@ -6,73 +6,264 @@
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#4a1705">
 <title>De Minas Pão de Queijaria — Faça seu pedido</title>
+<meta name="description" content="Catálogo De Minas Pão de Queijaria: pães de queijo, queijos mineiros, doces, mel e muito mais. Monte seu pedido e envie pelo WhatsApp.">
+<link rel="canonical" href="https://deminaspaodequeijaria.com.br/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="De Minas Pão de Queijaria">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="De Minas Pão de Queijaria — Faça seu pedido">
+<meta property="og:description" content="Pães de queijo, queijos mineiros, doces, mel e muito mais. Monte seu pedido e envie pelo WhatsApp.">
+<meta property="og:url" content="https://deminaspaodequeijaria.com.br/">
+<meta property="og:image" content="https://deminaspaodequeijaria.com.br/logo.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Bakery","name":"De Minas Pão de Queijaria","url":"https://deminaspaodequeijaria.com.br/","image":"https://deminaspaodequeijaria.com.br/logo.jpg","telephone":"+5511986975803","address":{"@type":"PostalAddress","streetAddress":"Rua Engenheiro Pegado, 332","addressLocality":"São Paulo","addressRegion":"SP","addressCountry":"BR"},"servesCuisine":"Mineira"}</script>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="tema-mockup.css">
 <style>
-  /* CSS de segurança mínimo, caso o tema falhe */
-  body { margin:0; background:#fcf3e2; font-family:'Nunito Sans', sans-serif; padding-bottom:104px; }
-  .cartbar { position:fixed; left:12px; right:12px; bottom:12px; background:#4a1705; color:#fff; border-radius:18px; display:flex; justify-content:space-between; padding:9px 18px; transform:translateY(140%); transition:transform .25s; z-index:40; }
-  .cartbar.on { transform:none; }
-  .hero { text-align:center; padding:14px 16px; }
-  .hero img { width:min(250px,64vw); height:auto; margin:0 auto; display:block; }
-  #stick { position:sticky; top:0; z-index:30; background:#4a1705; }
-  #catalog { max-width:1100px; margin:0 auto; padding:0 16px; }
-  .grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); margin-top:10px; }
-  .card { display:flex; flex-direction:column; background:#fffaf0; border:1px solid #ecd7ab; border-radius:16px; padding:10px; }
-  .card img { width:100%; height:180px; object-fit:cover; border-radius:10px; margin-bottom:8px; }
-  .nm { font-family:'Fraunces', serif; font-size:18px; color:#4a1705; margin:0 0 4px; }
-  .desc { font-size:13px; color:#7a5a45; margin:0 0 8px; }
-  .opt { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-top:1px dashed #dcc590; }
-  .pr { font-weight:800; color:#a7030e; }
-  .add { background:#a7030e; color:#fff; border:0; border-radius:999px; padding:8px 16px; font-weight:800; cursor:pointer; }
-  .chips { display:flex; gap:8px; overflow-x:auto; padding:10px 16px; }
-  .chip { background:transparent; color:#fff; border:1px solid #fff; border-radius:999px; padding:6px 12px; white-space:nowrap; cursor:pointer; font-size:12px; }
+:root{
+  --cream:#fcf3e2; --cream2:#f5e6c8; --card:#fffaf0; --line:#ecd7ab;
+  --brown:#4a1705; --brown2:#6a2a12; --gold:#b98410; --gold-d:#8a6006; --gold-l:#e9c46a;
+  --red:#a7030e; --red-d:#820009; --ink:#2a0d03; --muted:#7a5a45; --wa:#128c4a; --wa-d:#0d6e3a;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.45 'Nunito Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;padding-bottom:104px}
+h1,h2,h3,.serif{font-family:'Fraunces',Georgia,'Times New Roman',serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.hero{text-align:center;padding:14px 16px 12px}
+.hero img{width:min(250px,64vw);height:auto;display:block;margin:0 auto}
+.hero p{margin:4px auto 0;color:var(--brown2);font-weight:700;font-size:15px;max-width:30ch}
+.hero .rule{height:3px;width:min(260px,60vw);background:var(--gold);margin:12px auto 0;border-radius:2px}
+#stick{position:sticky;top:0;z-index:30;background:var(--brown);box-shadow:0 3px 12px #2a0d0340}
+.searchrow{padding:10px 16px 6px;max-width:1100px;margin:0 auto}
+.search{position:relative}
+.search input{width:100%;height:44px;border-radius:999px;border:0;background:var(--cream);padding:0 16px 0 44px;font-size:16px}
+.search svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--brown2)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:6px 16px 12px;max-width:1100px;margin:0 auto;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid #e9c46a66;background:transparent;color:var(--cream);border-radius:999px;padding:8px 15px;font-weight:800;font-size:14px;white-space:nowrap}
+.chip[aria-current="true"]{background:var(--gold-l);color:var(--brown);border-color:var(--gold-l)}
+section.cat{padding-top:24px;scroll-margin-top:var(--stickh,120px)}
+section.cat>h2{font-size:27px;line-height:1.1;color:var(--brown);margin:0 0 2px;display:flex;align-items:center;gap:10px;font-weight:800}
+section.cat>h2 svg{width:26px;height:16px;flex:none}
+.grp{display:flex;align-items:center;gap:10px;margin:18px 0 10px;color:var(--gold-d);font-weight:800;font-size:12px;letter-spacing:.13em;text-transform:uppercase}
+.grp::after{content:"";flex:1;height:1px;background:#b9841040}
+.grp{scroll-margin-top:var(--stickh,120px)}
+.kgcall{margin:10px 0 0;padding:10px 14px;background:#fff4d6;border:1px solid #e9c46a;border-left:5px solid var(--gold);border-radius:12px;font-size:14px;color:var(--brown)}
+.kgnote{margin:2px 0 0;font-size:12px;font-weight:800;color:var(--gold-d)}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));margin-top:10px}
+.grp+.grid{margin-top:0}
+.card{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;align-items:flex-start;box-shadow:0 1px 0 #fff inset}
+.ph{flex:none;width:104px;height:104px;border-radius:12px;overflow:hidden;background:var(--cream2);border:0;padding:0;display:grid;place-items:center;cursor:zoom-in;position:relative}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph.empty{cursor:default;background:linear-gradient(160deg,#f5e6c8,#ecd7ab)}
+.ph.empty svg{width:48px;opacity:.55}
+.cbody{flex:1;min-width:0}
+[hidden]{display:none!important}
+.addmore{display:flex;width:100%;align-items:center;justify-content:center;gap:8px;margin-top:12px;height:46px;border:1.5px dashed #c9a65d;background:#fffdf6;color:var(--brown);border-radius:12px;font-weight:800;font-size:15px}
+.addmore:hover{background:var(--cream2)}
+.upsell{margin-top:16px}
+.upsell h4{margin:0 0 8px;font:700 16px 'Fraunces',Georgia,serif;color:var(--brown)}
+.ups-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory}
+.ups{flex:0 0 152px;scroll-snap-align:start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:4px}
+.ups img{width:100%;height:72px;object-fit:cover;border-radius:9px;margin-bottom:2px}
+.ups .un{font-weight:700;font-size:14px;line-height:1.2;color:var(--brown)}
+.ups .up{font-weight:800;color:var(--red);font-size:14px}
+.ups .up small{font-weight:600;color:var(--muted);font-size:12px}
+.ups .add{height:34px;font-size:13px;padding:0 12px;margin-top:auto}
+.de{color:var(--muted);font-weight:600;font-size:13px;margin-right:6px;text-decoration:line-through}
+.sv{display:block;font-size:12px;font-weight:800;color:var(--wa-d)}
+.desc{margin:0 0 6px;font-size:13px;line-height:1.35;color:var(--muted)}
+.ci .d{font-size:12.5px;color:var(--muted);line-height:1.3}
+.cod{font-size:11.5px;font-weight:700;letter-spacing:.05em;color:var(--muted);margin:-2px 0 5px}
+.nm{font-weight:600;font-size:16.5px;line-height:1.2;color:var(--brown);margin:2px 0 4px;font-family:'Fraunces',Georgia,serif}
+.badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold-d);border-radius:999px;padding:1px 8px;margin:0 4px 2px 0}
+.badge.off{background:var(--brown);border-color:var(--brown);color:#fff}
+
+.opt{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px dashed #dcc590;flex-wrap:wrap}
+.opt:first-of-type{border-top:0}
+.opt > span:first-child{flex:1 1 auto;min-width:0}
+.opt .add, .opt .step{flex-shrink:0;margin-left:auto}
+
+.opt .lb{display:block;font-size:12px;color:var(--muted);font-weight:600;line-height:1.1}
+.opt .pr{font-weight:800;font-size:16.5px;color:var(--red);white-space:nowrap}
+.add{background:var(--red);color:#fff;border:0;border-radius:999px;height:38px;padding:0 18px;font-weight:800;font-size:14px}
+.add:hover{background:var(--red-d)}
+.step{display:inline-flex;align-items:center;background:var(--cream2);border:1px solid #dcc590;border-radius:999px;height:38px}
+.step button{width:38px;height:36px;border:0;background:transparent;font-size:22px;font-weight:800;color:var(--brown);border-radius:999px;line-height:1}
+.step button:hover{background:#0000000d}
+.step output{min-width:34px;text-align:center;font-weight:800;font-variant-numeric:tabular-nums;padding:0 2px}
+.card.off{opacity:.62}
+.card.off .ph img{filter:grayscale(1)}
+.cartbar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:40;max-width:720px;margin:0 auto;background:var(--brown);color:#fff;border-radius:18px;padding:9px 9px 9px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 8px 28px #2a0d0366;transform:translateY(140%);transition:transform .25s}
+.cartbar.on{transform:none}
+.cartbar b{font-size:17px}
+.cartbar small{display:block;font-size:12px;opacity:.8;font-weight:600}
+.btn{border:0;border-radius:999px;height:44px;padding:0 20px;font-weight:800;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn.gold{background:var(--gold-l);color:var(--brown)}
+.btn.red{background:var(--red);color:#fff}
+.btn.wa{background:var(--wa);color:#fff;width:100%;height:52px;font-size:16px}
+.btn.wa:hover{background:var(--wa-d)}
+.btn.ghost{background:transparent;border:1.5px solid #c9a65d;color:var(--brown)}
+.btn.sm{height:36px;padding:0 14px;font-size:13px}
+.btn.danger{background:#fff;color:var(--red);border:1.5px solid var(--red)}
+.btn-limpar{background:transparent;border:1.5px solid var(--red);color:var(--red);height:34px;padding:0 14px;font-size:13px;font-weight:800;border-radius:999px;cursor:pointer;flex:none}
+.btn-limpar:hover{background:var(--red);color:#fff}
+.dh-acoes{display:flex;align-items:center;gap:8px;flex:none}
+.cartmodal{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:#2a0d0399;overflow:hidden}
+.cartmodal.on{display:flex}
+.cartmodal-inner{background:var(--cream);color:var(--ink);border-radius:22px 22px 0 0;width:100%;max-width:580px;max-height:92dvh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -8px 40px #00000040}
+@media (min-width:601px){.cartmodal{align-items:center}.cartmodal-inner{border-radius:22px;max-height:88dvh}}
+.dh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px 8px}
+.dh h3{margin:0;font-size:22px;color:var(--brown);font-weight:800;flex:1;min-width:0}
+.x-close{border:0;background:var(--cream2);width:38px;height:38px;border-radius:50%;font-size:20px;line-height:1;color:var(--brown)}
+.db{overflow:auto;padding:4px 18px 16px;flex:1}
+.df{padding:12px 18px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card);flex-shrink:0}
+.fld{display:block;margin-top:12px}
+.fld>span{display:block;font-size:13px;font-weight:800;color:var(--brown2);margin-bottom:4px}
+.fld input[type=text],.fld input[type=number],.fld input[type=tel],.fld input[type=password],.fld input[type=url],.fld select,.fld textarea{width:100%;border:1.5px solid #d9bf85;background:#fffdf6;border-radius:12px;padding:11px 12px;font-size:16px}
+.fld textarea{min-height:76px;resize:vertical}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.seg label{border:1.5px solid #d9bf85;border-radius:12px;padding:11px 12px;font-weight:800;text-align:center;cursor:pointer;background:#fffdf6}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg input:checked+span{color:#fff}
+.seg label:has(input:checked){background:var(--brown);border-color:var(--brown);color:#fff}
+.seg label:has(input:focus-visible){outline:3px solid var(--gold)}
+.ci{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center}
+.ci .t{font-weight:700;line-height:1.2}
+.ci .s{font-size:13px;color:var(--muted)}
+.ci .sub{font-weight:800;color:var(--red);text-align:right}
+.ci .rm{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:13px;padding:0;justify-self:start}
+.tot{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0 2px;font-size:18px}
+.tot b{font-size:24px;color:var(--brown);font-family:'Fraunces',serif}
+.note{font-size:13px;color:var(--muted);margin:6px 0 0}
+.empty-msg{text-align:center;color:var(--muted);padding:40px 12px}
+#lb img{display:block;width:100%;max-height:72dvh;object-fit:contain;background:#000}
+footer{margin-top:40px;background:var(--brown);color:#f5e6c8;padding:28px 16px 36px;text-align:center;font-size:14px}
+footer .serif{font-size:20px;color:var(--gold-l);font-weight:800}
+footer ul{list-style:none;margin:12px auto;padding:0;max-width:60ch}
+footer li{margin:4px 0}
+footer a{color:var(--gold-l);font-weight:800}
+footer .adm{display:none!important}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;z-index:100;max-width:92vw;font-weight:700;box-shadow:0 6px 20px #0006;text-align:center}
+@media (prefers-reduced-motion:reduce){.cartbar{transition:none}.cartmodal-inner{transition:none}}
+@media (max-width:420px){
+  .add{padding:0 12px;font-size:13px}
+}
+html.theme-loading body { opacity: 0; transition: opacity 0.2s; }
+html.theme-ready body { opacity: 1; }
 </style>
+<script>
+  document.documentElement.classList.add('theme-loading');
+</script>
+<link rel="stylesheet" href="tema-mockup.css">
 </head>
 <body>
 
 <header class="hero">
-  <img src="logo.jpg" alt="De Minas">
+  <img src="logo.jpg" alt="De Minas Pão de Queijaria — O autêntico pão de queijo mineiro" width="720" height="455">
   <p>Escolha seus produtos e envie o pedido direto pelo WhatsApp</p>
+  <div class="rule"></div>
 </header>
 
 <div id="stick">
-  <div class="searchrow" style="padding:10px 16px;">
-    <input id="q" type="search" placeholder="Buscar produto..." style="width:100%;border-radius:99px;border:0;padding:12px 20px;font-size:16px;">
+  <div class="searchrow">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <label class="sr" for="q">Buscar produto</label>
+      <input id="q" type="search" placeholder="Buscar produto ou código…" autocomplete="off" enterkeyhint="search">
+    </div>
   </div>
-  <nav class="chips" id="chips"></nav>
+  <nav class="chips" id="chips" aria-label="Categorias"></nav>
 </div>
 
-<main id="catalog"><p style="text-align:center;padding:40px;">Carregando catálogo...</p></main>
+<main class="wrap" id="catalog" aria-live="polite"><p class="empty-msg">Carregando catálogo…</p></main>
 
-<footer style="text-align:center;padding:20px;color:#7a5a45;font-size:13px;">
-  <p>Rua Engenheiro Pegado, 332 — Vila Carrão, São Paulo/SP</p>
+<footer>
+  <div class="serif">De Minas Pão de Queijaria</div>
+  <ul id="avisos"></ul>
+  <p>Faça sua encomenda: <a id="waLink" href="https://wa.me/5511986975803" rel="noopener">WhatsApp (11) 98697-5803</a></p>
+  <p>Rua Engenheiro Pegado, 332 — Vila Carrão, Zona Leste, São Paulo/SP</p>
 </footer>
 
 <div class="cartbar" id="cartbar">
-  <div><b id="cbTotal">R$ 0,00</b><br><small id="cbCount">0 itens</small></div>
-  <button class="add" id="cbOpen">Ver pedido</button>
+  <div><b id="cbTotal">R$ 0,00</b><small id="cbCount">0 itens</small></div>
+  <button class="btn gold" id="cbOpen" type="button">Ver pedido</button>
 </div>
 
-<!-- Modal do Carrinho -->
-<div id="cartDlg" class="cartmodal" style="display:none;position:fixed;inset:0;background:#2a0d0399;z-index:50;align-items:flex-end;justify-content:center;">
-  <div style="background:#fcf3e2;width:100%;max-width:580px;max-height:90vh;display:flex;flex-direction:column;border-radius:22px 22px 0 0;">
-    <div style="padding:16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ecd7ab;">
-      <h3 style="margin:0;color:#4a1705;">Seu pedido</h3>
-      <button id="cartClose" style="border:0;background:#f5e6c8;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer;">×</button>
-    </div>
-    <div style="padding:16px;overflow-y:auto;flex:1;" id="cartItems"></div>
-    <div style="padding:16px;border-top:1px solid #ecd7ab;background:#fffaf0;">
-      <label style="display:block;margin-bottom:8px;font-size:14px;">Seu nome: <input type="text" id="cName" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;"></label>
-      <label style="display:block;margin-bottom:8px;font-size:14px;">WhatsApp (com DDD): <input type="tel" id="cTel" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;"></label>
-      <label style="display:block;margin-bottom:8px;font-size:14px;">Endereço: <input type="text" id="cAddr" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;"></label>
-      <div style="display:flex;justify-content:space-between;font-weight:800;margin:12px 0;">
-        <span>Total:</span><span id="cartTotal" style="color:#a7030e;">R$ 0,00</span>
+<div class="cartmodal" id="cartDlg">
+  <div class="cartmodal-inner">
+    <div class="dh">
+      <h3 id="cartTitle">Seu pedido</h3>
+      <div class="dh-acoes">
+        <button class="btn-limpar" type="button" id="btnLimpar">Limpar</button>
+        <button class="x-close" type="button" id="cartClose" aria-label="Fechar">×</button>
       </div>
-      <button id="sendBtn" class="add" style="width:100%;padding:16px;font-size:16px;background:#128c4a;">Enviar pedido pelo WhatsApp</button>
     </div>
+    <form id="orderForm" style="display:flex;flex-direction:column;min-height:0;flex:1;overflow:hidden">
+      <div class="db">
+        <div id="cartItems"></div>
+        <button class="addmore" type="button" id="addMore">＋ Adicionar mais produtos</button>
+        <div class="tot"><span id="totLbl">Total dos produtos</span><b id="cartSubtotal">R$ 0,00</b></div>
+        <p class="note" id="cartNote"></p>
+        <div class="upsell" id="upsell" hidden></div>
+        
+        <label class="fld"><span>Seu nome</span><input type="text" id="cName" required autocomplete="name"></label>
+        <label class="fld"><span>Seu WhatsApp (com DDD)</span><input type="tel" id="cTel" required inputmode="tel" autocomplete="tel" placeholder="(11) 90000-0000"></label>
+        
+        <div class="seg" role="radiogroup" aria-label="Entrega ou retirada">
+          <label><input type="radio" name="tipo" value="Entrega" checked><span>Entrega</span></label>
+          <label><input type="radio" name="tipo" value="Retirada"><span>Retirada na loja</span></label>
+        </div>
+
+        <label class="fld" id="freteFld">
+          <span>Bairro de entrega (Frete)</span>
+          <select id="cFrete">
+            <option value="8|Vila Carrão">Vila Carrão (R$ 8,00)</option>
+            <option value="12|Tatuapé">Tatuapé (R$ 12,00)</option>
+            <option value="15|Anália Franco">Anália Franco (R$ 15,00)</option>
+            <option value="0|A combinar">Outro bairro (A combinar)</option>
+          </select>
+        </label>
+        <label class="fld" id="addrFld"><span>Endereço completo</span><textarea id="cAddr" autocomplete="street-address" placeholder="Rua, número, complemento"></textarea></label>
+        
+        <label class="fld">
+          <span>Forma de pagamento</span>
+          <select id="cPag">
+            <option value="PIX">PIX</option>
+            <option value="Cartão de Crédito">Cartão de Crédito</option>
+            <option value="Cartão de Débito">Cartão de Débito</option>
+            <option value="Dinheiro">Dinheiro</option>
+          </select>
+        </label>
+        <label class="fld" id="trocoFld" hidden><span>Troco para quanto?</span><input type="text" id="cTroco" placeholder="Ex: R$ 100,00"></label>
+        <label class="fld"><span>Observações (opcional)</span><textarea id="cObs" placeholder="Ex.: marca preferida, horário, troca de sabor"></textarea></label>
+        
+        <div class="tot" style="padding:16px 0 2px; border-top:1px solid var(--line); margin-top:8px;">
+          <span style="font-size:18px; font-weight:800; color:var(--brown)">Total a pagar (com taxa de entrega)</span>
+          <b id="cartTotal" style="font-size:26px; color:var(--red)">R$ 0,00</b>
+        </div>
+      </div>
+      <div class="df">
+        <button class="btn wa" type="submit">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.25-1.5A9.9 9.9 0 1 0 12.04 2Zm5.8 14c-.25.7-1.45 1.33-2 1.4-.5.07-1.13.1-1.8-.12-.42-.13-.95-.31-1.64-.6-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3s.75-2.12 1.02-2.4c.26-.3.57-.37.76-.37h.55c.18 0 .42-.07.65.5.25.58.83 2.02.9 2.17.07.14.12.31.02.5-.1.2-.14.31-.29.48-.14.17-.3.38-.43.5-.14.15-.29.3-.12.6.17.28.74 1.22 1.6 1.97 1.1.98 2.03 1.28 2.32 1.43.29.14.46.12.63-.07.17-.2.72-.84.91-1.12.2-.29.38-.24.65-.14.26.1 1.7.8 1.99.95.3.14.48.22.55.34.07.12.07.7-.18 1.4Z"/></svg>
+          <span id="sendTxt">Enviar pedido pelo WhatsApp</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="cartmodal" id="lb">
+  <div class="cartmodal-inner">
+    <div class="dh"><h3 id="lbT" style="font-size:18px"></h3><button class="x-close" type="button" id="lbClose">×</button></div>
+    <img id="lbImg" alt="" style="display:block;width:100%;max-height:72dvh;object-fit:contain;background:#000">
   </div>
 </div>
 
@@ -88,175 +279,490 @@
     messagingSenderId: "489232858438",
     appId: "1:489232858438:web:32e7bdfb10a44abb62b947"
   });
+
   const fdb = getFirestore(app);
 
   window.DM_enviarPedido = async function (pedido) {
     const id = pedido.codigo || ('DM-' + Date.now().toString(36).toUpperCase());
     const limpo = JSON.parse(JSON.stringify(pedido));
-    await setDoc(doc(fdb, 'pedidosCatalogo', id), { ...limpo, id, status: 'novo', origem: 'catalogo', criadoEm: serverTimestamp() });
+
+    await setDoc(doc(fdb, 'pedidosCatalogo', id), {
+      ...limpo,
+      id,
+      status: 'novo',
+      origem: 'catalogo',
+      criadoEm: serverTimestamp()
+    });
+
     return id;
   };
+  window.DM_CATALOGO_PRONTO = true;
 </script>
 
+<script src="qrcode.js"></script>
 <script>
 (() => {
 'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const brl = n => n.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+const r2 = n => Math.round(n * 100) / 100;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const clone = o => JSON.parse(JSON.stringify(o));
+const store = { get(k){ try{return JSON.parse(localStorage.getItem(k))}catch{return null} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false} } };
+const fmtQty = (q, kg) => kg ? q.toLocaleString('pt-BR', {maximumFractionDigits: 1}) + ' kg' : String(q);
+const ROOF = '<svg viewBox="0 0 52 32" aria-hidden="true"><path d="M26 1 L51 28 C41 23 33 26 26 25 C19 24 10 28 1 30 Z" fill="#a7030e"/></svg>';
 
-// CATÁLOGO EMBUTIDO PARA NÃO DEPENDER DE ARQUIVOS EXTERNOS
-const PRODUTOS = [
-  { id:"1", cat:"congelados", nome:"Pão de Queijo Tradicional 30g", descricao:"Sabor da Roça", foto:"sabor-da-roca-pao-de-queijo-tradicional-30g-mve4kx69.jpg", opcoes:[{label:"1kg",preco:30}] },
-  { id:"2", cat:"congelados", nome:"Pão de Queijo Coquetel 15g", descricao:"Sabor da Roça", foto:"sabor-da-roca-pao-de-queijo-coquetel-15g-mve4kyd0.jpg", opcoes:[{label:"2kgs",preco:60}] },
-  { id:"3", cat:"congelados", nome:"Pão de Queijo Lanche 80g", descricao:"Sabor da Roça", foto:"pao-de-queijo.jpg", opcoes:[{label:"2kgs",preco:60}] },
-  { id:"4", cat:"congelados", nome:"Pão de Queijo Super Lanche 100g", descricao:"Sabor da Roça", foto:"sabor-da-roca-pao-de-queijo-super-lanche-100g-mve4kzlw.jpg", opcoes:[{label:"2kgs",preco:60}] },
-  { id:"5", cat:"congelados", nome:"Chipa com 3 Queijos", descricao:"Sabor da Roça", foto:"sabor-da-roca-chipa-com-3-queijos-mve4l0yy.jpg", opcoes:[{label:"1kg",preco:34}] },
-  { id:"6", cat:"congelados", nome:"Biscoito de Queijo com 2 Queijos", descricao:"Sabor da Roça", foto:"sabor-da-roca-biscoito-de-queijo-com-2-queijos-mve4l26d.jpg", opcoes:[{label:"1kg",preco:32}] },
-  { id:"7", cat:"congelados", nome:"Broa Doce", descricao:"Sabor da Roça", foto:"sabor-da-roca-broa-doce-mve4l3gz.jpg", opcoes:[{label:"1kg",preco:28.9}] },
-  { id:"8", cat:"congelados", nome:"Broa Salgada", descricao:"Sabor da Roça", foto:"broa.jpg", opcoes:[{label:"1kg",preco:28.9}] },
-  { id:"9", cat:"congelados", nome:"Pão de Queijo Tradicional 25g", descricao:"Bem de Minas", foto:"pao-de-queijo.jpg", opcoes:[{label:"1kg",preco:32.9}] },
-  { id:"10", cat:"congelados", nome:"Recheado Costela", descricao:"Garcia de Minas", foto:"garcia-de-minas-recheado-costela-mve4l700.jpg", opcoes:[{label:"1kg",preco:42}] },
-  { id:"11", cat:"congelados", nome:"Recheado Goiabada", descricao:"Garcia de Minas", foto:"garcia-de-minas-recheado-goiabada-mve4l8b2.jpg", opcoes:[{label:"1kg",preco:38}] },
-  { id:"12", cat:"congelados", nome:"Recheado Frango", descricao:"Garcia de Minas", foto:"garcia-de-minas-recheado-frango-mve4l9mn.jpg", opcoes:[{label:"1kg",preco:38}] },
-  { id:"13", cat:"congelados", nome:"Recheado Calabresa", descricao:"Garcia de Minas", foto:"garcia-de-minas-recheado-calabresa-mve4laws.jpg", opcoes:[{label:"1kg",preco:38}] },
-  { id:"14", cat:"congelados", nome:"Recheado Requeijão", descricao:"Garcia de Minas", foto:"garcia-de-minas-recheado-requeijao-mve4lc2z.jpg", opcoes:[{label:"1kg",preco:38}] },
-  { id:"15", cat:"congelados", nome:"Recheado Doce de Leite", descricao:"Garcia de Minas", foto:"garcia-de-minas-recheado-doce-de-leite-mve4ldey.jpg", opcoes:[{label:"1kg",preco:38}] },
-  { id:"16", cat:"queijos", nome:"Queijo Fresco", descricao:"Canastra", foto:"queijo-fresco.jpg", opcoes:[{label:"Peça",preco:50}] },
-  { id:"17", cat:"queijos", nome:"Queijo Canastra Medeiros", descricao:"Canastra", foto:"canastra-medeiros.jpg", opcoes:[{label:"Preço por kg",preco:80,kg:true}] },
-  { id:"18", cat:"queijos", nome:"Queijo Serra da Canastra", descricao:"Canastra", foto:"serra-da-canastra.jpg", opcoes:[{label:"Preço por kg",preco:67,kg:true}] },
-  { id:"19", cat:"queijos", nome:"Queijo Meia Cura Araxá", descricao:"Canastra", foto:"meia-cura-araxa.jpg", opcoes:[{label:"Preço por kg",preco:75,kg:true}] },
-  { id:"20", cat:"doces", nome:"Doce de Leite Moreno", descricao:"Artesanal", foto:"dl-moreno.jpg", opcoes:[{label:"Pote",preco:36}] },
-  { id:"21", cat:"doces", nome:"Goiabada Cascão de Corte", descricao:"Artesanal", foto:"goiabada-corte-cascao.jpg", opcoes:[{label:"400g",preco:24}] },
-  { id:"22", cat:"doces", nome:"Doce de Leite na Palha", descricao:"Artesanal", foto:"dl-na-palha.jpg", opcoes:[{label:"Unidade",preco:30}] },
-  { id:"23", cat:"mel", nome:"Mel Florada Silvestre", descricao:"Puro", foto:"mel-silvestre.jpg", opcoes:[{label:"250g",preco:25},{label:"500g",preco:40}] },
-  { id:"24", cat:"biscoitos", nome:"Casadinho de Goiabada", descricao:"Artesanal", foto:"casadinho.jpg", opcoes:[{label:"Pote",preco:20}] },
-  { id:"25", cat:"biscoitos", nome:"Biscoito de Queijo Canastra", descricao:"Artesanal", foto:"biscoito-canastra.jpg", opcoes:[{label:"Pacote",preco:22}] }
+// PRODUTOS EMBUTIDOS DIRETO NO CÓDIGO
+const PRODUTOS_EMBUTIDOS = [
+  // COMBOS
+  { id:"combo-cafe-da-manha", codigo:"CB-001", cat:"combos", grupo:"", nome:"Combo Café da Manhã Mineiro", descricao:"1 kg de Pão de Queijo Tradicional 30g + 1 Doce de Leite Moreno (pote) + 1 Biscoito de Queijo Canastra (pacote)", foto:"", opcoes:[{label:"Combo",preco:79.9,de:88}], disponivel:true, consultarEstoque:false },
+  { id:"combo-romeu-e-julieta", codigo:"CB-002", cat:"combos", grupo:"", nome:"Combo Romeu e Julieta", descricao:"1 Queijo Fresco (peça) + 1 Goiabada Cascão de Corte 400g", foto:"", opcoes:[{label:"Combo",preco:66.9,de:74}], disponivel:true, consultarEstoque:false },
+  { id:"combo-presente-mineiro", codigo:"CB-003", cat:"combos", grupo:"", nome:"Combo Presente Mineiro", descricao:"1 Mel Silvestre 250g + 1 Doce de Leite Moreno + 1 Geleia de Pimenta 250g + 1 Casadinho de Goiabada", foto:"", opcoes:[{label:"Combo",preco:99.9,de:111}], disponivel:true, consultarEstoque:false },
+  
+  // CONGELADOS
+  { id:"pq-tradicional-30g", codigo:"PQ-001", cat:"congelados", grupo:"Sabor da Roça", nome:"Pão de Queijo Tradicional 30g", foto:"sabor-da-roca-pao-de-queijo-tradicional-30g-mve4kx69.jpg", opcoes:[{label:"1kg",preco:30},{label:"2kgs",preco:60}], disponivel:true, consultarEstoque:false },
+  { id:"pq-coquetel-15g", codigo:"PQ-002", cat:"congelados", grupo:"Sabor da Roça", nome:"Pão de Queijo Coquetel 15g", foto:"sabor-da-roca-pao-de-queijo-coquetel-15g-mve4kyd0.jpg", opcoes:[{label:"2kgs",preco:60}], disponivel:true, consultarEstoque:false },
+  { id:"pq-lanche-80g", codigo:"PQ-003", cat:"congelados", grupo:"Sabor da Roça", nome:"Pão de Queijo Lanche 80g", foto:"pao-de-queijo.jpg", opcoes:[{label:"2kgs",preco:60}], disponivel:true, consultarEstoque:false },
+  { id:"pq-super-lanche-100g", codigo:"PQ-004", cat:"congelados", grupo:"Sabor da Roça", nome:"Pão de Queijo Super Lanche 100g", foto:"sabor-da-roca-pao-de-queijo-super-lanche-100g-mve4kzlw.jpg", opcoes:[{label:"2kgs",preco:60}], disponivel:true, consultarEstoque:false },
+  { id:"chipa-3-queijos", codigo:"PQ-005", cat:"congelados", grupo:"Sabor da Roça", nome:"Chipa com 3 Queijos", foto:"sabor-da-roca-chipa-com-3-queijos-mve4l0yy.jpg", opcoes:[{label:"1kg",preco:34}], disponivel:true, consultarEstoque:false },
+  { id:"biscoito-queijo-2-queijos", codigo:"PQ-006", cat:"congelados", grupo:"Sabor da Roça", nome:"Biscoito de Queijo com 2 Queijos", foto:"sabor-da-roca-biscoito-de-queijo-com-2-queijos-mve4l26d.jpg", opcoes:[{label:"1kg",preco:32}], disponivel:true, consultarEstoque:false },
+  { id:"broa-doce", codigo:"PQ-007", cat:"congelados", grupo:"Sabor da Roça", nome:"Broa Doce", foto:"sabor-da-roca-broa-doce-mve4l3gz.jpg", opcoes:[{label:"1kg",preco:28.9}], disponivel:true, consultarEstoque:false },
+  { id:"broa-doce-erva", codigo:"PQ-008", cat:"congelados", grupo:"Sabor da Roça", nome:"Broa Doce com Ervas", foto:"sabor-da-roca-broa-doce-com-ervas-mve4l4ki.jpg", opcoes:[{label:"1kg",preco:28.9}], disponivel:true, consultarEstoque:false },
+  { id:"broa-salgada", codigo:"PQ-009", cat:"congelados", grupo:"Sabor da Roça", nome:"Broa Salgada Temperada", foto:"broa.jpg", opcoes:[{label:"1kg",preco:28.9}], disponivel:true, consultarEstoque:false },
+  { id:"pq-trad-25g", codigo:"PQ-010", cat:"congelados", grupo:"Bem de Minas", nome:"Pão de Queijo Tradicional 25g", foto:"pao-de-queijo.jpg", opcoes:[{label:"1kg",preco:32.9},{label:"500g",preco:17}], disponivel:true, consultarEstoque:false },
+  { id:"biscoito-chipa", codigo:"PQ-011", cat:"congelados", grupo:"Bem de Minas", nome:"Biscoito (Chipa)", foto:"bem-de-minas-biscoito-chipa-mve4l5vn.jpg", opcoes:[{label:"500g",preco:18}], disponivel:true, consultarEstoque:false },
+  { id:"recheado-costela", codigo:"PQ-012", cat:"congelados", grupo:"Garcia de Minas", nome:"Recheado Costela", foto:"garcia-de-minas-recheado-costela-mve4l700.jpg", opcoes:[{label:"1kg",preco:42}], disponivel:true, consultarEstoque:true },
+  { id:"recheado-goiabada", codigo:"PQ-013", cat:"congelados", grupo:"Garcia de Minas", nome:"Recheado Goiabada", foto:"garcia-de-minas-recheado-goiabada-mve4l8b2.jpg", opcoes:[{label:"1kg",preco:38}], disponivel:true, consultarEstoque:true },
+  { id:"recheado-frango", codigo:"PQ-014", cat:"congelados", grupo:"Garcia de Minas", nome:"Recheado Frango", foto:"garcia-de-minas-recheado-frango-mve4l9mn.jpg", opcoes:[{label:"1kg",preco:38}], disponivel:true, consultarEstoque:true },
+  { id:"recheado-calabresa", codigo:"PQ-015", cat:"congelados", grupo:"Garcia de Minas", nome:"Recheado Calabresa", foto:"garcia-de-minas-recheado-calabresa-mve4laws.jpg", opcoes:[{label:"1kg",preco:38}], disponivel:true, consultarEstoque:true },
+  { id:"recheado-requeijao", codigo:"PQ-016", cat:"congelados", grupo:"Garcia de Minas", nome:"Recheado Requeijão", foto:"garcia-de-minas-recheado-requeijao-mve4lc2z.jpg", opcoes:[{label:"1kg",preco:38}], disponivel:true, consultarEstoque:true },
+  { id:"recheado-doce-leite", codigo:"PQ-017", cat:"congelados", grupo:"Garcia de Minas", nome:"Recheado Doce de Leite", foto:"garcia-de-minas-recheado-doce-de-leite-mve4ldey.jpg", opcoes:[{label:"1kg",preco:38}], disponivel:true, consultarEstoque:true },
+  { id:"pq-trad-garcia", codigo:"PQ-018", cat:"congelados", grupo:"Garcia de Minas", nome:"Pão de Queijo Tradicional", foto:"pao-de-queijo.jpg", opcoes:[{label:"1kg",preco:29.9},{label:"2kgs",preco:59.8}], disponivel:true, consultarEstoque:false },
+  { id:"broas-garcia", codigo:"PQ-019", cat:"congelados", grupo:"Garcia de Minas", nome:"Broas", foto:"broa.jpg", opcoes:[{label:"1kg",preco:29.9}], disponivel:true, consultarEstoque:false },
+  { id:"brasil-mineiro", codigo:"PQ-020", cat:"congelados", grupo:"Encanto de Minas", nome:"Brasil Mineiro", foto:"pao-de-queijo.jpg", opcoes:[{label:"1kg",preco:29.9},{label:"2kgs",preco:59.8}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-tradicional", codigo:"PQ-021", cat:"congelados", grupo:"Encanto de Minas", nome:"Encanto Tradicional", foto:"encanto-de-minas-brasil-mineiro-encanto-tradicional-mve4lenj.jpg", opcoes:[{label:"400g",preco:16.9},{label:"1kg",preco:30.9},{label:"2kgs",preco:59.9}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-temperado", codigo:"PQ-022", cat:"congelados", grupo:"Encanto de Minas", nome:"Temperado", foto:"encanto-de-minas-brasil-mineiro-temperado-mve4lfuh.jpg", opcoes:[{label:"1kg",preco:33.9}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-calabresa", codigo:"PQ-023", cat:"congelados", grupo:"Encanto de Minas", nome:"Calabresa", foto:"encanto-de-minas-brasil-mineiro-calabresa-mve4lh6y.jpg", opcoes:[{label:"1kg",preco:35.9}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-multigraos", codigo:"PQ-024", cat:"congelados", grupo:"Encanto de Minas", nome:"Multigrãos", foto:"encanto-de-minas-brasil-mineiro-multigraos-mve4lic7.jpg", opcoes:[{label:"1kg",preco:30.9}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-gourmet", codigo:"PQ-025", cat:"congelados", grupo:"Encanto de Minas", nome:"Gourmet 4 Queijos", foto:"encanto-de-minas-brasil-mineiro-gourmet-4-queijos-mve4ljfk.jpg", opcoes:[{label:"1kg",preco:54.9},{label:"2kgs",preco:98.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-palitinho", codigo:"PQ-026", cat:"congelados", grupo:"Encanto de Minas", nome:"Palitinho Provolone", foto:"encanto-de-minas-brasil-mineiro-palitinho-provolone-mve4lkk8.jpg", opcoes:[{label:"1kg",preco:39.9},{label:"2kgs",preco:79.8}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-doce-empanado", codigo:"PQ-027", cat:"congelados", grupo:"Encanto de Minas", nome:"Doce de Leite Empanado", foto:"encanto-de-minas-brasil-mineiro-doce-de-leite-empanado-mve4llnn.jpg", opcoes:[{label:"1kg",preco:48.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-requeijao-empanado", codigo:"PQ-028", cat:"congelados", grupo:"Encanto de Minas", nome:"Requeijão Empanado", foto:"encanto-de-minas-brasil-mineiro-requeijao-empanado-mve4lmv5.jpg", opcoes:[{label:"1kg",preco:48.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-goiabada-empanado", codigo:"PQ-029", cat:"congelados", grupo:"Encanto de Minas", nome:"Goiabada Empanado", foto:"encanto-de-minas-brasil-mineiro-goiabada-empanado-mve4lo2d.jpg", opcoes:[{label:"1kg",preco:48.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-frango-empanado", codigo:"PQ-030", cat:"congelados", grupo:"Encanto de Minas", nome:"Frango Empanado", foto:"encanto-de-minas-brasil-mineiro-frango-empanado-mve4lp4n.jpg", opcoes:[{label:"1kg",preco:49.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-goiabada-artesanal", codigo:"PQ-031", cat:"congelados", grupo:"Encanto de Minas", nome:"Goiabada Artesanal", foto:"encanto-de-minas-brasil-mineiro-goiabada-artesanal-mve4lq9d.jpg", opcoes:[{label:"1kg",preco:45.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-requeijao-artesanal", codigo:"PQ-032", cat:"congelados", grupo:"Encanto de Minas", nome:"Requeijão Artesanal", foto:"encanto-de-minas-brasil-mineiro-requeijao-artesanal-mve4lrib.jpg", opcoes:[{label:"1kg",preco:45.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-frango-artesanal", codigo:"PQ-033", cat:"congelados", grupo:"Encanto de Minas", nome:"Frango Artesanal", foto:"encanto-de-minas-brasil-mineiro-frango-artesanal-mve4lsuc.jpg", opcoes:[{label:"1kg",preco:49.9}], disponivel:true, consultarEstoque:true },
+  { id:"encanto-dadinho", codigo:"PQ-034", cat:"congelados", grupo:"Encanto de Minas", nome:"Dadinho de Tapioca", foto:"encanto-de-minas-brasil-mineiro-dadinho-de-tapioca-mve4ltz9.jpg", opcoes:[{label:"500g",preco:29.9}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-broa-doce", codigo:"PQ-035", cat:"congelados", grupo:"Encanto de Minas", nome:"Broa Doce", foto:"encanto-de-minas-brasil-mineiro-broa-doce-mve4lv7e.jpg", opcoes:[{label:"1kg",preco:34.9}], disponivel:true, consultarEstoque:false },
+  { id:"encanto-broa-salgada", codigo:"PQ-036", cat:"congelados", grupo:"Encanto de Minas", nome:"Broa Salgada", foto:"broa.jpg", opcoes:[{label:"1kg",preco:34.9}], disponivel:true, consultarEstoque:false },
+
+  // QUEIJOS
+  { id:"kit-parmesao", codigo:"QJ-001", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Kit 4 Parmesão Canastra", foto:"kit-parmesao-canastra.jpg", opcoes:[{label:"Kit",preco:60}], disponivel:true, consultarEstoque:false },
+  { id:"kit-queijos-canastra", codigo:"QJ-002", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Kit 4 Queijos Serra da Canastra", foto:"kit-queijos-serra-da-canastra.jpg", opcoes:[{label:"Kit",preco:60}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-fresco", codigo:"QJ-003", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Fresco", foto:"queijo-fresco.jpg", opcoes:[{label:"Peça",preco:50}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-monte-carmelo", codigo:"QJ-004", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Meia Cura Monte Carmelo", foto:"meia-cura-monte-carmelo.jpg", opcoes:[{label:"Preço por kg",preco:65,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-canastra-medeiros", codigo:"QJ-005", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Canastra Medeiros", foto:"canastra-medeiros.jpg", opcoes:[{label:"Preço por kg",preco:80,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-cruzeiro", codigo:"QJ-006", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Meia Cura Cruzeiro da Fortaleza", foto:"meia-cura-cruzeiro-da-fortaleza.jpg", opcoes:[{label:"Preço por kg",preco:65,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-serra-salitre", codigo:"QJ-007", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Meia Cura Serra do Salitre", foto:"meia-cura-serra-do-salitre.jpg", opcoes:[{label:"Preço por kg",preco:67,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-serra-canastra", codigo:"QJ-008", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Serra da Canastra", foto:"serra-da-canastra.jpg", opcoes:[{label:"Preço por kg",preco:67,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-araxa", codigo:"QJ-009", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Meia Cura Araxá", foto:"meia-cura-araxa.jpg", opcoes:[{label:"Preço por kg",preco:75,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-malacaxeta", codigo:"QJ-010", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo Malacaxeta", foto:"malacaxeta.jpg", opcoes:[{label:"Peça",preco:90}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-da-santa", codigo:"QJ-011", cat:"queijos", grupo:"Canastra e Meia Cura", nome:"Queijo da Santa", foto:"queijo-da-santa.jpg", opcoes:[{label:"Peça",preco:90}], disponivel:true, consultarEstoque:false },
+  { id:"tranca-provolone", codigo:"QJ-012", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Trança Provolone", foto:"tranca-provolone.jpg", opcoes:[{label:"Unidade",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"tranca-alho", codigo:"QJ-013", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Trança com Alho", foto:"tranca-alho.jpg", opcoes:[{label:"Unidade",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"tranca-vinho", codigo:"QJ-014", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Trança ao Vinho", foto:"tranca-vinho.jpg", opcoes:[{label:"Unidade",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"nozinho-defumado", codigo:"QJ-015", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Nozinho Provolone Defumado", foto:"nozinho-provolone-defumado.jpg", opcoes:[{label:"Unidade",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"palito-temperado", codigo:"QJ-016", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Palito Temperado", foto:"palito-temperado.jpg", opcoes:[{label:"Unidade",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"nozinho-temperado", codigo:"QJ-017", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Nozinho Temperado", foto:"nozinho-temperado.jpg", opcoes:[{label:"Unidade",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-tranca", codigo:"QJ-018", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Trança", foto:"tranca.jpg", opcoes:[{label:"Unidade",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"provolone-defumado", codigo:"QJ-019", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Provolone Fresco Defumado", foto:"provolone-fresco-defumado.jpg", opcoes:[{label:"Preço por kg",preco:100,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"provolone-desidratado", codigo:"QJ-020", cat:"queijos", grupo:"Tranças e Provolones", nome:"Queijo Provolone Desidratado", foto:"provolone-desidratado.jpg", opcoes:[{label:"Pote",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"requeijao-moreno", codigo:"QJ-021", cat:"queijos", grupo:"Coalho e Requeijão", nome:"Requeijão Moreno", foto:"requeijao-moreno.jpg", opcoes:[{label:"Preço por kg",preco:75,kg:true}], disponivel:true, consultarEstoque:false },
+  { id:"queijo-coalho", codigo:"QJ-022", cat:"queijos", grupo:"Coalho e Requeijão", nome:"Queijo Coalho", foto:"queijo-coalho.jpg", opcoes:[{label:"Preço por kg",preco:80,kg:true}], disponivel:true, consultarEstoque:false },
+
+  // DOCES
+  { id:"doce-leite-moreno", codigo:"DC-001", cat:"doces", grupo:"Doces de Leite", nome:"Doce de Leite Moreno", foto:"dl-moreno.jpg", opcoes:[{label:"Pote",preco:36}], disponivel:true, consultarEstoque:false },
+  { id:"doce-leite-claro", codigo:"DC-002", cat:"doces", grupo:"Doces de Leite", nome:"Doce de Leite Claro", foto:"dl-claro.jpg", opcoes:[{label:"Pote",preco:36}], disponivel:true, consultarEstoque:false },
+  { id:"doce-leite-vicosa", codigo:"DC-003", cat:"doces", grupo:"Doces de Leite", nome:"Doce de Leite Viçosa 400g", foto:"dl-vicosa.jpg", opcoes:[{label:"400g",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"doce-leite-lazara", codigo:"DC-004", cat:"doces", grupo:"Doces de Leite", nome:"Doce de Leite Dona Lázara", foto:"dl-dona-lazara.jpg", opcoes:[{label:"Pote",preco:25}], disponivel:true, consultarEstoque:false },
+  { id:"doce-leite-barra", codigo:"DC-005", cat:"doces", grupo:"Doces de Leite", nome:"Doce de Leite Barra (tablete)", foto:"dl-barra-tablete.jpg", opcoes:[{label:"Unidade",preco:22}], disponivel:true, consultarEstoque:false },
+  { id:"barra-doce-leite", codigo:"DC-006", cat:"doces", grupo:"Doces de Leite", nome:"Barra Doce de Leite", foto:"barra-dl.jpg", opcoes:[{label:"400g",preco:35},{label:"700g",preco:50}], disponivel:true, consultarEstoque:false },
+  { id:"doce-leite-palha", codigo:"DC-007", cat:"doces", grupo:"Doces de Leite", nome:"Doce de Leite na Palha", foto:"dl-na-palha.jpg", opcoes:[{label:"Unidade",preco:30}], disponivel:true, consultarEstoque:false },
+  { id:"doce-leite-palha-lazara", codigo:"DC-008", cat:"doces", grupo:"Doces de Leite", nome:"Doce de Leite na Palha Dona Lázara", foto:"dl-na-palha-dona-lazara.jpg", opcoes:[{label:"Unidade",preco:28}], disponivel:true, consultarEstoque:false },
+  { id:"pingo-leite", codigo:"DC-009", cat:"doces", grupo:"Doces de Leite", nome:"Doce Pingo de Leite", foto:"pingo-de-leite.jpg", opcoes:[{label:"Pote",preco:25}], disponivel:true, consultarEstoque:false },
+  { id:"goiabada-corte", codigo:"DC-010", cat:"doces", grupo:"Goiabadas e Bananada", nome:"Goiabada Cascão Corte", foto:"goiabada-cascao-corte.jpg", opcoes:[{label:"250g",preco:18},{label:"400g",preco:24},{label:"500g",preco:30}], disponivel:true, consultarEstoque:false },
+  { id:"goiabada-corte-cascao", codigo:"DC-011", cat:"doces", grupo:"Goiabadas e Bananada", nome:"Goiabada Cascão de Corte", foto:"goiabada-corte-cascao.jpg", opcoes:[{label:"Unidade",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"goiabada-colher", codigo:"DC-012", cat:"doces", grupo:"Goiabadas e Bananada", nome:"Goiabada Cascão de Colher", foto:"goiabada-colher.jpg", opcoes:[{label:"Pote",preco:42}], disponivel:true, consultarEstoque:false },
+  { id:"goiabada-zelia", codigo:"DC-013", cat:"doces", grupo:"Goiabadas e Bananada", nome:"Goiabada Cremosa Zélia", foto:"goiabada-cremosa-zelia.jpg", opcoes:[{label:"Lata",preco:28}], disponivel:true, consultarEstoque:false },
+  { id:"goiabada-palha", codigo:"DC-014", cat:"doces", grupo:"Goiabadas e Bananada", nome:"Goiabada Cascão na Palha", foto:"goiabada-na-palha.jpg", opcoes:[{label:"Unidade",preco:30}], disponivel:true, consultarEstoque:false },
+  { id:"bananada-palha", codigo:"DC-015", cat:"doces", grupo:"Goiabadas e Bananada", nome:"Bananada na Palha", foto:"bananada-na-palha.jpg", opcoes:[{label:"Unidade",preco:30}], disponivel:true, consultarEstoque:false },
+  { id:"marmelada", codigo:"DC-016", cat:"doces", grupo:"Goiabadas e Bananada", nome:"Marmelada", foto:"marmelada.jpg", opcoes:[{label:"Unidade",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"ambrosia", codigo:"DC-017", cat:"doces", grupo:"Cremosos e em Calda", nome:"Doce Ambrosia", foto:"ambrosia.jpg", opcoes:[{label:"Pote",preco:30}], disponivel:true, consultarEstoque:false },
+  { id:"doce-manga", codigo:"DC-018", cat:"doces", grupo:"Cremosos e em Calda", nome:"Doce de Manga", foto:"doce-de-manga.jpg", opcoes:[{label:"Pote",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"cocada-morena", codigo:"DC-019", cat:"doces", grupo:"Cremosos e em Calda", nome:"Cocada Morena Cremosa", foto:"cocada-morena.jpg", opcoes:[{label:"Pote",preco:38}], disponivel:true, consultarEstoque:false },
+  { id:"cocada-branca", codigo:"DC-020", cat:"doces", grupo:"Cremosos e em Calda", nome:"Cocada Branca Cremosa", foto:"cocada-branca.jpg", opcoes:[{label:"Pote",preco:38}], disponivel:true, consultarEstoque:false },
+  { id:"doce-pastoso", codigo:"DC-021", cat:"doces", grupo:"Cremosos e em Calda", nome:"Doce Pastoso com Leite", foto:"doce-pastoso-leite.jpg", opcoes:[{label:"Pote",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"doce-mamao", codigo:"DC-022", cat:"doces", grupo:"Cremosos e em Calda", nome:"Doce de Mamão Ralado", foto:"doce-de-mamao.jpg", opcoes:[{label:"Pote",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"doce-figo", codigo:"DC-023", cat:"doces", grupo:"Cremosos e em Calda", nome:"Doce de Figo", foto:"doce-de-figo.jpg", opcoes:[{label:"Pote",preco:38}], disponivel:true, consultarEstoque:false },
+  { id:"doce-abobora", codigo:"DC-024", cat:"doces", grupo:"Cremosos e em Calda", nome:"Doce de Abóbora em Pedaços", foto:"doce-de-abobora.jpg", opcoes:[{label:"Pote",preco:38}], disponivel:true, consultarEstoque:false },
+  { id:"figo-ramy", codigo:"DC-025", cat:"doces", grupo:"Cremosos e em Calda", nome:"Figo Ramy Caramelizado", foto:"figo-ramy.jpg", opcoes:[{label:"Lata",preco:50}], disponivel:true, consultarEstoque:false },
+  { id:"doce-queijo-calda", codigo:"DC-026", cat:"doces", grupo:"Cremosos e em Calda", nome:"Doce de Queijo em Calda", foto:"doce-de-queijo-calda.jpg", opcoes:[{label:"Pote",preco:60}], disponivel:true, consultarEstoque:false },
+  { id:"bala-leite-35", codigo:"DC-027", cat:"doces", grupo:"Balas", nome:"Bala Doce de Leite", foto:"bala-dl-35.jpg", opcoes:[{label:"Pacote",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"bala-leite-40", codigo:"DC-028", cat:"doces", grupo:"Balas", nome:"Bala Doce de Leite (maior)", foto:"bala-dl-40.jpg", opcoes:[{label:"Pacote",preco:40}], disponivel:true, consultarEstoque:false },
+  { id:"bala-quebra-queixo", codigo:"DC-029", cat:"doces", grupo:"Balas", nome:"Bala Quebra Queixo", foto:"quebra-queixo.jpg", opcoes:[{label:"Pacote",preco:40}], disponivel:true, consultarEstoque:false },
+
+  // MEL
+  { id:"mel-silvestre", codigo:"ML-001", cat:"mel", grupo:"", nome:"Mel Florada Silvestre", foto:"mel-silvestre.jpg", opcoes:[{label:"250g",preco:25},{label:"500g",preco:40},{label:"1,4kg",preco:100}], disponivel:true, consultarEstoque:false },
+  { id:"mel-laranjeira", codigo:"ML-002", cat:"mel", grupo:"", nome:"Mel Florada Laranjeira", foto:"mel-laranjeira.jpg", opcoes:[{label:"250g",preco:28},{label:"500g",preco:45},{label:"1,4kg",preco:110}], disponivel:true, consultarEstoque:false },
+  { id:"mel-eucalipto", codigo:"ML-003", cat:"mel", grupo:"", nome:"Mel Florada Eucalipto", foto:"mel-eucalipto.jpg", opcoes:[{label:"250g",preco:25},{label:"500g",preco:40},{label:"1,4kg",preco:100}], disponivel:true, consultarEstoque:false },
+  { id:"mel-favo", codigo:"ML-004", cat:"mel", grupo:"", nome:"Mel com Favo", foto:"mel-com-favo.jpg", opcoes:[{label:"500g",preco:50},{label:"800g",preco:70}], disponivel:true, consultarEstoque:false },
+  { id:"mel-silvestre-330", codigo:"ML-005", cat:"mel", grupo:"", nome:"Mel Silvestre 330g", foto:"mel-silvestre-330.jpg", opcoes:[{label:"330g",preco:39}], disponivel:true, consultarEstoque:false },
+  { id:"mel-favo-150", codigo:"ML-006", cat:"mel", grupo:"", nome:"Mel com Favo 150g", foto:"mel-com-favo-150.jpg", opcoes:[{label:"150g",preco:25}], disponivel:true, consultarEstoque:false },
+  { id:"melado", codigo:"ML-007", cat:"mel", grupo:"", nome:"Melado", foto:"melado.jpg", opcoes:[{label:"Pote",preco:28}], disponivel:true, consultarEstoque:false },
+  { id:"melado-cana", codigo:"ML-008", cat:"mel", grupo:"", nome:"Melado de Cana 248g", foto:"melado-de-cana.jpg", opcoes:[{label:"248g",preco:28}], disponivel:true, consultarEstoque:false },
+
+  // MERCEARIA
+  { id:"manteiga-canastra", codigo:"MC-001", cat:"mercearia", grupo:"", nome:"Manteiga Canastra 500g", foto:"manteiga-canastra.jpg", opcoes:[{label:"500g",preco:35}], disponivel:true, consultarEstoque:false },
+  { id:"manteiga-garrafa", codigo:"MC-002", cat:"mercearia", grupo:"", nome:"Manteiga de Garrafa", foto:"manteiga-garrafa.jpg", opcoes:[{label:"Garrafa",preco:30}], disponivel:true, consultarEstoque:false },
+  { id:"geleia-pimenta", codigo:"MC-003", cat:"mercearia", grupo:"", nome:"Geleias de Pimenta 250g", foto:"geleias-pimenta.jpg", opcoes:[{label:"Unidade",preco:30}], disponivel:true, consultarEstoque:false },
+  { id:"farinha-biju", codigo:"MC-004", cat:"mercearia", grupo:"", nome:"Farinha de Mandioca Biju 800g", foto:"farinha-biju.jpg", opcoes:[{label:"800g",preco:28}], disponivel:true, consultarEstoque:false },
+  { id:"farinha-sem-pimenta", codigo:"MC-005", cat:"mercearia", grupo:"", nome:"Farinha Temperada sem Pimenta", foto:"farinha-temperada.jpg", opcoes:[{label:"Pacote",preco:25}], disponivel:true, consultarEstoque:false },
+  { id:"farinha-alho", codigo:"MC-006", cat:"mercearia", grupo:"", nome:"Farinha Temperada de Alho", foto:"farinha-alho.jpg", opcoes:[{label:"Pacote",preco:25}], disponivel:true, consultarEstoque:false },
+  { id:"picles", codigo:"MC-007", cat:"mercearia", grupo:"", nome:"Picles", foto:"picles.jpg", opcoes:[{label:"Pote",preco:25}], disponivel:true, consultarEstoque:false },
+
+  // BISCOITOS
+  { id:"casadinho", codigo:"BP-001", cat:"biscoitos", grupo:"", nome:"Casadinho de Goiabada", foto:"casadinho.jpg", opcoes:[{label:"Pote",preco:20}], disponivel:true, consultarEstoque:false },
+  { id:"sequilho", codigo:"BP-002", cat:"biscoitos", grupo:"", nome:"Sequilho de Goiabada", foto:"sequilho.jpg", opcoes:[{label:"Pote",preco:20}], disponivel:true, consultarEstoque:false },
+  { id:"bolacha-nata", codigo:"BP-003", cat:"biscoitos", grupo:"", nome:"Bolacha de Nata", foto:"bolacha-de-nata.jpg", opcoes:[{label:"Pacote",preco:13}], disponivel:true, consultarEstoque:false },
+  { id:"biscoito-canastra", codigo:"BP-004", cat:"biscoitos", grupo:"", nome:"Biscoito de Queijo Canastra", foto:"biscoito-canastra.jpg", opcoes:[{label:"Pacote",preco:22}], disponivel:true, consultarEstoque:false },
+  { id:"suspiro", codigo:"BP-005", cat:"biscoitos", grupo:"", nome:"Suspiro", foto:"suspiro.jpg", opcoes:[{label:"Pacote",preco:12}], disponivel:true, consultarEstoque:false }
 ];
 
-const S = { cart: JSON.parse(localStorage.getItem('dm_cart') || '{}'), q: '' };
-const $ = (s) => document.querySelector(s);
-const brl = n => n.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+const DADOS_EMBUTIDOS = {
+  whatsapp: "5511986975803",
+  avisos: [
+    "Pedidos: pão de queijo congelado e recheados até sábado; doces, queijos e demais produtos até domingo. Entregas às terças-feiras, a partir das 18h.",
+    "Valores sujeitos a alteração conforme reajuste do fornecedor.",
+    "Recheados, linha especial e gourmet: consultar estoque."
+  ],
+  sugestoes: ["PQ-034", "DC-001", "BP-004", "BP-001", "ML-001", "MC-002"],
+  categorias: [
+    { id: "combos", nome: "Combos Mineiros" },
+    { id: "congelados", nome: "Pão de Queijo Mineiro" },
+    { id: "queijos", nome: "Queijos" },
+    { id: "doces", nome: "Doces" },
+    { id: "mel", nome: "Mel e Melado" },
+    { id: "mercearia", nome: "Mercearia Mineira" },
+    { id: "biscoitos", nome: "Biscoitos e Petiscos" }
+  ],
+  produtos: PRODUTOS_EMBUTIDOS
+};
 
-function render() {
-  const cats = [
-    {id:'congelados', nome:'Pães de Queijo'},
-    {id:'queijos', nome:'Queijos'},
-    {id:'doces', nome:'Doces'},
-    {id:'mel', nome:'Mel'},
-    {id:'biscoitos', nome:'Biscoitos'}
-  ];
+const S = { data: DADOS_EMBUTIDOS, cart: store.get('dm_cart') || {}, q: '' };
+
+function gerarCodigoPedido(){
+  const d = new Date(), p = n => String(n).padStart(2, '0');
+  let r;
+  try { const a = new Uint32Array(1); crypto.getRandomValues(a); r = a[0].toString(36).toUpperCase().slice(-4).padStart(4, '0'); }
+  catch { r = Math.random().toString(36).slice(2, 6).toUpperCase().padStart(4, '0'); }
+  return 'DM-' + String(d.getFullYear()).slice(2) + p(d.getMonth() + 1) + p(d.getDate()) + '-' + r;
+}
+
+function load() {
+  reconcileCart();
+  renderAll();
+}
+function waNumber() { return (S.data && S.data.whatsapp) || '5511986975803'; }
+const findProd = id => S.data.produtos.find(p => p.id === id);
+const keyOf = (p, o) => p.id + '||' + o.label;
+function lookup(key) {
+  const [id, label] = key.split('||');
+  const p = S.data.produtos.find(x => x.id === id);
+  const o = p && p.opcoes.find(x => x.label === label);
+  return p && o ? {p, o} : null;
+}
+function reconcileCart() {
+  for (const k of Object.keys(S.cart)) { const f = lookup(k); if (!f || f.p.disponivel === false) delete S.cart[k]; }
+  store.set('dm_cart', S.cart);
+}
+
+function optHTML(p, o, i) {
+  const k = keyOf(p, o);
+  const q = S.cart[k] || 0;
+  const sav = o.de > o.preco ? r2(o.de - o.preco) : 0;
+  const price = `<span><span class="lb">${esc(o.label)}</span><span class="pr">${sav ? `<s class="de">${brl(o.de)}</s>` : ''}${brl(o.preco)}${o.kg ? '<small style="font-weight:700;font-size:12px">/kg</small>' : ''}</span>${sav ? `<span class="sv">Economize ${brl(sav)}</span>` : ''}</span>`;
+  let ctl;
+  if (p.disponivel === false) ctl = '';
+  else if (!q) ctl = `<button class="add" type="button" data-act="inc" data-k="${esc(k)}">Adicionar</button>`;
+  else ctl = `<span class="step"><button type="button" data-act="dec" data-k="${esc(k)}" aria-label="Diminuir">−</button><output>${fmtQty(q, o.kg)}</output><button type="button" data-act="inc" data-k="${esc(k)}" aria-label="Aumentar">+</button></span>`;
+  return `<div class="opt" data-k="${esc(k)}">${price}${ctl}</div>`;
+}
+function cardHTML(p) {
+  const off = p.disponivel === false;
+  const photo = p.foto
+    ? `<button class="ph" type="button" data-act="zoom" data-pid="${esc(p.id)}" aria-label="Ampliar foto: ${esc(p.nome)}"><img src="${esc(p.foto)}" alt="${esc(p.nome)}" loading="lazy" decoding="async"></button>`
+    : `<div class="ph empty" aria-hidden="true">${ROOF}</div>`;
+  const badges = (off ? '<span class="badge off">Indisponível</span>' : '') + (p.consultarEstoque && !off ? '<span class="badge">Consultar estoque</span>' : '');
+  return `<article class="card ${off ? 'off' : ''}" data-pid="${esc(p.id)}">${photo}<div class="cbody"><h3 class="nm">${esc(p.nome)}</h3>${p.codigo ? `<div class="cod">Cód. ${esc(p.codigo)}</div>` : ''}${p.descricao ? `<p class="desc">${esc(p.descricao)}</p>` : ''}${badges ? '<div>' + badges + '</div>' : ''}${p.opcoes.map((o, i) => optHTML(p, o, i)).join('')}${hasKg([p]) ? '<p class="kgnote">Valor final após a pesagem</p>' : ''}</div></article>`;
+}
+const visibleCats = () => S.data.categorias;
+let anchors = [];
+
+function renderCatalog() {
+  const q = norm(S.q.trim());
+  const cats = visibleCats().sort((a, b) => {
+    const aIsCombo = /combo/i.test(a.nome);
+    const bIsCombo = /combo/i.test(b.nome);
+    if (aIsCombo && !bIsCombo) return 1;
+    if (!aIsCombo && bIsCombo) return -1;
+    return 0;
+  });
+  const single = cats.length === 1;
+  let html = '', any = false, gi = 0; anchors = [];
+  if (!single) anchors.push({key: 'c0', label: 'Todos'});
+  for (const c of cats) {
+    const items = S.data.produtos.filter(p => p.cat === c.id && (!q || norm(p.nome + ' ' + (p.grupo || '') + ' ' + (p.codigo || '') + ' ' + (p.descricao || '')).includes(q)));
+    if (!items.length) continue;
+    any = true;
+    const groups = []; const idx = new Map();
+    for (const p of items) { const g = p.grupo || ''; if (!idx.has(g)) { idx.set(g, groups.length); groups.push({g, list: []}); } groups[idx.get(g)].list.push(p); }
+    const ck = 'c' + (anchors.length || 1);
+    if (!single) anchors.push({key: ck, label: c.nome});
+    html += `<section class="cat" id="a-${ck}" ${single ? '' : `data-key="${ck}"`}><h2>${ROOF}${esc(c.nome)}</h2>`;
+    if (hasKg(items)) html += `<p class="kgcall"><b>Cobrado por quilo.</b> O valor final muda após a pesagem: cada peça pesa um pouco diferente (por exemplo, 1,5 kg ou 1,625 kg). O preço mostrado é por kg e o total final é confirmado pelo WhatsApp.</p>`;
+    for (const {g, list} of groups) {
+      if (g) {
+        const gk = 'g' + (gi++);
+        if (single) anchors.push({key: gk, label: g});
+        html += `<div class="grp" id="a-${gk}" ${single ? `data-key="${gk}"` : ''}>${esc(g)}</div>`;
+      }
+      html += `<div class="grid">${list.map(cardHTML).join('')}</div>`;
+    }
+    html += '</section>';
+  }
+  $('#catalog').innerHTML = any ? html : `<p class="empty-msg">Nenhum produto encontrado.</p>`;
+  renderChips();
+}
+function renderChips() {
+  const box = $('#chips');
+  box.hidden = anchors.length < 2;
+  box.innerHTML = anchors.map(a => `<button class="chip" type="button" data-chip="${esc(a.key)}">${esc(a.label)}</button>`).join('');
+}
+function renderFooter() {
+  $('#avisos').innerHTML = (S.data.avisos || []).map(a => `<li>${esc(a)}</li>`).join('');
+  const n = waNumber();
+  $('#waLink').href = 'https://wa.me/' + n;
+}
+function renderAll() { renderCatalog(); renderFooter(); renderCartBar(); }
+function cartLines() {
+  return Object.entries(S.cart).map(([k, q]) => { const f = lookup(k); return f && {...f, q, k, sub: r2(f.o.preco * q)}; }).filter(Boolean);
+}
+function renderCartBar() {
+  const L = cartLines();
+  const total = r2(L.reduce((a, l) => a + l.sub, 0));
+  $('#cbTotal').textContent = brl(total);
+  $('#cbCount').textContent = L.length + (L.length === 1 ? ' item' : ' itens');
+  $('#cartbar').classList.toggle('on', L.length > 0);
+}
+function setQty(k, q) {
+  const f = lookup(k); if (!f) return;
+  q = r2(q);
+  if (q <= 0) delete S.cart[k]; else S.cart[k] = q;
+  store.set('dm_cart', S.cart);
+  const el = $(`.opt[data-k="${CSS.escape(k)}"]`);
+  if (el) { const i = f.p.opcoes.indexOf(f.o); el.outerHTML = optHTML(f.p, f.o, i); }
+  renderCartBar();
+  if ($('#cartDlg').classList.contains('on')) renderCart();
+}
+const stepOf = o => o.kg ? 0.5 : 1;
+
+function atualizarTotais() {
+  const L = cartLines();
+  if (!L.length) return;
+  const subtotal = r2(L.reduce((a, l) => a + l.sub, 0));
+  const tipo = $('input[name=tipo]:checked').value;
+  const frete = tipo === 'Entrega' ? (parseFloat($('#cFrete').value.split('|')[0]) || 0) : 0;
+  const total = r2(subtotal + frete);
   
-  let html = '';
-  let anchors = [{key:'c0', label:'Todos'}];
+  $('#cartSubtotal').textContent = brl(subtotal);
+  $('#cartTotal').textContent = brl(total);
+  $('#sendTxt').textContent = 'Enviar pedido · ' + brl(total);
+}
+
+function renderCart() {
+  const L = cartLines();
+  if (!L.length) { closeCart(); return; }
+  $('#cartTitle').textContent = 'Seu pedido · ' + L.length + (L.length === 1 ? ' item' : ' itens');
+  $('#cartItems').innerHTML = L.map(l => `<div class="ci"><div><div class="t">${esc(l.p.nome)}</div><div class="s">${esc(l.o.label)} · ${brl(l.o.preco)}${l.o.kg ? '/kg' : ''}</div>${l.p.descricao ? `<div class="d">${esc(l.p.descricao)}</div>` : ''}</div><div class="sub">${l.o.kg ? '≈ ' : ''}${brl(l.sub)}</div>
+    <button class="rm" type="button" data-act="rm" data-k="${esc(l.k)}">Remover</button>
+    <span class="step"><button type="button" data-act="dec" data-k="${esc(l.k)}" aria-label="Diminuir">−</button><output>${fmtQty(l.q, l.o.kg)}</output><button type="button" data-act="inc" data-k="${esc(l.k)}" aria-label="Aumentar">+</button></span></div>`).join('');
   
-  cats.forEach(c => {
-    const prods = PRODUTOS.filter(p => p.cat === c.id && (!S.q || p.nome.toLowerCase().includes(S.q.toLowerCase())));
-    if(!prods.length) return;
-    
-    anchors.push({key:c.id, label:c.nome});
-    html += `<section id="a-${c.id}" style="padding-top:24px;"><h2 style="font-size:24px;color:#4a1705;margin-bottom:10px;">${c.nome}</h2><div class="grid">`;
-    
-    prods.forEach(p => {
-      html += `<div class="card">
-        <img src="${p.foto}" alt="${p.nome}" onerror="this.style.display='none'">
-        <h3 class="nm">${p.nome}</h3>
-        <p class="desc">${p.descricao}</p>
-        ${p.opcoes.map(o => `
-          <div class="opt">
-            <div><span style="font-size:12px;color:#7a5a45;">${o.label}</span><br><span class="pr">${brl(o.preco)}</span></div>
-            <button class="add" onclick="addCart('${p.id}||${o.label}')">Adicionar</button>
-          </div>
-        `).join('')}
-      </div>`;
-    });
-    html += `</div></section>`;
+  atualizarTotais();
+  
+  const kgIn = L.some(l => l.o.kg);
+  $('#cartNote').textContent = kgIn ? 'Queijos são cobrados por quilo: o valor final é confirmado após a pesagem.' : '';
+}
+function openCart() {
+  const c = store.get('dm_cust') || {};
+  if (c.nome && !$('#cName').value) $('#cName').value = c.nome;
+  if (c.addr && !$('#cAddr').value) $('#cAddr').value = c.addr;
+  if (c.tel && !$('#cTel').value) $('#cTel').value = c.tel;
+  syncAddr();
+  if (!cartLines().length) { toast('Adicione produtos primeiro'); return; }
+  renderCart();
+  $('#cartDlg').classList.add('on');
+}
+function closeCart(){ $('#cartDlg').classList.remove('on'); }
+function limparCarrinho(){
+  if (!cartLines().length) return;
+  if (!confirm('Limpar todos os itens do pedido?')) return;
+  S.cart = {};
+  store.set('dm_cart', S.cart);
+  renderCartBar();
+  closeCart();
+}
+function nomeMsg(p) { const base = p.cat === 'congelados' && p.grupo ? `${p.nome} [${p.grupo}]` : p.nome; return (p.codigo ? p.codigo + ' · ' : '') + base; }
+function buildMessage(codigo) {
+  const L = cartLines();
+  const nome = $('#cName').value.trim();
+  const tel = $('#cTel').value.trim();
+  const tipo = $('input[name=tipo]:checked').value;
+  const addr = $('#cAddr').value.trim();
+  const obs = $('#cObs').value.trim();
+  const freteVal = tipo === 'Entrega' ? (parseFloat($('#cFrete').value.split('|')[0]) || 0) : 0;
+  const freteNome = tipo === 'Entrega' ? $('#cFrete').value.split('|')[1] : 'Retirada';
+  const pag = $('#cPag').value;
+  const troco = $('#cTroco').value.trim();
+  const kgIn = L.some(l => l.o.kg);
+  
+  const lines = L.map(l => {
+    const lab = (l.o.kg || /^unidade$/i.test(l.o.label)) ? '' : ` (${l.o.label})`;
+    const qtd = l.o.kg ? '~' + fmtQty(l.q, true) : `${l.q}x`;
+    return `• ${qtd} ${nomeMsg(l.p)}${lab} — ${l.o.kg ? '≈ ' : ''}${brl(l.sub)}`;
   });
   
-  $('#catalog').innerHTML = html;
-  $('#chips').innerHTML = anchors.map(a => `<button class="chip" onclick="document.getElementById('a-${a.key}').scrollIntoView({behavior:'smooth'})">${a.label}</button>`).join('');
-  renderCartBar();
-}
-
-window.addCart = (k) => {
-  S.cart[k] = (S.cart[k] || 0) + 1;
-  localStorage.setItem('dm_cart', JSON.stringify(S.cart));
-  renderCartBar();
-};
-
-function renderCartBar() {
-  const items = Object.values(S.cart).reduce((a,b)=>a+b,0);
-  let total = 0;
-  for(const [k, q] of Object.entries(S.cart)) {
-    const [pid, label] = k.split('||');
-    const p = PRODUTOS.find(x => x.id === pid);
-    const o = p && p.opcoes.find(x => x.label === label);
-    if(o) total += o.preco * q;
-  }
-  $('#cbTotal').textContent = brl(total);
-  $('#cbCount').textContent = items + (items === 1 ? ' item' : ' itens');
-  $('#cartbar').classList.toggle('on', items > 0);
-}
-
-$('#q').addEventListener('input', e => { S.q = e.target.value; render(); });
-$('#cbOpen').onclick = () => {
-  const items = Object.values(S.cart).reduce((a,b)=>a+b,0);
-  if(!items) return alert('Adicione produtos primeiro!');
+  const subtotal = r2(L.reduce((a, l) => a + l.sub, 0));
+  const totalFinal = r2(subtotal + freteVal);
   
-  let html = '';
-  for(const [k, q] of Object.entries(S.cart)) {
-    const [pid, label] = k.split('||');
-    const p = PRODUTOS.find(x => x.id === pid);
-    const o = p && p.opcoes.find(x => x.label === label);
-    if(o) html += `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;"><span>${q}x ${p.nome} (${label})</span><span style="font-weight:bold;">${brl(o.preco * q)}</span></div>`;
-  }
-  $('#cartItems').innerHTML = html;
-  $('#cartTotal').textContent = $('#cbTotal').textContent;
-  $('#cartDlg').style.display = 'flex';
-};
-$('#cartClose').onclick = () => $('#cartDlg').style.display = 'none';
+  let m = `Pedido — De Minas Pão de Queijaria\n\n`;
+  m += `Código: ${codigo}\n`;
+  m += `Nome: ${nome}\n`;
+  m += `Contato: ${tel}\n`;
+  m += `${tipo}${tipo === 'Entrega' && addr ? ': ' + addr : ''}\n\n`;
+  m += `Itens:\n${lines.join('\n')}\n\n`;
+  m += `Subtotal: ${brl(subtotal)}\n`;
+  if (tipo === 'Entrega') m += `Taxa de entrega (${freteNome}): ${freteVal > 0 ? brl(freteVal) : 'A combinar'}\n`;
+  m += `*Total a pagar: ${brl(totalFinal)}*\n\n`;
+  m += `*Pagamento:* ${pag}`;
+  if (pag === 'Dinheiro' && troco) m += ` (Troco para: ${troco})`;
+  if (obs) m += `\n*Obs.:* ${obs}`;
+  if (kgIn) m += `\n\nQueijos vendidos por kg: o valor final é confirmado após a pesagem.`;
+  if (pag === 'PIX') m += `\nPIX: ${(S.data && S.data.pix) || '(11) 98697-5803'} (${(S.data && S.data.pixNome) || 'Franklin Rainier'})`;
+  return m;
+}
 
-$('#sendBtn').onclick = async () => {
+function syncAddr() {
+  const entrega = $('input[name=tipo]:checked').value === 'Entrega';
+  $('#addrFld').hidden = !entrega;
+  $('#freteFld').hidden = !entrega;
+  $('#cAddr').required = entrega;
+  atualizarTotais();
+}
+
+$('#cPag').addEventListener('change', e => { $('#trocoFld').hidden = e.target.value !== 'Dinheiro'; });
+$('#cFrete').addEventListener('change', atualizarTotais);
+$$('input[name=tipo]').forEach(r => r.addEventListener('change', () => { syncAddr(); atualizarTotais(); }));
+
+$('#cbOpen').addEventListener('click', openCart);
+$('#cartClose').addEventListener('click', closeCart);
+$('#btnLimpar').addEventListener('click', limparCarrinho);
+$('#addMore').addEventListener('click', closeCart);
+$('#lbClose').addEventListener('click', () => $('#lb').classList.remove('on'));
+$('#cartDlg').addEventListener('click', e => { if (e.target === $('#cartDlg')) closeCart(); });
+$('#lb').addEventListener('click', e => { if (e.target === $('#lb')) $('#lb').classList.remove('on'); });
+
+$('#orderForm').addEventListener('submit', e => {
+  e.preventDefault();
+  if (!cartLines().length) return;
   const nome = $('#cName').value.trim();
-  const tel = $('#cTel').value.trim().replace(/\D/g,'');
+  const tipo = $('input[name=tipo]:checked').value;
   const addr = $('#cAddr').value.trim();
+  const obs  = $('#cObs').value.trim();
+  const L    = cartLines();
+  const tel = $('#cTel').value.trim();
+  const telDig = tel.replace(/\D/g, '');
   
-  if(!nome || !tel || !addr) return alert('Preencha nome, WhatsApp e endereço.');
+  if (telDig.length < 10 || telDig.length > 13) { toast('Informe seu WhatsApp com DDD'); $('#cTel').focus(); return; }
   
-  let msg = `*Pedido - De Minas Pão de Queijaria*\n\n*Nome:* ${nome}\n*WhatsApp:* ${tel}\n*Endereço:* ${addr}\n\n*Itens:*\n`;
-  let total = 0;
+  store.set('dm_cust', {nome, addr, tel});
+  store.set('dm_last_order', S.cart);
   
-  for(const [k, q] of Object.entries(S.cart)) {
-    const [pid, label] = k.split('||');
-    const p = PRODUTOS.find(x => x.id === pid);
-    const o = p && p.opcoes.find(x => x.label === label);
-    if(o) {
-      msg += `• ${q}x ${p.nome} (${label}) - ${brl(o.preco * q)}\n`;
-      total += o.preco * q;
-    }
-  }
+  const codigo = gerarCodigoPedido();
+  const freteVal = tipo === 'Entrega' ? (parseFloat($('#cFrete').value.split('|')[0]) || 0) : 0;
+  const freteNome = tipo === 'Entrega' ? $('#cFrete').value.split('|')[1] : 'Retirada';
+  const pag = $('#cPag').value;
+  const troco = $('#cTroco').value.trim();
   
-  msg += `\n*Total: ${brl(total)}*`;
+  const itensFire = L.map(l => ({
+    codigo: l.p.codigo || '', nome: l.p.nome, label: l.o.label, qtd: l.q,
+    preco: l.o.preco, kg: !!l.o.kg, subtotal: l.sub
+  }));
   
-  // Envia pro Firebase (ERP)
-  try {
-    if (window.DM_enviarPedido) {
-      await window.DM_enviarPedido({
-        codigo: 'DM-' + Date.now().toString(36).toUpperCase(),
-        cliente: nome, whatsapp: tel, endereco: addr,
-        itens: [], total: total, tipo: 'Entrega', pagamento: 'PIX', obs: ''
-      });
-      alert('✅ Pedido enviado para o sistema!');
-    }
-  } catch(e) { console.error(e); }
+  const subtotal = r2(L.reduce((a, l) => a + l.sub, 0));
+  const totalSnap = r2(subtotal + freteVal);
   
-  window.open('https://wa.me/5511986975803?text=' + encodeURIComponent(msg), '_blank');
-  
-  S.cart = {};
-  localStorage.removeItem('dm_cart');
-  renderCartBar();
-  $('#cartDlg').style.display = 'none';
-  render();
-};
+  const pedido = {
+    codigo, cliente: nome, whatsapp: telDig.length <= 11 ? '55' + telDig : telDig,
+    endereco: tipo === 'Entrega' ? addr : '', tipo, obs, itens: itensFire, total: totalSnap,
+    frete: freteNome, taxaFrete: freteVal, pagamento: pag, troco: troco
+  };
 
-render();
+  // 1. Envia para o banco de dados (ERP)
+  if (window.DM_enviarPedido) {
+    window.DM_enviarPedido(pedido).then(() => {
+        alert("✅ Pedido registrado no sistema com sucesso! Agora abriremos o WhatsApp.");
+    }).catch(err => {
+        console.error("Erro ao salvar no ERP:", err);
+        alert("⚠️ Não foi possível registrar no sistema, mas vamos abrir o WhatsApp.");
+    });
+  }
+
+  // 2. Abre o WhatsApp
+  const msg = buildMessage(codigo);
+  window.open('https://wa.me/' + waNumber() + '?text=' + encodeURIComponent(msg), '_blank');
+
+  // 3. Limpa o carrinho
+  S.cart = {};
+  store.set('dm_cart', S.cart);
+  renderCartBar();
+  closeCart();
+});
+
+document.addEventListener('click', e => {
+  const chip = e.target.closest('[data-chip]');
+  if (chip) { const s = $('#a-' + CSS.escape(chip.dataset.chip)); if (s) s.scrollIntoView({behavior: 'smooth', block: 'start'}); return; }
+  const t = e.target.closest('[data-act]'); if (!t) return;
+  const act = t.dataset.act;
+  if (act === 'inc' || act === 'dec') {
+    const f = lookup(t.dataset.k); if (!f) return;
+    const cur = S.cart[t.dataset.k] || 0, st = stepOf(f.o);
+    setQty(t.dataset.k, act === 'inc' ? cur + (cur ? st : 1) : cur - st);
+  } else if (act === 'rm') setQty(t.dataset.k, 0);
+  else if (act === 'zoom') { const p = findProd(t.dataset.pid); $('#lbT').textContent = p.nome; $('#lbImg').src = p.foto; $('#lb').classList.add('on'); }
+});
+$('#q').addEventListener('input', e => { S.q = e.target.value; renderCatalog(); });
+
+let toastT;
+function toast(msg, ms = 3200) {
+  let t = $('.toast'); if (!t) { t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t); }
+  t.textContent = msg; clearTimeout(toastT); toastT = setTimeout(() => t.remove(), ms);
+}
+
+load();
+setTimeout(() => document.documentElement.classList.replace('theme-loading', 'theme-ready'), 400);
 })();
 </script>
 <script src="tema-mockup.js" defer></script>
