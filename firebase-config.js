@@ -301,36 +301,7 @@ html.theme-ready body { opacity: 1; }
   </div>
 </div>
 
-<!-- FIREBASE E ENVIO PARA O ERP DIRETO -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
-  // Tenta pegar as configurações do firebase-config.js ou usa as do projeto
-  try {
-    const app = initializeApp({
-      apiKey: "AIzaSyA... (a chave do seu projeto)", 
-      authDomain: "deminas-pedidos.firebaseapp.com",
-      projectId: "deminas-pedidos",
-      storageBucket: "deminas-pedidos.appspot.com",
-      messagingSenderId: "...",
-      appId: "..."
-    });
-    const db = getFirestore(app);
-
-    window.DM_enviarPedido = async (pedido) => {
-      await addDoc(collection(db, "pedidos_catalogo"), {
-        ...pedido,
-        status: 'novo',
-        criadoEm: serverTimestamp()
-      });
-      console.log("✅ Pedido enviado para o ERP com sucesso!");
-    };
-  } catch (e) {
-    console.warn("Firebase não inicializado. Tentando método antigo.", e);
-  }
-</script>
-
+<script type="module" src="firebase-catalogo.js"></script>
 <script src="qrcode.js"></script>
 <script>
 (() => {
