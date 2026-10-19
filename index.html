@@ -5,15 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#4a1705">
-<title>Pão de Queijo Mineiro — De Minas Pão de Queijaria</title>
-<meta name="description" content="Pão de queijo mineiro De Minas: pães de queijo, chipas, broas e recheados congelados para assar em casa. Monte seu pedido e envie pelo WhatsApp.">
-<link rel="canonical" href="https://deminaspaodequeijaria.com.br/index.html">
+<title>De Minas Pão de Queijaria — Faça seu pedido</title>
+<meta name="description" content="Catálogo De Minas Pão de Queijaria: pães de queijo, queijos mineiros, doces, mel e muito mais. Monte seu pedido e envie pelo WhatsApp.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Bakery","name":"De Minas Pão de Queijaria","url":"https://deminaspaodequeijaria.com.br/","image":"https://deminaspaodequeijaria.com.br/logo.jpg","telephone":"+5511986975803","address":{"@type":"PostalAddress","streetAddress":"Rua Engenheiro Pegado, 332","addressLocality":"São Paulo","addressRegion":"SP","addressCountry":"BR"},"servesCuisine":"Mineira"}</script>
+<link rel="canonical" href="https://deminaspaodequeijaria.com.br/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="De Minas Pão de Queijaria">
 <meta property="og:locale" content="pt_BR">
-<meta property="og:title" content="Pão de Queijo Mineiro — De Minas Pão de Queijaria">
-<meta property="og:description" content="Pães de queijo, chipas, broas e recheados congelados para assar em casa. Monte seu pedido e envie pelo WhatsApp.">
-<meta property="og:url" content="https://deminaspaodequeijaria.com.br/index.html">
+<meta property="og:title" content="De Minas Pão de Queijaria — Faça seu pedido">
+<meta property="og:description" content="Pães de queijo, queijos mineiros, doces, mel e muito mais. Monte seu pedido e envie pelo WhatsApp.">
+<meta property="og:url" content="https://deminaspaodequeijaria.com.br/">
 <meta property="og:image" content="https://deminaspaodequeijaria.com.br/logo.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -184,11 +185,6 @@ footer .adm{display:none!important}
 html.theme-loading body { opacity: 0; transition: opacity 0.2s; }
 html.theme-ready body { opacity: 1; }
 .marcas-parceiras { font-size: 13px; color: var(--muted); text-align: center; margin: 16px auto; max-width: 600px; line-height: 1.4; }
-
-/* Botões do rodapé — Como Assar / Alergênicos */
-.footer-links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0}
-.btn-footer{background:transparent;border:1.5px solid #e9c46a;color:#f5e6c8;border-radius:999px;padding:8px 16px;font-weight:800;font-size:13px}
-.btn-footer:hover{background:#e9c46a;color:#4a1705}
 </style>
 
 <script>
@@ -198,11 +194,11 @@ html.theme-ready body { opacity: 1; }
 <link rel="stylesheet" href="tema-mockup.css">
 </head>
 
-<body data-hero="Pão de queijo mineiro para assar em casa — direto no WhatsApp" data-qr1="Escaneie e peça seu pão de queijo" data-qr2="direto pelo WhatsApp">
+<body>
 
 <header class="hero">
-  <img src="logo.jpg" alt="De Minas Pão de Queijaria — Pão de Queijo Mineiro" width="720" height="455">
-  <p>Pão de queijo mineiro para assar em casa — direto no WhatsApp</p>
+  <img src="logo.jpg" alt="De Minas Pão de Queijaria — O autêntico pão de queijo mineiro" width="720" height="455">
+  <p>Escolha seus produtos e envie o pedido direto pelo WhatsApp</p>
   <div class="rule"></div>
 </header>
 
@@ -212,7 +208,7 @@ html.theme-ready body { opacity: 1; }
     <div class="search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <label class="sr" for="q">Buscar produto</label>
-      <input id="q" type="search" placeholder="Buscar pão de queijo, broa, chipa ou código…" autocomplete="off" enterkeyhint="search">
+      <input id="q" type="search" placeholder="Buscar produto ou código…" autocomplete="off" enterkeyhint="search">
     </div>
   </div>
   <nav class="chips" id="chips" aria-label="Categorias"></nav>
@@ -220,17 +216,19 @@ html.theme-ready body { opacity: 1; }
 
 <main class="wrap" id="catalog" aria-live="polite"><p class="empty-msg">Carregando catálogo…</p></main>
 
-<footer>
-  <div class="serif">De Minas Pão de Queijaria</div>
-  <ul id="avisos"></ul>
-  <p class="marcas-parceiras"><b>Nossas Marcas Parceiras:</b> Temos orgulho de trabalhar com a melhor qualidade de Minas. Nossa principal parceira é a <b>Sabor da Roça</b>, além de Garcia, Encanto, Bem de Minas e outras. Se tiver preferência por alguma marca, basta escrever nas observações!</p>
-  <p class="footer-links">
-    <button class="btn-footer" type="button" data-abrir="assar">Como Assar</button>
-    <button class="btn-footer" type="button" data-abrir="alerg">Alergênicos</button>
-  </p>
-  <p>Faça sua encomenda: <a id="waLink" href="https://wa.me/5511986975803" rel="noopener">WhatsApp (11) 98697-5803</a></p>
-  <p>Rua Engenheiro Pegado, 332 — Vila Carrão, Zona Leste, São Paulo/SP</p>
-  <a class="adm" href="#admin" id="admLink">Área do administrador</a>
+<footer class="rodape">
+  <div class="marca"><b>De Minas</b><span>Pão de Queijaria</span><em>O Autêntico Pão de Queijo Mineiro</em></div>
+  <a class="cta" id="waLink" href="https://wa.me/5511986975803" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.300 14.200c-.2.600-1.300 1.200-1.800 1.200-.5.100-1.100.100-1.800-.1-.4-.1-1-.3-1.700-.6-3-1.300-4.900-4.300-5.100-4.500-.1-.2-1.200-1.600-1.200-3s.8-2.100 1-2.400c.3-.3.600-.3.800-.3h.6c.2 0 .4 0 .6.500l.9 2.100c.1.200.1.400 0 .5l-.4.600-.4.400c-.1.200-.3.300-.1.600.2.300.8 1.300 1.700 2.100 1.200 1 2.100 1.300 2.400 1.500.3.100.5.100.6-.1l.9-1.100c.2-.3.400-.2.600-.1l2 1c.3.100.5.200.5.300.1.200.1.800-.1 1.400z"/></svg>Fazer pedido pelo WhatsApp</a>
+  <p class="wanum" id="waNum">(11) 98697-5803</p>
+  <div class="grade">
+    <div class="cartao"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><h4>Pedidos</h4><p>Pão de queijo congelado e recheados: até sábado.<br>Doces, queijos e demais: até domingo.</p></div>
+    <div class="cartao"><svg viewBox="0 0 24 24"><path d="M2 6h11v10H2zM13 9h4.5l3 3.5V16H13z"/><circle cx="6.5" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/></svg><h4>Entrega</h4><p>Às terças-feiras, a partir das 18h.</p></div>
+    <div class="cartao"><svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10.5h19M6.5 15h4"/></svg><h4>Pagamento</h4><p>PIX, cartão de débito, crédito ou dinheiro.</p></div>
+    <div class="cartao"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.100 7-11.500A7 7 0 0 0 5 9.500C5 14.900 12 21 12 21z"/><circle cx="12" cy="9.500" r="2.500"/></svg><h4>Retirada</h4><p>Rua Engenheiro Pegado, 332<br>Vila Carrão, São Paulo<br><a href="https://www.google.com/maps/search/?api=1&query=Rua+Engenheiro+Pegado+332+Vila+Carr%C3%A3o+S%C3%A3o+Paulo" target="_blank" rel="noopener">Ver no mapa</a></p></div>
+  </div>
+  <details><summary>Avisos importantes</summary><ul id="avisos"></ul></details>
+  <div class="fim">© 2026 De Minas Pão de Queijaria</div>
+  <a class="adm" href="#admin" id="admLink" hidden>Área do administrador</a>
 </footer>
 
 <div class="cartbar" id="cartbar">
@@ -312,31 +310,6 @@ html.theme-ready body { opacity: 1; }
   </div>
 </div>
 
-<!-- Modal: Como Assar -->
-<div class="cartmodal" id="modal-assar">
-  <div class="cartmodal-inner">
-    <div class="dh"><h3>Como Assar</h3><button class="x-close" type="button" data-fechar aria-label="Fechar">×</button></div>
-    <div class="db" style="padding:18px">
-      <p><b>Pão de queijo / chipa / dadinho:</b> Forno pré-aquecido a 180°C. Assar do congelado por 20–25 min, até dourar.</p>
-      <p><b>Broas e recheados:</b> Forno a 180°C por 25–30 min.</p>
-      <p><b>Air fryer:</b> 160°C por 12–15 min (pão de queijo pequeno) ou 180°C por 15–18 min (maiores).</p>
-      <p class="note">Tempos variam conforme o forno. Na dúvida, asse até dourar.</p>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: Alergênicos -->
-<div class="cartmodal" id="modal-alerg">
-  <div class="cartmodal-inner">
-    <div class="dh"><h3>Alergênicos</h3><button class="x-close" type="button" data-fechar aria-label="Fechar">×</button></div>
-    <div class="db" style="padding:18px">
-      <p><b>Contém:</b> leite e derivados, glúten (trigo) em alguns produtos, ovos em algumas receitas.</p>
-      <p><b>Pode conter traços de:</b> soja, amendoim e castanhas (produção compartilhada).</p>
-      <p class="note">Em caso de alergia severa, consulte a gente pelo WhatsApp antes de pedir.</p>
-    </div>
-  </div>
-</div>
-
 <script type="module" src="firebase-catalogo.js"></script>
 <script src="qrcode.js"></script>
 <script>
@@ -371,8 +344,7 @@ function gerarCodigoPedido(){
   try { const a = new Uint32Array(1); crypto.getRandomValues(a); r = a[0].toString(36).toUpperCase().slice(-4).padStart(4, '0'); }
   catch { r = Math.random().toString(36).slice(2, 6).toUpperCase().padStart(4, '0'); }
   return 'DM-' + String(d.getFullYear()).slice(2) + p(d.getMonth() + 1) + p(d.getDate()) + '-' + r;
-}
-async function load() {
+}async function load() {
   let pub = null;
   try {
     const r = await fetch('produtos.json?v=' + Date.now(), {cache: 'no-store'});
@@ -438,20 +410,33 @@ const visibleProds = () => { const ids = new Set(visibleCats().map(c => c.id)); 
 let anchors = [];
 function renderCatalog() {
   const q = norm(S.q.trim());
-  const cats = visibleCats(), single = cats.length === 1;
+  const cats = visibleCats().sort((a, b) => {
+    const aIsCombo = /combo/i.test(a.nome);
+    const bIsCombo = /combo/i.test(b.nome);
+    if (aIsCombo && !bIsCombo) return 1;
+    if (!aIsCombo && bIsCombo) return -1;
+    return 0;
+  });
+  const single = cats.length === 1;
   let html = '', any = false, gi = 0; anchors = [];
+  if (!single) anchors.push({key: 'c0', label: 'Todos'});
   for (const c of cats) {
     const items = S.data.produtos.filter(p => p.cat === c.id && (!q || norm(p.nome + ' ' + (p.grupo || '') + ' ' + (p.codigo || '') + ' ' + (p.descricao || '')).includes(q)));
     if (!items.length && !(S.admin && !q)) continue;
     any = true;
     const groups = []; const idx = new Map();
     for (const p of items) { const g = p.grupo || ''; if (!idx.has(g)) { idx.set(g, groups.length); groups.push({g, list: []}); } groups[idx.get(g)].list.push(p); }
-    const ck = 'c' + anchors.length;
+    const ck = 'c' + (anchors.length || 1);
     if (!single) anchors.push({key: ck, label: c.nome});
     html += `<section class="cat" id="a-${ck}" ${single ? '' : `data-key="${ck}"`}><h2>${ROOF}${esc(c.nome)}</h2>`;
     if (hasKg(items)) html += `<p class="kgcall"><b>Cobrado por quilo.</b> O valor final muda após a pesagem: cada peça pesa um pouco diferente (por exemplo, 1,5 kg ou 1,625 kg). O preço mostrado é por kg e o total final é confirmado pelo WhatsApp.</p>`;
     if (S.admin) html += `<div class="cat-tools"><button class="btn sm red" type="button" data-act="new" data-cat="${esc(c.id)}">+ Novo produto em ${esc(c.nome)}</button></div>`;
     for (const {g, list} of groups) {
+      if (g) {
+        const gk = 'g' + (gi++);
+        if (single) anchors.push({key: gk, label: g});
+        html += `<div class="grp" id="a-${gk}" ${single ? `data-key="${gk}"` : ''}>${esc(g)}</div>`;
+      }
       html += `<div class="grid">${list.map(cardHTML).join('')}</div>`;
     }
     html += '</section>';
@@ -468,11 +453,12 @@ function renderChips() {
   measure();
 }
 function renderFooter() {
-  $('#avisos').innerHTML = [...(S.data.avisos || []), ...(hasKg(visibleProds()) ? [KGMSG] : [])].map(a => `<li>${esc(a)}</li>`).join('');
+  const av = (S.data.avisos || []).filter(a => !/^pedidos:/i.test(a));
+  $('#avisos').innerHTML = [...av, ...(hasKg(visibleProds()) ? [KGMSG] : []), 'Imagens meramente ilustrativas.'].map(a => `<li>${esc(a)}</li>`).join('');
   const n = waNumber();
   $('#waLink').href = 'https://wa.me/' + n;
   const d = n.replace(/^55/, '');
-  $('#waLink').textContent = `WhatsApp (${d.slice(0, 2)}) ${d.slice(2, -4)}-${d.slice(-4)}`;
+  $('#waNum').textContent = `(${d.slice(0, 2)}) ${d.slice(2, -4)}-${d.slice(-4)}`;
 }
 function renderAll() { renderCatalog(); renderFooter(); renderCartBar(); renderAdminBar(); }
 function measure() { document.documentElement.style.setProperty('--stickh', ($('#stick').offsetHeight + 8) + 'px'); }
@@ -531,10 +517,8 @@ function renderCart() {
   $('#cartItems').innerHTML = L.map(l => `<div class="ci"><div><div class="t">${esc(l.p.nome)}</div><div class="s">${esc(l.o.label)} · ${brl(l.o.preco)}${l.o.kg ? '/kg' : ''}</div>${l.p.descricao ? `<div class="d">${esc(l.p.descricao)}</div>` : ''}</div><div class="sub">${l.o.kg ? '≈ ' : ''}${brl(l.sub)}</div>
     <button class="rm" type="button" data-act="rm" data-k="${esc(l.k)}">Remover</button>
     <span class="step"><button type="button" data-act="dec" data-k="${esc(l.k)}" aria-label="Diminuir">−</button><output>${fmtQty(l.q, l.o.kg)}</output><button type="button" data-act="inc" data-k="${esc(l.k)}" aria-label="Aumentar">+</button></span></div>`).join('');
+  atualizarTotais();
   const kgIn = L.some(l => l.o.kg);
-  $('#totLbl').textContent = kgIn ? 'Total estimado' : 'Total dos produtos';
-  $('#cartTotal').textContent = (kgIn ? '≈ ' : '') + brl(r2(L.reduce((a, l) => a + l.sub, 0)));
-  $('#sendTxt').textContent = 'Enviar pedido · ' + (kgIn ? '≈ ' : '') + brl(r2(L.reduce((a, l) => a + l.sub, 0)));
   renderUpsell(L);
   const est = L.some(l => l.p.consultarEstoque);
   $('#cartNote').textContent = [(S.data.avisos || [])[0] || '', kgIn ? KGMSG : '', est ? 'Há itens para consultar estoque — confirmaremos pelo WhatsApp.' : ''].filter(Boolean).join(' ');
@@ -559,6 +543,7 @@ function limparCarrinho(){
   closeCart();
   toast('Pedido limpo.');
 }
+// Na mensagem do pedido, congelados levam a marca para o lojista saber de quem comprar
 function nomeMsg(p) { const base = p.cat === 'congelados' && p.grupo ? `${p.nome} [${p.grupo}]` : p.nome; return (p.codigo ? p.codigo + ' · ' : '') + base; }
 function buildMessage(codigo) {
   const L = cartLines();
@@ -606,14 +591,34 @@ function buildMessage(codigo) {
   if (pag === 'PIX') m += `\n\nPIX (celular): ${(S.data && S.data.pix) || '(11) 98697-5803'} (${(S.data && S.data.pixNome) || 'Franklin Rainier'})`;
   return m;
 }
+function atualizarTotais() {
+  const L = cartLines();
+  if (!L.length) return;
+  const kgIn = L.some(l => l.o.kg);
+  const subtotal = r2(L.reduce((a, l) => a + l.sub, 0));
+  const tipoEl = $('input[name=tipo]:checked');
+  const tipo = tipoEl ? tipoEl.value : 'Retirada';
+  const freteEl = $('#cFrete');
+  const frete = (tipo === 'Entrega' && freteEl) ? (parseFloat(freteEl.value.split('|')[0]) || 0) : 0;
+  const total = r2(subtotal + frete);
+  const totEl = $('#cartTotal'), btnTxt = $('#sendTxt'), lblTot = $('#totLbl');
+  if (totEl) totEl.textContent = (kgIn ? '≈ ' : '') + brl(total);
+  if (btnTxt) btnTxt.textContent = 'Enviar pedido · ' + (kgIn ? '≈ ' : '') + brl(total);
+  if (lblTot) lblTot.textContent = (tipo === 'Entrega' && frete > 0) ? 'Total com entrega' : (kgIn ? 'Total estimado' : 'Total dos produtos');
+}
 function syncAddr() {
-  const entrega = $('input[name=tipo]:checked').value === 'Entrega';
-  $('#addrFld').hidden = !entrega; $('#pickNote') && ($('#pickNote').hidden = entrega); $('#cAddr').required = entrega;
-  $('#freteFld').hidden = !entrega;
+  const tipoEl = $('input[name=tipo]:checked');
+  if (!tipoEl) return;
+  const entrega = tipoEl.value === 'Entrega';
+  const addrFld = $('#addrFld'); if (addrFld) addrFld.hidden = !entrega;
+  const cAddr = $('#cAddr'); if (cAddr) cAddr.required = entrega;
+  const freteFld = $('#freteFld'); if (freteFld) freteFld.hidden = !entrega;
+  atualizarTotais();
 }
 $('#cPag').addEventListener('change', e => {
   $('#trocoFld').hidden = e.target.value !== 'Dinheiro';
 });
+$('#cFrete').addEventListener('change', atualizarTotais);
 
 $('#cbOpen').addEventListener('click', openCart);
 $('#cartClose').addEventListener('click', closeCart);
@@ -698,27 +703,6 @@ document.addEventListener('click', e => {
   else if (act === 'edit') openEdit(t.dataset.pid);
   else if (act === 'new') openEdit(null, {cat: t.dataset.cat});
 });
-
-/* ---- Modais Como Assar / Alergênicos ---- */
-document.addEventListener('click', e => {
-  const abrir = e.target.closest('[data-abrir]');
-  if (abrir) {
-    const id = abrir.dataset.abrir === 'assar' ? 'modal-assar' : 'modal-alerg';
-    const m = document.getElementById(id);
-    if (m) m.classList.add('on');
-    return;
-  }
-  const fechar = e.target.closest('[data-fechar]');
-  if (fechar) {
-    const m = fechar.closest('.cartmodal');
-    if (m) m.classList.remove('on');
-    return;
-  }
-  if (e.target.classList.contains('cartmodal') && e.target.id.startsWith('modal-')) {
-    e.target.classList.remove('on');
-  }
-});
-
 document.addEventListener('change', e => {
   const t = e.target;
   if (t.classList.contains('pin')) {
