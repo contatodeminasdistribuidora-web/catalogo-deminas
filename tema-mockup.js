@@ -52,7 +52,25 @@ document.body.appendChild(tabs);
 const openCart = () => $('#cbOpen').click();
 const fire = (v) => { const q = $('#q'); q.value = v; q.dispatchEvent(new Event('input', {bubbles: true})); };
 $('#tCart').onclick = openCart;
-$('#tMenu').onclick = () => $('footer').scrollIntoView({behavior: 'smooth'});
+const drawer = document.createElement('div'); drawer.className = 'drawer'; drawer.hidden = true;
+drawer.innerHTML = '<div class="dr-back"></div><nav class="dr-panel" aria-label="Menu"><div class="dr-head"><span>Menu</span><button type="button" class="dr-x" aria-label="Fechar menu">×</button></div><div id="drList" style="display:flex;flex-direction:column;gap:8px"></div><a class="dr-wa" id="drWa" href="#" target="_blank" rel="noopener">Falar no WhatsApp</a></nav>';
+document.body.appendChild(drawer);
+const closeDr = () => { drawer.classList.remove('on'); document.body.style.overflow = ''; setTimeout(() => { drawer.hidden = true; }, 200); };
+const openDr = () => {
+  const list = $('#drList'); list.innerHTML = '';
+  document.querySelectorAll('#chips .chip').forEach(ch => {
+    const c = ch.cloneNode(true); const ic = c.querySelector('.ico'); if (ic) ic.remove();
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'dr-item'; b.textContent = c.textContent.trim();
+    b.onclick = () => { closeDr(); setTimeout(() => ch.click(), 220); };
+    list.appendChild(b);
+  });
+  const wa = $('#waLink'); if (wa) $('#drWa').href = wa.href;
+  drawer.hidden = false; requestAnimationFrame(() => drawer.classList.add('on')); document.body.style.overflow = 'hidden';
+};
+$('#tMenu').setAttribute('aria-label', 'Abrir menu');
+$('#tMenu').onclick = openDr;
+drawer.addEventListener('click', e => { if (e.target.classList.contains('dr-back') || e.target.closest('.dr-x')) closeDr(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !drawer.hidden) closeDr(); });
 $('#banGo').onclick = () => { fire(''); $('#catalog').scrollIntoView({behavior: 'smooth'}); };
 $('#prGo').onclick = () => { fire(''); const c = document.querySelector('#catalog [data-combos]'); (c || $('#catalog')).scrollIntoView({behavior: 'smooth'}); if (!c) fire('combo'); };
 tabs.onclick = e => {
@@ -68,8 +86,8 @@ $('#btnRepeat').onclick = () => {
   const last = JSON.parse(localStorage.getItem('dm_last_order') || '{}');
   if (!last || !Object.keys(last).length) { alert('Você ainda não fez nenhum pedido neste aparelho.'); return; }
   localStorage.setItem('dm_cart', JSON.stringify(last));
-  alert('Sua última compra foi adicionada ao carrinho!');
-  openCart();
+  sessionStorage.setItem('dm_open_cart', '1');
+  location.reload();
 };
 $('#btnFavs').onclick = () => {
   showOnlyFavs = !showOnlyFavs;
@@ -103,6 +121,12 @@ function renderFavs() {
 // --------------------------------------------
 
 const favs = new Set(JSON.parse(localStorage.getItem('dm_fav') || '[]'));
+let CATMAP = null;
+fetch('produtos.json?v=' + Date.now()).then(r => r.json()).then(d => { CATMAP = {}; (d.produtos || []).forEach(p => { CATMAP[p.id] = p.cat; }); document.querySelectorAll('#catalog .card').forEach(frz); }).catch(() => {});
+function frz(c) {
+  if (!CATMAP || c.querySelector('.frz') || CATMAP[c.dataset.pid] !== 'congelados') return;
+  const nm = $('.nm', c); if (nm) nm.insertAdjacentHTML('afterend', '<div class="frz">❄ Congelado · Pronto para assar</div>');
+}
 function decorate() {
   document.querySelectorAll('#catalog .card:not([data-x])').forEach(c => {
     c.dataset.x = 1;
@@ -111,7 +135,7 @@ function decorate() {
     const tag = grp && grp.classList && grp.classList.contains('grp') ? grp.textContent.trim() : '';
     if (tag) c.insertAdjacentHTML('afterbegin', `<span class="tagb">${tag.replace(/</g, '&lt;')}</span>`);
     c.insertAdjacentHTML('afterbegin', `<button class="fav" type="button" aria-label="Favoritar" aria-pressed="${favs.has(id)}">${I.heart}</button>`);
-    const nm = $('.nm', c); if (nm) nm.insertAdjacentHTML('afterend', '<div class="frz">❄ Congelado · Pronto para assar</div>');
+    frz(c);
   });
   carousel();
   pick();
@@ -245,4 +269,8 @@ document.addEventListener('click', e => {
 new MutationObserver(decorate).observe($('#catalog'), {childList: true, subtree: true});
 new MutationObserver(badge).observe($('#cartbar'), {attributes: true, childList: true, subtree: true, characterData: true});
 decorate(); badge();
+if (sessionStorage.getItem('dm_open_cart')) {
+  sessionStorage.removeItem('dm_open_cart');
+  let n = 0; const t = setInterval(() => { const cb = $('#cartbar'); if (cb && cb.classList.contains('on')) { clearInterval(t); $('#cbOpen').click(); } else if (++n > 40) clearInterval(t); }, 250);
+}
 })();
