@@ -19,8 +19,8 @@ window.DM_enviarPedido = async function (pedido) {
   const id = pedido.codigo || ('DM-' + Date.now().toString(36).toUpperCase());
   const limpo = JSON.parse(JSON.stringify(pedido));
 
-  // Grava na coleção "pedidos" para o ERP ler automaticamente
-  await setDoc(doc(fdb, 'pedidos', id), {
+  // Grava na coleção "pedidosCatalogo" que o ERP lê na aba Novos Pedidos
+  await setDoc(doc(fdb, 'pedidosCatalogo', id), {
     ...limpo,
     id,
     status: 'novo',
