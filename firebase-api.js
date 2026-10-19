@@ -312,6 +312,17 @@ export async function listarPedidosCatalogo() {
   return lista;
 }
 
+// Tempo real: chama o callback sempre que mudar a lista de pedidos NOVOS do catálogo
+export function observarPedidosCatalogo(callback, onError) {
+  const q = query(collection(db, "pedidosCatalogo"), where("status", "==", "novo"));
+  return onSnapshot(q, snap => {
+    const lista = [];
+    snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
+    lista.sort((a, b) => (b.criadoEm?.seconds || Date.now() / 1000) - (a.criadoEm?.seconds || Date.now() / 1000));
+    callback(lista);
+  }, err => { if (onError) onError(err); else console.error(err); });
+}
+
 export async function atualizarPedidoCatalogo(id, dados) {
   await updateDoc(doc(db, "pedidosCatalogo", id), { ...dados, atualizadoEm: serverTimestamp() });
 }
