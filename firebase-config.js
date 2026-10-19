@@ -1,6 +1,5 @@
 // ============================================================
 // firebase-config.js
-// Configuração e inicialização do Firebase
 // ============================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
