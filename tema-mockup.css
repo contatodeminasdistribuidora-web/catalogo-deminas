@@ -166,6 +166,13 @@ footer.rodape details ul{margin:10px 0 0;padding-left:18px;font-size:13px;line-h
 footer.rodape .fim{margin:18px auto 0;padding-top:12px;border-top:1px solid #e9c46a4d;text-align:center;font-size:12px;color:#c9b48a;max-width:760px}
 @media (min-width:700px){footer.rodape .grade{grid-template-columns:repeat(4,1fr)}}
 
+/* ===== barra do topo fixa (menu e carrinho sempre à mão) ===== */
+:root{--tbh:0px}
+.topbar{position:sticky;top:0;z-index:40;max-width:none;margin:0;padding:6px max(12px,calc((100vw - 1100px)/2));box-shadow:0 1px 0 var(--line)}
+.topbar img{height:46px}
+#stick{top:var(--tbh)}
+section.cat,.grp{scroll-margin-top:calc(var(--stickh,120px) + var(--tbh))}
+
 /* ===== menu lateral (três traços) ===== */
 .drawer{position:fixed;inset:0;z-index:80}
 .drawer[hidden]{display:none}
@@ -176,3 +183,31 @@ footer.rodape .fim{margin:18px auto 0;padding-top:12px;border-top:1px solid #e9c
 .dr-x{border:0;background:var(--cream2);width:38px;height:38px;border-radius:50%;font-size:22px;color:var(--red)}
 .dr-item{text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 14px;font:700 15px 'Nunito Sans',sans-serif;color:var(--brown)}
 .dr-wa{margin-top:auto;text-align:center;background:#118c4f;color:#fff;border-radius:12px;padding:14px;font-weight:800;text-decoration:none}
+
+/* ===== Em breve, janelas (Como assar / Alergênicos), FAQ e depoimentos ===== */
+.soon{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.soonb{align-self:flex-start;background:var(--cream2);color:var(--gold-d);border:1px dashed var(--gold);border-radius:999px;padding:5px 12px;font:800 12px 'Nunito Sans',sans-serif;text-transform:uppercase;letter-spacing:.06em}
+.btn.avise{background:#fff;color:var(--red);border:1.5px solid var(--red);height:44px;border-radius:12px;font-weight:800;width:100%}
+.infobtns{max-width:1100px;margin:8px auto 0;padding:0 16px;display:flex;gap:8px;flex-wrap:wrap}
+.infobtns button{flex:1 1 auto;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font:800 13px 'Nunito Sans',sans-serif;color:var(--red)}
+.extsec{max-width:1100px;margin:28px auto 0;padding:0 16px;scroll-margin-top:calc(var(--stickh,120px) + var(--tbh))}
+.extsec h2{font:700 24px 'Fraunces',Georgia,serif;color:var(--brown);margin:0 0 12px}
+.extsec details{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.extsec summary{font-weight:800;color:var(--brown);cursor:pointer}
+.extsec details p{margin:8px 0 0;color:var(--brown2);line-height:1.45}
+.dep-track{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
+.dep{flex:0 0 82%;max-width:360px;scroll-snap-align:start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:0}
+.dep p{margin:0 0 8px;font:italic 600 16px/1.4 'Fraunces',Georgia,serif;color:var(--brown)}
+.dep-by{font-size:13px;color:var(--muted)}
+.btn-dep{display:inline-block;margin-top:10px;border:1.5px solid var(--red);color:var(--red);border-radius:999px;padding:10px 18px;font-weight:800;text-decoration:none}
+.mdl{position:fixed;inset:0;z-index:90;display:flex;align-items:flex-end;justify-content:center}
+.mdl[hidden]{display:none}
+.mdl-back{position:absolute;inset:0;background:#3b0a1099}
+.mdl-box{position:relative;background:var(--cream);width:100%;max-width:520px;max-height:86dvh;overflow:auto;border-radius:20px 20px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom))}
+@media(min-width:700px){.mdl{align-items:center}.mdl-box{border-radius:20px}}
+.mdl-head{display:flex;justify-content:space-between;align-items:center;font:700 22px 'Fraunces',Georgia,serif;color:var(--brown);margin-bottom:8px}
+.mdl-body p{margin:8px 0;line-height:1.5;color:var(--brown2)}
+.mdl-it{display:flex;flex-direction:column;gap:2px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0}
+.mdl-it b{color:var(--brown)}
+.mdl-av{font-size:13px;color:var(--muted)}
+.dr-sep{height:1px;background:var(--line);margin:4px 0}
