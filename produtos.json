@@ -275,7 +275,7 @@
     },
     {
      "label": "1kg",
-     "preco": 33.9
+     "preco": 30.9
     }
    ],
    "disponivel": true,
@@ -1797,7 +1797,7 @@
    "consultarEstoque": false
   }
  ],
- "atualizadoEm": "2026-10-19T21:04:29.312307Z",
+ "atualizadoEm": "2026-10-19T21:06:32.663712Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
