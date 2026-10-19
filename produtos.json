@@ -267,11 +267,11 @@
    "cat": "congelados",
    "grupo": "Pão de Queijo Tradicional",
    "nome": "Chipa Tradicional",
-   "foto": "",
+   "foto": "pq-022-mvfrk6rb.jpg",
    "opcoes": [
     {
      "label": "500g",
-     "preco": 18.0
+     "preco": 18
     },
     {
      "label": "1kg",
@@ -376,8 +376,8 @@
    "codigo": "PQ-007",
    "cat": "congelados",
    "grupo": "Broas de Milho",
-   "nome": "Broa Doce",
-   "foto": "broa-de-milho-doce-1mmvfmlx.jpg",
+   "nome": "Broa de Doce",
+   "foto": "pq-007-mvfrk7y0.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -392,8 +392,8 @@
    "codigo": "PQ-008",
    "cat": "congelados",
    "grupo": "Broas de Milho",
-   "nome": "Broa Doce com Erva-doce",
-   "foto": "broa-de-milho-doce-com-erva-doce-92xpwsyu.jpg",
+   "nome": "Broa de Doce com Erva-doce",
+   "foto": "pq-008-mvfrk99z.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -408,8 +408,8 @@
    "codigo": "PQ-009",
    "cat": "congelados",
    "grupo": "Broas de Milho",
-   "nome": "Broa Salgada Temperada",
-   "foto": "broa-de-milho-salgada-temperada-rm77gx3m.jpg",
+   "nome": "Broa de Sal Temperada",
+   "foto": "pq-009-mvfrkal5.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -425,7 +425,7 @@
    "cat": "congelados",
    "grupo": "Recheados Artesanais",
    "nome": "Recheado de Goiabada",
-   "foto": "recheado-goiabada-80a0ca9x.jpg",
+   "foto": "pq-010-mvfrkbpk.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -489,7 +489,7 @@
    "cat": "congelados",
    "grupo": "Recheados Artesanais",
    "nome": "Recheado de Doce de Leite",
-   "foto": "recheado-doce-de-leite-8mg1zrft.jpg",
+   "foto": "pq-014-mvfrkd0a.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -505,7 +505,7 @@
    "cat": "congelados",
    "grupo": "Recheados Artesanais",
    "nome": "Recheado de Costela",
-   "foto": "recheado-costela-bsdnd75b.jpg",
+   "foto": "pq-015-mvfrke9g.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -521,7 +521,7 @@
    "cat": "congelados",
    "grupo": "Recheados Empanados",
    "nome": "Empanado de Doce de Leite",
-   "foto": "recheado-doce-de-leite-8mg1zrft.jpg",
+   "foto": "pq-016-mvfrkfi2.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -553,7 +553,7 @@
    "cat": "congelados",
    "grupo": "Recheados Empanados",
    "nome": "Empanado de Goiabada",
-   "foto": "recheado-goiabada-80a0ca9x.jpg",
+   "foto": "pq-018-mvfrkgqb.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -1797,7 +1797,7 @@
    "consultarEstoque": false
   }
  ],
- "atualizadoEm": "2026-10-19T21:06:32.663712Z",
+ "atualizadoEm": "2026-10-19T21:26:01.864Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
