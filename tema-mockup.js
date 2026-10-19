@@ -19,6 +19,8 @@ const top = document.createElement('div');
 top.className = 'topbar';
 top.innerHTML = `<button class="ib" type="button" id="tMenu" aria-label="Ir para contato">${I.menu}</button><img src="${logo}" alt="De Minas Pão de Queijaria"><button class="ib" type="button" id="tCart" aria-label="Ver pedido">${I.cart}<span class="bdg" id="tBdg" data-n="0"></span></button>`;
 document.body.prepend(top);
+const setTbh = () => document.documentElement.style.setProperty('--tbh', top.offsetHeight + 'px');
+setTbh(); addEventListener('resize', setTbh); addEventListener('load', setTbh); setTimeout(setTbh, 600);
 
 const ban = document.createElement('div');
 ban.className = 'banner';
@@ -64,6 +66,10 @@ const openDr = () => {
     b.onclick = () => { closeDr(); setTimeout(() => ch.click(), 220); };
     list.appendChild(b);
   });
+  if (EXTRA_ITEMS.length) {
+    const sep = document.createElement('div'); sep.className = 'dr-sep'; list.appendChild(sep);
+    EXTRA_ITEMS.forEach(x => { const b = document.createElement('button'); b.type = 'button'; b.className = 'dr-item'; b.textContent = x.l; b.onclick = () => { closeDr(); setTimeout(x.f, 240); }; list.appendChild(b); });
+  }
   const wa = $('#waLink'); if (wa) $('#drWa').href = wa.href;
   drawer.hidden = false; requestAnimationFrame(() => drawer.classList.add('on')); document.body.style.overflow = 'hidden';
 };
@@ -121,10 +127,50 @@ function renderFavs() {
 // --------------------------------------------
 
 const favs = new Set(JSON.parse(localStorage.getItem('dm_fav') || '[]'));
+let EXTRA_ITEMS = [];
+const escH = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+let mdl = null;
+function closeModal() { if (mdl) { mdl.hidden = true; document.body.style.overflow = ''; } }
+function openModal(titulo, html) {
+  if (!mdl) {
+    mdl = document.createElement('div'); mdl.className = 'mdl'; mdl.hidden = true;
+    mdl.innerHTML = '<div class="mdl-back"></div><div class="mdl-box" role="dialog" aria-modal="true" aria-labelledby="mdlT"><div class="mdl-head"><b id="mdlT"></b><button type="button" class="dr-x" aria-label="Fechar">×</button></div><div class="mdl-body" id="mdlB"></div></div>';
+    document.body.appendChild(mdl);
+    mdl.addEventListener('click', e => { if (e.target.classList.contains('mdl-back') || e.target.closest('.dr-x')) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !mdl.hidden) closeModal(); });
+  }
+  $('#mdlT').textContent = titulo; $('#mdlB').innerHTML = html; mdl.hidden = false; document.body.style.overflow = 'hidden';
+}
+function extras(d) {
+  const ct = d.conteudo || {}; const wa = String(d.whatsapp || '5511986975803');
+  const acts = [];
+  const rolar = id => { const e = document.getElementById(id); if (e) e.scrollIntoView({behavior: 'smooth', block: 'start'}); };
+  if (ct.comoAssar) { const c = ct.comoAssar; acts.push({l: c.titulo || 'Como assar', f: () => openModal(c.titulo || 'Como assar', '<p>' + escH(c.intro) + '</p>' + (c.itens || []).map(i => '<div class="mdl-it"><b>' + escH(i.t) + '</b><span>' + escH(i.d) + '</span></div>').join('') + (c.aviso ? '<p class="mdl-av">' + escH(c.aviso) + '</p>' : ''))}); }
+  if (ct.alergenicos) { const c = ct.alergenicos; acts.push({l: c.titulo || 'Alergênicos', f: () => openModal(c.titulo || 'Alergênicos', (c.paragrafos || []).map(p => '<p>' + escH(p) + '</p>').join(''))}); }
+  const faq = ct.faq || [], deps = ct.depoimentos || [];
+  if (faq.length) acts.push({l: 'Perguntas frequentes', f: () => rolar('faq')});
+  const ft = document.querySelector('footer');
+  if (deps.length && ft && !document.getElementById('depoimentos')) {
+    const s = document.createElement('section'); s.id = 'depoimentos'; s.className = 'extsec';
+    s.innerHTML = '<h2>O que os clientes dizem</h2><div class="dep-track">' + deps.map(x => '<blockquote class="dep"><p>“' + escH(x.texto) + '”</p><div class="dep-by">' + escH(x.nome) + (x.bairro ? ' · ' + escH(x.bairro) : '') + '</div></blockquote>').join('') + '</div><a class="btn-dep" target="_blank" rel="noopener" href="https://wa.me/' + wa + '?text=' + encodeURIComponent('Olá! Quero deixar meu depoimento sobre a De Minas.') + '">Enviar meu depoimento</a>';
+    ft.before(s);
+  }
+  if (faq.length && ft && !document.getElementById('faq')) {
+    const s = document.createElement('section'); s.id = 'faq'; s.className = 'extsec';
+    s.innerHTML = '<h2>Perguntas frequentes</h2>' + faq.map(q => '<details><summary>' + escH(q.p) + '</summary><p>' + escH(q.r) + '</p></details>').join('');
+    ft.before(s);
+  }
+  if (typeof recur !== 'undefined' && recur && acts.length && !document.querySelector('.infobtns')) {
+    const row = document.createElement('div'); row.className = 'infobtns';
+    acts.forEach(a => { const b = document.createElement('button'); b.type = 'button'; b.textContent = a.l; b.onclick = a.f; row.appendChild(b); });
+    recur.after(row);
+  }
+  EXTRA_ITEMS = acts.concat(deps.length ? [{l: 'Depoimentos', f: () => rolar('depoimentos')}] : []);
+}
 let CATMAP = null;
-fetch('produtos.json?v=' + Date.now()).then(r => r.json()).then(d => { CATMAP = {}; (d.produtos || []).forEach(p => { CATMAP[p.id] = p.cat; }); document.querySelectorAll('#catalog .card').forEach(frz); }).catch(() => {});
+fetch('produtos.json?v=' + Date.now()).then(r => r.json()).then(d => { CATMAP = {}; (d.produtos || []).forEach(p => { CATMAP[p.id] = p.cat; }); document.querySelectorAll('#catalog .card').forEach(frz); extras(d); }).catch(() => {});
 function frz(c) {
-  if (!CATMAP || c.querySelector('.frz') || CATMAP[c.dataset.pid] !== 'congelados') return;
+  if (!CATMAP || c.querySelector('.frz') || c.querySelector('.soon') || CATMAP[c.dataset.pid] !== 'congelados') return;
   const nm = $('.nm', c); if (nm) nm.insertAdjacentHTML('afterend', '<div class="frz">❄ Congelado · Pronto para assar</div>');
 }
 function decorate() {
@@ -232,6 +278,9 @@ const P = {
 function iconFor(t) {
   t = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   if (/combo|kit|cesta/.test(t)) return P.gift;
+  if (/especiais|sabores/.test(t)) return P.cheese;
+  if (/dadinho|tapioca/.test(t)) return P.cookie;
+  if (/breve/.test(t)) return P.gift;
   if (/pao de queijo|chipa|broa|tradicional|recheado/.test(t)) return P.bread;
   if (/queijo/.test(t)) return P.cheese;
   if (/doce|goiabada|compota|cocada|bala/.test(t)) return P.candy;
