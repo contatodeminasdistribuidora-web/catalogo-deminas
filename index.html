@@ -301,7 +301,42 @@ html.theme-ready body { opacity: 1; }
   </div>
 </div>
 
-<script type="module" src="firebase-catalogo.js"></script>
+<!-- FIREBASE EMBUTIDO PARA GARANTIR O ENVIO AO ERP -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+  import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+  const app = initializeApp({
+    apiKey: "AIzaSyDj9wKSco9HEMNi7Iiu5xWZ1MqeZUpc5qQ",
+    authDomain: "deminas-pedidos.firebaseapp.com",
+    projectId: "deminas-pedidos",
+    storageBucket: "deminas-pedidos.firebasestorage.app",
+    messagingSenderId: "489232858438",
+    appId: "1:489232858438:web:32e7bdfb10a44abb62b947"
+  });
+
+  const fdb = getFirestore(app);
+
+  window.DM_enviarPedido = async function (pedido) {
+    const id = pedido.codigo || ('DM-' + Date.now().toString(36).toUpperCase());
+    const limpo = JSON.parse(JSON.stringify(pedido));
+
+    // Grava na coleção "pedidos" para o ERP ler automaticamente
+    await setDoc(doc(fdb, 'pedidos', id), {
+      ...limpo,
+      id,
+      status: 'novo',
+      origem: 'catalogo',
+      criadoEm: serverTimestamp()
+    });
+
+    return id;
+  };
+
+  window.DM_CATALOGO_PRONTO = true;
+  document.dispatchEvent(new CustomEvent('dm-catalogo-pronto'));
+</script>
+
 <script src="qrcode.js"></script>
 <script>
 (() => {
@@ -528,7 +563,6 @@ function atualizarTotais() {
   if (totEl) totEl.textContent = (kgIn ? '≈ ' : '') + brl(total);
   if (btnTxt) btnTxt.textContent = 'Enviar pedido · ' + (kgIn ? '≈ ' : '') + brl(total);
   
-  // Alterar o texto do título do total
   if (lblTot) {
     lblTot.textContent = (tipo === 'Entrega') ? 'Total a pagar (com frete)' : 'Valor da entrega';
   }
@@ -706,15 +740,9 @@ if (orderFormEl) {
     };
     (async () => {
       try {
-        // Verifica todas as formas possíveis de chamar a função do Firebase
         if (typeof window.DM_enviarPedido === 'function') {
           await window.DM_enviarPedido(pedido);
-        } else if (typeof window.dmEnviarPedido === 'function') {
-          await window.dmEnviarPedido(pedido);
-        } else if (typeof window.criarPedido === 'function') {
-          await window.criarPedido(pedido);
-        } else {
-          console.warn("Atenção: Nenhuma função de envio do Firebase foi encontrada no index.html!");
+          console.log("Pedido enviado com sucesso para o ERP!");
         }
       } catch (err) {
         console.error('Falha ao gravar no ERP (WhatsApp segue):', err);
