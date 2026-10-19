@@ -2,42 +2,10 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Teste de Pedido</title>
-<style>
-  body { margin:0; background:#fcf3e2; color:#4a1705; font-family:sans-serif; padding:20px; }
-  button { padding:10px 20px; background:#a7030e; color:#fff; border:none; border-radius:5px; font-size:16px; cursor:pointer; }
-</style>
+<title>Teste de Carregamento</title>
 </head>
-<body>
-<h1>Teste Simples</h1>
-<p>Clique no botão para testar o envio:</p>
-<button id="btnEnviar">Enviar Pedido de Teste</button>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
-  
-  const app = initializeApp({
-    apiKey: "AIzaSyDj9wKSco9HEMNi7Iiu5xWZ1MqeZUpc5qQ",
-    authDomain: "deminas-pedidos.firebaseapp.com",
-    projectId: "deminas-pedidos"
-  });
-  const fdb = getFirestore(app);
-
-  document.getElementById('btnEnviar').addEventListener('click', async () => {
-    try {
-      await setDoc(doc(fdb, 'pedidosCatalogo', 'TESTE-' + Date.now()), {
-        cliente: "Teste",
-        total: 10,
-        status: "novo",
-        origem: "catalogo"
-      });
-      alert("✅ Pedido de teste enviado com sucesso!");
-    } catch(e) {
-      alert("❌ Erro: " + e.message);
-    }
-  });
-</script>
+<body style="background-color: #fcf3e2; padding: 50px; font-family: sans-serif;">
+  <h1 style="color: #4a1705;">Funcionou!</h1>
+  <p>Se você está vendo isso, o HTML está sendo lido corretamente.</p>
 </body>
 </html>
