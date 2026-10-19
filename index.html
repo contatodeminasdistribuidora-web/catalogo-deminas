@@ -5,17 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#4a1705">
-<title>Pão de Queijo Mineiro — De Minas Pão de Queijaria</title>
-<meta name="description" content="Pão de queijo mineiro De Minas: pães de queijo, chipas, broas e recheados congelados para assar em casa. Monte seu pedido e envie pelo WhatsApp.">
-<link rel="canonical" href="https://deminaspaodequeijaria.com.br/congelados.html">
+<title>De Minas Pão de Queijaria — Faça seu pedido</title>
+<meta name="description" content="Catálogo De Minas Pão de Queijaria: pães de queijo, queijos mineiros, doces, mel e muito mais. Monte seu pedido e envie pelo WhatsApp.">
+<link rel="canonical" href="https://deminaspaodequeijaria.com.br/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="De Minas Pão de Queijaria">
 <meta property="og:locale" content="pt_BR">
-<meta property="og:title" content="Pão de Queijo Mineiro — De Minas Pão de Queijaria">
-<meta property="og:description" content="Pães de queijo, chipas, broas e recheados congelados para assar em casa. Monte seu pedido e envie pelo WhatsApp.">
-<meta property="og:url" content="https://deminaspaodequeijaria.com.br/congelados.html">
+<meta property="og:title" content="De Minas Pão de Queijaria — Faça seu pedido">
+<meta property="og:description" content="Pães de queijo, queijos mineiros, doces, mel e muito mais. Monte seu pedido e envie pelo WhatsApp.">
+<meta property="og:url" content="https://deminaspaodequeijaria.com.br/">
 <meta property="og:image" content="https://deminaspaodequeijaria.com.br/logo.jpg">
 <meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Bakery","name":"De Minas Pão de Queijaria","url":"https://deminaspaodequeijaria.com.br/","image":"https://deminaspaodequeijaria.com.br/logo.jpg","telephone":"+5511986975803","address":{"@type":"PostalAddress","streetAddress":"Rua Engenheiro Pegado, 332","addressLocality":"São Paulo","addressRegion":"SP","addressCountry":"BR"},"servesCuisine":"Mineira"}</script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -152,35 +153,31 @@ footer a{color:var(--gold-l);font-weight:800}
 footer .adm{display:none!important}
 .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;z-index:100;max-width:92vw;font-weight:700;box-shadow:0 6px 20px #0006;text-align:center}
 @media (prefers-reduced-motion:reduce){.cartbar{transition:none}.cartmodal-inner{transition:none}}
-@media (max-width:420px){.add{padding:0 12px;font-size:13px}}
-
+@media (max-width:420px){
+  .add{padding:0 12px;font-size:13px}
+}
 html.theme-loading body { opacity: 0; transition: opacity 0.2s; }
 html.theme-ready body { opacity: 1; }
-.marcas-parceiras { font-size: 13px; color: var(--muted); text-align: center; margin: 16px auto; max-width: 600px; line-height: 1.4; }
 </style>
-
 <script>
   document.documentElement.classList.add('theme-loading');
 </script>
-
 <link rel="stylesheet" href="tema-mockup.css">
 </head>
-
-<body data-cats="congelados" data-hero="Pão de queijo mineiro para assar em casa — direto no WhatsApp" data-qr1="Escaneie e peça seu pão de queijo" data-qr2="direto pelo WhatsApp">
+<body>
 
 <header class="hero">
-  <img src="logo.jpg" alt="De Minas Pão de Queijaria — Pão de Queijo Mineiro" width="720" height="455">
-  <p>Pão de queijo mineiro para assar em casa — direto no WhatsApp</p>
+  <img src="logo.jpg" alt="De Minas Pão de Queijaria — O autêntico pão de queijo mineiro" width="720" height="455">
+  <p>Escolha seus produtos e envie o pedido direto pelo WhatsApp</p>
   <div class="rule"></div>
 </header>
 
 <div id="stick">
-  <div id="adminbar" hidden></div>
   <div class="searchrow">
     <div class="search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <label class="sr" for="q">Buscar produto</label>
-      <input id="q" type="search" placeholder="Buscar pão de queijo, broa, chipa ou código…" autocomplete="off" enterkeyhint="search">
+      <input id="q" type="search" placeholder="Buscar produto ou código…" autocomplete="off" enterkeyhint="search">
     </div>
   </div>
   <nav class="chips" id="chips" aria-label="Categorias"></nav>
@@ -191,10 +188,8 @@ html.theme-ready body { opacity: 1; }
 <footer>
   <div class="serif">De Minas Pão de Queijaria</div>
   <ul id="avisos"></ul>
-  <p class="marcas-parceiras"><b>Nossas Marcas Parceiras:</b> Temos orgulho de trabalhar com a melhor qualidade de Minas. Nossa principal parceira é a <b>Sabor da Roça</b>, além de Garcia, Encanto, Bem de Minas e outras. Se tiver preferência por alguma marca, basta escrever nas observações!</p>
   <p>Faça sua encomenda: <a id="waLink" href="https://wa.me/5511986975803" rel="noopener">WhatsApp (11) 98697-5803</a></p>
   <p>Rua Engenheiro Pegado, 332 — Vila Carrão, Zona Leste, São Paulo/SP</p>
-  <a class="adm" href="#admin" id="admLink">Área do administrador</a>
 </footer>
 
 <div class="cartbar" id="cartbar">
@@ -215,7 +210,7 @@ html.theme-ready body { opacity: 1; }
       <div class="db">
         <div id="cartItems"></div>
         <button class="addmore" type="button" id="addMore">＋ Adicionar mais produtos</button>
-        <div class="tot"><span id="totLbl">Total dos produtos</span><b id="cartTotal">R$ 0,00</b></div>
+        <div class="tot"><span id="totLbl">Total dos produtos</span><b id="cartSubtotal">R$ 0,00</b></div>
         <p class="note" id="cartNote"></p>
         <div class="upsell" id="upsell" hidden></div>
         
@@ -247,16 +242,19 @@ html.theme-ready body { opacity: 1; }
             <option value="Dinheiro">Dinheiro</option>
           </select>
         </label>
-        <label class="fld" id="trocoFld" hidden><span>Troco para quanto?</span><input type="text" id="cTroco" placeholder="Ex: R$ 100,00 (ou deixe em branco se não precisar)"></label>
-
+        <label class="fld" id="trocoFld" hidden><span>Troco para quanto?</span><input type="text" id="cTroco" placeholder="Ex: R$ 100,00"></label>
         <label class="fld"><span>Observações (opcional)</span><textarea id="cObs" placeholder="Ex.: marca preferida, horário, troca de sabor"></textarea></label>
+        
+        <div class="tot" style="padding:16px 0 2px; border-top:1px solid var(--line); margin-top:8px;">
+          <span style="font-size:18px; font-weight:800; color:var(--brown)">Total a pagar (com taxa de entrega)</span>
+          <b id="cartTotal" style="font-size:26px; color:var(--red)">R$ 0,00</b>
+        </div>
       </div>
       <div class="df">
         <button class="btn wa" type="submit">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.25-1.5A9.9 9.9 0 1 0 12.04 2Zm5.8 14c-.25.7-1.45 1.33-2 1.4-.5.07-1.13.1-1.8-.12-.42-.13-.95-.31-1.64-.6-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3s.75-2.12 1.02-2.4c.26-.3.57-.37.76-.37h.55c.18 0 .42-.07.65.5.25.58.83 2.02.9 2.17.07.14.12.31.02.5-.1.2-.14.31-.29.48-.14.17-.3.38-.43.5-.14.15-.29.3-.12.6.17.28.74 1.22 1.6 1.97 1.1.98 2.03 1.28 2.32 1.43.29.14.46.12.63-.07.17-.2.72-.84.91-1.12.2-.29.38-.24.65-.14.26.1 1.7.8 1.99.95.3.14.48.22.55.34.07.12.07.7-.18 1.4Z"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.25-1.5A9.9 9.9 0 1 0 12.04 2Zm5.8 14c-.25.7-1.45 1.33-2 1.4-.5.07-1.13.1-1.8-.12-.42-.13-.95-.31-1.64-.6-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3s.75-2.12 1.02-2.4c.26-.3.57-.37.76-.37h.55c.18 0 .42-.07.65.5.25.58.83 2.02.9 2.17.07.14.12.31.02.5-.1.2-.14.31-.29.48-.14.17-.3.38-.43.5-.14.15-.29.3-.12.6.17.28.74 1.22 1.6 1.97 1.1.98 2.03 1.28 2.32 1.43.29.14.46.12.63-.07.17-.2.72-.84.91-1.12.2-.29.38-.24.65-.14.26.1 1.7.8 1.99.95.3.14.48.22.55.34.07.12.07.7-.18 1.4Z"/></svg>
           <span id="sendTxt">Enviar pedido pelo WhatsApp</span>
         </button>
-        <p class="note" style="text-align:center">Você será levado ao WhatsApp para confirmar o pedido e combinar pagamento e entrega.</p>
       </div>
     </form>
   </div>
@@ -264,16 +262,8 @@ html.theme-ready body { opacity: 1; }
 
 <div class="cartmodal" id="lb">
   <div class="cartmodal-inner">
-    <div class="dh"><h3 id="lbT" style="font-size:18px"></h3><button class="x-close" type="button" id="lbClose" aria-label="Fechar">×</button></div>
+    <div class="dh"><h3 id="lbT" style="font-size:18px"></h3><button class="x-close" type="button" id="lbClose">×</button></div>
     <img id="lbImg" alt="" style="display:block;width:100%;max-height:72dvh;object-fit:contain;background:#000">
-  </div>
-</div>
-
-<div class="cartmodal" id="dlg">
-  <div class="cartmodal-inner">
-    <div class="dh"><h3 id="dlgTitle">Título</h3><button class="x-close" type="button" id="dlgClose" aria-label="Fechar">×</button></div>
-    <div class="db" id="dlgBody" style="padding:18px"></div>
-    <div class="df" id="dlgFoot" style="display:none"></div>
   </div>
 </div>
 
@@ -320,21 +310,11 @@ const r2 = n => Math.round(n * 100) / 100;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const clone = o => JSON.parse(JSON.stringify(o));
-const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
-const store = {
-  get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
-  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } },
-  del(k){ try { localStorage.removeItem(k); } catch {} }
-};
+const store = { get(k){ try{return JSON.parse(localStorage.getItem(k))}catch{return null} }, set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false} } };
 const fmtQty = (q, kg) => kg ? q.toLocaleString('pt-BR', {maximumFractionDigits: 1}) + ' kg' : String(q);
 const ROOF = '<svg viewBox="0 0 52 32" aria-hidden="true"><path d="M26 1 L51 28 C41 23 33 26 26 25 C19 24 10 28 1 30 Z" fill="#a7030e"/></svg>';
 
-const ONLY = (document.body.dataset.cats || '').split(',').filter(Boolean);
-const KGMSG = 'Queijos são cobrados por quilo: o valor final é confirmado após a pesagem de cada peça (pode ser um pouco maior ou menor que o pedido).';
-const hasKg = list => list.some(p => p.opcoes.some(o => o.kg));
-if (document.body.dataset.hero) $('.hero p').textContent = document.body.dataset.hero;
-const S = { data: null, published: null, admin: false, dirty: false, cart: store.get('dm_cart') || {}, q: '' };
-S.admin = /(^|[#?&])admin\b/.test(location.hash + location.search);
+const S = { data: null, cart: store.get('dm_cart') || {}, q: '' };
 
 function gerarCodigoPedido(){
   const d = new Date(), p = n => String(n).padStart(2, '0');
@@ -345,28 +325,14 @@ function gerarCodigoPedido(){
 }
 
 async function load() {
-  let pub = null;
   try {
     const r = await fetch('produtos.json?v=' + Date.now(), {cache: 'no-store'});
-    if (!r.ok) throw new Error(r.status);
-    pub = await r.json();
-  } catch (e) { pub = null; }
-  S.published = pub;
-  const draft = S.admin ? store.get('dm_draft') : null;
-  if (draft) { S.data = draft; S.dirty = true; }
-  else S.data = pub ? clone(pub) : null;
-  if (!S.data) {
-    $('#catalog').innerHTML = '<p class="empty-msg">Não foi possível carregar o catálogo agora.<br>Chame a gente no <a href="https://wa.me/5511986975803">WhatsApp (11) 98697-5803</a>.</p>';
-    return;
-  }
-  reconcileCart();
-  renderAll();
+    S.data = await r.json();
+    reconcileCart();
+    renderAll();
+  } catch(e) { $('#catalog').innerHTML = '<p class="empty-msg">Não foi possível carregar o catálogo.</p>'; }
 }
 function waNumber() { return (S.data && S.data.whatsapp) || '5511986975803'; }
-function saveDraft() {
-  S.dirty = true;
-  if (!store.set('dm_draft', S.data)) toast('Rascunho grande demais para salvar no navegador. Publique agora.');
-}
 const findProd = id => S.data.produtos.find(p => p.id === id);
 const keyOf = (p, o) => p.id + '||' + o.label;
 function lookup(key) {
@@ -399,8 +365,7 @@ function cardHTML(p) {
   const badges = (off ? '<span class="badge off">Indisponível</span>' : '') + (p.consultarEstoque && !off ? '<span class="badge">Consultar estoque</span>' : '');
   return `<article class="card ${off ? 'off' : ''}" data-pid="${esc(p.id)}">${photo}<div class="cbody"><h3 class="nm">${esc(p.nome)}</h3>${p.codigo ? `<div class="cod">Cód. ${esc(p.codigo)}</div>` : ''}${p.descricao ? `<p class="desc">${esc(p.descricao)}</p>` : ''}${badges ? '<div>' + badges + '</div>' : ''}${p.opcoes.map((o, i) => optHTML(p, o, i)).join('')}${hasKg([p]) ? '<p class="kgnote">Valor final após a pesagem</p>' : ''}</div></article>`;
 }
-const visibleCats = () => S.data.categorias.filter(c => !ONLY.length || ONLY.includes(c.id));
-const visibleProds = () => { const ids = new Set(visibleCats().map(c => c.id)); return S.data.produtos.filter(p => ids.has(p.cat)); };
+const visibleCats = () => S.data.categorias;
 let anchors = [];
 
 function renderCatalog() {
@@ -435,42 +400,20 @@ function renderCatalog() {
     }
     html += '</section>';
   }
-  $('#catalog').innerHTML = any ? html : `<p class="empty-msg">Nenhum produto encontrado para "${esc(S.q)}".</p>`;
+  $('#catalog').innerHTML = any ? html : `<p class="empty-msg">Nenhum produto encontrado.</p>`;
   renderChips();
-  measure();
 }
-
 function renderChips() {
   const box = $('#chips');
   box.hidden = anchors.length < 2;
   box.innerHTML = anchors.map(a => `<button class="chip" type="button" data-chip="${esc(a.key)}">${esc(a.label)}</button>`).join('');
-  spy(true);
-  measure();
 }
 function renderFooter() {
-  $('#avisos').innerHTML = [...(S.data.avisos || []), ...(hasKg(visibleProds()) ? [KGMSG] : [])].map(a => `<li>${esc(a)}</li>`).join('');
+  $('#avisos').innerHTML = (S.data.avisos || []).map(a => `<li>${esc(a)}</li>`).join('');
   const n = waNumber();
   $('#waLink').href = 'https://wa.me/' + n;
-  const d = n.replace(/^55/, '');
-  $('#waLink').textContent = `WhatsApp (${d.slice(0, 2)}) ${d.slice(2, -4)}-${d.slice(-4)}`;
 }
 function renderAll() { renderCatalog(); renderFooter(); renderCartBar(); }
-function measure() { document.documentElement.style.setProperty('--stickh', ($('#stick').offsetHeight + 8) + 'px'); }
-window.addEventListener('resize', measure);
-
-let spyOn = '';
-function spy(force) {
-  const els = $$('#catalog [data-key]'); if (!els.length) return;
-  const lim = $('#stick').offsetHeight + 24;
-  let cur = els[0].dataset.key;
-  for (const e of els) if (e.getBoundingClientRect().top <= lim) cur = e.dataset.key;
-  if (cur === spyOn && !force) return;
-  spyOn = cur;
-  $$('.chip').forEach(b => { const on = b.dataset.chip === cur; b.setAttribute('aria-current', on); if (on) b.scrollIntoView({inline: 'center', block: 'nearest'}); });
-}
-let tick = false;
-window.addEventListener('scroll', () => { if (tick) return; tick = true; requestAnimationFrame(() => { tick = false; spy(); }); }, {passive: true});
-
 function cartLines() {
   return Object.entries(S.cart).map(([k, q]) => { const f = lookup(k); return f && {...f, q, k, sub: r2(f.o.preco * q)}; }).filter(Boolean);
 }
@@ -492,18 +435,6 @@ function setQty(k, q) {
   if ($('#cartDlg').classList.contains('on')) renderCart();
 }
 const stepOf = o => o.kg ? 0.5 : 1;
-function renderUpsell(L) {
-  const box = $('#upsell'); if (!box) return;
-  const inCart = new Set(L.map(l => l.p.id));
-  const list = (S.data.sugestoes || []).map(c => S.data.produtos.find(p => p.codigo === c))
-    .filter(p => p && p.disponivel !== false && p.opcoes.length && !inCart.has(p.id)).slice(0, 3);
-  if (!list.length) { box.hidden = true; box.innerHTML = ''; return; }
-  box.hidden = false;
-  box.innerHTML = `<h4>Que tal levar também?</h4><div class="ups-row">${list.map(p => {
-    const o = p.opcoes[0], k = keyOf(p, o);
-    return `<div class="ups">${p.foto ? `<img src="${esc(p.foto)}" alt="" loading="lazy">` : ''}<div class="un">${esc(p.nome)}</div><div class="up">${brl(o.preco)}${o.kg ? '/kg' : ` <small>${esc(o.label)}</small>`}</div><button class="add" type="button" data-act="inc" data-k="${esc(k)}">+ Adicionar</button></div>`;
-  }).join('')}</div>`;
-}
 
 function atualizarTotais() {
   const L = cartLines();
@@ -646,15 +577,21 @@ $('#orderForm').addEventListener('submit', e => {
     frete: freteNome, taxaFrete: freteVal, pagamento: pag, troco: troco
   };
 
-  (async () => {
-    try {
-      if (window.DM_enviarPedido) await window.DM_enviarPedido(pedido);
-    } catch (err) { console.error('Falha ao gravar no ERP:', err); }
-  })();
+  // 1. Envia para o banco de dados (ERP)
+  if (window.DM_enviarPedido) {
+    window.DM_enviarPedido(pedido).then(() => {
+        alert("✅ Pedido registrado no sistema com sucesso! Agora abriremos o WhatsApp.");
+    }).catch(err => {
+        console.error("Erro ao salvar no ERP:", err);
+        alert("⚠️ Não foi possível registrar no sistema, mas vamos abrir o WhatsApp.");
+    });
+  }
 
+  // 2. Abre o WhatsApp
   const msg = buildMessage(codigo);
   window.open('https://wa.me/' + waNumber() + '?text=' + encodeURIComponent(msg), '_blank');
 
+  // 3. Limpa o carrinho
   S.cart = {};
   store.set('dm_cart', S.cart);
   renderCartBar();
