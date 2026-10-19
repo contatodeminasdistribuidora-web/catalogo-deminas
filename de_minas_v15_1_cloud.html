@@ -307,6 +307,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
 #novos-flut .nf-row b{display:block;font-size:14px}
 #novos-flut .nf-row span{color:var(--txt2)}
 #novos-flut .nf-btns{display:flex;gap:6px;margin-top:6px}
+@media(max-width:768px){#novos-flut{left:8px;right:8px;bottom:64px;width:auto}#novos-flut .nf-b{max-height:40vh}}
 </style>
 </head>
 <body>
@@ -1403,6 +1404,7 @@ function ir(pg){
   closeSidebar();
   const fn=getRenderer(pg);if(fn)fn();
   atualizaBadges();
+  if (typeof desenharFlutuante === 'function') desenharFlutuante();
 }
 
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay-close').classList.toggle('open');}
@@ -1601,7 +1603,9 @@ function desenharFlutuante() {
   document.title = n ? '(' + n + ') Novos pedidos — ' + _titulo0 : _titulo0;
   const badge = document.getElementById('badge-catalogo');
   if (badge) { badge.textContent = n; badge.style.display = n > 0 ? 'inline' : 'none'; }
-  if (!n) { box.classList.remove('on'); box.innerHTML = ''; return; }
+  const naPagina = (typeof curPage !== 'undefined' && curPage === 'novos-pedidos');
+  if (!n || naPagina) { box.classList.remove('on'); box.innerHTML = ''; return; }
+  if (box.dataset.min === undefined) box.dataset.min = window.matchMedia('(max-width:768px)').matches ? '1' : '0';
   const aberto = box.dataset.min !== '1';
   box.classList.add('on');
   box.innerHTML = `<div class="nf-h" onclick="alternarFlutuante()"><span>🆕 ${n} novo${n > 1 ? 's' : ''} pedido${n > 1 ? 's' : ''}</span><span>${aberto ? '▾' : '▴'}</span></div>` +
