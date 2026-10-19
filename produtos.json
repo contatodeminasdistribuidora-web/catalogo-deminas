@@ -333,7 +333,8 @@
     }
    ],
    "disponivel": true,
-   "consultarEstoque": true
+   "consultarEstoque": true,
+   "descricao": "Queijo Minas Artesanal, Mussarela, Parmesão e Provolone"
   },
   {
    "id": "pq-005",
@@ -1797,7 +1798,7 @@
    "consultarEstoque": false
   }
  ],
- "atualizadoEm": "2026-10-19T21:26:01.864Z",
+ "atualizadoEm": "2026-10-19T21:37:04.862Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
