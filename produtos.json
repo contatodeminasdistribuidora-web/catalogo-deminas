@@ -267,11 +267,15 @@
    "cat": "congelados",
    "grupo": "Pão de Queijo Tradicional",
    "nome": "Chipa Tradicional",
-   "foto": "bem-de-minas-biscoito-chipa-mve4l5vn.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "500g",
      "preco": 18.0
+    },
+    {
+     "label": "1kg",
+     "preco": 33.9
     }
    ],
    "disponivel": true,
@@ -1793,7 +1797,7 @@
    "consultarEstoque": false
   }
  ],
- "atualizadoEm": "2026-10-19T20:38:01.431523Z",
+ "atualizadoEm": "2026-10-19T21:04:29.312307Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
