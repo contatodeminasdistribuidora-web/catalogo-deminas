@@ -220,8 +220,8 @@ html.theme-ready body { opacity: 1; }
   <a class="cta" id="waLink" href="https://wa.me/5511986975803" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.300 14.200c-.2.600-1.300 1.200-1.800 1.200-.5.100-1.100.100-1.800-.1-.4-.1-1-.3-1.700-.6-3-1.300-4.900-4.300-5.100-4.500-.1-.2-1.200-1.600-1.200-3s.8-2.100 1-2.400c.3-.3.600-.3.800-.3h.6c.2 0 .4 0 .6.500l.9 2.100c.1.200.1.400 0 .5l-.4.600-.4.400c-.1.200-.3.300-.1.600.2.300.8 1.300 1.700 2.100 1.200 1 2.100 1.300 2.400 1.500.3.100.5.100.6-.1l.9-1.100c.2-.3.400-.2.600-.1l2 1c.3.100.5.200.5.300.1.200.1.800-.1 1.400z"/></svg>Fazer pedido pelo WhatsApp</a>
   <p class="wanum" id="waNum">(11) 98697-5803</p>
   <div class="grade">
-    <div class="cartao"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><h4>Pedidos</h4><p>Pão de queijo congelado e recheados: até sábado.<br>Doces, queijos e demais: até domingo.</p></div>
-    <div class="cartao"><svg viewBox="0 0 24 24"><path d="M2 6h11v10H2zM13 9h4.5l3 3.5V16H13z"/><circle cx="6.5" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/></svg><h4>Entrega</h4><p>Às terças-feiras, a partir das 18h.</p></div>
+    <div class="cartao"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><rect x="6.5" y="12" width="11" height="5.5" rx="1"/></svg><h4>Congelado</h4><p>Tire do freezer e asse direto, no forno ou na airfryer.</p></div>
+    <div class="cartao"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><h4>Funcionamento</h4><p>Segunda a sábado, das 8h às 20h.</p></div>
     <div class="cartao"><svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10.5h19M6.5 15h4"/></svg><h4>Pagamento</h4><p>PIX, cartão de débito, crédito ou dinheiro.</p></div>
     <div class="cartao"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.100 7-11.500A7 7 0 0 0 5 9.500C5 14.900 12 21 12 21z"/><circle cx="12" cy="9.500" r="2.500"/></svg><h4>Retirada</h4><p>Rua Engenheiro Pegado, 332<br>Vila Carrão, São Paulo<br><a href="https://www.google.com/maps/search/?api=1&query=Rua+Engenheiro+Pegado+332+Vila+Carr%C3%A3o+S%C3%A3o+Paulo" target="_blank" rel="noopener">Ver no mapa</a></p></div>
   </div>
@@ -402,7 +402,7 @@ function cardHTML(p) {
     : `<div class="ph empty" aria-hidden="true">${ROOF}</div>`;
   const badges = (off ? '<span class="badge off">Indisponível</span>' : '') + (p.consultarEstoque && !off ? '<span class="badge">Consultar estoque</span>' : '');
   const admin = S.admin ? `<div class="admin-actions"><button class="btn sm ghost" type="button" data-act="edit" data-pid="${esc(p.id)}">Editar</button><label><input type="checkbox" data-act="avail" data-pid="${esc(p.id)}" ${off ? '' : 'checked'}> Disponível</label></div>` : '';
-  return `<article class="card ${off ? 'off' : ''}" data-pid="${esc(p.id)}">${photo}<div class="cbody"><h3 class="nm">${esc(p.nome)}</h3>${p.codigo ? `<div class="cod">Cód. ${esc(p.codigo)}</div>` : ''}${p.descricao ? `<p class="desc">${esc(p.descricao)}</p>` : ''}${badges ? '<div>' + badges + '</div>' : ''}${p.opcoes.map((o, i) => optHTML(p, o, i)).join('')}${hasKg([p]) ? '<p class="kgnote">Valor final após a pesagem</p>' : ''}${admin}</div></article>`;
+  return `<article class="card ${off ? 'off' : ''}" data-pid="${esc(p.id)}">${photo}<div class="cbody"><h3 class="nm">${esc(p.nome)}</h3>${p.codigo ? `<div class="cod">Cód. ${esc(p.codigo)}</div>` : ''}${p.descricao ? `<p class="desc">${esc(p.descricao)}</p>` : ''}${badges ? '<div>' + badges + '</div>' : ''}${p.emBreve ? `<div class="soon"><span class="soonb">Em breve</span><button class="btn avise" type="button" data-act="avise" data-pid="${esc(p.id)}">Avise-me</button></div>` : p.opcoes.map((o, i) => optHTML(p, o, i)).join('')}${hasKg([p]) ? '<p class="kgnote">Valor final após a pesagem</p>' : ''}${admin}</div></article>`;
 }
 const visibleCats = () => S.data.categorias.filter(c => !ONLY.length || ONLY.includes(c.id));
 const visibleProds = () => { const ids = new Set(visibleCats().map(c => c.id)); return S.data.produtos.filter(p => ids.has(p.cat)); };
@@ -452,7 +452,7 @@ function renderChips() {
   measure();
 }
 function renderFooter() {
-  const av = (S.data.avisos || []).filter(a => !/^pedidos:/i.test(a));
+  const av = (S.data.avisos || []);
   $('#avisos').innerHTML = [...av, ...(hasKg(visibleProds()) ? [KGMSG] : []), 'Imagens meramente ilustrativas.'].map(a => `<li>${esc(a)}</li>`).join('');
   const n = waNumber();
   $('#waLink').href = 'https://wa.me/' + n;
@@ -466,7 +466,7 @@ window.addEventListener('resize', measure);
 let spyOn = '';
 function spy(force) {
   const els = $$('#catalog [data-key]'); if (!els.length) return;
-  const lim = $('#stick').offsetHeight + 24;
+  const lim = $('#stick').offsetHeight + 24 + (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tbh')) || 0);
   let cur = els[0].dataset.key;
   for (const e of els) if (e.getBoundingClientRect().top <= lim) cur = e.dataset.key;
   if (cur === spyOn && !force) return;
@@ -500,8 +500,15 @@ const stepOf = o => o.kg ? 0.5 : 1;
 function renderUpsell(L) {
   const box = $('#upsell'); if (!box) return;
   const inCart = new Set(L.map(l => l.p.id));
-  const list = (S.data.sugestoes || []).map(c => S.data.produtos.find(p => p.codigo === c))
-    .filter(p => p && p.disponivel !== false && p.opcoes.length && !inCart.has(p.id)).slice(0, 3);
+  const vis = new Set(visibleCats().map(c => c.id));
+  const ok = p => p && p.disponivel !== false && p.opcoes.length && vis.has(p.cat) && !inCart.has(p.id);
+  let list = (S.data.sugestoes || []).map(c => S.data.produtos.find(p => p.codigo === c)).filter(ok);
+  if (list.length < 3) {
+    const jaTem = new Set(list.map(p => p.id));
+    const extra = S.data.produtos.filter(p => ok(p) && !jaTem.has(p.id) && !/^CB-/.test(p.codigo || '')).sort((a, b) => a.opcoes[0].preco - b.opcoes[0].preco);
+    list = list.concat(extra);
+  }
+  list = list.slice(0, 3);
   if (!list.length) { box.hidden = true; box.innerHTML = ''; return; }
   box.hidden = false;
   box.innerHTML = `<h4>Que tal levar também?</h4><div class="ups-row">${list.map(p => {
@@ -513,7 +520,7 @@ function renderCart() {
   const L = cartLines();
   if (!L.length) { closeCart(); return; }
   $('#cartTitle').textContent = 'Seu pedido · ' + L.length + (L.length === 1 ? ' item' : ' itens');
-  $('#cartItems').innerHTML = L.map(l => `<div class="ci"><div><div class="t">${esc(l.p.nome)}</div><div class="s">${esc(l.o.label)} · ${brl(l.o.preco)}${l.o.kg ? '/kg' : ''}</div>${l.p.descricao ? `<div class="d">${esc(l.p.descricao)}</div>` : ''}</div><div class="sub">${l.o.kg ? '≈ ' : ''}${brl(l.sub)}</div>
+  $('#cartItems').innerHTML = L.map(l => `<div class="ci"><div><div class="t">${esc(l.p.nome)}</div><div class="s">${esc(l.o.label)} · ${brl(l.o.preco)}${l.o.kg ? '/kg' : ''}</div>${/^CB-/.test(l.p.codigo || '') && l.p.descricao ? `<div class="d">${esc(l.p.descricao)}</div>` : ''}</div><div class="sub">${l.o.kg ? '≈ ' : ''}${brl(l.sub)}</div>
     <button class="rm" type="button" data-act="rm" data-k="${esc(l.k)}">Remover</button>
     <span class="step"><button type="button" data-act="dec" data-k="${esc(l.k)}" aria-label="Diminuir">−</button><output>${fmtQty(l.q, l.o.kg)}</output><button type="button" data-act="inc" data-k="${esc(l.k)}" aria-label="Aumentar">+</button></span></div>`).join('');
   atualizarTotais();
@@ -542,8 +549,7 @@ function limparCarrinho(){
   closeCart();
   toast('Pedido limpo.');
 }
-// Na mensagem do pedido, congelados levam a marca para o lojista saber de quem comprar
-function nomeMsg(p) { const base = p.cat === 'congelados' && p.grupo ? `${p.nome} [${p.grupo}]` : p.nome; return (p.codigo ? p.codigo + ' · ' : '') + base; }
+function nomeMsg(p) { return (p.codigo ? p.codigo + ' · ' : '') + p.nome; }
 function buildMessage(codigo) {
   const L = cartLines();
   const nome = $('#cName').value.trim();
@@ -562,7 +568,7 @@ function buildMessage(codigo) {
   const lines = L.map(l => {
     const lab = (l.o.kg || /^unidade$/i.test(l.o.label)) ? '' : ` (${l.o.label})`;
     const qtd = l.o.kg ? '~' + fmtQty(l.q, true) : `${l.q}x`;
-    return `• ${qtd} ${nomeMsg(l.p)}${lab}${l.p.consultarEstoque ? ' [consultar estoque]' : ''} — ${l.o.kg ? '≈ ' : ''}${brl(l.sub)}${l.o.kg ? ' (valor final após pesagem)' : ''}${l.p.descricao ? '\n   ↳ ' + l.p.descricao : ''}`;
+    return `• ${qtd} ${nomeMsg(l.p)}${lab}${l.p.consultarEstoque ? ' [consultar estoque]' : ''} — ${l.o.kg ? '≈ ' : ''}${brl(l.sub)}${l.o.kg ? ' (valor final após pesagem)' : ''}${/^CB-/.test(l.p.codigo || '') && l.p.descricao ? '\n   ↳ ' + l.p.descricao : ''}`;
   });
   
   const subtotal = r2(L.reduce((a, l) => a + l.sub, 0));
@@ -697,6 +703,9 @@ document.addEventListener('click', e => {
     const f = lookup(t.dataset.k); if (!f) return;
     const cur = S.cart[t.dataset.k] || 0, st = stepOf(f.o);
     setQty(t.dataset.k, act === 'inc' ? cur + (cur ? st : (f.o.kg ? 1 : 1)) : cur - st);
+  } else if (act === 'avise') {
+    const p = findProd(t.dataset.pid);
+    window.open('https://wa.me/' + waNumber() + '?text=' + encodeURIComponent('Olá! Quero ser avisado quando o ' + p.nome + ' chegar.'), '_blank', 'noopener');
   } else if (act === 'rm') setQty(t.dataset.k, 0);
   else if (act === 'zoom') { const p = findProd(t.dataset.pid); $('#lbT').textContent = p.nome; $('#lbImg').src = p.foto; $('#lbImg').alt = p.nome; $('#lb').classList.add('on'); }
   else if (act === 'edit') openEdit(t.dataset.pid);
