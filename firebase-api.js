@@ -83,8 +83,6 @@ export async function atualizarPedido(id, dados) {
 }
 
 export async function listarPedidos() {
-  // Sem orderBy("criadoEm"): pedidos do ERP usam o campo "data", e o orderBy
-  // excluiria todo documento que não tenha o campo ordenado.
   const snap = await getDocs(collection(db, "pedidos"));
   const lista = [];
   snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
@@ -209,7 +207,7 @@ export async function listarVendedores() {
 }
 
 // ------------------------------------------------------------
-// FINANCEIRO: contas a pagar / receber / despesas
+// FINANCEIRO
 // ------------------------------------------------------------
 
 export async function salvarAP(conta) {
@@ -249,7 +247,7 @@ export async function listarDespesas() {
 }
 
 // ------------------------------------------------------------
-// CONFIG (nome da loja, PIX, etc.)
+// CONFIG
 // ------------------------------------------------------------
 
 export async function carregarConfig() {
@@ -260,47 +258,31 @@ export async function carregarConfig() {
 
 export async function salvarConfig(cfg) {
   const ref = doc(db, "config", "loja");
-  // o PIN nunca vai para a nuvem; remove também qualquer PIN gravado por versões antigas
   const { pin, ...resto } = cfg || {};
   await setDoc(ref, { ...resto, pin: deleteField(), atualizadoEm: serverTimestamp() }, { merge: true });
 }
 
 // ------------------------------------------------------------
-// MIGRAÇÃO: envia todo o db do v14 (localStorage) para o Firestore
+// MIGRAÇÃO
 // ------------------------------------------------------------
 
 export async function migrarTudoParaNuvem(dbLocal) {
   const mapa = {
-    prods: "produtos",
-    peds: "pedidos",
-    vendas: "vendas",
-    clis: "clientes",
-    atClis: "atacado_clientes",
-    atPeds: "atacado_pedidos",
-    forns: "fornecedores",
-    vends: "vendedores",
-    ap: "financeiro_ap",
-    ar: "financeiro_ar",
-    desps: "financeiro_despesas"
+    prods: "produtos", peds: "pedidos", vendas: "vendas", clis: "clientes",
+    atClis: "atacado_clientes", atPeds: "atacado_pedidos", forns: "fornecedores",
+    vends: "vendedores", ap: "financeiro_ap", ar: "financeiro_ar", desps: "financeiro_despesas"
   };
-
-  const TAM_LOTE = 400; // limite do Firestore é 500 operações por batch
+  const TAM_LOTE = 400;
   const resultados = {};
-
   for (const [chaveLocal, nomeColecao] of Object.entries(mapa)) {
     const lista = dbLocal[chaveLocal] || [];
-    if (!lista.length) {
-      resultados[nomeColecao] = 0;
-      continue;
-    }
+    if (!lista.length) { resultados[nomeColecao] = 0; continue; }
     try {
       let enviados = 0;
       for (let i = 0; i < lista.length; i += TAM_LOTE) {
         const batch = writeBatch(db);
         lista.slice(i, i + TAM_LOTE).forEach(item => {
-          // JSON remove campos undefined (o Firestore rejeita undefined)
           const limpo = JSON.parse(JSON.stringify(item));
-          // id sempre string e sem "/" (ids numéricos ou com barra quebravam o doc())
           const id = String(limpo.id || `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`).replace(/\//g, "_");
           const ref = doc(db, nomeColecao, id);
           batch.set(ref, { ...limpo, id, migradoEm: serverTimestamp() }, { merge: true });
@@ -309,23 +291,19 @@ export async function migrarTudoParaNuvem(dbLocal) {
         enviados += Math.min(TAM_LOTE, lista.length - i);
       }
       resultados[nomeColecao] = enviados;
-    } catch (e) {
-      resultados[nomeColecao] = `ERRO: ${e.message}`;
-    }
+    } catch (e) { resultados[nomeColecao] = `ERRO: ${e.message}`; }
   }
-
   return resultados;
 }
 
 // ------------------------------------------------------------
-// CATÁLOGO PÚBLICO: pedidos pendentes de aprovação
+// CATÁLOGO PÚBLICO
 // ------------------------------------------------------------
 
 export async function listarPedidosCatalogo() {
   const snap = await getDocs(collection(db, "pedidosCatalogo"));
   const lista = [];
   snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
-  // ordena mais recentes primeiro (criadoEm é um Timestamp do Firestore)
   lista.sort((a, b) => {
     const ta = a.criadoEm?.seconds || 0;
     const tb = b.criadoEm?.seconds || 0;
@@ -335,10 +313,7 @@ export async function listarPedidosCatalogo() {
 }
 
 export async function atualizarPedidoCatalogo(id, dados) {
-  await updateDoc(doc(db, "pedidosCatalogo", id), {
-    ...dados,
-    atualizadoEm: serverTimestamp()
-  });
+  await updateDoc(doc(db, "pedidosCatalogo", id), { ...dados, atualizadoEm: serverTimestamp() });
 }
 
 export async function deletarPedidoCatalogo(id) {
@@ -346,8 +321,7 @@ export async function deletarPedidoCatalogo(id) {
 }
 
 // ------------------------------------------------------------
-// EXCLUSÕES: apagar na nuvem e registrar o "tombstone" para que
-// nenhum aparelho (nem a sincronização) traga o item de volta
+// EXCLUSÕES
 // ------------------------------------------------------------
 
 const MAPA_COL = {
@@ -357,10 +331,9 @@ const MAPA_COL = {
 };
 const _idSeguro = id => String(id).replace(/\//g, "_");
 
-// lista: [{ c: 'peds', id: '...', em: 1700000000000 }]
 export async function registrarExclusoes(lista) {
   const itens = (lista || []).filter(e => e && MAPA_COL[e.c] && e.id != null);
-  const TAM = 200; // 2 operações por item → 400 por lote (limite do Firestore: 500)
+  const TAM = 200;
   for (let i = 0; i < itens.length; i += TAM) {
     const batch = writeBatch(db);
     itens.slice(i, i + TAM).forEach(e => {
@@ -379,7 +352,6 @@ export async function listarExclusoes() {
   return lista;
 }
 
-// Apaga documentos sem registrar tombstone (usado no "Reset Total")
 export async function apagarDocs(lista) {
   const itens = (lista || []).filter(e => e && MAPA_COL[e.c] && e.id != null);
   const TAM = 400;
