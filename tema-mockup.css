@@ -142,3 +142,37 @@ footer{background:var(--brown)}
     justify-content: flex-start !important;
   }
 }
+
+/* ===== rodapé novo ===== */
+footer.rodape{background:var(--brown);color:#f7ead2;padding:30px 18px 24px;border-top:4px solid var(--gold-l);text-align:left;margin-top:30px}
+footer.rodape .marca{text-align:center}
+footer.rodape .marca b{display:block;font:800 26px 'Nunito Sans',sans-serif;letter-spacing:.06em;text-transform:uppercase}
+footer.rodape .marca span{display:block;margin-top:2px;font:700 11px 'Nunito Sans',sans-serif;letter-spacing:.32em;color:#e08a4a;text-transform:uppercase}
+footer.rodape .marca em{display:block;margin-top:10px;font-style:normal;font-size:13px;color:var(--gold-l)}
+footer.rodape .cta{display:flex;align-items:center;justify-content:center;gap:10px;max-width:520px;margin:20px auto 6px;height:52px;border-radius:14px;background:#118c4f;color:#fff;font-weight:800;font-size:16px;text-decoration:none}
+footer.rodape .cta svg{width:22px;height:22px;fill:#fff}
+footer.rodape .wanum{text-align:center;margin:0 0 16px;font-size:13px;color:#d9c7a0}
+footer.rodape .grade{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:760px;margin:0 auto}
+footer.rodape .cartao{background:#ffffff0f;border:1px solid #e9c46a59;border-radius:14px;padding:12px 12px 13px}
+footer.rodape .cartao h4{margin:6px 0 4px;font:800 13px 'Nunito Sans',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--gold-l)}
+footer.rodape .cartao p{margin:0;font-size:13.5px;line-height:1.4}
+footer.rodape .cartao svg{width:22px;height:22px;stroke:var(--gold-l);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+footer.rodape .cartao a{color:#f7ead2;text-underline-offset:3px}
+footer.rodape details{max-width:760px;margin:14px auto 0;border-top:1px solid #e9c46a4d;padding-top:12px}
+footer.rodape summary{cursor:pointer;font-size:13.5px;font-weight:800;color:var(--gold-l);list-style:none}
+footer.rodape summary::after{content:' ▾'}
+footer.rodape details[open] summary::after{content:' ▴'}
+footer.rodape details ul{margin:10px 0 0;padding-left:18px;font-size:13px;line-height:1.5;color:#e9d9b8;list-style:disc}
+footer.rodape .fim{margin:18px auto 0;padding-top:12px;border-top:1px solid #e9c46a4d;text-align:center;font-size:12px;color:#c9b48a;max-width:760px}
+@media (min-width:700px){footer.rodape .grade{grid-template-columns:repeat(4,1fr)}}
+
+/* ===== menu lateral (três traços) ===== */
+.drawer{position:fixed;inset:0;z-index:80}
+.drawer[hidden]{display:none}
+.dr-back{position:absolute;inset:0;background:#3b0a1099;opacity:0;transition:opacity .2s}
+.dr-panel{position:absolute;left:0;top:0;bottom:0;width:min(84vw,320px);background:var(--cream);transform:translateX(-100%);transition:transform .2s;padding:16px 16px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;overflow:auto;box-shadow:4px 0 24px #3b0a1033}
+.drawer.on .dr-back{opacity:1}.drawer.on .dr-panel{transform:none}
+.dr-head{display:flex;align-items:center;justify-content:space-between;font:700 22px 'Fraunces',Georgia,serif;color:var(--brown);margin-bottom:6px}
+.dr-x{border:0;background:var(--cream2);width:38px;height:38px;border-radius:50%;font-size:22px;color:var(--red)}
+.dr-item{text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 14px;font:700 15px 'Nunito Sans',sans-serif;color:var(--brown)}
+.dr-wa{margin-top:auto;text-align:center;background:#118c4f;color:#fff;border-radius:12px;padding:14px;font-weight:800;text-decoration:none}
