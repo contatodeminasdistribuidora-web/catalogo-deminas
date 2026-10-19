@@ -589,7 +589,13 @@ $('#cPag').addEventListener('change', e => {
   $('#trocoFld').hidden = e.target.value !== 'Dinheiro';
 });
 
-$('#cbOpen').addEventListener('click', openCart);
+// CORREÇÃO DO BOTÃO VER PEDIDO
+document.addEventListener('click', e => {
+  if (e.target.closest('#cbOpen') || e.target.closest('.cartbar .btn')) {
+    openCart();
+  }
+});
+
 $('#cartClose').addEventListener('click', closeCart);
 $('#btnLimpar').addEventListener('click', limparCarrinho);
 $('#addMore').addEventListener('click', () => { closeCart(); toast('Seu pedido está salvo. Toque em "Ver pedido" quando quiser finalizar.', 2600); });
