@@ -510,11 +510,22 @@ function atualizarTotais() {
   if (!L.length) return;
   const kgIn = L.some(l => l.o.kg);
   const subtotal = r2(L.reduce((a, l) => a + l.sub, 0));
-  const tipo = $('input[name=tipo]:checked').value;
-  const frete = tipo === 'Entrega' ? (parseFloat($('#cFrete').value.split('|')[0]) || 0) : 0;
+  
+  const tipoEl = $('input[name=tipo]:checked');
+  const tipo = tipoEl ? tipoEl.value : 'Retirada';
+  
+  const freteEl = $('#cFrete');
+  let frete = 0;
+  if (tipo === 'Entrega' && freteEl) {
+    frete = parseFloat(freteEl.value.split('|')[0]) || 0;
+  }
+  
   const total = r2(subtotal + frete);
-  $('#cartTotal').textContent = (kgIn ? '≈ ' : '') + brl(total);
-  $('#sendTxt').textContent = 'Enviar pedido · ' + (kgIn ? '≈ ' : '') + brl(total);
+  const totEl = $('#cartTotal');
+  const btnTxt = $('#sendTxt');
+  
+  if (totEl) totEl.textContent = (kgIn ? '≈ ' : '') + brl(total);
+  if (btnTxt) btnTxt.textContent = 'Enviar pedido · ' + (kgIn ? '≈ ' : '') + brl(total);
 }
 
 function renderCart() {
@@ -653,7 +664,7 @@ if (lbEl) lbEl.addEventListener('click', e => { if (e.target === $('#lb')) $('#l
 const dlgEl = $('#dlg');
 if (dlgEl) dlgEl.addEventListener('click', e => { if (e.target === $('#dlg')) $('#dlg').classList.remove('on'); });
 
-$$('input[name=tipo]').forEach(r => r.addEventListener('change', syncAddr));
+$$('input[name=tipo]').forEach(r => r.addEventListener('change', () => { syncAddr(); atualizarTotais(); }));
 
 const orderFormEl = $('#orderForm');
 if (orderFormEl) {
@@ -689,8 +700,16 @@ if (orderFormEl) {
     };
     (async () => {
       try {
-        if (window.DM_enviarPedido) await window.DM_enviarPedido(pedido);
-        else if (window.dmEnviarPedido) await window.dmEnviarPedido(pedido); // Compatibilidade
+        // Verifica todas as formas possíveis de chamar a função do Firebase
+        if (typeof window.DM_enviarPedido === 'function') {
+          await window.DM_enviarPedido(pedido);
+        } else if (typeof window.dmEnviarPedido === 'function') {
+          await window.dmEnviarPedido(pedido);
+        } else if (typeof window.criarPedido === 'function') {
+          await window.criarPedido(pedido);
+        } else {
+          console.warn("Atenção: Nenhuma função de envio do Firebase foi encontrada no index.html!");
+        }
       } catch (err) {
         console.error('Falha ao gravar no ERP (WhatsApp segue):', err);
       }
