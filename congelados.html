@@ -190,7 +190,7 @@ html.theme-ready body { opacity: 1; }
   document.documentElement.classList.add('theme-loading');
 </script>
 
-<link rel="stylesheet" href="tema-mockup.css?v=20261019e">
+<link rel="stylesheet" href="tema-mockup.css?v=20261020a">
 </head>
 
 <body data-cats="congelados" data-hero="Pão de queijo mineiro para assar em casa — direto no WhatsApp" data-qr1="Escaneie e peça seu pão de queijo" data-qr2="direto pelo WhatsApp">
@@ -217,8 +217,10 @@ html.theme-ready body { opacity: 1; }
 
 <footer class="rodape">
   <div class="marca"><b>De Minas</b><span>Pão de Queijaria</span><em>O Autêntico Pão de Queijo Mineiro</em></div>
-  <a class="cta" id="waLink" href="https://wa.me/5511986975803" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.300 14.200c-.2.600-1.300 1.200-1.800 1.200-.5.100-1.100.100-1.800-.1-.4-.1-1-.3-1.700-.6-3-1.300-4.900-4.300-5.100-4.500-.1-.2-1.200-1.600-1.200-3s.8-2.100 1-2.400c.3-.3.600-.3.800-.3h.6c.2 0 .4 0 .6.500l.9 2.100c.1.200.1.400 0 .5l-.4.600-.4.400c-.1.200-.3.300-.1.600.2.300.8 1.300 1.700 2.100 1.200 1 2.100 1.300 2.400 1.500.3.100.5.100.6-.1l.9-1.100c.2-.3.400-.2.600-.1l2 1c.3.100.5.200.5.300.1.200.1.800-.1 1.400z"/></svg>Fazer pedido pelo WhatsApp</a>
-  <p class="wanum" id="waNum">(11) 98697-5803</p>
+  <a class="cta" id="waLink" href="https://wa.me/5511940507018" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.300 14.200c-.2.600-1.300 1.200-1.800 1.200-.5.100-1.100.100-1.800-.1-.4-.1-1-.3-1.700-.6-3-1.300-4.900-4.300-5.100-4.500-.1-.2-1.200-1.600-1.200-3s.8-2.100 1-2.400c.3-.3.600-.3.800-.3h.6c.2 0 .4 0 .6.500l.9 2.100c.1.200.1.400 0 .5l-.4.600-.4.400c-.1.200-.3.300-.1.600.2.300.8 1.300 1.700 2.100 1.200 1 2.100 1.300 2.400 1.500.3.100.5.100.6-.1l.9-1.100c.2-.3.400-.2.600-.1l2 1c.3.100.5.200.5.300.1.200.1.800-.1 1.400z"/></svg>Fazer pedido pelo WhatsApp</a>
+  <p class="wanum" id="waNum">(11) 94050-7018</p>
+  <a class="cta2" id="waLink2" href="https://wa.me/5511986975803" rel="noopener">Dúvidas e atendimento</a>
+  <p class="wanum" id="waNum2">(11) 98697-5803</p>
   <div class="grade">
     <div class="cartao"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><rect x="6.5" y="12" width="11" height="5.5" rx="1"/></svg><h4>Congelado</h4><p>Tire do freezer e asse direto, no forno ou na airfryer.</p></div>
     <div class="cartao"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><h4>Funcionamento</h4><p>Segunda a sábado, das 8h às 20h.</p></div>
@@ -261,7 +263,7 @@ html.theme-ready body { opacity: 1; }
         </div>
 
         <label class="fld" id="freteFld">
-          <span>Bairro de entrega (Frete)</span>
+          <span>Bairro de entrega</span>
           <select id="cFrete">
             <option value="8|Vila Carrão">Vila Carrão (R$ 8,00)</option>
             <option value="12|Tatuapé">Tatuapé (R$ 12,00)</option>
@@ -361,7 +363,10 @@ function gerarCodigoPedido(){
   reconcileCart();
   renderAll();
 }
-function waNumber() { return (S.data && S.data.whatsapp) || '5511986975803'; }
+const WA_PEDIDOS = '5511940507018', WA_ATEND = '5511986975803';
+const soDig = v => String(v || '').replace(/\D/g, '');
+function waNumber() { return soDig(S.data && S.data.whatsappPedidos) || WA_PEDIDOS; }
+function waAtend() { return soDig(S.data && S.data.whatsappAtendimento) || WA_ATEND; }
 function saveDraft() {
   S.dirty = true;
   if (!store.set('dm_draft', S.data)) toast('Rascunho grande demais para salvar no navegador. Publique agora.');
@@ -472,10 +477,10 @@ function renderChips() {
 function renderFooter() {
   const av = (S.data.avisos || []);
   $('#avisos').innerHTML = [...av, ...(hasKg(visibleProds()) ? [KGMSG] : []), 'Imagens meramente ilustrativas.'].map(a => `<li>${esc(a)}</li>`).join('');
-  const n = waNumber();
-  $('#waLink').href = 'https://wa.me/' + n;
-  const d = n.replace(/^55/, '');
-  $('#waNum').textContent = `(${d.slice(0, 2)}) ${d.slice(2, -4)}-${d.slice(-4)}`;
+  const fmt = n => { const d = n.replace(/^55/, ''); return `(${d.slice(0, 2)}) ${d.slice(2, -4)}-${d.slice(-4)}`; };
+  const pe = waNumber(), at = waAtend();
+  $('#waLink').href = 'https://wa.me/' + pe; $('#waNum').textContent = fmt(pe);
+  $('#waLink2').href = 'https://wa.me/' + at; $('#waNum2').textContent = fmt(at);
 }
 function renderAll() { renderCatalog(); renderFooter(); renderCartBar(); renderAdminBar(); }
 function measure() { document.documentElement.style.setProperty('--stickh', ($('#stick').offsetHeight + 8) + 'px'); }
@@ -600,8 +605,8 @@ function buildMessage(codigo) {
   m += `${kgIn ? 'Total estimado' : 'Subtotal'}: ${kgIn ? '≈ ' : ''}${brl(subtotal)}`;
   
   if (tipo === 'Entrega') {
-    m += `\nFrete (${freteNome}): ${freteVal > 0 ? brl(freteVal) : 'A combinar'}`;
-    if (freteVal > 0) m += `\n*Total com frete:* ${kgIn ? '≈ ' : ''}${brl(totalFinal)}`;
+    m += `\nEntrega (${freteNome}): ${freteVal > 0 ? brl(freteVal) : 'A combinar'}`;
+    if (freteVal > 0) m += `\n*Total:* ${kgIn ? '≈ ' : ''}${brl(totalFinal)}`;
   }
 
   m += `\n\n*Pagamento:* ${pag}`;
@@ -725,7 +730,7 @@ document.addEventListener('click', e => {
     if (h) h.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth', block: 'start'});
   } else if (act === 'avise') {
     const p = findProd(t.dataset.pid);
-    window.open('https://wa.me/' + waNumber() + '?text=' + encodeURIComponent('Olá! Quero ser avisado quando o ' + p.nome + ' chegar.'), '_blank', 'noopener');
+    window.open('https://wa.me/' + waAtend() + '?text=' + encodeURIComponent('Olá! Quero ser avisado quando o ' + p.nome + ' chegar.'), '_blank', 'noopener');
   } else if (act === 'rm') setQty(t.dataset.k, 0);
   else if (act === 'zoom') { const p = findProd(t.dataset.pid); $('#lbT').textContent = p.nome; $('#lbImg').src = p.foto; $('#lbImg').alt = p.nome; $('#lb').classList.add('on'); }
   else if (act === 'edit') openEdit(t.dataset.pid);
@@ -892,13 +897,15 @@ function openCats() {
 }
 
 function openShop() {
-  showDlg('Dados da loja', `<label class="fld"><span>WhatsApp que recebe os pedidos (com 55 + DDD)</span><input type="tel" id="sWa" value="${esc(waNumber())}" inputmode="numeric"></label>
+  showDlg('Dados da loja', `<label class="fld"><span>WhatsApp de PEDIDOS (com 55 + DDD)</span><input type="tel" id="sWa" value="${esc(waNumber())}" inputmode="numeric"></label>
+    <label class="fld"><span>WhatsApp de ATENDIMENTO e dúvidas (com 55 + DDD)</span><input type="tel" id="sWa2" value="${esc(waAtend())}" inputmode="numeric"></label>
     <label class="fld"><span>Avisos no rodapé e no pedido (um por linha)</span><textarea id="sAv" style="min-height:110px">${esc((S.data.avisos || []).join('\n'))}</textarea></label>`,
     '<button class="btn ghost" type="button" data-close>Cancelar</button><button class="btn red" type="button" id="sSave">Salvar</button>');
   $('#sSave').addEventListener('click', () => {
     const n = $('#sWa').value.replace(/\D/g, '');
-    if (n.length < 12) { toast('Informe o número completo, ex.: 5511986975803'); return; }
-    S.data.whatsapp = n; S.data.avisos = $('#sAv').value.split('\n').map(s => s.trim()).filter(Boolean);
+    const n2 = $('#sWa2').value.replace(/\D/g, '');
+    if (n.length < 12 || n2.length < 12) { toast('Informe os números completos, ex.: 5511940507018'); return; }
+    S.data.whatsappPedidos = n; S.data.whatsappAtendimento = n2; S.data.avisos = $('#sAv').value.split('\n').map(s => s.trim()).filter(Boolean);
     saveDraft(); $('#dlg').classList.remove('on'); renderFooter();
   });
 }
@@ -1021,6 +1028,6 @@ setTimeout(() => document.documentElement.classList.replace('theme-loading', 'th
 })();
 </script>
 <!-- TEMA APP (Script) -->
-<script src="tema-mockup.js?v=20261019e" defer></script>
+<script src="tema-mockup.js?v=20261020a" defer></script>
 </body>
 </html>
