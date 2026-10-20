@@ -212,3 +212,6 @@ section.cat,.grp{scroll-margin-top:calc(var(--stickh,120px) + var(--tbh))}
 .mdl-av{font-size:13px;color:var(--muted)}
 .dr-sep{height:1px;background:var(--line);margin:4px 0}
 #catalog{scroll-margin-top:calc(var(--stickh,120px) + var(--tbh))}
+.card.destaque{border:2px solid var(--gold-l);box-shadow:0 4px 16px #b8860b33}
+.card.destaque .tagb{background:var(--gold-d)}
+.btn-more{background:none;border:0;color:var(--red);font:800 13px 'Nunito Sans',sans-serif;text-decoration:underline;text-underline-offset:3px;padding:6px 0 0;text-align:left}
