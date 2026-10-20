@@ -409,7 +409,7 @@ function cardHTML(p, fx) {
 const visibleCats = () => S.data.categorias.filter(c => !ONLY.length || ONLY.includes(c.id));
 const visibleProds = () => { const ids = new Set(visibleCats().map(c => c.id)); return S.data.produtos.filter(p => ids.has(p.cat)); };
 let anchors = [];
-const MP_PADRAO = {titulo: 'Mais pedidos', itens: [{codigo: 'PQ-001', opcao: '1kg', titulo: 'Pão de Queijo Tradicional 30g', destaque: true}, {codigo: 'PQ-003', opcao: '1kg'}, {codigo: 'PQ-014', opcao: '1kg'}, {codigo: 'PQ-015', opcao: '1kg'}]};
+const MP_PADRAO = {titulo: 'Mais pedidos', itens: [{codigo: 'PQ-001', opcao: '1kg', titulo: 'Pão de Queijo Tradicional 30g', destaque: true}, {codigo: 'PQ-003', opcao: '1kg'}, {codigo: 'PQ-014', opcao: '1kg'}, {codigo: 'PQ-015', opcao: '1kg'}, {codigo: 'PQ-010', opcao: '1kg'}]};
 function maisPedidosHTML(single) {
   const mp = (S.data.conteudo && S.data.conteudo.maisPedidos) || MP_PADRAO;
   if (!mp || !(mp.itens || []).length) return '';
