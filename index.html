@@ -191,7 +191,7 @@ html.theme-ready body { opacity: 1; }
   document.documentElement.classList.add('theme-loading');
 </script>
 
-<link rel="stylesheet" href="tema-mockup.css?v=20261019b">
+<link rel="stylesheet" href="tema-mockup.css?v=20261019e">
 </head>
 
 <body>
@@ -396,18 +396,35 @@ function optHTML(p, o, i) {
   else ctl = `<span class="step"><button type="button" data-act="dec" data-k="${esc(k)}" aria-label="Diminuir">−</button><output>${fmtQty(q, o.kg)}</output><button type="button" data-act="inc" data-k="${esc(k)}" aria-label="Aumentar">+</button></span>`;
   return `<div class="opt" data-k="${esc(k)}">${price}${ctl}</div>`;
 }
-function cardHTML(p) {
+function cardHTML(p, fx) {
+  fx = fx && typeof fx === 'object' ? fx : null;
   const off = p.disponivel === false;
   const photo = p.foto
     ? `<button class="ph" type="button" data-act="zoom" data-pid="${esc(p.id)}" aria-label="Ampliar foto: ${esc(p.nome)}"><img src="${esc(p.foto)}" alt="${esc(p.nome)}" loading="lazy" decoding="async"></button>`
     : `<div class="ph empty" aria-hidden="true">${ROOF}</div>`;
   const badges = (off ? '<span class="badge off">Indisponível</span>' : '') + (p.consultarEstoque && !off ? '<span class="badge">Consultar estoque</span>' : '');
   const admin = S.admin ? `<div class="admin-actions"><button class="btn sm ghost" type="button" data-act="edit" data-pid="${esc(p.id)}">Editar</button><label><input type="checkbox" data-act="avail" data-pid="${esc(p.id)}" ${off ? '' : 'checked'}> Disponível</label></div>` : '';
-  return `<article class="card ${off ? 'off' : ''}" data-pid="${esc(p.id)}">${photo}<div class="cbody"><h3 class="nm">${esc(p.nome)}</h3>${p.codigo ? `<div class="cod">Cód. ${esc(p.codigo)}</div>` : ''}${p.descricao ? `<p class="desc">${esc(p.descricao)}</p>` : ''}${badges ? '<div>' + badges + '</div>' : ''}${p.emBreve ? `<div class="soon"><span class="soonb">Em breve</span><button class="btn avise" type="button" data-act="avise" data-pid="${esc(p.id)}">Avise-me</button></div>` : p.opcoes.map((o, i) => optHTML(p, o, i)).join('')}${hasKg([p]) ? '<p class="kgnote">Valor final após a pesagem</p>' : ''}${admin}</div></article>`;
+  return `<article class="card ${off ? 'off' : ''}${fx && fx.destaque ? ' destaque' : ''}" data-pid="${esc(p.id)}"${fx && fx.selo ? ` data-selo="${esc(fx.selo)}"` : ''}>${photo}<div class="cbody"><h3 class="nm">${esc(fx && fx.titulo ? fx.titulo : p.nome)}</h3>${p.codigo ? `<div class="cod">Cód. ${esc(p.codigo)}</div>` : ''}${p.descricao ? `<p class="desc">${esc(p.descricao)}</p>` : ''}${badges ? '<div>' + badges + '</div>' : ''}${p.emBreve ? `<div class="soon"><span class="soonb">Em breve</span><button class="btn avise" type="button" data-act="avise" data-pid="${esc(p.id)}">Avise-me</button></div>` : p.opcoes.map((o, i) => (!fx || fx.only === undefined || fx.only === i) ? optHTML(p, o, i) : '').join('') + (fx && fx.mais ? '<button type="button" class="btn-more" data-act="goto" data-g="' + esc(p.grupo || '') + '">Ver outros tamanhos</button>' : '')}${hasKg([p]) ? '<p class="kgnote">Valor final após a pesagem</p>' : ''}${admin}</div></article>`;
 }
 const visibleCats = () => S.data.categorias.filter(c => !ONLY.length || ONLY.includes(c.id));
 const visibleProds = () => { const ids = new Set(visibleCats().map(c => c.id)); return S.data.produtos.filter(p => ids.has(p.cat)); };
 let anchors = [];
+const MP_PADRAO = {titulo: 'Mais pedidos', itens: [{codigo: 'PQ-001', opcao: '1kg', titulo: 'Pão de Queijo Tradicional 30g', destaque: true}, {codigo: 'PQ-003', opcao: '1kg'}, {codigo: 'PQ-014', opcao: '1kg'}, {codigo: 'PQ-015', opcao: '1kg'}]};
+function maisPedidosHTML(single) {
+  const mp = (S.data.conteudo && S.data.conteudo.maisPedidos) || MP_PADRAO;
+  if (!mp || !(mp.itens || []).length) return '';
+  const cards = [];
+  mp.itens.forEach(it => {
+    const p = S.data.produtos.find(x => x.codigo === it.codigo);
+    if (!p || p.disponivel === false || !p.opcoes.length) return;
+    let i = p.opcoes.findIndex(o => o.label === it.opcao); if (i < 0) i = 0;
+    cards.push(cardHTML(p, {only: i, titulo: it.titulo, selo: it.selo || (it.destaque ? 'O mais pedido' : 'Mais pedido'), destaque: !!it.destaque, mais: p.opcoes.length > 1}));
+  });
+  if (!cards.length) return '';
+  const nome = mp.titulo || 'Mais pedidos';
+  if (single) anchors.push({key: 'gmp', label: nome});
+  return `<div class="grp" id="a-gmp" ${single ? 'data-key="gmp"' : ''}>${esc(nome)}</div><div class="grid">${cards.join('')}</div>`;
+}
 function renderCatalog() {
   const q = norm(S.q.trim());
   const cats = visibleCats().sort((a, b) => {
@@ -437,7 +454,8 @@ function renderCatalog() {
         if (single) anchors.push({key: gk, label: g});
         html += `<div class="grp" id="a-${gk}" ${single ? `data-key="${gk}"` : ''}>${esc(g)}</div>`;
       }
-      html += `<div class="grid">${list.map(cardHTML).join('')}</div>`;
+      html += `<div class="grid">${list.map(p => cardHTML(p)).join('')}</div>`;
+      if (c.id === 'congelados' && !q && !S.admin && /combo/i.test(g)) html += maisPedidosHTML(single);
     }
     html += '</section>';
   }
@@ -492,8 +510,7 @@ function setQty(k, q) {
   q = r2(q);
   if (q <= 0) delete S.cart[k]; else S.cart[k] = q;
   store.set('dm_cart', S.cart);
-  const el = $(`.opt[data-k="${CSS.escape(k)}"]`);
-  if (el) { const i = f.p.opcoes.indexOf(f.o); el.outerHTML = optHTML(f.p, f.o, i); }
+  $$(`.opt[data-k="${CSS.escape(k)}"]`).forEach(el => { const i = f.p.opcoes.indexOf(f.o); el.outerHTML = optHTML(f.p, f.o, i); });
   renderCartBar();
   if ($('#cartDlg').classList.contains('on')) renderCart();
 }
@@ -704,6 +721,9 @@ document.addEventListener('click', e => {
     const f = lookup(t.dataset.k); if (!f) return;
     const cur = S.cart[t.dataset.k] || 0, st = stepOf(f.o);
     setQty(t.dataset.k, act === 'inc' ? cur + (cur ? st : (f.o.kg ? 1 : 1)) : cur - st);
+  } else if (act === 'goto') {
+    const h = $$('.grp').find(x => x.textContent.trim() === t.dataset.g);
+    if (h) h.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth', block: 'start'});
   } else if (act === 'avise') {
     const p = findProd(t.dataset.pid);
     window.open('https://wa.me/' + waNumber() + '?text=' + encodeURIComponent('Olá! Quero ser avisado quando o ' + p.nome + ' chegar.'), '_blank', 'noopener');
@@ -779,6 +799,7 @@ function drawEdit() {
   const groups = [...new Set(S.data.produtos.filter(p => p.cat === ep.cat && p.grupo).map(p => p.grupo))];
   const body = `
     <label class="fld"><span>Nome do produto</span><input type="text" id="eNome" value="${esc(ep.nome)}" maxlength="90"></label>
+    <label class="fld"><span>Texto do selo na foto (opcional; em branco usa o nome do grupo; "-" esconde)</span><input type="text" id="eSelo" value="${esc(ep.selo || '')}" maxlength="40" autocomplete="off"></label>
     <label class="fld"><span>Descrição / o que vem no combo (opcional)</span><textarea id="eDesc" maxlength="220" style="min-height:60px">${esc(ep.descricao || '')}</textarea></label>
     <label class="fld"><span>Código do produto (ex.: PQ-001)</span><input type="text" id="eCod" value="${esc(ep.codigo || '')}" maxlength="20" autocapitalize="characters" autocomplete="off"></label>
     <label class="fld"><span>Categoria</span><select id="eCat">${S.data.categorias.map(c => `<option value="${esc(c.id)}" ${c.id === ep.cat ? 'selected' : ''}>${esc(c.nome)}</option>`).join('')}</select></label>
@@ -799,7 +820,7 @@ function drawEdit() {
 }
 const optRow = (o, i) => `<div class="orow" data-i="${i}"><input type="text" class="ol" placeholder="Ex.: 1kg, Pote, Peça" value="${esc(o.label)}" aria-label="Embalagem"><input type="number" class="op" step="0.01" min="0" inputmode="decimal" value="${o.preco === 0 ? '' : Number(o.preco).toFixed(2)}" placeholder="0,00" aria-label="Preço"><label><input type="checkbox" class="ok" ${o.kg ? 'checked' : ''}> por kg</label><button class="xx" type="button" aria-label="Remover" data-rm="${i}">×</button></div>`;
 function syncEdit() {
-  ep.nome = $('#eNome').value.trim(); ep.codigo = $('#eCod').value.trim().toUpperCase(); ep.descricao = $('#eDesc').value.trim(); if (!ep.descricao) delete ep.descricao; ep.cat = $('#eCat').value; ep.grupo = $('#eGrupo').value.trim();
+  ep.nome = $('#eNome').value.trim(); ep.codigo = $('#eCod').value.trim().toUpperCase(); ep.descricao = $('#eDesc').value.trim(); if (!ep.descricao) delete ep.descricao; ep.selo = $('#eSelo').value.trim(); if (!ep.selo) delete ep.selo; ep.cat = $('#eCat').value; ep.grupo = $('#eGrupo').value.trim();
   ep.disponivel = $('#eDisp').checked; ep.consultarEstoque = $('#eEst').checked;
   const prevOp = ep.opcoes;
   ep.opcoes = $$('#eOpts .orow').map((r, i) => {
@@ -1001,6 +1022,6 @@ setTimeout(() => document.documentElement.classList.replace('theme-loading', 'th
 })();
 </script>
 <!-- TEMA APP (Script) -->
-<script src="tema-mockup.js?v=20261019b" defer></script>
+<script src="tema-mockup.js?v=20261019e" defer></script>
 </body>
 </html>
