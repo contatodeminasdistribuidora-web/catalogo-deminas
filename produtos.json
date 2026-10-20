@@ -226,11 +226,28 @@
    "consultarEstoque": true
   },
   {
+   "id": "pq-023",
+   "codigo": "PQ-023",
+   "cat": "congelados",
+   "grupo": "Pão de Queijo Tradicional",
+   "nome": "Pão de Queijo Coquetel 15g",
+   "foto": "sabor-da-roca-pao-de-queijo-coquetel-15g-mve4kyd0.jpg",
+   "descricao": "Peças de 15g. Pacote de 2kg.",
+   "opcoes": [
+    {
+     "label": "2kgs",
+     "preco": 59.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
    "id": "pq-001",
    "codigo": "PQ-001",
    "cat": "congelados",
    "grupo": "Pão de Queijo Tradicional",
-   "nome": "Pão de Queijo Tradicional",
+   "nome": "Pão de Queijo Tradicional 30g",
    "foto": "sabor-da-roca-pao-de-queijo-tradicional-30g-mve4kx69.jpg",
    "opcoes": [
     {
@@ -244,17 +261,39 @@
     {
      "label": "2kgs",
      "preco": 59.9
-    },
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
+   "id": "pq-024",
+   "codigo": "PQ-024",
+   "cat": "congelados",
+   "grupo": "Pão de Queijo Tradicional",
+   "nome": "Pão de Queijo Lanche 80g",
+   "foto": "pao-de-queijo.jpg",
+   "descricao": "Peças de 80g. Pacote de 2kg.",
+   "opcoes": [
     {
-     "label": "Coquetel 15g · 2kgs",
+     "label": "2kgs",
      "preco": 59.9
-    },
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
+   "id": "pq-025",
+   "codigo": "PQ-025",
+   "cat": "congelados",
+   "grupo": "Pão de Queijo Tradicional",
+   "nome": "Pão de Queijo Super Lanche 100g",
+   "foto": "sabor-da-roca-pao-de-queijo-super-lanche-100g-mve4kzlw.jpg",
+   "descricao": "Peças de 100g. Pacote de 2kg.",
+   "opcoes": [
     {
-     "label": "Lanche 80g · 2kgs",
-     "preco": 59.9
-    },
-    {
-     "label": "Super Lanche 100g · 2kgs",
+     "label": "2kgs",
      "preco": 59.9
     }
    ],
@@ -1798,7 +1837,7 @@
    "consultarEstoque": false
   }
  ],
- "atualizadoEm": "2026-10-20T03:29:06.401Z",
+ "atualizadoEm": "2026-10-20T08:46:26.639384Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
