@@ -426,7 +426,7 @@
    "cat": "congelados",
    "grupo": "Recheados Artesanais",
    "nome": "Recheado de Goiabada",
-   "foto": "pq-010-mvfrkbpk.jpg",
+   "foto": "pq-010-mvg4j96i.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -490,7 +490,7 @@
    "cat": "congelados",
    "grupo": "Recheados Artesanais",
    "nome": "Recheado de Doce de Leite",
-   "foto": "pq-014-mvfrkd0a.jpg",
+   "foto": "pq-014-mvg4jala.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -506,7 +506,7 @@
    "cat": "congelados",
    "grupo": "Recheados Artesanais",
    "nome": "Recheado de Costela",
-   "foto": "pq-015-mvfrke9g.jpg",
+   "foto": "pq-015-mvg4jbrb.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -522,7 +522,7 @@
    "cat": "congelados",
    "grupo": "Recheados Empanados",
    "nome": "Empanado de Doce de Leite",
-   "foto": "pq-016-mvfrkfi2.jpg",
+   "foto": "pq-016-mvg4jcvv.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -554,7 +554,7 @@
    "cat": "congelados",
    "grupo": "Recheados Empanados",
    "nome": "Empanado de Goiabada",
-   "foto": "pq-018-mvfrkgqb.jpg",
+   "foto": "pq-018-mvg4jeax.jpg",
    "opcoes": [
     {
      "label": "1kg",
@@ -1798,7 +1798,7 @@
    "consultarEstoque": false
   }
  ],
- "atualizadoEm": "2026-10-19T21:37:04.862Z",
+ "atualizadoEm": "2026-10-20T03:29:06.401Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
