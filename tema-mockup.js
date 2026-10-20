@@ -128,6 +128,13 @@ function renderFavs() {
 
 const favs = new Set(JSON.parse(localStorage.getItem('dm_fav') || '[]'));
 let EXTRA_ITEMS = [];
+let SELO = {};
+function setSelo(c) {
+  const s = SELO[c.dataset.pid]; if (s === undefined) return;
+  const t = c.querySelector('.tagb');
+  if (s === '-') { if (t) t.remove(); return; }
+  if (t) t.textContent = s; else c.insertAdjacentHTML('afterbegin', '<span class="tagb">' + escH(s) + '</span>');
+}
 const escH = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 let mdl = null;
 function closeModal() { if (mdl) { mdl.hidden = true; document.body.style.overflow = ''; } }
@@ -168,7 +175,7 @@ function extras(d) {
   EXTRA_ITEMS = acts.concat(deps.length ? [{l: 'Depoimentos', f: () => rolar('depoimentos')}] : []);
 }
 let CATMAP = null;
-fetch('produtos.json?v=' + Date.now()).then(r => r.json()).then(d => { CATMAP = {}; (d.produtos || []).forEach(p => { CATMAP[p.id] = p.cat; }); document.querySelectorAll('#catalog .card').forEach(frz); extras(d); }).catch(() => {});
+fetch('produtos.json?v=' + Date.now()).then(r => r.json()).then(d => { CATMAP = {}; (d.produtos || []).forEach(p => { CATMAP[p.id] = p.cat; if (p.selo) SELO[p.id] = p.selo; }); document.querySelectorAll('#catalog .card').forEach(frz); extras(d); }).catch(() => {});
 function frz(c) {
   if (!CATMAP || c.querySelector('.frz') || c.querySelector('.soon') || CATMAP[c.dataset.pid] !== 'congelados') return;
   const nm = $('.nm', c); if (nm) nm.insertAdjacentHTML('afterend', '<div class="frz">❄ Congelado · Pronto para assar</div>');
@@ -178,10 +185,10 @@ function decorate() {
     c.dataset.x = 1;
     const id = c.dataset.pid;
     const grp = c.closest('section') && (c.parentElement.previousElementSibling || {});
-    const tag = grp && grp.classList && grp.classList.contains('grp') ? grp.textContent.trim() : '';
+    const tag = c.dataset.selo || (grp && grp.classList && grp.classList.contains('grp') ? grp.textContent.trim() : '');
     if (tag) c.insertAdjacentHTML('afterbegin', `<span class="tagb">${tag.replace(/</g, '&lt;')}</span>`);
     c.insertAdjacentHTML('afterbegin', `<button class="fav" type="button" aria-label="Favoritar" aria-pressed="${favs.has(id)}">${I.heart}</button>`);
-    frz(c);
+    frz(c); setSelo(c);
   });
   carousel();
   pick();
@@ -200,9 +207,9 @@ function carousel() {
     sec.querySelectorAll('.grid:not([data-car])').forEach(g => {
       const prev = g.previousElementSibling;
       const grpTxt = prev && prev.classList.contains('grp') ? prev.textContent : '';
-      const isComboGroup = /combo/i.test(grpTxt);
+      const isComboGroup = /combo|mais pedidos/i.test(grpTxt);
       
-      if (isComboGroup) prev.dataset.combos = 1;
+      if (/combo/i.test(grpTxt)) prev.dataset.combos = 1;
 
       // Mantém o gatilho original
       if (!isCongelados && !isComboSection && !isComboGroup) return;
@@ -281,6 +288,7 @@ function iconFor(t) {
   if (/especiais|sabores/.test(t)) return P.cheese;
   if (/dadinho|tapioca/.test(t)) return P.cookie;
   if (/breve/.test(t)) return P.gift;
+  if (/mais pedidos/.test(t)) return P.cookie;
   if (/pao de queijo|chipa|broa|tradicional|recheado/.test(t)) return P.bread;
   if (/queijo/.test(t)) return P.cheese;
   if (/doce|goiabada|compota|cocada|bala/.test(t)) return P.candy;
