@@ -2356,7 +2356,7 @@
    "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-21T20:44:00.000000Z",
+ "atualizadoEm": "2026-10-21T20:58:11.000000Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
@@ -2425,68 +2425,68 @@
  "bairros": [
   {
    "n": "Vila Carrão",
-   "taxa": 8,
+   "taxa": 6,
    "alias": [
     "carrao"
    ]
   },
   {
    "n": "Chácara Califórnia",
-   "taxa": 8
+   "taxa": 6
   },
   {
    "n": "Vila Matilde",
-   "taxa": 8
+   "taxa": 6
   },
   {
    "n": "Vila Formosa",
-   "taxa": 8
+   "taxa": 6
   },
   {
    "n": "Vila Gomes Cardim",
-   "taxa": 8
+   "taxa": 6
   },
   {
    "n": "Vila Nova Manchester",
-   "taxa": 8
+   "taxa": 6
   },
   {
    "n": "Vila Santa Isabel",
-   "taxa": 8
+   "taxa": 6
   },
   {
    "n": "Tatuapé",
-   "taxa": 12
+   "taxa": 8
   },
   {
    "n": "Penha",
-   "taxa": 12,
+   "taxa": 8,
    "alias": [
     "penha de franca"
    ]
   },
   {
    "n": "Vila Invernada",
-   "taxa": 12
+   "taxa": 8
   },
   {
    "n": "Parque São Jorge",
-   "taxa": 12
+   "taxa": 8
   },
   {
    "n": "Vila Diva",
-   "taxa": 12,
+   "taxa": 8,
    "alias": [
     "diva"
    ]
   },
   {
    "n": "Vila Regente Feijó",
-   "taxa": 12
+   "taxa": 8
   },
   {
    "n": "Anália Franco",
-   "taxa": 15,
+   "taxa": 6,
    "alias": [
     "jardim analia franco",
     "jd analia franco",
@@ -2495,47 +2495,47 @@
   },
   {
    "n": "Água Rasa",
-   "taxa": 15
+   "taxa": 10
   },
   {
    "n": "Belém",
-   "taxa": 15
+   "taxa": 10
   },
   {
    "n": "Vila Prudente",
-   "taxa": 15
+   "taxa": 10
   },
   {
    "n": "Parque São Lucas",
-   "taxa": 15
+   "taxa": 10
   },
   {
    "n": "Vila Alpina",
-   "taxa": 15
+   "taxa": 10
   },
   {
    "n": "Vila Bertioga",
-   "taxa": 15
+   "taxa": 10
   },
   {
    "n": "Vila Ema",
-   "taxa": 15
+   "taxa": 10
   },
   {
    "n": "Jardim Novo Carrão",
-   "taxa": 15
+   "taxa": 10
   },
   {
    "n": "Vila Zelina",
-   "taxa": 15
+   "taxa": 10
   },
   {
    "n": "Mooca",
-   "taxa": 20
+   "taxa": 12
   },
   {
    "n": "Jardim Grimaldi",
-   "taxa": 20,
+   "taxa": 12,
    "alias": [
     "grimaldi"
    ]
