@@ -190,7 +190,7 @@ html.theme-ready body { opacity: 1; }
   document.documentElement.classList.add('theme-loading');
 </script>
 
-<link rel="stylesheet" href="tema-mockup.css?v=20261020a">
+<link rel="stylesheet" href="tema-mockup.css?v=20261020e">
 </head>
 
 <body data-cats="congelados" data-hero="Pão de queijo mineiro para assar em casa — direto no WhatsApp" data-qr1="Escaneie e peça seu pão de queijo" data-qr2="direto pelo WhatsApp">
@@ -363,6 +363,7 @@ function gerarCodigoPedido(){
   reconcileCart();
   renderAll();
 }
+try { const q = new URLSearchParams(location.search).get('ind'); if (q) localStorage.setItem('dm_ind', q.replace(/[^\p{L}\p{N}_-]/gu, '').slice(0, 30)); } catch (e) {}
 const WA_PEDIDOS = '5511940507018', WA_ATEND = '5511986975803';
 const soDig = v => String(v || '').replace(/\D/g, '');
 function waNumber() { return soDig(S.data && S.data.whatsappPedidos) || WA_PEDIDOS; }
@@ -613,6 +614,8 @@ function buildMessage(codigo) {
   if (pag === 'Dinheiro' && troco) m += ` (Troco para: ${troco})`;
   
   if (obs) m += `\n\n*Obs.:* ${obs}`;
+  let ind = ''; try { ind = localStorage.getItem('dm_ind') || ''; } catch (e) {}
+  if (ind) m += `\n\nIndicado por: ${ind}`;
   m += `\n\nA De Minas agradece! Conheça nossa linha completa, de pães de queijo, Dadinho de Tapioca, sabores especiais e Broas, trem bão demais da conta!`;
   if (kgIn) m += `\n\nQueijos vendidos por kg: o valor final é confirmado após a pesagem.`;
   if (pag === 'PIX') m += `\n\nPIX (celular): ${(S.data && S.data.pix) || '(11) 98697-5803'} (${(S.data && S.data.pixNome) || 'Franklin Rainier'})`;
@@ -681,6 +684,7 @@ $('#orderForm').addEventListener('submit', e => {
   const freteNome = $('#cFrete').value.split('|')[1];
   const pag = $('#cPag').value;
   const troco = $('#cTroco').value.trim();
+  let ind = ''; try { ind = localStorage.getItem('dm_ind') || ''; } catch (e) {}
 
   const itensFire = L.map(l => ({
     codigo: l.p.codigo || '', nome: l.p.nome, label: l.o.label, qtd: l.q,
@@ -691,7 +695,7 @@ $('#orderForm').addEventListener('submit', e => {
     codigo, cliente: nome, whatsapp: telDig.length <= 11 ? '55' + telDig : telDig,
     endereco: tipo === 'Entrega' ? addr : '',
     tipo, obs, itens: itensFire, total: totalSnap, pago: false,
-    frete: freteNome, taxaFrete: freteVal, pagamento: pag, troco: troco
+    frete: freteNome, taxaFrete: freteVal, pagamento: pag, troco: troco, indicadoPor: ind || undefined
   };
 
   (async () => {
@@ -712,6 +716,7 @@ $('#orderForm').addEventListener('submit', e => {
   store.set('dm_cart', S.cart);
   renderCartBar();
   closeCart();
+  document.dispatchEvent(new CustomEvent('dm-pedido-enviado'));
 });
 
 document.addEventListener('click', e => {
@@ -1028,6 +1033,6 @@ setTimeout(() => document.documentElement.classList.replace('theme-loading', 'th
 })();
 </script>
 <!-- TEMA APP (Script) -->
-<script src="tema-mockup.js?v=20261020a" defer></script>
+<script src="tema-mockup.js?v=20261020e" defer></script>
 </body>
 </html>
