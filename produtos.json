@@ -713,7 +713,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 65,
+     "preco": 68,
      "kg": true
     }
    ],
@@ -730,7 +730,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 80,
+     "preco": 90,
      "kg": true
     }
    ],
@@ -747,7 +747,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 65,
+     "preco": 68,
      "kg": true
     }
    ],
@@ -764,7 +764,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 67,
+     "preco": 68,
      "kg": true
     }
    ],
@@ -776,12 +776,12 @@
    "codigo": "QJ-008",
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
-   "nome": "Queijo Serra da Canastra",
+   "nome": "Queijo Serra da Canastra Medeiros",
    "foto": "serra-da-canastra.jpg",
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 67,
+     "preco": 70,
      "kg": true
     }
    ],
@@ -976,7 +976,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 40
+     "preco": 50
     }
    ],
    "disponivel": true,
@@ -2334,7 +2334,7 @@
    "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-21T14:45:59.083Z",
+ "atualizadoEm": "2026-10-21T14:58:31.116Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
