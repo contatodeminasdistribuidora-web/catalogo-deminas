@@ -468,6 +468,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
       <div class="stat-grid" id="recorrencia-stats"></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
         <button class="btn btn-ouro" onclick="dispararWhatsAppInativos()">📲 Disparar para Inativos (+15 dias)</button>
+        <button class="btn" onclick="unificarCadastros()">🔗 Unificar cadastros duplicados</button>
       </div>
       <div class="filters">
         <button class="filter-btn active" onclick="filtrarRecorrencia('TODOS',this)">Todos</button>
@@ -737,15 +738,28 @@ function setCloudStatus(estado, texto) {
   }
 }
 
+let _loginBusy = false;
 function fazerLogin() {
+  if (_loginBusy) return;   // já tem uma janela do Google aberta: ignora o segundo toque
+  const erro = document.getElementById('login-erro');
   if (!window.FB || !window.FB.entrarComGoogle) {
-    document.getElementById('login-erro').textContent = 'Firebase ainda carregando. Aguarde 2 segundos.';
-    document.getElementById('login-erro').classList.add('on');
+    erro.textContent = 'Firebase ainda carregando. Aguarde 2 segundos.';
+    erro.classList.add('on');
     return;
   }
-  document.getElementById('login-erro').classList.remove('on');
+  erro.classList.remove('on');
+  _loginBusy = true;
+  const btn = document.querySelector('.btn-google');
+  if (btn) { btn.disabled = true; btn.style.opacity = '.6'; }
+  let info = document.getElementById('login-info');
+  if (!info) { info = document.createElement('p'); info.id = 'login-info'; info.style.cssText = 'margin-top:12px;font-size:13px;color:#7a5a00;background:#fff8e1;border-radius:8px;padding:10px 12px'; erro.before(info); }
+  info.textContent = 'Abrindo o Google… escolha a conta na janela que abriu. Se ela fechar e voltar para esta tela, recarregue a página.';
   setCloudStatus('sincronizando', 'Entrando...');
-  window.FB.entrarComGoogle();
+  Promise.resolve(window.FB.entrarComGoogle()).finally(() => {
+    _loginBusy = false;
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; }
+    info.remove();
+  });
 }
 
 function fazerLogout() {
@@ -1432,9 +1446,8 @@ function atualizaBadges(){
   const rP=db.peds.filter(p=>statusAReceber.includes(p.st)&&!p.recebido).length+db.atPeds.filter(p=>['PENDENTE','PAGO','ENTREGUE'].includes(p.st)&&!p.recebido).length;
   const bR=document.getElementById('badge-receber');if(bR){bR.textContent=rP;bR.style.display=rP>0?'inline':'none';}
   const agora=new Date();
-  const cliUlt={};
-  [...db.peds,...db.vendas].forEach(p=>{const nome=(p.cli||'?').toLowerCase();const dt=new Date(p.data||0);if(!cliUlt[nome]||dt>cliUlt[nome])cliUlt[nome]=dt;});
-  const inativos=Object.entries(cliUlt).filter(([n,dt])=>Math.floor((agora-dt)/(864e5))>30&&n!=='?').length;
+  const cliUlt=mapaCompras().ult;
+  const inativos=db.clis.filter(c=>cliUlt[c.id]&&Math.floor((agora-cliUlt[c.id])/(864e5))>30).length;
   const bRec=document.getElementById('badge-recorrencia');if(bRec){bRec.textContent=inativos;bRec.style.display=inativos>0?'inline':'none';}
   const bLix=document.getElementById('badge-lixeira');if(bLix){const n=db.lixeira.length;bLix.textContent=n;bLix.style.display=n>0?'inline':'none';}
 }
@@ -1525,6 +1538,7 @@ function desenharNovosPedidos() {
         <div class="ped-card-mid">📱 ${x(p.whatsapp || '—')} · ${x(p.tipo || 'Entrega')}</div>
         <div class="ped-card-mid" style="font-size:12px">📍 ${x(p.endereco || '—')}</div>
         <div class="ped-card-mid" style="font-size:12px">💳 ${x(p.pagamento || '—')}${p.troco ? ' · troco para ' + x(p.troco) : ''}${p.taxaFrete ? ' · 🚚 ' + x(p.frete || 'Entrega') + ' ' + R(p.taxaFrete) : ''}</div>
+        ${p.indicadoPor ? '<div class="ped-card-mid" style="font-size:12px">🤝 Indicado por ' + x(p.indicadoPor) + '</div>' : ''}
         ${p.obs ? `<div class="ped-card-mid" style="font-size:12px;color:var(--laranja)">💬 ${x(p.obs)}</div>` : ''}
         <div style="background:var(--creme);border-radius:6px;padding:8px 10px;margin:8px 0;font-size:12.5px">${itens}</div>
         <div class="ped-card-bot">
@@ -1657,7 +1671,7 @@ async function aprovarPedidoCatalogo(id) {
       complemento: '',
       condominio: '',
       horario: '',
-      obs: [String(ped.obs || '').slice(0, 380), ped.pagamento ? 'Pgto: ' + String(ped.pagamento).slice(0, 30) + (ped.troco ? ' (troco p/ ' + String(ped.troco).slice(0, 20) + ')' : '') : '', '[via catálogo]'].filter(Boolean).join(' | '),
+      obs: [String(ped.obs || '').slice(0, 380), ped.pagamento ? 'Pgto: ' + String(ped.pagamento).slice(0, 30) + (ped.troco ? ' (troco p/ ' + String(ped.troco).slice(0, 20) + ')' : '') : '', ped.indicadoPor ? 'Indicado por: ' + String(ped.indicadoPor).slice(0, 30) : '', '[via catálogo]'].filter(Boolean).join(' | '),
       vendedor: '',
       st: temPV ? 'PESAGEM' : 'PENDENTE',
       itens: itensERP,
@@ -1672,7 +1686,7 @@ async function aprovarPedidoCatalogo(id) {
     db.peds.push(novoPed);
     debitarEstoque(novoPed.itens);
     novoPed.estoqueDebitado = true;
-    upsertCli(novoPed.cli, novoPed.wa, novoPed.logradouro, '', '');
+    novoPed.cliId=upsertCli(novoPed.cli, novoPed.wa, novoPed.logradouro, '', '').id;
     salvar();   // grava local ANTES de falar com a nuvem
     atualizaBadges();
   }
@@ -1738,8 +1752,8 @@ function _rendPainelReal(){
   document.getElementById('painel-fin-alert').innerHTML=apVenc.length?`<div class="alert alert-danger" style="cursor:pointer" onclick="ir('financeiro')">🔴 ${apVenc.length} conta(s) a pagar vencida(s)!</div>`:'';
   document.getElementById('painel-receber-alert').innerHTML=totalReceber>0?`<div class="alert alert-info" style="cursor:pointer" onclick="ir('receber')">📋 ${rP.length+rPAt.length} pedido(s) aguardando recebimento. Total: ${R(totalReceber)}</div>`:'';
   const agora=new Date();
-  const cliUlt={};[...db.peds,...db.vendas].forEach(p=>{const nome=(p.cli||'?').toLowerCase();const dt=new Date(p.data||0);if(!cliUlt[nome]||dt>cliUlt[nome])cliUlt[nome]=dt;});
-  const inativos=Object.entries(cliUlt).filter(([n,dt])=>Math.floor((agora-dt)/(864e5))>30&&n!=='?');
+  const cliUlt=mapaCompras().ult;
+  const inativos=db.clis.filter(c=>cliUlt[c.id]&&Math.floor((agora-cliUlt[c.id])/(864e5))>30);
   document.getElementById('painel-recorrencia-alert').innerHTML=inativos.length?`<div class="alert alert-warn" style="cursor:pointer" onclick="ir('recorrencia')">🔄 ${inativos.length} cliente(s) inativo(s) (+30 dias)</div>`:'';
   const months=[],recArr=[],despArr=[];
   for(let i=5;i>=0;i--){
@@ -2034,21 +2048,77 @@ function salvarPedido(){
     db.peds.push(ped);
     if(ped.st!=='CANCELADO'){debitarEstoque(ped.itens);ped.estoqueDebitado=true;}
     if(st==='PAGO'||st==='ENTREGUE'){ped.recebido=false;criarContaAR(ped.id,nP(ped.num),ped.cli,ped.total,'whatsapp');}
-    upsertCli(cli,wa,logradouro,complemento,condominio);
+    ped.cliId=upsertCli(cli,wa,logradouro,complemento,condominio).id;
     toast('Pedido '+nP(ped.num)+' criado!','ok');
   }
   modalPedDirty=false;salvar();fm('mod-ped');rendPedidos();atualizaBadges();if(curPage==='painel')rendPainel();if(curPage==='congelados')rendCongelados();
 }
 
+// ===== CADASTRO ÚNICO POR TELEFONE =====
+// telChave: só os dígitos (DDD + número), sem o 55. É a "chave" do cliente.
+function telChave(w){let d=String(w||'').replace(/\D/g,'');if(d.length>11&&d.startsWith('55'))d=d.slice(2);return d.length>=10?d:'';}
+function nomeNorm(n){return String(n||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();}
+function cliTemNome(c,nn){return nomeNorm(c.n)===nn||(c.nomes||[]).some(x=>nomeNorm(x)===nn);}
+// acha o cadastro: 1º pelo telefone; sem telefone, pelo nome exato. Com telefone novo, só junta pelo nome se o cadastro ainda não tem telefone.
+function acharCli(nome,wa){
+  const tk=telChave(wa);
+  if(tk){const c=db.clis.find(cl=>telChave(cl.wa)===tk);if(c)return c;}
+  const nn=nomeNorm(nome);
+  return db.clis.find(cl=>cliTemNome(cl,nn)&&(!tk||!telChave(cl.wa)))||null;
+}
+// dono do pedido: pelo vínculo (cliId), depois pelo telefone, depois pelo nome
+function cliDoPedido(p){
+  if(p.cliId){const c=db.clis.find(cl=>cl.id===p.cliId);if(c)return c;}
+  const tk=telChave(p.wa);if(tk){const c=db.clis.find(cl=>telChave(cl.wa)===tk);if(c)return c;}
+  const nn=nomeNorm(p.cli);return nn?db.clis.find(cl=>cliTemNome(cl,nn))||null:null;
+}
+// mapa id do cliente -> data da última compra e lista de pedidos (usado em toda a recorrência)
+function mapaCompras(){
+  const ult={},peds={};
+  db.peds.forEach(p=>{const c=cliDoPedido(p);if(!c)return;(peds[c.id]=peds[c.id]||[]).push(p);const dt=new Date(p.data||0);if(!ult[c.id]||dt>ult[c.id])ult[c.id]=dt;});
+  db.vendas.forEach(v=>{if(!v.cli||v.cli==='?')return;const nn=nomeNorm(v.cli);const c=db.clis.find(cl=>cliTemNome(cl,nn));if(!c)return;const dt=new Date(v.data||0);if(!ult[c.id]||dt>ult[c.id])ult[c.id]=dt;});
+  return{ult,peds};
+}
 function upsertCli(nome,wa,logradouro,complemento,condominio){
-  const n=nome.toLowerCase().trim();
-  let c=db.clis.find(cl=>cl.n.toLowerCase()===n||(wa&&cl.wa===wa));
+  nome=String(nome||'').trim()||'Cliente';
+  let c=acharCli(nome,wa);
   if(!c){
-    db.clis.push({id:uid(),n:nome,wa:wa||'',logradouro:logradouro||'',complemento:complemento||'',condominio:condominio||'',cid:'',obs:'',tipo:'PF',doc:'',email:'',nasc:''});
+    c={id:uid(),n:nome,wa:wa||'',logradouro:logradouro||'',complemento:complemento||'',condominio:condominio||'',cid:'',obs:'',tipo:'PF',doc:'',email:'',nasc:'',nomes:[]};
+    db.clis.push(c);
   }else{
-    if(wa)c.wa=wa;
+    if(wa&&!telChave(c.wa))c.wa=wa;   // só completa o telefone se faltava; nunca troca o que já existe
+    if(nomeNorm(c.n)!==nomeNorm(nome)){c.nomes=c.nomes||[];if(!c.nomes.some(x=>nomeNorm(x)===nomeNorm(nome)))c.nomes.push(nome);}
     if(logradouro){c.logradouro=logradouro;c.complemento=complemento;c.condominio=condominio;}
   }
+  return c;
+}
+// une cadastros que têm o mesmo telefone (os excluídos vão para a lixeira e podem ser restaurados)
+function unificarCadastros(){
+  const grupos={};db.clis.forEach(c=>{const k=telChave(c.wa);if(k)(grupos[k]=grupos[k]||[]).push(c);});
+  const dup=Object.values(grupos).filter(g=>g.length>1);
+  if(!dup.length){toast('Nenhum cadastro duplicado (mesmo telefone)','ok');return;}
+  const total=dup.reduce((n,g)=>n+g.length-1,0);
+  if(!confirm(`Encontrei ${dup.length} cliente(s) com mais de um cadastro (${total} cadastro(s) a unir, todos com o mesmo telefone).\n\nOs pedidos e o histórico continuam, e os cadastros unidos vão para a lixeira (dá para restaurar).\n\nUnir agora?`))return;
+  const contar=c=>db.peds.filter(p=>p.cliId===c.id||(!p.cliId&&nomeNorm(p.cli)===nomeNorm(c.n))).length;
+  const completo=c=>['logradouro','complemento','condominio','email','obs','doc','nasc','cid'].filter(f=>c[f]).length;
+  dup.forEach(g=>{
+    g.sort((a,b)=>contar(b)-contar(a)||completo(b)-completo(a));
+    const pr=g[0];pr.nomes=pr.nomes||[];
+    g.slice(1).forEach(d=>{
+      [d.n,...(d.nomes||[])].forEach(n=>{if(nomeNorm(n)!==nomeNorm(pr.n)&&!pr.nomes.some(x=>nomeNorm(x)===nomeNorm(n)))pr.nomes.push(n);});
+      ['logradouro','complemento','condominio','email','obs','doc','nasc','cid'].forEach(f=>{if(!pr[f]&&d[f])pr[f]=d[f];});
+      db.peds.forEach(pd=>{if(pd.cliId===d.id||(!pd.cliId&&nomeNorm(pd.cli)===nomeNorm(d.n)))pd.cliId=pr.id;});
+      moverParaLixeira('cliente',d);tomb('clis',d.id);db.clis=db.clis.filter(cl=>cl.id!==d.id);
+    });
+  });
+  salvar();rendRecorrencia();if(curPage==='clientes')rendClientes();atualizaBadges();toast('Cadastros unidos!','ok');
+}
+// chave PIX para mensagens de WhatsApp: se a chave da configuração for um CPF, usa o celular
+function pixCliente(){const k=String(cfg.pix||'').trim();return /^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(k)?'(11) 98697-5803':k;}
+// mensagem de reativação (mesmo texto no envio individual e no disparo em lista)
+function msgReativacao(nome){
+  const p=String(nome||'').trim().split(' ')[0];
+  return `Oi${p?' '+p:''}! Aqui é o Franklin, da *De Minas Pão de Queijaria* 🧀\n\nFaz um tempinho que você não pede o nosso pão de queijo. Bateu saudade?\n\nAgora ficou mais fácil: é só escolher no catálogo e enviar o pedido pelo WhatsApp:\nhttps://deminaspaodequeijaria.com.br/congelados.html?ind=reativacao\n\nEntregamos de segunda a sábado, até as 20h. Se preferir, me responda aqui mesmo com o que você quer.\n\nPIX: ${pixCliente()} (${cfg.pixNome})\n\nUm abraço! 🙏`;
 }
 
 function abrirEditPed(id){
@@ -2120,7 +2190,7 @@ function abrirDetPed(id){
   am('mod-det');
 }
 
-function enviarMsgHorario(pedId){const p=db.peds.find(pe=>pe.id===pedId);if(!p)return;const msg=`Olá ${p.cli}! 😊\nSou Franklin da *De Minas Pão de Queijaria* 🧀\n\nSeu pedido ${nP(p.num)} está pronto!\n\nQual o *melhor horário* para receber?\nAguardo! 🙏`;const num=(p.wa||cfg.wa1).replace(/\D/g,'');window.open(`https://wa.me/${num.startsWith('55')?num:'55'+num}?text=${encodeURIComponent(msg)}`,'_blank');}
+function enviarMsgHorario(pedId){const p=db.peds.find(pe=>pe.id===pedId);if(!p)return;const msg=`Olá ${p.cli}! 😊\nSou Franklin da *De Minas Pão de Queijaria* 🧀\n\nSeu pedido ${nP(p.num)} está pronto!\n\nQual o *melhor horário* para receber?\nAguardo! 🙏`;const num=String(p.wa||'').replace(/\D/g,'');if(!num){toast('Este pedido está sem WhatsApp do cliente','warn');return;}window.open(`https://wa.me/${num.startsWith('55')?num:'55'+num}?text=${encodeURIComponent(msg)}`,'_blank');}
 
 function alterarStPed(id,st){
   const p=db.peds.find(pe=>pe.id===id);if(!p)return;
@@ -2575,16 +2645,12 @@ function filtrarRecorrencia(f,btn){recorrenciaFiltro=f;document.querySelectorAll
 function rendRecorrencia(){
   const busca=(document.getElementById('busca-recorrencia')?.value||'').toLowerCase();
   const agora=new Date();
-  const cliUltMap={};
-  db.peds.forEach(p=>{if(!p.cli||p.cli==='?')return;const k=p.cli.toLowerCase();const dt=new Date(p.data||0);if(!cliUltMap[k]||dt>cliUltMap[k].dt)cliUltMap[k]={dt,nome:p.cli,wa:p.wa||''};});
-  db.vendas.forEach(v=>{if(!v.cli||v.cli==='?')return;const k=v.cli.toLowerCase();const dt=new Date(v.data||0);if(!cliUltMap[k]||dt>cliUltMap[k].dt)cliUltMap[k]={dt,nome:v.cli,wa:''};});
+  const mc=mapaCompras();
   let clientes=db.clis.map(c=>{
-    const k=c.n.toLowerCase();
-    const info=cliUltMap[k];
-    const ultimaCompra=info?info.dt:null;
+    const ultimaCompra=mc.ult[c.id]||null;
     const dias=ultimaCompra?Math.floor((agora-ultimaCompra)/(864e5)):null;
-    const peds=db.peds.filter(p=>p.cli?.toLowerCase()===k);
-    const totalGasto=peds.reduce((s,p)=>s+calcTotal(p),0);
+    const peds=mc.peds[c.id]||[];
+    const totalGasto=peds.reduce((sum,p)=>sum+calcTotal(p),0);
     return{...c,ultimaCompra,dias,totalGasto,totalPedidos:peds.length};
   });
   if(busca)clientes=clientes.filter(c=>c.n.toLowerCase().includes(busca));
@@ -2615,19 +2681,13 @@ function rendRecorrencia(){
   });
   document.getElementById('recorrencia-lista').innerHTML=html;
 }
-function enviarWANome(nome,wa){if(!wa){toast('Cliente sem WhatsApp cadastrado','warn');return;}const msg=`Oi ${nome}! 😊\nSou Franklin da *De Minas Pão de Queijaria* 🧀\n\nSentimos sua falta! Que tal reabastecer?\n\nTemos pãozinho de queijo, queijos artesanais e muito mais! 🛒\n\nPIX: ${cfg.pix} (${cfg.pixNome})\n\nAguardo seu pedido! 🙏`;const num=wa.replace(/\D/g,'');window.open(`https://wa.me/${num.startsWith('55')?num:'55'+num}?text=${encodeURIComponent(msg)}`,'_blank');}
+function enviarWANome(nome,wa){if(!telChave(wa)){toast('Cliente sem WhatsApp cadastrado','warn');return;}const num=String(wa).replace(/\D/g,'');window.open(`https://wa.me/${num.startsWith('55')?num:'55'+num}?text=${encodeURIComponent(msgReativacao(nome))}`,'_blank');}
 function dispararWhatsAppInativos(){
-  const agora=new Date();
-  const inativos=db.clis.filter(c=>{
-    const peds=db.peds.filter(p=>p.cli?.toLowerCase()===c.n.toLowerCase());
-    const ultima=peds.length>0?new Date(Math.max(...peds.map(p=>new Date(p.data||0)))):null;
-    if(!ultima)return false;
-    return Math.floor((agora-ultima)/(864e5))>14&&c.wa;
-  });
+  const agora=new Date();const ult=mapaCompras().ult;
+  const inativos=db.clis.filter(c=>ult[c.id]&&Math.floor((agora-ult[c.id])/(864e5))>14&&telChave(c.wa));
   if(!inativos.length){toast('Nenhum cliente inativo com WhatsApp','warn');return;}
   if(!confirm(`Enviar mensagem para ${inativos.length} cliente(s)?`))return;
-  const msg=`🤠 Ô sô!\n\nSaudadocê! 🧀 Tem um tempinho que ocê não pede o nosso pãozinho!\n\nTemos:\n🥖 Pão de Queijo\n🧀 Chipa 3 Queijos\n🥐 Pão Recheado\n🍪 Biscoito de Queijo\n🥖 Broa de Milho\n\nQuer pedir? É só chamar!\n\n💳 PIX: ${cfg.pix} (${cfg.pixNome})\n\nTe espero! 🤗`;
-  mostrarListaWA(inativos.map(c=>{const num=c.wa.replace(/\D/g,'');const waNum=num.startsWith('55')?num:'55'+num;return{nome:c.n,url:`https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`};}),`Chamar ${inativos.length} cliente(s) inativo(s)`);
+  mostrarListaWA(inativos.map(c=>{const num=String(c.wa).replace(/\D/g,'');const waNum=num.startsWith('55')?num:'55'+num;return{nome:c.n,url:`https://wa.me/${waNum}?text=${encodeURIComponent(msgReativacao(c.n))}`};}),`Chamar ${inativos.length} cliente(s) inativo(s)`);
 }
 function mostrarListaWA(itens,titulo){
   const antigo=document.getElementById('wa-lista-overlay');if(antigo)antigo.remove();
@@ -3523,8 +3583,9 @@ function enviarWA(pedId){
     return`• ${it.nome} — ${q} ${R(calcItemSubFn(it))}`;
   }).join('\n');
   const sugestao=`\n\nJá experimentou nossos outros produtos?\n• Chipa 3 Queijos\n• Pão de Queijo Recheado (vários sabores)\n• Biscoito de Queijo 2 Queijos\n• Broa de Milho (doce e salgada)\n\nPeça na próxima!`;
-  const msg=`*🧀 DE MINAS — ${nP(p.num)}*\n————\n*Cliente:* ${p.cli}\n*Endereço:* ${end||'—'}\n${p.horario?'🕐 *'+p.horario+'*\n':''}${p.obs?'*Obs:* '+p.obs+'\n':''}${p.vendedor?'👔 *Vendedor:* '+p.vendedor+'\n':''}————\n*ITENS:*\n${itens}\n————\n${p.frete?'Frete: '+R(p.frete)+'\n':''}*Total:* ${R(total)}\n\n*PIX:* ${cfg.pix} (${cfg.pixNome})${sugestao}\n\nA De Minas Pão de Queijaria agradece! ❤️`;
-  const num=(p.wa||cfg.wa1).replace(/\D/g,'');
+  const msg=`*🧀 DE MINAS — ${nP(p.num)}*\n————\n*Cliente:* ${p.cli}\n*Endereço:* ${end||'—'}\n${p.horario?'🕐 *'+p.horario+'*\n':''}${p.obs?'*Obs:* '+p.obs+'\n':''}${p.vendedor?'👔 *Vendedor:* '+p.vendedor+'\n':''}————\n*ITENS:*\n${itens}\n————\n${p.frete?'Frete: '+R(p.frete)+'\n':''}*Total:* ${R(total)}\n\n*PIX:* ${pixCliente()} (${cfg.pixNome})${sugestao}\n\nA De Minas Pão de Queijaria agradece! ❤️`;
+  const num=String(p.wa||'').replace(/\D/g,'');
+  if(!num){toast('Este pedido está sem WhatsApp do cliente','warn');return;}
   window.open(`https://wa.me/${num.startsWith('55')?num:'55'+num}?text=${encodeURIComponent(msg)}`,'_blank');
 }
 
