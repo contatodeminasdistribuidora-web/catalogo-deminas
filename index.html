@@ -191,7 +191,7 @@ html.theme-ready body { opacity: 1; }
   document.documentElement.classList.add('theme-loading');
 </script>
 
-<link rel="stylesheet" href="tema-mockup.css?v=20261020e">
+<link rel="stylesheet" href="tema-mockup.css?v=20261021f">
 </head>
 
 <body>
@@ -265,12 +265,10 @@ html.theme-ready body { opacity: 1; }
 
         <label class="fld" id="freteFld">
           <span>Bairro de entrega</span>
-          <select id="cFrete">
-            <option value="8|Vila Carrão">Vila Carrão (R$ 8,00)</option>
-            <option value="12|Tatuapé">Tatuapé (R$ 12,00)</option>
-            <option value="15|Anália Franco">Anália Franco (R$ 15,00)</option>
-            <option value="0|A combinar">Outro bairro (A combinar)</option>
-          </select>
+          <input type="text" id="cBairro" list="bairrosList" placeholder="Digite o seu bairro" autocomplete="off" autocapitalize="words" enterkeyhint="done">
+          <datalist id="bairrosList"></datalist>
+          <input type="hidden" id="cFrete" value="0|A combinar">
+          <small class="note" id="cFreteInfo" style="margin-top:6px;display:block">Digite o bairro e a taxa de entrega aparece aqui.</small>
         </label>
         <label class="fld" id="addrFld"><span>Endereço completo</span><textarea id="cAddr" autocomplete="street-address" placeholder="Rua, número, complemento"></textarea></label>
         
@@ -650,6 +648,36 @@ $('#cPag').addEventListener('change', e => {
   $('#trocoFld').hidden = e.target.value !== 'Dinheiro';
 });
 $('#cFrete').addEventListener('change', atualizarTotais);
+
+// ---- Bairro digitado -> taxa de entrega (consulta a tabela "bairros" do catálogo) ----
+const BAIRROS_PADRAO = [{"n": "Vila Carrão", "taxa": 8, "alias": ["carrao"]}, {"n": "Chácara Califórnia", "taxa": 8}, {"n": "Vila Matilde", "taxa": 8}, {"n": "Vila Formosa", "taxa": 8}, {"n": "Vila Gomes Cardim", "taxa": 8}, {"n": "Vila Nova Manchester", "taxa": 8}, {"n": "Vila Santa Isabel", "taxa": 8}, {"n": "Tatuapé", "taxa": 12}, {"n": "Penha", "taxa": 12, "alias": ["penha de franca"]}, {"n": "Vila Invernada", "taxa": 12}, {"n": "Parque São Jorge", "taxa": 12}, {"n": "Vila Diva", "taxa": 12, "alias": ["diva"]}, {"n": "Vila Regente Feijó", "taxa": 12}, {"n": "Anália Franco", "taxa": 15, "alias": ["jardim analia franco", "jd analia franco", "analia"]}, {"n": "Água Rasa", "taxa": 15}, {"n": "Belém", "taxa": 15}, {"n": "Vila Prudente", "taxa": 15}, {"n": "Parque São Lucas", "taxa": 15}, {"n": "Vila Alpina", "taxa": 15}, {"n": "Vila Bertioga", "taxa": 15}, {"n": "Vila Ema", "taxa": 15}, {"n": "Jardim Novo Carrão", "taxa": 15}, {"n": "Vila Zelina", "taxa": 15}, {"n": "Mooca", "taxa": 20}, {"n": "Jardim Grimaldi", "taxa": 20, "alias": ["grimaldi"]}];
+const bairrosLista = () => (S.data && Array.isArray(S.data.bairros) && S.data.bairros.length) ? S.data.bairros : BAIRROS_PADRAO;
+const normB = s => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\b(vila|vl|jardim|jd|parque|pq|chacara|ch|bairro)\b/g, ' ').replace(/\s+/g, ' ').trim();
+function acharBairro(txt) {
+  const k = normB(txt); if (k.length < 3) return null;
+  const L = bairrosLista().map(b => ({b, keys: [normB(b.n)].concat((b.alias || []).map(normB))}));
+  let hit = L.find(x => x.keys.includes(k)); if (hit) return hit.b;
+  const dentro = L.filter(x => x.keys.some(q => q && (' ' + k + ' ').includes(' ' + q + ' '))).sort((a, c) => Math.max(...c.keys.map(q => q.length)) - Math.max(...a.keys.map(q => q.length)));
+  if (dentro.length) return dentro[0].b;
+  if (k.length >= 4) { const parte = L.filter(x => x.keys.some(q => q.includes(k))); if (parte.length === 1) return parte[0].b; }
+  return null;
+}
+function atualizarBairro() {
+  const campo = $('#cBairro'), info = $('#cFreteInfo'), oculto = $('#cFrete');
+  const txt = campo.value.trim(); let valor, msg;
+  if (!txt) { valor = '0|A combinar'; msg = 'Digite o bairro e a taxa de entrega aparece aqui.'; }
+  else {
+    const b = acharBairro(txt);
+    if (b) { valor = b.taxa + '|' + b.n; msg = 'Taxa de entrega para ' + b.n + ': ' + brl(b.taxa); }
+    else { valor = '0|A combinar - ' + txt.replace(/[|\n]/g, ' ').slice(0, 40); msg = 'Não achamos esse bairro na nossa lista. A taxa de entrega será combinada pelo WhatsApp.'; }
+  }
+  if (oculto.value !== valor) { oculto.value = valor; oculto.dispatchEvent(new Event('change')); }
+  info.textContent = msg;
+}
+function preencherBairros() { const dl = $('#bairrosList'); if (dl && !dl.children.length) dl.innerHTML = bairrosLista().map(b => '<option value="' + esc(b.n) + '"></option>').join(''); }
+$('#cBairro').addEventListener('input', atualizarBairro);
+$('#cBairro').addEventListener('focus', preencherBairros);
+setTimeout(preencherBairros, 1500);
 
 $('#cbOpen').addEventListener('click', openCart);
 $('#cartClose').addEventListener('click', closeCart);
@@ -1034,6 +1062,6 @@ setTimeout(() => document.documentElement.classList.replace('theme-loading', 'th
 })();
 </script>
 <!-- TEMA APP (Script) -->
-<script src="tema-mockup.js?v=20261020e" defer></script>
+<script src="tema-mockup.js?v=20261021f" defer></script>
 </body>
 </html>
