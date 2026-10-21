@@ -70,7 +70,7 @@ const openDr = () => {
     const sep = document.createElement('div'); sep.className = 'dr-sep'; list.appendChild(sep);
     EXTRA_ITEMS.forEach(x => { const b = document.createElement('button'); b.type = 'button'; b.className = 'dr-item'; b.textContent = x.l; b.onclick = () => { closeDr(); setTimeout(x.f, 240); }; list.appendChild(b); });
   }
-  const wa = $('#waLink'); if (wa) $('#drWa').href = wa.href;
+  const wa = $('#waLink2'); if (wa) $('#drWa').href = wa.href;
   drawer.hidden = false; requestAnimationFrame(() => drawer.classList.add('on')); document.body.style.overflow = 'hidden';
 };
 $('#tMenu').setAttribute('aria-label', 'Abrir menu');
@@ -86,6 +86,7 @@ tabs.onclick = e => {
   if (b.dataset.t === 'cart') openCart();
 };
 
+{ const aPed = tabs.querySelector('a'); if (aPed) aPed.addEventListener('click', () => { const w = $('#waLink'); if (w) aPed.href = w.href; }); }
 // --- NOVO: Lógica de Repetir e Favoritos ---
 let showOnlyFavs = false;
 $('#btnRepeat').onclick = () => {
@@ -148,14 +149,31 @@ function openModal(titulo, html) {
   }
   $('#mdlT').textContent = titulo; $('#mdlB').innerHTML = html; mdl.hidden = false; document.body.style.overflow = 'hidden';
 }
+function indCode() {
+  try { const c = JSON.parse(localStorage.getItem('dm_cust') || '{}'); const n = String(c.nome || '').trim().split(/\s+/)[0] || ''; return n.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 20); } catch (e) { return ''; }
+}
+function compartilhar() {
+  const ind = indCode();
+  const url = location.origin + location.pathname.replace(/index\.html$/, '') + (ind ? '?ind=' + encodeURIComponent(ind) : '');
+  const texto = 'Conheça a De Minas Pão de Queijaria: pão de queijo mineiro congelado, é só assar. Faça o pedido pelo catálogo:';
+  if (navigator.share) navigator.share({title: 'De Minas Pão de Queijaria', text: texto, url}).catch(() => {});
+  else window.open('https://wa.me/?text=' + encodeURIComponent(texto + ' ' + url), '_blank', 'noopener');
+}
+document.addEventListener('dm-pedido-enviado', () => {
+  setTimeout(() => {
+    openModal('Pedido enviado!', '<p>Seu pedido foi enviado pelo WhatsApp. Obrigado por apoiar um pequeno negócio da Vila Carrão.</p><p><b>Comprou, gostou, espalhou.</b> Mande o catálogo para um amigo e ajude a De Minas a levar o melhor de Minas para mais mesas.</p><button type="button" class="btn-share" id="mdShare">Compartilhar com um amigo</button><p class="mdl-av">#EspalhaMinas</p>');
+    const b = $('#mdShare'); if (b) b.onclick = compartilhar;
+  }, 1200);
+});
 function extras(d) {
-  const ct = d.conteudo || {}; const wa = String(d.whatsapp || '5511986975803');
+  const ct = d.conteudo || {}; const wa = String(d.whatsappAtendimento || '5511986975803').replace(/\D/g, '');
   const acts = [];
   const rolar = id => { const e = document.getElementById(id); if (e) e.scrollIntoView({behavior: 'smooth', block: 'start'}); };
   if (ct.comoAssar) { const c = ct.comoAssar; acts.push({l: c.titulo || 'Como assar', f: () => openModal(c.titulo || 'Como assar', '<p>' + escH(c.intro) + '</p>' + (c.itens || []).map(i => '<div class="mdl-it"><b>' + escH(i.t) + '</b><span>' + escH(i.d) + '</span></div>').join('') + (c.aviso ? '<p class="mdl-av">' + escH(c.aviso) + '</p>' : ''))}); }
   if (ct.alergenicos) { const c = ct.alergenicos; acts.push({l: c.titulo || 'Alergênicos', f: () => openModal(c.titulo || 'Alergênicos', (c.paragrafos || []).map(p => '<p>' + escH(p) + '</p>').join(''))}); }
   const faq = ct.faq || [], deps = ct.depoimentos || [];
   if (faq.length) acts.push({l: 'Perguntas frequentes', f: () => rolar('faq')});
+  acts.push({l: 'Compartilhar o catálogo', f: compartilhar});
   const ft = document.querySelector('footer');
   if (deps.length && ft && !document.getElementById('depoimentos')) {
     const s = document.createElement('section'); s.id = 'depoimentos'; s.className = 'extsec';
@@ -175,7 +193,7 @@ function extras(d) {
   EXTRA_ITEMS = acts.concat(deps.length ? [{l: 'Depoimentos', f: () => rolar('depoimentos')}] : []);
 }
 let CATMAP = null;
-fetch('produtos.json?v=' + Date.now()).then(r => r.json()).then(d => { CATMAP = {}; (d.produtos || []).forEach(p => { CATMAP[p.id] = p.cat; if (p.selo) SELO[p.id] = p.selo; }); document.querySelectorAll('#catalog .card').forEach(frz); extras(d); }).catch(() => {});
+fetch('produtos.json?v=' + Date.now()).then(r => r.json()).then(d => { CATMAP = {}; (d.produtos || []).forEach(p => { CATMAP[p.id] = p.cat; if (p.selo) SELO[p.id] = p.selo; }); document.querySelectorAll('#catalog .card').forEach(c => { frz(c); setSelo(c); }); extras(d); }).catch(() => {});
 function frz(c) {
   if (!CATMAP || c.querySelector('.frz') || c.querySelector('.soon') || CATMAP[c.dataset.pid] !== 'congelados') return;
   const nm = $('.nm', c); if (nm) nm.insertAdjacentHTML('afterend', '<div class="frz">❄ Congelado · Pronto para assar</div>');
@@ -279,6 +297,7 @@ const P = {
   honey: '<rect x="6" y="8" width="12" height="12" rx="3"/><path d="M8 8V5h8v3M9 13h6M9 16h6"/>',
   basket: '<path d="M3 10h18l-2 10H5zM8 10l3-6M16 10l-3-6"/>',
   cookie: '<circle cx="12" cy="12" r="8"/><circle cx="9" cy="10" r="1"/><circle cx="14.500" cy="9" r="1"/><circle cx="12" cy="14" r="1"/><circle cx="16" cy="14" r="1"/>',
+  zero: '<rect x="5" y="8" width="11" height="11" rx="2"/><path d="M16 8l3-3v11l-3 3M5 8l3-3h11M3 21 21 3"/>',
   star: '<path d="m12 3 2.700 5.600 6.100.9-4.400 4.300 1 6.100L12 17l-5.400 2.900 1-6.100L3.200 9.500l6.100-.9z"/>',
   all: '<rect x="4" y="4" width="6" height="6" rx="1.500"/><rect x="14" y="4" width="6" height="6" rx="1.500"/><rect x="4" y="14" width="6" height="6" rx="1.500"/><rect x="14" y="14" width="6" height="6" rx="1.500"/>'
 };
@@ -289,6 +308,7 @@ function iconFor(t) {
   if (/dadinho|tapioca/.test(t)) return P.cookie;
   if (/breve/.test(t)) return P.gift;
   if (/mais pedidos/.test(t)) return P.cookie;
+  if (/zero|diet/.test(t)) return P.zero;
   if (/pao de queijo|chipa|broa|tradicional|recheado/.test(t)) return P.bread;
   if (/queijo/.test(t)) return P.cheese;
   if (/doce|goiabada|compota|cocada|bala/.test(t)) return P.candy;
