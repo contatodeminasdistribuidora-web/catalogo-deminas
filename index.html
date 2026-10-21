@@ -780,7 +780,17 @@ document.addEventListener('change', e => {
     const p = findProd(t.dataset.pid); p.disponivel = t.checked; saveDraft(); renderCatalog();
   }
 });
-$('#q').addEventListener('input', e => { S.q = e.target.value; renderCatalog(); });
+let buscaT;
+function irParaResultados() {
+  clearTimeout(buscaT);
+  if (!S.q.trim()) return;
+  buscaT = setTimeout(() => {
+    const alvo = $('#catalog section.cat') || $('#catalog .empty-msg'); if (!alvo) return;
+    const st = $('#stick'), h = st ? st.getBoundingClientRect().height : 0;
+    window.scrollTo({top: Math.max(0, alvo.getBoundingClientRect().top + window.scrollY - h - 10), behavior: 'smooth'});
+  }, 250);
+}
+$('#q').addEventListener('input', e => { S.q = e.target.value; renderCatalog(); irParaResultados(); });
 $('#admLink').addEventListener('click', () => setTimeout(() => location.reload(), 0));
 window.addEventListener('hashchange', () => { if (/(^|[#?&])admin\b/.test(location.hash + location.search) !== S.admin) location.reload(); });
 
