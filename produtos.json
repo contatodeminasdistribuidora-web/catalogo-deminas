@@ -1897,14 +1897,14 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Doce de Leite Zero Açúcar e Zero Lactose 250g",
-   "foto": "",
+   "foto": "za-004-mvi8sdcb.jpg",
    "opcoes": [
     {
      "label": "250g",
      "preco": 33
     }
    ],
-   "disponivel": false,
+   "disponivel": true,
    "consultarEstoque": false,
    "selo": "Zero Açúcar"
   },
@@ -2334,7 +2334,7 @@
    "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-21T14:59:40.899Z",
+ "atualizadoEm": "2026-10-21T15:03:36.976Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
