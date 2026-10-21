@@ -128,7 +128,7 @@
    "grupo": "",
    "nome": "Combo Presente Mineiro",
    "descricao": "1 Mel Silvestre 250g + 1 Doce de Leite Moreno (pote) + 1 Geleia de Pimenta 250g + 1 Casadinho de Goiabada (pote)",
-   "foto": "",
+   "foto": "combo-presente-mineiro.jpg",
    "opcoes": [
     {
      "label": "Combo",
@@ -145,7 +145,7 @@
    "cat": "combos",
    "grupo": "",
    "nome": "Combo Cesta Mineira de Fim de Ano",
-   "foto": "",
+   "foto": "combo-cesta-mineira-de-fim-de-ano.jpg",
    "descricao": "1 Doce de Leite Viçosa 400g + 1 Goiabada Cascão de Corte 500g + 1 Mel Silvestre 330g + 1 Geleia de Pimenta 250g + 1 Biscoito de Queijo Canastra + 1 Casadinho de Goiabada",
    "opcoes": [
     {
@@ -2356,7 +2356,7 @@
    "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-21T21:18:14.000000Z",
+ "atualizadoEm": "2026-10-21T21:54:41.000000Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
