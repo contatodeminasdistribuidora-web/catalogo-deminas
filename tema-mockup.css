@@ -151,6 +151,7 @@ footer.rodape .marca span{display:block;margin-top:2px;font:700 11px 'Nunito San
 footer.rodape .marca em{display:block;margin-top:10px;font-style:normal;font-size:13px;color:var(--gold-l)}
 footer.rodape .cta{display:flex;align-items:center;justify-content:center;gap:10px;max-width:520px;margin:20px auto 6px;height:52px;border-radius:14px;background:#118c4f;color:#fff;font-weight:800;font-size:16px;text-decoration:none}
 footer.rodape .cta svg{width:22px;height:22px;fill:#fff}
+footer.rodape .cta2{display:flex;align-items:center;justify-content:center;max-width:520px;margin:6px auto 6px;height:46px;border-radius:14px;border:1.5px solid var(--gold-l);color:var(--gold-l);font-weight:800;font-size:15px;text-decoration:none}
 footer.rodape .wanum{text-align:center;margin:0 0 16px;font-size:13px;color:#d9c7a0}
 footer.rodape .grade{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:760px;margin:0 auto}
 footer.rodape .cartao{background:#ffffff0f;border:1px solid #e9c46a59;border-radius:14px;padding:12px 12px 13px}
@@ -211,6 +212,7 @@ section.cat,.grp{scroll-margin-top:calc(var(--stickh,120px) + var(--tbh))}
 .mdl-it b{color:var(--brown)}
 .mdl-av{font-size:13px;color:var(--muted)}
 .dr-sep{height:1px;background:var(--line);margin:4px 0}
+.btn-share{display:block;width:100%;margin-top:14px;background:var(--red);color:#fff;border:0;border-radius:999px;padding:14px 18px;font:800 16px 'Nunito Sans',sans-serif}
 #catalog{scroll-margin-top:calc(var(--stickh,120px) + var(--tbh))}
 .card.destaque{border:2px solid var(--gold-l);box-shadow:0 4px 16px #b8860b33}
 .card.destaque .tagb{background:var(--gold-d)}
