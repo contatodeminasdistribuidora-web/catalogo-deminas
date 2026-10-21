@@ -2,7 +2,7 @@
  "versao": 1,
  "whatsapp": "5511986975803",
  "avisos": [
-  "Pedidos: pão de queijo congelado e recheados até sábado; doces, queijos e demais produtos até domingo. Entregas às terças-feiras, a partir das 18h.",
+  "Pão de queijo congelado e recheados: entregas de segunda a sábado, até as 20h. Doces, queijos e demais produtos de Minas: entregas às terças, quintas e sábados, com data e horário combinados com você pelo WhatsApp.",
   "Valores sujeitos a alteração conforme reajuste do fornecedor.",
   "Recheados, linha especial e gourmet: consultar estoque."
  ],
@@ -30,6 +30,10 @@
   {
    "id": "doces",
    "nome": "Doces"
+  },
+  {
+   "id": "zero",
+   "nome": "Zero Açúcar"
   },
   {
    "id": "mel",
@@ -1835,9 +1839,502 @@
    ],
    "disponivel": true,
    "consultarEstoque": false
+  },
+  {
+   "id": "za-001",
+   "codigo": "ZA-001",
+   "cat": "zero",
+   "grupo": "Doces de Leite e Pingo de Leite",
+   "nome": "Doce de Leite Zero Açúcar 210g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "210g",
+     "preco": 33
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-002",
+   "codigo": "ZA-002",
+   "cat": "zero",
+   "grupo": "Doces de Leite e Pingo de Leite",
+   "nome": "Doce de Leite com Coco Zero Açúcar 210g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "210g",
+     "preco": 33
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-003",
+   "codigo": "ZA-003",
+   "cat": "zero",
+   "grupo": "Doces de Leite e Pingo de Leite",
+   "nome": "Doce de Leite Zero Açúcar 250g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "250g",
+     "preco": 38
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-004",
+   "codigo": "ZA-004",
+   "cat": "zero",
+   "grupo": "Doces de Leite e Pingo de Leite",
+   "nome": "Doce de Leite Zero Açúcar e Zero Lactose 250g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "250g",
+     "preco": 33
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-005",
+   "codigo": "ZA-005",
+   "cat": "zero",
+   "grupo": "Doces de Leite e Pingo de Leite",
+   "nome": "Doce de Leite Zero Açúcar 400g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "400g",
+     "preco": 56
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-006",
+   "codigo": "ZA-006",
+   "cat": "zero",
+   "grupo": "Doces de Leite e Pingo de Leite",
+   "nome": "Doce de Leite Zero Açúcar e Zero Lactose 400g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "400g",
+     "preco": 50
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-007",
+   "codigo": "ZA-007",
+   "cat": "zero",
+   "grupo": "Doces de Leite e Pingo de Leite",
+   "nome": "Doce de Leite Diet 630g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "630g",
+     "preco": 68
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Diet"
+  },
+  {
+   "id": "za-008",
+   "codigo": "ZA-008",
+   "cat": "zero",
+   "grupo": "Doces de Leite e Pingo de Leite",
+   "nome": "Pingo de Leite Zero Açúcar 100g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "100g",
+     "preco": 33
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-009",
+   "codigo": "ZA-009",
+   "cat": "zero",
+   "grupo": "Whey Protein",
+   "nome": "Doce de Leite Zero Açúcar Whey Protein 250g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "250g",
+     "preco": 38
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-010",
+   "codigo": "ZA-010",
+   "cat": "zero",
+   "grupo": "Whey Protein",
+   "nome": "Brigadeiro Zero Açúcar Whey Protein 250g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "250g",
+     "preco": 38
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-011",
+   "codigo": "ZA-011",
+   "cat": "zero",
+   "grupo": "Goiabadas, Geleias e Marmelada",
+   "nome": "Goiabada Zero Açúcar 360g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "360g",
+     "preco": 56
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-012",
+   "codigo": "ZA-012",
+   "cat": "zero",
+   "grupo": "Goiabadas, Geleias e Marmelada",
+   "nome": "Goiabada Diet 200g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "200g",
+     "preco": 38
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Diet"
+  },
+  {
+   "id": "za-013",
+   "codigo": "ZA-013",
+   "cat": "zero",
+   "grupo": "Goiabadas, Geleias e Marmelada",
+   "nome": "Doce de Goiaba Zero Açúcar 250g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "250g",
+     "preco": 44
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-014",
+   "codigo": "ZA-014",
+   "cat": "zero",
+   "grupo": "Goiabadas, Geleias e Marmelada",
+   "nome": "Geleia de Goiabada Zero Açúcar 200g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "200g",
+     "preco": 26
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-015",
+   "codigo": "ZA-015",
+   "cat": "zero",
+   "grupo": "Goiabadas, Geleias e Marmelada",
+   "nome": "Geleia de Mirtilo Zero Açúcar 125g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "125g",
+     "preco": 35
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-016",
+   "codigo": "ZA-016",
+   "cat": "zero",
+   "grupo": "Goiabadas, Geleias e Marmelada",
+   "nome": "Marmelada Zero Açúcar 540g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "540g",
+     "preco": 50
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-017",
+   "codigo": "ZA-017",
+   "cat": "zero",
+   "grupo": "Doces de Frutas",
+   "nome": "Doce de Mamão Enrolado Zero Açúcar 250g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "250g",
+     "preco": 44
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-018",
+   "codigo": "ZA-018",
+   "cat": "zero",
+   "grupo": "Doces de Frutas",
+   "nome": "Doce de Figo Zero Açúcar 250g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "250g",
+     "preco": 44
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-019",
+   "codigo": "ZA-019",
+   "cat": "zero",
+   "grupo": "Doces de Frutas",
+   "nome": "Doce de Caju Zero Açúcar 250g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "250g",
+     "preco": 44
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-020",
+   "codigo": "ZA-020",
+   "cat": "zero",
+   "grupo": "Doces de Frutas",
+   "nome": "Doce de Laranja Zero Açúcar 250g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "250g",
+     "preco": 44
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-021",
+   "codigo": "ZA-021",
+   "cat": "zero",
+   "grupo": "Doces de Frutas",
+   "nome": "Doce de Pêssego Zero Açúcar 250g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "250g",
+     "preco": 44
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-022",
+   "codigo": "ZA-022",
+   "cat": "zero",
+   "grupo": "Doces de Frutas",
+   "nome": "Figada Zero Açúcar 540g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "540g",
+     "preco": 58
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-023",
+   "codigo": "ZA-023",
+   "cat": "zero",
+   "grupo": "Banana e Bananadas",
+   "nome": "Banana Natural Zero Açúcar",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "10 un",
+     "preco": 22
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-024",
+   "codigo": "ZA-024",
+   "cat": "zero",
+   "grupo": "Banana e Bananadas",
+   "nome": "Bananada com Ameixa Zero Açúcar",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "10 un",
+     "preco": 22
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-025",
+   "codigo": "ZA-025",
+   "cat": "zero",
+   "grupo": "Banana e Bananadas",
+   "nome": "Banana com Açaí Zero Açúcar",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "10 un",
+     "preco": 22
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-026",
+   "codigo": "ZA-026",
+   "cat": "zero",
+   "grupo": "Banana e Bananadas",
+   "nome": "Banana com Uvas Passas Zero Açúcar",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "10 un",
+     "preco": 22
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-027",
+   "codigo": "ZA-027",
+   "cat": "zero",
+   "grupo": "Amendoim e Pé de Moça",
+   "nome": "Paçoca Cremosa Zero Açúcar 400g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "400g",
+     "preco": 35
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
+  },
+  {
+   "id": "za-028",
+   "codigo": "ZA-028",
+   "cat": "zero",
+   "grupo": "Amendoim e Pé de Moça",
+   "nome": "Pasta de Amendoim sem Açúcar",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "Unidade",
+     "preco": 21
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Sem açúcar"
+  },
+  {
+   "id": "za-029",
+   "codigo": "ZA-029",
+   "cat": "zero",
+   "grupo": "Amendoim e Pé de Moça",
+   "nome": "Pé de Moça Zero Açúcar 250g",
+   "foto": "",
+   "opcoes": [
+    {
+     "label": "250g",
+     "preco": 44
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-20T08:46:26.639384Z",
+ "atualizadoEm": "2026-10-20T14:07:25.947978Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
@@ -1866,7 +2363,7 @@
   "faq": [
    {
     "p": "Qual o prazo de pedido e de entrega?",
-    "r": "Pão de queijo congelado e recheados: pedidos até sábado. Doces, queijos e demais produtos: até domingo. As entregas são às terças-feiras, a partir das 18h."
+    "r": "Pão de queijo congelado e recheados: entregamos de segunda a sábado, até as 20h. Doces, queijos e demais produtos de Minas: entregas às terças, quintas e sábados, com data e horário combinados com você pelo WhatsApp."
    },
    {
     "p": "Como faço o pedido?",
