@@ -665,11 +665,29 @@
    "opcoes": [
     {
      "label": "Kit",
-     "preco": 60
+     "preco": 63
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "descricao": "Kit com 4 peças de parmesão da Canastra, cerca de 500g no total."
+  },
+  {
+   "id": "canastra-e-meia-cura-parmesao-da-canastra",
+   "codigo": "QJ-023",
+   "cat": "queijos",
+   "grupo": "Canastra e Meia Cura",
+   "nome": "Parmesão da Canastra",
+   "foto": "parmesao-da-canastra.jpg",
+   "opcoes": [
+    {
+     "label": "Peça",
+     "preco": 43.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false,
+   "descricao": "Peso médio de cada peça: 350g."
   },
   {
    "id": "canastra-e-meia-cura-kit-4-queijos-serra-da-canastra",
@@ -818,7 +836,7 @@
      "preco": 90
     }
    ],
-   "disponivel": true,
+   "disponivel": false,
    "consultarEstoque": false
   },
   {
@@ -866,7 +884,7 @@
      "preco": 40
     }
    ],
-   "disponivel": true,
+   "disponivel": false,
    "consultarEstoque": false
   },
   {
@@ -879,11 +897,12 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40
+     "preco": 35.9
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "descricao": "Peso médio de cada peça: 300g."
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-nozinho-provolone-defumado",
@@ -898,7 +917,7 @@
      "preco": 40
     }
    ],
-   "disponivel": true,
+   "disponivel": false,
    "consultarEstoque": false
   },
   {
@@ -911,11 +930,12 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40
+     "preco": 29.9
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "descricao": "Peso médio de cada peça: 250g."
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-nozinho-temperado",
@@ -927,11 +947,12 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40
+     "preco": 41.9
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "descricao": "Peso médio de cada peça: 350g."
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-tranca",
@@ -943,11 +964,12 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40
+     "preco": 33.9
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "descricao": "Peso médio de cada peça: 300g."
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-provolone-fresco-defumado",
@@ -2334,7 +2356,7 @@
    "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-21T04:51:58.000000Z",
+ "atualizadoEm": "2026-10-21T20:44:00.000000Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
