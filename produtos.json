@@ -713,7 +713,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 68,
+     "preco": 73,
      "kg": true
     }
    ],
@@ -730,7 +730,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 90,
+     "preco": 80,
      "kg": true
     }
    ],
@@ -747,7 +747,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 68,
+     "preco": 71,
      "kg": true
     }
    ],
@@ -764,7 +764,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 68,
+     "preco": 71,
      "kg": true
     }
    ],
@@ -776,12 +776,12 @@
    "codigo": "QJ-008",
    "cat": "queijos",
    "grupo": "Canastra e Meia Cura",
-   "nome": "Queijo Serra da Canastra Medeiros",
+   "nome": "Queijo Serra da Canastra",
    "foto": "serra-da-canastra.jpg",
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 70,
+     "preco": 67,
      "kg": true
     }
    ],
@@ -798,7 +798,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 75,
+     "preco": 85,
      "kg": true
     }
    ],
@@ -976,7 +976,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 50
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1009,7 +1009,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 80,
+     "preco": 94,
      "kg": true
     }
    ],
@@ -1058,7 +1058,7 @@
    "opcoes": [
     {
      "label": "400g",
-     "preco": 38
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1502,15 +1502,15 @@
    "opcoes": [
     {
      "label": "250g",
-     "preco": 25
+     "preco": 26
     },
     {
      "label": "500g",
-     "preco": 40
+     "preco": 45
     },
     {
      "label": "1,4kg",
-     "preco": 100
+     "preco": 116
     }
    ],
    "disponivel": true,
@@ -1526,15 +1526,15 @@
    "opcoes": [
     {
      "label": "250g",
-     "preco": 28
+     "preco": 29
     },
     {
      "label": "500g",
-     "preco": 45
+     "preco": 50
     },
     {
      "label": "1,4kg",
-     "preco": 110
+     "preco": 116
     }
    ],
    "disponivel": true,
@@ -1554,11 +1554,11 @@
     },
     {
      "label": "500g",
-     "preco": 40
+     "preco": 45
     },
     {
      "label": "1,4kg",
-     "preco": 100
+     "preco": 116
     }
    ],
    "disponivel": true,
@@ -1578,7 +1578,7 @@
     },
     {
      "label": "800g",
-     "preco": 70
+     "preco": 83
     }
    ],
    "disponivel": true,
@@ -1690,7 +1690,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 30
+     "preco": 33
     }
    ],
    "disponivel": true,
@@ -1846,7 +1846,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Doce de Leite Zero Açúcar 210g",
-   "foto": "za-001-mvi848dc.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "210g",
@@ -1863,7 +1863,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Doce de Leite com Coco Zero Açúcar 210g",
-   "foto": "za-002-mvi84af5.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "210g",
@@ -1880,7 +1880,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Doce de Leite Zero Açúcar 250g",
-   "foto": "za-003-mvi84c96.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "250g",
@@ -1897,7 +1897,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Doce de Leite Zero Açúcar e Zero Lactose 250g",
-   "foto": "za-004-mvi8ujfw.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "250g",
@@ -1914,7 +1914,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Doce de Leite Zero Açúcar 400g",
-   "foto": "za-005-mvi84e56.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "400g",
@@ -1931,7 +1931,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Doce de Leite Zero Açúcar e Zero Lactose 400g",
-   "foto": "za-006-mvi84gcq.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "400g",
@@ -1948,7 +1948,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Doce de Leite Diet 630g",
-   "foto": "za-007-mvi84ia1.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "630g",
@@ -1965,7 +1965,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Pingo de Leite Zero Açúcar 100g",
-   "foto": "za-008-mvi84juw.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "100g",
@@ -1982,7 +1982,7 @@
    "cat": "zero",
    "grupo": "Whey Protein",
    "nome": "Doce de Leite Zero Açúcar Whey Protein 250g",
-   "foto": "za-009-mvi84lrs.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "250g",
@@ -1999,7 +1999,7 @@
    "cat": "zero",
    "grupo": "Whey Protein",
    "nome": "Brigadeiro Zero Açúcar Whey Protein 250g",
-   "foto": "za-010-mvi84odu.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "250g",
@@ -2016,7 +2016,7 @@
    "cat": "zero",
    "grupo": "Goiabadas, Geleias e Marmelada",
    "nome": "Goiabada Zero Açúcar 360g",
-   "foto": "za-011-mvi84ppg.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "360g",
@@ -2033,7 +2033,7 @@
    "cat": "zero",
    "grupo": "Goiabadas, Geleias e Marmelada",
    "nome": "Goiabada Diet 200g",
-   "foto": "za-012-mvi84s1d.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "200g",
@@ -2050,7 +2050,7 @@
    "cat": "zero",
    "grupo": "Goiabadas, Geleias e Marmelada",
    "nome": "Doce de Goiaba Zero Açúcar 250g",
-   "foto": "za-013-mvi84ts2.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "250g",
@@ -2067,7 +2067,7 @@
    "cat": "zero",
    "grupo": "Goiabadas, Geleias e Marmelada",
    "nome": "Geleia de Goiabada Zero Açúcar 200g",
-   "foto": "za-014-mvi84w0u.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "200g",
@@ -2084,7 +2084,7 @@
    "cat": "zero",
    "grupo": "Goiabadas, Geleias e Marmelada",
    "nome": "Geleia de Mirtilo Zero Açúcar 125g",
-   "foto": "za-015-mvi84xps.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "125g",
@@ -2101,7 +2101,7 @@
    "cat": "zero",
    "grupo": "Goiabadas, Geleias e Marmelada",
    "nome": "Marmelada Zero Açúcar 540g",
-   "foto": "za-016-mvi8506i.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "540g",
@@ -2118,7 +2118,7 @@
    "cat": "zero",
    "grupo": "Doces de Frutas",
    "nome": "Doce de Mamão Enrolado Zero Açúcar 250g",
-   "foto": "za-017-mvi8520z.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "250g",
@@ -2135,7 +2135,7 @@
    "cat": "zero",
    "grupo": "Doces de Frutas",
    "nome": "Doce de Figo Zero Açúcar 250g",
-   "foto": "za-018-mvi85451.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "250g",
@@ -2152,7 +2152,7 @@
    "cat": "zero",
    "grupo": "Doces de Frutas",
    "nome": "Doce de Caju Zero Açúcar 250g",
-   "foto": "za-019-mvi855rb.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "250g",
@@ -2169,7 +2169,7 @@
    "cat": "zero",
    "grupo": "Doces de Frutas",
    "nome": "Doce de Laranja Zero Açúcar 250g",
-   "foto": "za-020-mvi857lr.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "250g",
@@ -2186,7 +2186,7 @@
    "cat": "zero",
    "grupo": "Doces de Frutas",
    "nome": "Doce de Pêssego Zero Açúcar 250g",
-   "foto": "za-021-mvi85a4t.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "250g",
@@ -2203,7 +2203,7 @@
    "cat": "zero",
    "grupo": "Doces de Frutas",
    "nome": "Figada Zero Açúcar 540g",
-   "foto": "za-022-mvi85c2n.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "540g",
@@ -2220,7 +2220,7 @@
    "cat": "zero",
    "grupo": "Banana e Bananadas",
    "nome": "Banana Natural Zero Açúcar",
-   "foto": "za-023-mvi85dxo.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "10 un",
@@ -2237,7 +2237,7 @@
    "cat": "zero",
    "grupo": "Banana e Bananadas",
    "nome": "Bananada com Ameixa Zero Açúcar",
-   "foto": "za-024-mvi85frk.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "10 un",
@@ -2254,7 +2254,7 @@
    "cat": "zero",
    "grupo": "Banana e Bananadas",
    "nome": "Banana com Açaí Zero Açúcar",
-   "foto": "za-025-mvi85ht4.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "10 un",
@@ -2271,7 +2271,7 @@
    "cat": "zero",
    "grupo": "Banana e Bananadas",
    "nome": "Banana com Uvas Passas Zero Açúcar",
-   "foto": "za-026-mvi85jdu.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "10 un",
@@ -2288,7 +2288,7 @@
    "cat": "zero",
    "grupo": "Amendoim e Pé de Moça",
    "nome": "Paçoca Cremosa Zero Açúcar 400g",
-   "foto": "za-027-mvi85lc6.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "400g",
@@ -2305,7 +2305,7 @@
    "cat": "zero",
    "grupo": "Amendoim e Pé de Moça",
    "nome": "Pasta de Amendoim sem Açúcar",
-   "foto": "za-028-mvi85nj2.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "Unidade",
@@ -2322,7 +2322,7 @@
    "cat": "zero",
    "grupo": "Amendoim e Pé de Moça",
    "nome": "Pé de Moça Zero Açúcar 250g",
-   "foto": "za-029-mvi85p4n.jpg",
+   "foto": "",
    "opcoes": [
     {
      "label": "250g",
@@ -2334,7 +2334,7 @@
    "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-21T15:07:31.628Z",
+ "atualizadoEm": "2026-10-21T04:51:58.000000Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
@@ -2399,5 +2399,124 @@
    }
   ],
   "depoimentos": []
- }
+ },
+ "bairros": [
+  {
+   "n": "Vila Carrão",
+   "taxa": 8,
+   "alias": [
+    "carrao"
+   ]
+  },
+  {
+   "n": "Chácara Califórnia",
+   "taxa": 8
+  },
+  {
+   "n": "Vila Matilde",
+   "taxa": 8
+  },
+  {
+   "n": "Vila Formosa",
+   "taxa": 8
+  },
+  {
+   "n": "Vila Gomes Cardim",
+   "taxa": 8
+  },
+  {
+   "n": "Vila Nova Manchester",
+   "taxa": 8
+  },
+  {
+   "n": "Vila Santa Isabel",
+   "taxa": 8
+  },
+  {
+   "n": "Tatuapé",
+   "taxa": 12
+  },
+  {
+   "n": "Penha",
+   "taxa": 12,
+   "alias": [
+    "penha de franca"
+   ]
+  },
+  {
+   "n": "Vila Invernada",
+   "taxa": 12
+  },
+  {
+   "n": "Parque São Jorge",
+   "taxa": 12
+  },
+  {
+   "n": "Vila Diva",
+   "taxa": 12,
+   "alias": [
+    "diva"
+   ]
+  },
+  {
+   "n": "Vila Regente Feijó",
+   "taxa": 12
+  },
+  {
+   "n": "Anália Franco",
+   "taxa": 15,
+   "alias": [
+    "jardim analia franco",
+    "jd analia franco",
+    "analia"
+   ]
+  },
+  {
+   "n": "Água Rasa",
+   "taxa": 15
+  },
+  {
+   "n": "Belém",
+   "taxa": 15
+  },
+  {
+   "n": "Vila Prudente",
+   "taxa": 15
+  },
+  {
+   "n": "Parque São Lucas",
+   "taxa": 15
+  },
+  {
+   "n": "Vila Alpina",
+   "taxa": 15
+  },
+  {
+   "n": "Vila Bertioga",
+   "taxa": 15
+  },
+  {
+   "n": "Vila Ema",
+   "taxa": 15
+  },
+  {
+   "n": "Jardim Novo Carrão",
+   "taxa": 15
+  },
+  {
+   "n": "Vila Zelina",
+   "taxa": 15
+  },
+  {
+   "n": "Mooca",
+   "taxa": 20
+  },
+  {
+   "n": "Jardim Grimaldi",
+   "taxa": 20,
+   "alias": [
+    "grimaldi"
+   ]
+  }
+ ]
 }
