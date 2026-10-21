@@ -1058,7 +1058,7 @@
    "opcoes": [
     {
      "label": "400g",
-     "preco": 35
+     "preco": 38
     }
    ],
    "disponivel": true,
@@ -1846,7 +1846,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Doce de Leite Zero Açúcar 210g",
-   "foto": "",
+   "foto": "za-001-mvi848dc.jpg",
    "opcoes": [
     {
      "label": "210g",
@@ -1863,7 +1863,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Doce de Leite com Coco Zero Açúcar 210g",
-   "foto": "",
+   "foto": "za-002-mvi84af5.jpg",
    "opcoes": [
     {
      "label": "210g",
@@ -1880,7 +1880,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Doce de Leite Zero Açúcar 250g",
-   "foto": "",
+   "foto": "za-003-mvi84c96.jpg",
    "opcoes": [
     {
      "label": "250g",
@@ -1904,7 +1904,7 @@
      "preco": 33
     }
    ],
-   "disponivel": true,
+   "disponivel": false,
    "consultarEstoque": false,
    "selo": "Zero Açúcar"
   },
@@ -1914,7 +1914,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Doce de Leite Zero Açúcar 400g",
-   "foto": "",
+   "foto": "za-005-mvi84e56.jpg",
    "opcoes": [
     {
      "label": "400g",
@@ -1931,7 +1931,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Doce de Leite Zero Açúcar e Zero Lactose 400g",
-   "foto": "",
+   "foto": "za-006-mvi84gcq.jpg",
    "opcoes": [
     {
      "label": "400g",
@@ -1948,7 +1948,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Doce de Leite Diet 630g",
-   "foto": "",
+   "foto": "za-007-mvi84ia1.jpg",
    "opcoes": [
     {
      "label": "630g",
@@ -1965,7 +1965,7 @@
    "cat": "zero",
    "grupo": "Doces de Leite e Pingo de Leite",
    "nome": "Pingo de Leite Zero Açúcar 100g",
-   "foto": "",
+   "foto": "za-008-mvi84juw.jpg",
    "opcoes": [
     {
      "label": "100g",
@@ -1982,7 +1982,7 @@
    "cat": "zero",
    "grupo": "Whey Protein",
    "nome": "Doce de Leite Zero Açúcar Whey Protein 250g",
-   "foto": "",
+   "foto": "za-009-mvi84lrs.jpg",
    "opcoes": [
     {
      "label": "250g",
@@ -1999,7 +1999,7 @@
    "cat": "zero",
    "grupo": "Whey Protein",
    "nome": "Brigadeiro Zero Açúcar Whey Protein 250g",
-   "foto": "",
+   "foto": "za-010-mvi84odu.jpg",
    "opcoes": [
     {
      "label": "250g",
@@ -2016,7 +2016,7 @@
    "cat": "zero",
    "grupo": "Goiabadas, Geleias e Marmelada",
    "nome": "Goiabada Zero Açúcar 360g",
-   "foto": "",
+   "foto": "za-011-mvi84ppg.jpg",
    "opcoes": [
     {
      "label": "360g",
@@ -2033,7 +2033,7 @@
    "cat": "zero",
    "grupo": "Goiabadas, Geleias e Marmelada",
    "nome": "Goiabada Diet 200g",
-   "foto": "",
+   "foto": "za-012-mvi84s1d.jpg",
    "opcoes": [
     {
      "label": "200g",
@@ -2050,7 +2050,7 @@
    "cat": "zero",
    "grupo": "Goiabadas, Geleias e Marmelada",
    "nome": "Doce de Goiaba Zero Açúcar 250g",
-   "foto": "",
+   "foto": "za-013-mvi84ts2.jpg",
    "opcoes": [
     {
      "label": "250g",
@@ -2067,7 +2067,7 @@
    "cat": "zero",
    "grupo": "Goiabadas, Geleias e Marmelada",
    "nome": "Geleia de Goiabada Zero Açúcar 200g",
-   "foto": "",
+   "foto": "za-014-mvi84w0u.jpg",
    "opcoes": [
     {
      "label": "200g",
@@ -2084,7 +2084,7 @@
    "cat": "zero",
    "grupo": "Goiabadas, Geleias e Marmelada",
    "nome": "Geleia de Mirtilo Zero Açúcar 125g",
-   "foto": "",
+   "foto": "za-015-mvi84xps.jpg",
    "opcoes": [
     {
      "label": "125g",
@@ -2101,7 +2101,7 @@
    "cat": "zero",
    "grupo": "Goiabadas, Geleias e Marmelada",
    "nome": "Marmelada Zero Açúcar 540g",
-   "foto": "",
+   "foto": "za-016-mvi8506i.jpg",
    "opcoes": [
     {
      "label": "540g",
@@ -2118,7 +2118,7 @@
    "cat": "zero",
    "grupo": "Doces de Frutas",
    "nome": "Doce de Mamão Enrolado Zero Açúcar 250g",
-   "foto": "",
+   "foto": "za-017-mvi8520z.jpg",
    "opcoes": [
     {
      "label": "250g",
@@ -2135,7 +2135,7 @@
    "cat": "zero",
    "grupo": "Doces de Frutas",
    "nome": "Doce de Figo Zero Açúcar 250g",
-   "foto": "",
+   "foto": "za-018-mvi85451.jpg",
    "opcoes": [
     {
      "label": "250g",
@@ -2152,7 +2152,7 @@
    "cat": "zero",
    "grupo": "Doces de Frutas",
    "nome": "Doce de Caju Zero Açúcar 250g",
-   "foto": "",
+   "foto": "za-019-mvi855rb.jpg",
    "opcoes": [
     {
      "label": "250g",
@@ -2169,7 +2169,7 @@
    "cat": "zero",
    "grupo": "Doces de Frutas",
    "nome": "Doce de Laranja Zero Açúcar 250g",
-   "foto": "",
+   "foto": "za-020-mvi857lr.jpg",
    "opcoes": [
     {
      "label": "250g",
@@ -2186,7 +2186,7 @@
    "cat": "zero",
    "grupo": "Doces de Frutas",
    "nome": "Doce de Pêssego Zero Açúcar 250g",
-   "foto": "",
+   "foto": "za-021-mvi85a4t.jpg",
    "opcoes": [
     {
      "label": "250g",
@@ -2203,7 +2203,7 @@
    "cat": "zero",
    "grupo": "Doces de Frutas",
    "nome": "Figada Zero Açúcar 540g",
-   "foto": "",
+   "foto": "za-022-mvi85c2n.jpg",
    "opcoes": [
     {
      "label": "540g",
@@ -2220,7 +2220,7 @@
    "cat": "zero",
    "grupo": "Banana e Bananadas",
    "nome": "Banana Natural Zero Açúcar",
-   "foto": "",
+   "foto": "za-023-mvi85dxo.jpg",
    "opcoes": [
     {
      "label": "10 un",
@@ -2237,7 +2237,7 @@
    "cat": "zero",
    "grupo": "Banana e Bananadas",
    "nome": "Bananada com Ameixa Zero Açúcar",
-   "foto": "",
+   "foto": "za-024-mvi85frk.jpg",
    "opcoes": [
     {
      "label": "10 un",
@@ -2254,7 +2254,7 @@
    "cat": "zero",
    "grupo": "Banana e Bananadas",
    "nome": "Banana com Açaí Zero Açúcar",
-   "foto": "",
+   "foto": "za-025-mvi85ht4.jpg",
    "opcoes": [
     {
      "label": "10 un",
@@ -2271,7 +2271,7 @@
    "cat": "zero",
    "grupo": "Banana e Bananadas",
    "nome": "Banana com Uvas Passas Zero Açúcar",
-   "foto": "",
+   "foto": "za-026-mvi85jdu.jpg",
    "opcoes": [
     {
      "label": "10 un",
@@ -2288,7 +2288,7 @@
    "cat": "zero",
    "grupo": "Amendoim e Pé de Moça",
    "nome": "Paçoca Cremosa Zero Açúcar 400g",
-   "foto": "",
+   "foto": "za-027-mvi85lc6.jpg",
    "opcoes": [
     {
      "label": "400g",
@@ -2305,7 +2305,7 @@
    "cat": "zero",
    "grupo": "Amendoim e Pé de Moça",
    "nome": "Pasta de Amendoim sem Açúcar",
-   "foto": "",
+   "foto": "za-028-mvi85nj2.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -2322,7 +2322,7 @@
    "cat": "zero",
    "grupo": "Amendoim e Pé de Moça",
    "nome": "Pé de Moça Zero Açúcar 250g",
-   "foto": "",
+   "foto": "za-029-mvi85p4n.jpg",
    "opcoes": [
     {
      "label": "250g",
@@ -2334,7 +2334,7 @@
    "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-20T14:07:25.947978Z",
+ "atualizadoEm": "2026-10-21T14:45:59.083Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
