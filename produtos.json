@@ -55,7 +55,7 @@
    "cat": "combos",
    "grupo": "",
    "nome": "Combo Dupla Minas no Pote",
-   "foto": "",
+   "foto": "combo-dupla-minas-no-pote.jpg",
    "descricao": "1 Doce de Leite Moreno (pote) + 1 Goiabada Cascão de Colher (pote)",
    "opcoes": [
     {
@@ -74,7 +74,7 @@
    "grupo": "",
    "nome": "Combo Romeu e Julieta",
    "descricao": "1 Queijo Fresco (peça) + 1 Goiabada Cascão de Corte 400g: a sobremesa mais mineira que existe",
-   "foto": "",
+   "foto": "combo-romeu-e-julieta.jpg",
    "opcoes": [
     {
      "label": "Combo",
@@ -92,7 +92,7 @@
    "grupo": "",
    "nome": "Combo Café da Manhã Mineiro",
    "descricao": "1 kg de Pão de Queijo Tradicional + 1 Doce de Leite Moreno (pote) + 1 Biscoito de Queijo Canastra (pacote)",
-   "foto": "",
+   "foto": "combo-cafe-da-manha-mineiro.jpg",
    "opcoes": [
     {
      "label": "Combo",
@@ -109,7 +109,7 @@
    "cat": "combos",
    "grupo": "",
    "nome": "Combo Tábua Mineira",
-   "foto": "",
+   "foto": "combo-tabua-mineira.jpg",
    "descricao": "1 Kit 4 Queijos Serra da Canastra + 1 Geleia de Pimenta 250g + 1 Goiabada Cascão de Corte 400g",
    "opcoes": [
     {
@@ -2356,7 +2356,7 @@
    "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-21T20:58:11.000000Z",
+ "atualizadoEm": "2026-10-21T21:18:14.000000Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
