@@ -14,7 +14,7 @@ const I = {
 const al = $('#admLink'); if (al) al.remove();
 if (/(^|[#?&])admin\b/.test(location.hash + location.search)) return; // admin mantém layout original
 
-const logo = ($('.hero img') || {}).src || 'logo.jpg';
+const logo = ($('.hero img') || {}).src || 'logo.png';
 const top = document.createElement('div');
 top.className = 'topbar';
 top.innerHTML = `<button class="ib" type="button" id="tMenu" aria-label="Ir para contato">${I.menu}</button><img src="${logo}" alt="De Minas Pão de Queijaria"><button class="ib" type="button" id="tCart" aria-label="Ver pedido">${I.cart}<span class="bdg" id="tBdg" data-n="0"></span></button>`;
@@ -155,7 +155,10 @@ function indCode() {
 function compartilhar() {
   const ind = indCode();
   const url = location.origin + location.pathname.replace(/index\.html$/, '') + (ind ? '?ind=' + encodeURIComponent(ind) : '');
-  const texto = 'Conheça a De Minas Pão de Queijaria: pão de queijo mineiro congelado, é só assar. Faça o pedido pelo catálogo:';
+  const completo = !/congelados/.test(location.pathname);
+  const texto = completo
+    ? 'Conheça a De Minas Pão de Queijaria: pão de queijo mineiro, queijos, doces e delícias de Minas. Faça o pedido pelo catálogo:'
+    : 'Conheça a De Minas Pão de Queijaria: pão de queijo mineiro congelado, é só assar. Faça o pedido pelo catálogo:';
   if (navigator.share) navigator.share({title: 'De Minas Pão de Queijaria', text: texto, url}).catch(() => {});
   else window.open('https://wa.me/?text=' + encodeURIComponent(texto + ' ' + url), '_blank', 'noopener');
 }
