@@ -198,7 +198,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
 .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
 .prod-btn{background:#fff;border:1.5px solid #e0e0e0;border-radius:var(--radius);padding:12px;cursor:pointer;text-align:left;transition:.2s;position:relative;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .prod-btn:hover{border-color:var(--ouro);box-shadow:0 2px 8px rgba(200,134,10,.2);transform:translateY(-1px)}
-.prod-btn.esgotado{opacity:.5;cursor:not-allowed;background:var(--creme2)}
+.prod-btn.esgotado{opacity:.75;background:var(--creme2)}
 .prod-btn.cong-card{border-left:3px solid var(--congelado)}
 .prod-btn .emoji{font-size:22px;display:block;margin-bottom:6px}
 .prod-btn .pname{font-size:12px;font-weight:600;color:var(--cafe);line-height:1.3;margin-bottom:4px}
@@ -642,7 +642,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
 <div class="modal-overlay" id="mod-recibo"><div class="modal modal-sm"><div class="modal-head"><h3>✅ Venda Finalizada!</h3><button class="close-btn" onclick="fm('mod-recibo')">×</button></div><div class="modal-body" id="recibo-body"></div><div class="modal-foot" id="recibo-foot"></div></div></div>
 <div class="modal-overlay" id="mod-at-ped"><div class="modal modal-lg"><div class="modal-head"><h3 id="at-ped-title">Novo Pedido B2B</h3><button class="close-btn" onclick="fm('mod-at-ped')">×</button></div><div class="modal-body" id="at-ped-body"></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-at-ped')">Cancelar</button><button class="btn btn-primary" onclick="salvarAtPed()">Salvar Pedido B2B</button></div></div></div>
 <div class="modal-overlay" id="mod-at-det"><div class="modal modal-lg"><div class="modal-head"><h3 id="at-det-title">Pedido B2B</h3><button class="close-btn" onclick="fm('mod-at-det')">×</button></div><div class="modal-body" id="at-det-body"></div><div class="modal-foot" id="at-det-foot"></div></div></div>
-<div class="modal-overlay" id="mod-at-cli"><div class="modal"><div class="modal-head"><h3 id="at-cli-title">Novo Cliente B2B</h3><button class="close-btn" onclick="fm('mod-at-cli')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-group" style="grid-column:1/-1"><label>Empresa *</label><input id="ac-n" placeholder="Supermercado Exemplo"></div><div class="form-group"><label>CNPJ/CPF</label><input id="ac-doc" placeholder="12.345.678/0001-99"></div><div class="form-group"><label>WhatsApp</label><input id="ac-wa" placeholder="(11) 99999-9999"></div><div class="form-group"><label>Cidade</label><input id="ac-cid" placeholder="São Paulo, SP"></div><div class="form-group" style="grid-column:1/-1"><label>Endereço</label><input id="ac-end" placeholder="Rua, número"></div><div class="form-group" style="grid-column:1/-1"><label>Observações</label><textarea id="ac-obs"></textarea></div></div><input type="hidden" id="ac-id"></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-at-cli')">Cancelar</button><button class="btn btn-primary" onclick="salvarAtCli()">Salvar</button></div></div></div>
+<div class="modal-overlay" id="mod-at-cli"><div class="modal"><div class="modal-head"><h3 id="at-cli-title">Novo Cliente B2B</h3><button class="close-btn" onclick="fm('mod-at-cli')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-group" style="grid-column:1/-1"><label>Empresa *</label><input id="ac-n" placeholder="Supermercado Exemplo"></div><div class="form-group"><label>CNPJ/CPF</label><input id="ac-doc" placeholder="12.345.678/0001-99"></div><div class="form-group"><label>WhatsApp</label><input id="ac-wa" placeholder="(11) 99999-9999"></div><div class="form-group"><label>Cidade</label><input id="ac-cid" placeholder="São Paulo, SP"></div><div class="form-group" style="grid-column:1/-1"><label>Endereço</label><input id="ac-end" placeholder="Rua, número"></div><div class="form-group" style="grid-column:1/-1"><label>Pagamento</label><select id="ac-prazo"><option value="">PIX / à vista (padrão)</option><option value="7d">Prazo de 7 dias aprovado</option></select></div><div class="form-group" style="grid-column:1/-1"><label>Observações</label><textarea id="ac-obs"></textarea></div></div><input type="hidden" id="ac-id"></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-at-cli')">Cancelar</button><button class="btn btn-primary" onclick="salvarAtCli()">Salvar</button></div></div></div>
 <div class="modal-overlay" id="mod-cli"><div class="modal"><div class="modal-head"><h3 id="cli-title">Novo Cliente</h3><button class="close-btn" onclick="fecharModalCli()">×</button></div><div class="modal-body"><div style="display:flex;gap:8px;margin-bottom:16px"><button id="cli-tipo-pf" onclick="setCliTipo('PF')" style="flex:1;padding:9px 0;border-radius:5px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:700;border:2px solid var(--azul);background:var(--azul);color:#fff">👤 PF</button><button id="cli-tipo-pj" onclick="setCliTipo('PJ')" style="flex:1;padding:9px 0;border-radius:5px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;border:2px solid var(--borda);background:#fff;color:var(--txt2)">🏢 PJ</button></div><div class="form-grid"><div class="form-group"><label>Nome *</label><input id="cli-n" placeholder="Nome completo"></div><div class="form-group"><label>WhatsApp</label><input id="cli-wa" placeholder="(11) 99999-9999"></div><div class="form-group"><label id="cli-doc-label">CPF/CNPJ</label><input id="cli-doc" placeholder="000.000.000-00"></div><div class="form-group"><label>E-mail</label><input id="cli-email" type="email" placeholder="email@exemplo.com"></div><div class="form-group"><label>Cidade/Bairro</label><input id="cli-cid" placeholder="Moema, SP"></div><div class="form-group"><label>Nascimento</label><input id="cli-nasc" type="date"></div><div class="form-group" style="grid-column:1/-1"><label>Logradouro</label><input id="cli-logradouro" list="end-list" placeholder="Rua, Av, Condomínio..."><datalist id="end-list"></datalist></div><div class="form-group"><label>Complemento</label><input id="cli-complemento" placeholder="Casa 11, Ap 302..."></div><div class="form-group"><label>Condomínio / Referência</label><input id="cli-condominio" list="cli-cond-list" placeholder="Ex: Condomínio Jardim..." autocomplete="off"><datalist id="cli-cond-list"></datalist></div><div class="form-group" style="grid-column:1/-1"><label>Observações</label><textarea id="cli-obs" placeholder="Notas..."></textarea></div></div><input type="hidden" id="cli-id"><input type="hidden" id="cli-tipo-val" value="PF"></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fecharModalCli()">Cancelar</button><button class="btn btn-primary" onclick="salvarCli()">Salvar</button></div></div></div>
 <div class="modal-overlay" id="mod-cli-hist"><div class="modal modal-lg"><div class="modal-head"><h3 id="cli-hist-title">Histórico</h3><button class="close-btn" onclick="fm('mod-cli-hist')">×</button></div><div class="modal-body" id="cli-hist-body"></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-cli-hist')">Fechar</button></div></div></div>
 
@@ -663,7 +663,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
   </div>
 </div>
 <div class="modal-overlay" id="mod-prod"><div class="modal"><div class="modal-head"><h3 id="prod-title">Novo Produto</h3><button class="close-btn" onclick="fm('mod-prod')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-group" style="grid-column:1/-1"><label>Nome *</label><input id="prod-n" placeholder="Nome do produto"></div><div class="form-group"><label>Categoria</label><select id="prod-cat" onchange="toggleProdCampos()"><option>Congelados</option><option>Queijos</option><option>Doces</option><option>Outros</option></select></div><div class="form-group"><label>Fornecedor</label><select id="prod-forn"></select></div><div class="form-group"><label>Tipo</label><select id="prod-tipo" onchange="toggleProdCampos()"><option value="estoque">Estoque local</option><option value="encomenda">Sob encomenda</option></select></div><div class="form-group"><label>Peso variável?</label><select id="prod-pv"><option value="0">Não</option><option value="1">Sim</option></select></div><div class="form-group"><label>Preço Varejo R$</label><input id="prod-pr" type="number" min="0" step=".01"></div><div class="form-group"><label>Preço Atacado R$</label><input id="prod-prat" type="number" min="0" step=".01" placeholder="0"></div><div class="form-group" id="prod-prm-wrap"><label>Preço Metade R$</label><input id="prod-prm" type="number" min="0" step=".01"></div><div class="form-group" id="prod-est-wrap"><label>Estoque</label><input id="prod-est" type="number" min="0" step=".1" value="0"></div><div class="form-group" id="prod-estmin-wrap"><label>Estoque Mínimo</label><input id="prod-estmin" type="number" min="0" step=".1" value="2"></div><div class="form-group" id="prod-pacote-wrap"><label>Pacote</label><input id="prod-pacote" placeholder="1kg, 2kg, 500g, un..."></div></div><input type="hidden" id="prod-id"></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-prod')">Cancelar</button><button class="btn btn-primary" onclick="salvarProd()">Salvar</button></div></div></div>
-<div class="modal-overlay" id="mod-cong-est"><div class="modal modal-sm"><div class="modal-head"><h3 id="cong-est-title">Atualizar Estoque</h3><button class="close-btn" onclick="fm('mod-cong-est')">×</button></div><div class="modal-body"><div id="cong-est-info" style="background:var(--congelado2);border-radius:8px;padding:12px;margin-bottom:14px;font-size:13px;color:var(--congelado)"></div><div class="form-group"><label>Novo Estoque</label><input id="cong-est-val" type="number" min="0" step=".5"></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-cong-est')">Cancelar</button><button class="btn btn-congelado" onclick="salvarEstCong()">Atualizar</button></div></div></div>
+<div class="modal-overlay" id="mod-cong-est"><div class="modal modal-sm"><div class="modal-head"><h3 id="cong-est-title">Atualizar Estoque</h3><button class="close-btn" onclick="fm('mod-cong-est')">×</button></div><div class="modal-body"><div id="cong-est-info" style="background:var(--congelado2);border-radius:8px;padding:12px;margin-bottom:14px;font-size:13px;color:var(--congelado)"></div><div class="form-group"><label>Novo Estoque (contagem)</label><input id="cong-est-val" type="number" step=".5"></div><div class="form-group"><label>Ou lançar compra (soma ao estoque)</label><input id="cong-est-add" type="number" min="0" step=".5" placeholder="Ex.: 10"></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-cong-est')">Cancelar</button><button class="btn btn-congelado" onclick="salvarEstCong()">Atualizar</button></div></div></div>
 <div class="modal-overlay" id="mod-forn"><div class="modal"><div class="modal-head"><h3 id="forn-title">Novo Fornecedor</h3><button class="close-btn" onclick="fm('mod-forn')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-group" style="grid-column:1/-1"><label>Nome *</label><input id="forn-n" placeholder="Nome do fornecedor"></div><div class="form-group"><label>WhatsApp</label><input id="forn-wa" placeholder="(11) 99999-9999"></div><div class="form-group"><label>Cidade</label><input id="forn-cid" placeholder="Uberlândia, MG"></div><div class="form-group"><label>Prazo</label><input id="forn-prazo" placeholder="3 dias úteis"></div><div class="form-group"><label>Pagamento</label><input id="forn-pgto" placeholder="30 dias"></div><div class="form-group" style="grid-column:1/-1"><label>Observações</label><textarea id="forn-obs"></textarea></div></div><input type="hidden" id="forn-id"></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-forn')">Cancelar</button><button class="btn btn-primary" onclick="salvarForn()">Salvar</button></div></div></div>
 <div class="modal-overlay" id="mod-vend"><div class="modal"><div class="modal-head"><h3 id="vend-title">Novo Vendedor</h3><button class="close-btn" onclick="fm('mod-vend')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-group" style="grid-column:1/-1"><label>Nome *</label><input id="vend-n" placeholder="Nome do vendedor"></div><div class="form-group"><label>WhatsApp</label><input id="vend-wa" placeholder="(11) 99999-9999"></div><div class="form-group"><label>Canal</label><select id="vend-canal"><option>WhatsApp</option><option>PDV</option><option>Atacado</option><option>Todos</option></select></div><div class="form-group"><label>Meta Mensal R$</label><input id="vend-meta" type="number" min="0" step="100" placeholder="0"></div><div class="form-group"><label>Comissão %</label><input id="vend-com" type="number" min="0" step="0.1" placeholder="0"></div></div><input type="hidden" id="vend-id"></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-vend')">Cancelar</button><button class="btn btn-primary" onclick="salvarVendedor()">Salvar</button></div></div></div>
 <div class="modal-overlay" id="mod-ap"><div class="modal modal-lg"><div class="modal-head"><h3 id="ap-title">Nova Conta a Pagar</h3><button class="close-btn" onclick="fm('mod-ap')">×</button></div><div class="modal-body"><div class="form-grid"><div class="form-group" style="grid-column:1/-1"><label>Descrição *</label><input id="ap-desc" placeholder="Compra..."></div><div class="form-group"><label>Fornecedor</label><select id="ap-forn"><option value="">Nenhum</option></select></div><div class="form-group"><label>Categoria</label><select id="ap-cat"><option>Produto</option><option>Viagem</option><option>Aluguel</option><option>Folha</option><option>Marketing</option><option>Outros</option></select></div><div class="form-group"><label>Valor R$</label><input id="ap-val" type="number" min="0" step=".01" oninput="calcParcelasAP()"></div><div class="form-group"><label>Vencimento</label><input id="ap-venc" type="date"></div><div class="form-group"><label>Parcelas</label><input id="ap-parc" type="number" min="1" max="60" value="1" oninput="calcParcelasAP()"></div><div class="form-group"><label>Recorrente</label><select id="ap-recor"><option value="0">Não</option><option value="1">Sim</option></select></div><div class="form-group"><label>Forma</label><select id="ap-pgto"><option>PIX</option><option>Boleto</option><option>Cartão</option><option>Dinheiro</option><option>Transferência</option></select></div><div class="form-group" style="grid-column:1/-1"><label>Obs</label><input id="ap-obs" placeholder="Observações..."></div></div><div id="ap-parc-preview" style="margin-top:12px"></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-ap')">Cancelar</button><button class="btn btn-primary" onclick="salvarAP()">Salvar</button></div></div></div>
@@ -1128,19 +1128,20 @@ function getStatusRecorrencia(dias){
 }
 
 function debitarEstoque(itens){
+  // nunca trava a venda: o estoque pode ficar negativo (= vendido e ainda a comprar)
   (itens||[]).forEach(it=>{
+    const q=parseFloat(it.qty)||1;
     const prod=gP(it.prodId);
-    if(prod&&prod.tipo==='estoque'){
-      prod.est=Math.max(0,(prod.est||0)-(parseFloat(it.qty)||1));
-    }
+    if(prod&&prod.tipo==='estoque')prod.est=(prod.est||0)-q;
+    (it.estq||[]).forEach(e=>{const pr=gP(e.id);if(pr&&pr.tipo==='estoque')pr.est=(pr.est||0)-e.q*q;});
   });
 }
 function restaurarEstoque(itens){
   (itens||[]).forEach(it=>{
+    const q=parseFloat(it.qty)||1;
     const prod=gP(it.prodId);
-    if(prod&&prod.tipo==='estoque'){
-      prod.est=(prod.est||0)+(parseFloat(it.qty)||1);
-    }
+    if(prod&&prod.tipo==='estoque')prod.est=(prod.est||0)+q;
+    (it.estq||[]).forEach(e=>{const pr=gP(e.id);if(pr&&pr.tipo==='estoque')pr.est=(pr.est||0)+e.q*q;});
   });
 }
 function verificarEstoqueItens(itens){
@@ -1150,6 +1151,7 @@ function verificarEstoqueItens(itens){
     if(prod&&prod.tipo==='estoque'&&(parseFloat(it.qty)||1)>(prod.est||0)){
       avisos.push(prod.n+' (disp: '+(prod.est||0)+')');
     }
+    (it.estq||[]).forEach(e=>{const pr=gP(e.id);const q=e.q*(parseFloat(it.qty)||1);if(pr&&pr.tipo==='estoque'&&q>(pr.est||0))avisos.push(pr.n.split('—')[0].trim()+' (disp: '+(pr.est||0)+')');});
   });
   if(avisos.length)toast('⚠️ Estoque insuficiente: '+avisos.join(', '),'warn');
 }
@@ -1342,7 +1344,9 @@ function getCatalogoMaster(){return[
 {id:'enc_lanche_90_1kg',n:'Pão de Queijo Tipo Lanche 90g Encanto — 1kg',cat:'Congelados',forn:'Encanto de Minas / Brasil Mineiro',tipo:'estoque',pr:32.90,prAtacado:null,pacote:'1kg',pv:false,est:0,estMin:2},
 {id:'enc_lanche_100_1kg',n:'Pão de Queijo Tipo Lanche 100g Encanto — 1kg',cat:'Congelados',forn:'Encanto de Minas / Brasil Mineiro',tipo:'estoque',pr:32.90,prAtacado:null,pacote:'1kg',pv:false,est:0,estMin:2},
 {id:'enc_palitao_1kg',n:'Palitão de Queijo 100g Encanto — 1kg',cat:'Congelados',forn:'Encanto de Minas / Brasil Mineiro',tipo:'estoque',pr:32.90,prAtacado:null,pacote:'1kg',pv:false,est:0,estMin:2},
-{id:'enc_ferradura_1kg',n:'Biscoito Ferradura Encanto — 1kg',cat:'Congelados',forn:'Encanto de Minas / Brasil Mineiro',tipo:'estoque',pr:32.90,prAtacado:null,pacote:'1kg',pv:false,est:0,estMin:2}
+{id:'enc_ferradura_1kg',n:'Biscoito Ferradura Encanto — 1kg',cat:'Congelados',forn:'Encanto de Minas / Brasil Mineiro',tipo:'estoque',pr:32.90,prAtacado:null,pacote:'1kg',pv:false,est:0,estMin:2},
+{id:'cong_chipatrad_500g',n:'Chipa Tradicional — 500g',cat:'Congelados',forn:'A definir',tipo:'estoque',pr:18.00,prAtacado:null,pacote:'500g',pv:false,est:0,estMin:0},
+{id:'cong_chipatrad_1kg',n:'Chipa Tradicional — 1kg',cat:'Congelados',forn:'A definir',tipo:'estoque',pr:30.90,prAtacado:null,pacote:'1kg',pv:false,est:0,estMin:0}
 ];}
 
 function carregar(){
@@ -1526,7 +1530,7 @@ function desenharNovosPedidos() {
 
     el.innerHTML = novosPedidosCache.map(p => {
       const itens = (p.itens || []).map(it =>
-        `${it.qtd || 1}x ${x(it.nome || '?')} — ${R(it.subtotal || (it.preco * it.qtd) || 0)}`
+        `${imgItem(it, 30)}${it.qtd || 1}x ${x(it.nome || '?')}${/^\d/.test(it.label || '') && !String(it.nome || '').includes(String(it.label)) ? ' (' + x(it.label) + ')' : ''}${it.kg ? ' (por kg)' : ''} — ${R(it.subtotal || (it.preco * it.qtd) || 0)}${descDoItem(it) ? '<div style="font-size:11px;color:#7a7a7a;margin:0 0 4px 34px">' + x(descDoItem(it)) + '</div>' : ''}`
       ).join('<br>');
 
       const dt = p.criadoEm?.seconds
@@ -1537,8 +1541,9 @@ function desenharNovosPedidos() {
       <div class="ped-card pend" style="cursor:default">
         <div class="ped-card-top">
           <span class="ped-num">🆕 ${x(p.cliente || 'Sem nome')}</span>
-          <span class="pill pill-pend">NOVO</span>
+          <span class="pill pill-pend">${p.canal === 'atacado' ? '🏢 ATACADO' : 'NOVO'}</span>
         </div>
+        ${p.canal === 'atacado' ? '<div class="ped-card-mid" style="font-size:12px;font-weight:700">🏢 CNPJ ' + x(String(p.cnpj || '').replace(/\D/g, '').replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')) + '</div>' : ''}
         <div class="ped-card-mid">📱 ${x(p.whatsapp || '—')} · ${x(p.tipo || 'Entrega')}</div>
         <div class="ped-card-mid" style="font-size:12px">📍 ${x(p.endereco || '—')}</div>
         <div class="ped-card-mid" style="font-size:12px">💳 ${x(p.pagamento || '—')}${p.troco ? ' · troco para ' + x(p.troco) : ''}${p.taxaFrete ? ' · 🚚 ' + x(p.frete || 'Entrega') + ' ' + R(p.taxaFrete) : ''}</div>
@@ -1633,11 +1638,56 @@ function alternarFlutuante() { const b = document.getElementById('novos-flut'); 
 function removerDoCacheCatalogo(id) { novosPedidosCache = novosPedidosCache.filter(p => p.id !== id); desenharNovosPedidos(); desenharFlutuante(); }
 
 async function aprovarPedidoCatalogo(id) {
+  if (!catSincronizado()) { await catAtualizarFotos(); if (!catSincronizado()) toast('⚠️ Catálogo não carregado: o estoque e a lista de compras podem ficar incompletos', 'warn'); }
   const ped = novosPedidosCache.find(p => p.id === id);
   if (!ped) { toast('Pedido não encontrado', 'err'); return; }
 
   // se uma tentativa anterior já criou o pedido no ERP, só refaz a marcação na nuvem (não duplica)
-  let novoPed = db.peds.find(p => p.catalogoId === id);
+  const ehAt = ped.canal === 'atacado';
+  let novoPed = (ehAt ? db.atPeds : db.peds).find(p => p.catalogoId === id);
+
+  if (!novoPed && ehAt) {
+    const itensAt = (ped.itens || []).slice(0, 60).map(it => {
+      const qty = Math.max(1, Math.min(999, Number(it.qtd) || 1));
+      const lab = String(it.label || '').trim().slice(0, 20), cod = String(it.codigo || '').slice(0, 20);
+      const cpa = catProd(cod);
+      const nomeBase = String((cpa && cpa.n) || it.nome || 'Item').slice(0, 100);
+      const cong = cpa ? cpa.cat === 'congelados' : udiEhCong(cod, it.cat, nomeBase);
+      return {
+        id: uid(), prodId: null,
+        nome: udiNomeComLabel(nomeBase, lab, !!it.kg).slice(0, 120), nomeBase, cod,
+        foto: String(it.foto || (catMapa.porCod[cod]) || '').slice(0, 80), desc: String(it.desc || (catMapa.descCod && catMapa.descCod[cod]) || '').slice(0, 160),
+        label: lab, cat: String(it.cat || '').slice(0, 20), comp: '', pesoKg: (cong && !it.kg) ? udiPesoLabel(lab) : 0, kgOpt: !!it.kg,
+        estq: (cong ? udiEstqCod(cod, lab) : []),
+        qty, pr: Math.max(0, Number(it.preco) || 0), sub: 'peca', tipoLabel: 'Unidade', pv: false, pesoReal: null, pacote: '', descItem: 0, descItemTipo: 'P'
+      };
+    });
+    const cnpjD = String(ped.cnpj || '').replace(/\D/g, '').slice(0, 14);
+    const cnpjF = cnpjD.length === 14 ? cnpjD.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5') : cnpjD;
+    const [empNome, ...respPartes] = String(ped.cliente || 'Cliente Atacado').split(' — ');
+    const resp = respPartes.join(' — ');
+    const waD = String(ped.whatsapp || '').replace(/\D/g, '');
+    let cli = db.atClis.find(c => cnpjD && String(c.doc || '').replace(/\D/g, '') === cnpjD);
+    if (!cli && waD) cli = db.atClis.find(c => String(c.w || '').replace(/\D/g, '').slice(-9) === waD.slice(-9));
+    if (!cli) {
+      cli = { id: uid(), n: empNome.trim().slice(0, 100), doc: cnpjF, w: String(ped.whatsapp || '').slice(0, 25), c: '', e: String(ped.endereco || '').slice(0, 300), obs: [resp ? 'Responsável: ' + resp : '', '[cadastrado pelo catálogo atacado]'].filter(Boolean).join(' | ') };
+      db.atClis.push(cli);
+    } else {
+      if (!cli.doc && cnpjF) cli.doc = cnpjF;
+      if (!cli.w && ped.whatsapp) cli.w = String(ped.whatsapp).slice(0, 25);
+      if (!cli.e && ped.endereco) cli.e = String(ped.endereco).slice(0, 300);
+    }
+    novoPed = {
+      id: uid(), num: db.seqAt++, catalogoId: id, codigoCatalogo: String(ped.codigo || id).slice(0, 30),
+      cliId: cli.id, cliNome: cli.n, pgto: cli.prazo === '7d' ? '7d' : 'AVista', vendedor: '',
+      obs: [String(ped.obs || '').slice(0, 380), resp ? 'Resp.: ' + resp : '', ped.tipo === 'Retirada' ? 'RETIRADA NA LOJA' : 'Entrega: ' + String(ped.endereco || '').slice(0, 200), '[via catálogo atacado]'].filter(Boolean).join(' | '),
+      itens: itensAt, frete: 0, desc: 0, st: 'PENDENTE', data: new Date().toISOString(), tipo: 'atacado', recebido: false, origem: 'catalogo'
+    };
+    novoPed.total = itensAt.reduce((t, it) => t + it.pr * it.qty, 0);
+    db.atPeds.push(novoPed);
+    debitarEstoque(novoPed.itens); novoPed.estoqueDebitado = true;
+    salvar(); atualizaBadges();
+  }
 
   if (!novoPed) {
     const avisos = [];
@@ -1646,15 +1696,20 @@ async function aprovarPedidoCatalogo(id) {
       const qty = Math.max(1, Math.min(999, Number(it.qtd) || 1));
       let preco = Math.max(0, Number(it.preco) || 0);
       const pv = !!(pr && pr.pv);
+      const lab = String(it.label || '').trim().slice(0, 20), cod = String(it.codigo || '').slice(0, 20);
+      const nomeBase = String((catProd(cod) && catProd(cod).n) || it.nome || (pr && pr.n) || 'Item').slice(0, 100);
+      const cpa = catProd(cod); const cong = cpa ? cpa.cat === 'congelados' : udiEhCong(cod, it.cat, nomeBase);
+      if (it.kg && !pr) avisos.push(`${nomeBase}: vendido por kg — pese e ajuste o valor`);
       if (pr) {
         if (pv) preco = pr.pr;   // peso variável: preço/kg do cadastro; o valor final sai na pesagem
         else if (Math.abs(preco - (pr.pr || 0)) > 0.009) avisos.push(`${it.nome}: site R$ ${Rn(preco)} × cadastro R$ ${Rn(pr.pr)}`);
-      } else {
+      } else if (!cod) {
         avisos.push(`${it.nome || 'Item'}: produto não encontrado no cadastro`);
       }
       return {
         id: uid(), prodId: it.prodId || null,
-        nome: String(it.nome || (pr && pr.n) || 'Item').slice(0, 120),
+        nome: udiNomeComLabel(nomeBase, lab, !!it.kg).slice(0, 120), nomeBase, cod, foto: String(it.foto || (catMapa.porCod[cod]) || '').slice(0, 80), desc: String(it.desc || (catMapa.descCod && catMapa.descCod[cod]) || '').slice(0, 160), label: lab, cat: String(it.cat || '').slice(0, 20),
+        comp: String(it.comp || '').slice(0, 240), pesoKg: (cong && !it.kg) ? udiPesoLabel(lab) : 0, kgOpt: !!it.kg, estq: (cong ? udiEstqCod(cod, lab) : []),
         qty, pr: preco, sub: 'peca', tipoLabel: pv ? 'Peça' : 'Unidade', pv, pesoReal: null,
         pacote: pr ? (pr.pacote || '') : '', descItem: 0, descItemTipo: 'P'
       };
@@ -1702,10 +1757,10 @@ async function aprovarPedidoCatalogo(id) {
       pedidoERP: novoPed.num
     });
     removerDoCacheCatalogo(id);
-    toast('✅ Pedido ' + nP(novoPed.num) + ' criado no ERP!' + (novoPed.temPV ? ' (entra em PESAGEM)' : ''), 'ok');
+    toast('✅ Pedido ' + (ehAt ? nAt(novoPed.num) + ' (Atacado)' : nP(novoPed.num)) + ' criado no ERP!' + (novoPed.temPV ? ' (entra em PESAGEM)' : ''), 'ok');
   } catch (e) {
     console.error(e);
-    toast('Pedido ' + nP(novoPed.num) + ' foi criado no ERP, mas não deu para marcar como aprovado no catálogo. Clique em Aprovar de novo (não duplica).', 'warn');
+    toast('Pedido ' + (ehAt ? nAt(novoPed.num) : nP(novoPed.num)) + ' foi criado no ERP, mas não deu para marcar como aprovado no catálogo. Clique em Aprovar de novo (não duplica).', 'warn');
   }
 }
 
@@ -2158,7 +2213,7 @@ function abrirDetPed(id){
     if(it.tipoLabel&&it.tipoLabel!=='Unidade'&&it.tipoLabel!=='Peça')qtdDisplay+=' ('+it.tipoLabel+')';
     const subtotal=calcItemSubFn(it);
     const descInfo=(it.descItem&&it.descItem>0)?`<span style="font-size:10px;color:var(--laranja)"> -${it.descItemTipo==='P'?it.descItem+'%':'R$'+it.descItem}</span>`:'';
-    return`<tr><td>${x(it.nome)}${it.pv?' ⚖️':''}</td><td>${qtdDisplay}</td><td>${R(it.pr)}${descInfo}</td><td style="font-weight:700">${R(subtotal)}</td></tr>`;
+    return`<tr><td>${imgItem(it,40)}${x(it.nome)}${codTag(it.cod||it.codigo)}${it.pv?' ⚖️':''}${descHtml(descDoItem(it),11)}</td><td>${qtdDisplay}</td><td>${R(it.pr)}${descInfo}</td><td style="font-weight:700">${R(subtotal)}</td></tr>`;
   }).join('');
   const end=enderecoCompleto(p);
   document.getElementById('det-title').textContent='Pedido '+nP(p.num);
@@ -2304,11 +2359,11 @@ function rendPDVGrid(){
   if(busca)prods=prods.filter(p=>p.n.toLowerCase().includes(busca));
   document.getElementById('pdv-grid').innerHTML=prods.map(p=>{
     const esgo=p.tipo==='estoque'&&p.est<=0;
-    return`<button class="prod-btn${esgo?' esgotado':''}${p.cat==='Congelados'?' cong-card':''}" onclick="${esgo?'void(0)':`addPDV('${p.id}')`}">
+    return`<button class="prod-btn${esgo?' esgotado':''}${p.cat==='Congelados'?' cong-card':''}" onclick="addPDV('${p.id}')">
       <span class="emoji">${prodEmoji(p.cat)}</span>
       <div class="pname">${x(p.n)}</div>
       <div class="pprice">${R(p.pr)}${p.pv?'/kg':''}</div>
-      <div class="pstock">${p.tipo==='estoque'?(esgo?'❌ Esgotado':'✓ '+p.est+'un'):'📦 Encomenda'}</div>
+      <div class="pstock">${p.tipo==='estoque'?(esgo?(p.est<0?'🛒 A repor '+Math.abs(p.est):'❌ Sem estoque'):'✓ '+p.est+'un'):'📦 Encomenda'}</div>
     </button>`;
   }).join('')||'<div style="color:var(--txt3);padding:20px">Nenhum produto</div>';
 }
@@ -2316,7 +2371,7 @@ function rendPDVGrid(){
 function addPDV(prodId){
   if(!pdvCaixaAberta){toast('Abra o caixa','warn');return;}
   const p=gP(prodId);if(!p)return;
-  if(p.tipo==='estoque'&&p.est<=0){toast('Esgotado','err');return;}
+  if(p.tipo==='estoque'&&p.est<=0)toast('Sem estoque — a venda continua e o estoque fica a repor','warn');
   if(p.pv){
     const kgTxt=prompt('Peso de "'+p.n+'" em kg (ex: 0,350):');
     if(kgTxt===null)return;
@@ -2395,7 +2450,7 @@ function finalizarVenda(){
   const num='PDV-'+String(Math.max(0,...db.vendas.map(v=>parseInt(String(v.num||'').replace(/\D/g,''))||0))+1).padStart(4,'0');
   const venda={id:uid(),num,itens:JSON.parse(JSON.stringify(pdvCartItems)),subtotal:sub,desconto:descR,total,pgto:pdvPgto,recebido,troco:Math.max(0,recebido-total),data:new Date().toISOString(),tipo:'pdv',vendedor};
   db.vendas.push(venda);
-  estoqueSnap.forEach(({prodId,qty})=>{const prod=gP(prodId);if(prod&&prod.tipo==='estoque')prod.est=Math.max(0,prod.est-qty);});
+  estoqueSnap.forEach(({prodId,qty})=>{const prod=gP(prodId);if(prod&&prod.tipo==='estoque')prod.est=(prod.est||0)-qty;});
   const ok=salvar();
   if(!ok){
     db.vendas.pop();
@@ -2442,7 +2497,7 @@ function rendCongelados(){
   if(busca)prods=prods.filter(p=>p.n.toLowerCase().includes(busca));
   const grid=document.getElementById('cong-grid');if(!grid)return;
   grid.innerHTML=prods.map(p=>{
-    const baixo=p.est<=p.estMin,esgo=p.est<=0;
+    const baixo=p.est<=p.estMin,esgo=p.est<=0,repor=p.est<0;
     return`<div class="cong-card">
       <div class="cong-card-name">${x(p.n)}</div>
       <span class="cong-card-pacote">${x(p.pacote||'un')}</span>
@@ -2451,7 +2506,7 @@ function rendCongelados(){
         <span style="font-size:12px;color:var(--txt3)">Estoque:</span>
         <span style="color:${esgo?'var(--vermelho)':baixo?'var(--laranja)':'var(--verde)'}">${p.est}</span>
         <span style="font-size:11px;color:var(--txt3)">un</span>
-        ${baixo?`<span style="font-size:10px;color:${esgo?'var(--vermelho)':'var(--laranja)'};font-weight:600;margin-left:auto">${esgo?'❌ ESGOTADO':'⚠️ BAIXO'}</span>`:''}
+        ${baixo?`<span style="font-size:10px;color:${esgo?'var(--vermelho)':'var(--laranja)'};font-weight:600;margin-left:auto">${repor?'🛒 A REPOR':esgo?'❌ ESGOTADO':'⚠️ BAIXO'}</span>`:''}
       </div>
       <div style="display:flex;gap:6px;margin-top:10px">
         <button class="btn btn-congelado btn-sm" style="flex:1" onclick="abrirEstCong('${p.id}')">📦 Atualizar</button>
@@ -2477,8 +2532,8 @@ function rendCongelados(){
   }).join(''):'<tr><td colspan="3" style="text-align:center;color:var(--txt3)">Nenhuma venda</td></tr>';
 }
 function abrirNovoCong(){abrirNovoProd();document.getElementById('prod-cat').value='Congelados';document.getElementById('prod-tipo').value='estoque';toggleProdCampos();}
-function abrirEstCong(id){congEstId=id;const p=gP(id);if(!p)return;document.getElementById('cong-est-title').textContent='Estoque — '+p.n.split('—')[0].trim();document.getElementById('cong-est-info').innerHTML=`<strong>${x(p.n)}</strong><br>Atual: ${p.est} un | Mínimo: ${p.estMin}`;document.getElementById('cong-est-val').value=p.est;am('mod-cong-est');}
-function salvarEstCong(){if(!congEstId)return;const p=gP(congEstId);if(!p)return;p.est=parseFloat(document.getElementById('cong-est-val').value)||0;salvar();fm('mod-cong-est');rendCongelados();atualizaBadges();if(curPage==='painel')rendPainel();toast('Estoque atualizado!','ok');}
+function abrirEstCong(id){congEstId=id;const p=gP(id);if(!p)return;document.getElementById('cong-est-title').textContent='Estoque — '+p.n.split('—')[0].trim();document.getElementById('cong-est-info').innerHTML=`<strong>${x(p.n)}</strong><br>Atual: ${p.est} un${p.est<0?' (a repor '+Math.abs(p.est)+')':''} | Mínimo: ${p.estMin}`;document.getElementById('cong-est-val').value=p.est;document.getElementById('cong-est-add').value='';am('mod-cong-est');}
+function salvarEstCong(){if(!congEstId)return;const p=gP(congEstId);if(!p)return;const add=parseFloat(document.getElementById('cong-est-add').value);if(add>0)p.est=(p.est||0)+add;else p.est=parseFloat(document.getElementById('cong-est-val').value)||0;salvar();fm('mod-cong-est');rendCongelados();atualizaBadges();if(curPage==='painel')rendPainel();toast('Estoque atualizado!','ok');}
 function exportCongCSV(){
   const esc=v=>{const s=String(v||'');return(s.includes(',')||s.includes('"'))?'"'+s.replace(/"/g,'""')+'"':s;};
   const prods=db.prods.filter(p=>p.cat==='Congelados');
@@ -2560,7 +2615,7 @@ function salvarAtPed(){
 }
 function abrirDetAt(id){
   const p=db.atPeds.find(pe=>pe.id===id);if(!p)return;
-  const itHtml=p.itens.map(it=>`<tr><td>${x(it.nome)}</td><td>${it.qty}x</td><td style="font-weight:700">${R(it.pr)}</td><td style="font-weight:700">${R(it.pr*it.qty)}</td></tr>`).join('');
+  const itHtml=p.itens.map(it=>`<tr><td>${imgItem(it,40)}${x(it.nome)}${codTag(it.cod||it.codigo)}${descHtml(descDoItem(it),11)}</td><td>${it.qty}x</td><td style="font-weight:700">${R(it.pr)}</td><td style="font-weight:700">${R(it.pr*it.qty)}</td></tr>`).join('');
   document.getElementById('at-det-title').textContent=nAt(p.num);
   document.getElementById('at-det-body').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;font-size:13.5px"><div><strong>Cliente:</strong> ${x(p.cliNome)}</div><div><strong>Pagamento:</strong> ${x(p.pgto)}</div>${p.vendedor?`<div><strong>👔 Vendedor:</strong> ${x(p.vendedor)}</div>`:''}<div><strong>Status:</strong> ${pillSt(p.st)}</div>${p.obs?`<div><strong>Obs:</strong> ${x(p.obs)}</div>`:''}</div><table style="width:100%;margin-bottom:12px"><thead><tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Subtotal</th></tr></thead><tbody>${itHtml}</tbody></table><div style="text-align:right;font-family:Arial;font-size:20px;font-weight:bold;color:var(--vinho)">Total: ${R(p.total||0)}</div><div style="margin-top:14px"><div class="filters">${['PENDENTE','PAGO','ENTREGUE','CANCELADO'].map(s=>`<button class="filter-btn${p.st===s?' active':''}" onclick="alterarStAt('${p.id}','${s}')">${s}</button>`).join('')}</div></div>`;
   document.getElementById('at-det-foot').innerHTML=`<button class="btn btn-ghost" onclick="fm('mod-at-det')">Fechar</button><button class="btn btn-primary" onclick="imprimirAtPed('${p.id}')">🖨️ Imprimir</button><button class="btn btn-danger" onclick="excluirAtPedComPin('${p.id}')">🗑️ Excluir</button>`;
@@ -2592,14 +2647,14 @@ function rendAtClis(){
   let html=`<div style="display:flex;justify-content:flex-end;margin-bottom:14px"><button class="btn btn-primary btn-sm" onclick="abrirNovoAtCli()">+ Novo Cliente</button></div>`;
   if(!db.atClis.length){html+='<div style="text-align:center;padding:40px;color:var(--txt3)">Nenhum cliente B2B</div>';document.getElementById('at-tab-clientes').innerHTML=html;return;}
   html+='<div class="tbl-wrap"><table><thead><tr><th>Empresa</th><th>WhatsApp</th><th>Pedidos</th><th>Total</th><th></th></tr></thead><tbody>';
-  db.atClis.forEach(c=>{const peds=db.atPeds.filter(p=>p.cliId===c.id);const total=peds.reduce((s,p)=>s+(p.total||0),0);html+=`<tr><td style="font-weight:600">${x(c.n)}</td><td>${c.w?x(c.w):'—'}</td><td>${peds.length}</td><td style="font-weight:700">${R(total)}</td><td><button class="btn btn-ghost btn-sm" onclick="editAtCli('${c.id}')">✏️</button></td></tr>`;});
+  db.atClis.forEach(c=>{const peds=db.atPeds.filter(p=>p.cliId===c.id);const total=peds.reduce((s,p)=>s+(p.total||0),0);html+=`<tr><td style="font-weight:600">${x(c.n)}${c.prazo==='7d'?' <span class="pill pill-pend" style="font-size:10px">7 DIAS</span>':''}</td><td>${c.w?x(c.w):'—'}</td><td>${peds.length}</td><td style="font-weight:700">${R(total)}</td><td><button class="btn btn-ghost btn-sm" onclick="editAtCli('${c.id}')">✏️</button></td></tr>`;});
   html+='</tbody></table></div>';document.getElementById('at-tab-clientes').innerHTML=html;
 }
 function rendAtTabela(){let html='<div class="tbl-wrap"><div class="tbl-head"><h3>Tabela de Preços Atacado</h3></div><table><thead><tr><th>Produto</th><th>Varejo</th><th>Atacado</th></tr></thead><tbody>';db.prods.filter(p=>p.cat==='Congelados').forEach(p=>{html+=`<tr><td>${x(p.n)}</td><td>${R(p.pr)}</td><td style="color:var(--verde);font-weight:600">${R(p.prAtacado||p.pr)}</td></tr>`;});html+='</tbody></table></div>';document.getElementById('at-tab-tabela').innerHTML=html;}
-function abrirNovoAtCli(){document.getElementById('at-cli-title').textContent='Novo Cliente B2B';['ac-n','ac-doc','ac-wa','ac-cid','ac-end','ac-obs'].forEach(id=>document.getElementById(id).value='');document.getElementById('ac-id').value='';am('mod-at-cli');}
-function editAtCli(id){const c=db.atClis.find(cl=>cl.id===id);if(!c)return;document.getElementById('at-cli-title').textContent='Editar Cliente B2B';document.getElementById('ac-n').value=c.n||'';document.getElementById('ac-doc').value=c.doc||'';document.getElementById('ac-wa').value=c.w||'';document.getElementById('ac-cid').value=c.c||'';document.getElementById('ac-end').value=c.e||'';document.getElementById('ac-obs').value=c.obs||'';document.getElementById('ac-id').value=id;am('mod-at-cli');}
-function salvarAtCli(){const n=document.getElementById('ac-n').value.trim();if(!n){toast('Informe o nome','warn');return;}const id=document.getElementById('ac-id').value;const data={n,doc:document.getElementById('ac-doc').value,w:document.getElementById('ac-wa').value,c:document.getElementById('ac-cid').value,e:document.getElementById('ac-end').value,obs:document.getElementById('ac-obs').value};if(id)Object.assign(db.atClis.find(c=>c.id===id),data);else db.atClis.push({id:uid(),...data});salvar();fm('mod-at-cli');rendAtClis();toast('Cliente salvo!','ok');}
-function imprimirAtPed(id){const p=db.atPeds.find(pe=>pe.id===id);if(!p)return;printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial;padding:20px;max-width:600px}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #eee}.total{font-size:20px;font-weight:bold;text-align:right}@media print{button{display:none}}</style></head><body><img src="${LOGO_ESC}" alt="De Minas" style="height:13mm;display:block;margin:0 0 6px"><h2>Pedido Atacado — ${nAt(p.num)}</h2><p>Cliente: ${x(p.cliNome)} | Pgto: ${x(p.pgto)}</p><table><thead><tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Subtotal</th></tr></thead><tbody>${p.itens.map(it=>`<tr><td>${x(it.nome)}</td><td>${it.qty}x</td><td>${R(it.pr)}</td><td>${R(it.pr*it.qty)}</td></tr>`).join('')}</tbody></table><p class="total">Total: ${R(p.total||0)}</p><p>PIX: ${x(cfg.pix)} (${x(cfg.pixNome)})</p><button onclick="window.print()">Imprimir</button></body></html>`);}
+function abrirNovoAtCli(){document.getElementById('at-cli-title').textContent='Novo Cliente B2B';['ac-n','ac-doc','ac-wa','ac-cid','ac-end','ac-obs','ac-prazo'].forEach(id=>document.getElementById(id).value='');document.getElementById('ac-id').value='';am('mod-at-cli');}
+function editAtCli(id){const c=db.atClis.find(cl=>cl.id===id);if(!c)return;document.getElementById('at-cli-title').textContent='Editar Cliente B2B';document.getElementById('ac-n').value=c.n||'';document.getElementById('ac-doc').value=c.doc||'';document.getElementById('ac-wa').value=c.w||'';document.getElementById('ac-cid').value=c.c||'';document.getElementById('ac-end').value=c.e||'';document.getElementById('ac-obs').value=c.obs||'';document.getElementById('ac-prazo').value=c.prazo||'';document.getElementById('ac-id').value=id;am('mod-at-cli');}
+function salvarAtCli(){const n=document.getElementById('ac-n').value.trim();if(!n){toast('Informe o nome','warn');return;}const id=document.getElementById('ac-id').value;const data={n,doc:document.getElementById('ac-doc').value,w:document.getElementById('ac-wa').value,c:document.getElementById('ac-cid').value,e:document.getElementById('ac-end').value,obs:document.getElementById('ac-obs').value,prazo:document.getElementById('ac-prazo').value};if(id)Object.assign(db.atClis.find(c=>c.id===id),data);else db.atClis.push({id:uid(),...data});salvar();fm('mod-at-cli');rendAtClis();toast('Cliente salvo!','ok');}
+function imprimirAtPed(id){const p=db.atPeds.find(pe=>pe.id===id);if(!p)return;printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial;padding:20px;max-width:600px}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #eee}.total{font-size:20px;font-weight:bold;text-align:right}@media print{button{display:none}}</style></head><body><img src="${LOGO_ESC}" alt="De Minas" style="height:13mm;display:block;margin:0 0 6px"><h2>Pedido Atacado — ${nAt(p.num)}</h2><p>Cliente: ${x(p.cliNome)} | Pgto: ${x(p.pgto)}</p><table><thead><tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Subtotal</th></tr></thead><tbody>${p.itens.map(it=>`<tr><td>${imgItem(it,34)}${x(it.nome)}${codTag(it.cod||it.codigo)}${descHtml(descDoItem(it),8)}</td><td>${it.qty}x</td><td>${R(it.pr)}</td><td>${R(it.pr*it.qty)}</td></tr>`).join('')}</tbody></table><p class="total">Total: ${R(p.total||0)}</p><p>PIX: ${x(cfg.pix)} (${x(cfg.pixNome)})</p><button onclick="window.print()">Imprimir</button></body></html>`);}
 
 // ============================================================
 // A RECEBER
@@ -3062,13 +3117,13 @@ function imprimirTodosPedidos(){
     const desc=dataFil?'nenhum pedido nesta data':'nenhum pedido encontrado com os filtros aplicados';
     toast('⚠️ '+desc.charAt(0).toUpperCase()+desc.slice(1),'warn');return;
   }
-  const css=`*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10.5pt;color:#1a1a1a;background:#fff}.pedido{page-break-after:always;padding:14mm 16mm;min-height:100vh}.pedido:last-child{page-break-after:auto}.header{border-bottom:2.5px solid #3d2000;padding-bottom:8px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-end}.logo-print{height:17mm;width:auto;display:block}.brand{font-size:20pt;font-weight:900;color:#3d2000;line-height:1}.brand-sub{font-size:8pt;color:#c8860a;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-top:2px}.num-ped{font-size:18pt;font-weight:900;color:#3d2000}.status{display:inline-block;padding:3px 10px;border-radius:12px;font-size:8pt;font-weight:700;margin-left:8px}.st-PENDENTE{background:#fff3cd;color:#856404}.st-PESAGEM{background:#cfe2ff;color:#084298}.st-PAGO{background:#e8f5ee;color:#1e7e3e}.meta{font-size:9pt;color:#444;margin-bottom:10px;line-height:1.7}table{width:100%;border-collapse:collapse;margin-bottom:10px}thead tr{background:#3d2000;color:#fff}th{padding:6px 10px;font-size:8.5pt;font-weight:600;text-align:left}th.r,td.r{text-align:right}td{padding:6px 10px;font-size:9.5pt;border-bottom:1px solid #eee}.total-box{text-align:right;padding:8px 12px;background:#3d2000;color:#fff;border-radius:4px;margin-bottom:12px}.pix-box{border:1.5px solid #c8860a;border-radius:6px;padding:8px 14px;background:#fffdf5;margin-bottom:10px}.footer{font-size:9pt;color:#3d2000;text-align:center;border-top:1px solid #eee;padding-top:6px;font-weight:600}@media print{.no-print{display:none}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}`;
+  const css=`*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10.5pt;color:#1a1a1a;background:#fff}.pedido{page-break-after:always;padding:14mm 16mm}.pedido:last-child{page-break-after:auto}.header{border-bottom:2.5px solid #3d2000;padding-bottom:8px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-end}.logo-print{height:17mm;width:auto;display:block}.brand{font-size:20pt;font-weight:900;color:#3d2000;line-height:1}.brand-sub{font-size:8pt;color:#c8860a;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-top:2px}.num-ped{font-size:18pt;font-weight:900;color:#3d2000}.status{display:inline-block;padding:3px 10px;border-radius:12px;font-size:8pt;font-weight:700;margin-left:8px}.st-PENDENTE{background:#fff3cd;color:#856404}.st-PESAGEM{background:#cfe2ff;color:#084298}.st-PAGO{background:#e8f5ee;color:#1e7e3e}.meta{font-size:9pt;color:#444;margin-bottom:10px;line-height:1.7}table{width:100%;border-collapse:collapse;margin-bottom:10px}thead tr{background:#3d2000;color:#fff}th{padding:6px 10px;font-size:8.5pt;font-weight:600;text-align:left}th.r,td.r{text-align:right}td{padding:6px 10px;font-size:9.5pt;border-bottom:1px solid #eee}.total-box{text-align:right;padding:8px 12px;background:#3d2000;color:#fff;border-radius:4px;margin-bottom:12px}.pix-box{border:1.5px solid #c8860a;border-radius:6px;padding:8px 14px;background:#fffdf5;margin-bottom:10px}.footer{font-size:9pt;color:#3d2000;text-align:center;border-top:1px solid #eee;padding-top:6px;font-weight:600}@media print{.no-print{display:none}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}`;
   const pedsHtml=peds.map(p=>{
     const total=calcTotal(p);const end=enderecoCompleto(p);
     const itensHtml=(p.itens||[]).map(it=>{
       let qtd=it.pv&&it.pesoReal?it.pesoReal.toFixed(3)+' kg':it.sub==='metade'?'½ peça':(it.qty||1)+'x'+(it.pacote&&it.pacote!==''&&it.pacote!=='un'?' ('+it.pacote+')':'');
       const sub=calcItemSubFn(it);
-      return`<tr><td>${x(it.nome)}</td><td>${qtd}</td><td>${R(it.pr)}</td><td class="r" style="font-weight:700">${R(sub)}</td></tr>`;
+      return`<tr><td>${imgItem(it,34)}${x(it.nome)}${codTag(it.cod||it.codigo)}${descHtml(descDoItem(it),8)}</td><td>${qtd}</td><td>${R(it.pr)}</td><td class="r" style="font-weight:700">${R(sub)}</td></tr>`;
     }).join('');
     return`<div class="pedido"><div class="header"><div><img class="logo-print" src="${LOGO_ESC}" alt="De Minas Pão de Queijaria"></div><div style="text-align:right"><div class="num-ped">${nP(p.num)}</div><span class="status st-${p.st}">${p.st}</span></div></div><div class="meta"><strong>Cliente:</strong> ${x(p.cli)} ${p.wa?'· '+x(p.wa):''}<br><strong>Endereço:</strong> ${x(end)}<br>${p.horario?'<strong>Horário:</strong> '+x(p.horario)+'<br>':''}${p.obs?'<strong>Obs:</strong> '+x(p.obs)+'<br>':''}<strong>Data:</strong> ${dF(p.data)}</div><table><thead><tr><th>Produto</th><th>Qtd</th><th>Preço Unit.</th><th class="r">Subtotal</th></tr></thead><tbody>${itensHtml}</tbody></table><div class="total-box"><div class="label">Total do Pedido</div><div class="valor">${R(total)}</div></div><div class="pix-box"><div>Pagamento via PIX</div><div style="font-size:12pt;font-weight:900">${x(cfg.pix)}</div><div>${x(cfg.pixNome)}</div></div><div class="footer">A De Minas Pão de Queijaria agradece!</div></div>`;
   }).join('');
@@ -3115,17 +3170,145 @@ function parsePesoTotal(unidade,qtd){
 }
 function isUnidadePeso(un){const u=String(un||'').toLowerCase().trim();if(u===''||u==='un')return false;return u.endsWith('kg')||u.endsWith('g');}
 function udiNavDate(d){const inp=document.getElementById('udi-data-filtro');if(!inp)return;const dt=inp.value?new Date(inp.value+'T12:00:00'):new Date();dt.setDate(dt.getDate()+d);inp.value=dISO(dt);rendListaUDIPage();}
+// ===== FOTOS DOS PRODUTOS (vêm do catálogo, pelo código de venda) =====
+const CAT_BASE='https://deminaspaodequeijaria.com.br/';
+let catMapa={porCod:{},porNome:{},descCod:{},descNome:{},prod:{},nomeCod:{},sync:''};
+function catCarregarCache(){try{const j=JSON.parse(localStorage.getItem('dm_cat_fotos')||'null');if(j&&j.porCod)catMapa=j;}catch(e){}}
+async function catAtualizarFotos(){
+  try{
+    const r=await fetch(CAT_BASE+'produtos.json',{cache:'no-cache'});if(!r.ok)return;
+    const J=await r.json();const porCod={},porNome={},descCod={},descNome={},prod={},nomeCod={};
+    (J.produtos||[]).forEach(p=>{
+      prod[p.codigo]={n:p.nome,cat:p.cat,ops:(p.opcoes||[]).map(o=>({l:o.label,p:o.preco,kg:!!o.kg})),comp:(p.componentes||[]).map(c=>({c:c.codigo,o:c.opcao,q:c.qtd})),f:p.foto||'',d:p.descricao||''};
+      nomeCod[udiNorm(p.nome)]=p.codigo;
+      if(p.descricao){descCod[p.codigo]=p.descricao;descNome[udiNorm(p.nome)]=p.descricao;}
+      if(!p.foto)return;porCod[p.codigo]=p.foto;porNome[udiNorm(p.nome)]=p.foto;
+    });
+    catMapa={porCod,porNome,descCod,descNome,prod,nomeCod,sync:new Date().toISOString()};try{localStorage.setItem('dm_cat_fotos',JSON.stringify(catMapa));}catch(e){}
+  }catch(e){}
+}
+function catSincronizado(){return !!(catMapa.prod&&Object.keys(catMapa.prod).length);}
+function catProd(cod){return cod&&catMapa.prod?catMapa.prod[cod]||null:null;}
+function codTag(cod){return cod?`<span style="font-size:10px;font-weight:600;color:#9a8f80;margin-left:6px;letter-spacing:.3px">${x(cod)}</span>`:'';}
+function fotoUrl(f){return f?(/^https?:/.test(f)?f:CAT_BASE+encodeURI(f)):'';}
+function fotoDoItem(it){
+  if(!it)return '';
+  const cod=it.cod||it.codigo||'';
+  const f=it.foto||(cod&&catMapa.porCod[cod])||catMapa.porNome[udiNorm(it.nomeBase||it.nome)]||catMapa.porNome[udiNorm(String(it.nome||'').replace(/\s—\s.*$/,''))];
+  return fotoUrl(f);
+}
+function imgUrl(u,px){return u?`<img src="${u}" alt="" style="width:${px}px;height:${px}px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;border:1px solid #eadfcf" onerror="this.style.display='none'">`:'';}
+function imgItem(it,px){return imgUrl(fotoDoItem(it),px);}
+function descDoItem(it){
+  if(!it)return '';const cod=it.cod||it.codigo||'';
+  return it.desc||(cod&&catMapa.descCod&&catMapa.descCod[cod])||(catMapa.descNome&&(catMapa.descNome[udiNorm(it.nomeBase||it.nome)]||catMapa.descNome[udiNorm(String(it.nome||'').replace(/\s—\s.*$/,''))]))||'';
+}
+function descHtml(d,px){return d?`<div style="font-size:${px||11}px;font-weight:400;color:#7a7a7a;line-height:1.25;margin-top:2px">${x(d)}</div>`:'';}
+catCarregarCache();setTimeout(catAtualizarFotos,1500);
+// ===== ESTOQUE DOS CONGELADOS: código do catálogo -> produtos do estoque =====
+// por opção: lista de candidatos; usa o primeiro com estoque, senão o primeiro da lista (fica "a repor")
+const ESTQ_CAND={
+ 'PQ-001':{'500g':['cong_trad_500g'],'1kg':['cong_pqt1kg','enc_trad_1kg'],'2kgs':['cong_pqt2kg','enc_trad_2kg']},
+ 'PQ-023':{'1kg':['cong_pqcok']},'PQ-024':{'1kg':['cong_pql80','enc_lanche_80_1kg']},'PQ-025':{'1kg':['cong_pqs100','enc_lanche_100_1kg']},
+ 'PQ-003':{'1kg':['cong_chi']},'PQ-022':{'500g':['cong_chipatrad_500g'],'1kg':['cong_chipatrad_1kg']},'PQ-002':{'1kg':['cong_bsq']},
+ 'PQ-004':{'1kg':['enc_gourmet_1kg']},'PQ-005':{'1kg':['enc_palitinho_1kg']},'PQ-006':{'1kg':['enc_temperado_1kg']},
+ 'PQ-007':{'1kg':['cong_brd','enc_broa_doce_1kg']},'PQ-008':{'1kg':['cong_bre']},'PQ-009':{'1kg':['cong_brs','enc_broa_sal_1kg']},
+ 'PQ-010':{'1kg':['cong_rgo','enc_art_goi_1kg']},'PQ-011':{'1kg':['cong_rfr','enc_frango_art_1kg']},'PQ-012':{'1kg':['cong_rre','enc_art_req_1kg']},
+ 'PQ-013':{'1kg':['cong_rca','enc_cal_1kg']},'PQ-014':{'1kg':['cong_rec_doce_leite','enc_art_dl_1kg']},'PQ-015':{'1kg':['cong_rec_costela']},
+ 'PQ-016':{'1kg':['enc_emp_dl_1kg']},'PQ-017':{'1kg':['enc_emp_req_1kg']},'PQ-018':{'1kg':['enc_emp_goi_1kg']},'PQ-019':{'1kg':['enc_frango_emp_1kg']},
+ 'PQ-020':{'1kg':['enc_multigr_1kg']},'PQ-021':{'500g':['enc_dadinho_500g']}
+};
+function estqEscolher(ids){for(const id of ids){const p=gP(id);if(p&&(p.est||0)>0)return id;}return ids.find(id=>gP(id))||null;}
+// [{id,q}] = quanto de cada produto do estoque sai por 1 unidade da opção escolhida
+function udiEstqCod(cod,label){
+  const out=[];const cp=catProd(cod);
+  if(cp&&cp.comp&&cp.comp.length){cp.comp.forEach(c=>udiEstqCod(c.c,c.o).forEach(e=>out.push({id:e.id,q:e.q*c.q})));return out;}
+  const m=ESTQ_CAND[cod];if(!m)return out;
+  const lab=String(label||'').toLowerCase().replace(/\s/g,'');
+  if(m[lab]){const id=estqEscolher(m[lab]);if(id)out.push({id,q:1});return out;}
+  const kg=udiPesoLabel(lab);if(kg>0&&m['1kg']){const id=estqEscolher(m['1kg']);if(id)out.push({id,q:kg});}
+  return out;
+}
+// ===== LISTA DE COMPRAS (UDI): itens vindos do catálogo =====
+// O catálogo manda código, opção (500g/1kg/2kgs...), categoria e composição dos combos.
+// Aqui isso vira linhas de compra: congelados somam em kg; produtos de Minas em unidades; combos viram os itens que levam.
+const UDI_FORN_CONG='Sabor da Roça', UDI_FORN_MINAS='Produtos de Minas';
+function udiNorm(t){return String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();}
+function udiEhCong(cod,cat,nome){
+  if(cod)return /^PQ-/.test(cod)||/^CB-00[4-7]$/.test(cod);
+  if(cat)return cat==='congelados';
+  const n=udiNorm(nome);
+  return /pao de queijo|recheado|chipa|broa|dadinho|palit(o|inho) de provolone|empanado|coquetel|tipo lanche|multigr/.test(n)&&!/canastra|queijo fresco|cascao|doce de leite (moreno|vicosa)/.test(n);
+}
+function udiPesoLabel(label){const m=String(label||'').toLowerCase().replace(',','.').match(/^(\d+(?:\.\d+)?)\s*(kgs?|g)\b/);if(!m)return 0;const v=parseFloat(m[1]);return m[2]==='g'?v/1000:v;}
+function udiNomeComLabel(nome,label,porKg){
+  const l=String(label||'').trim();
+  if(porKg)return nome+' — por kg';
+  if(/^\d/.test(l)&&!udiNorm(nome).includes(udiNorm(l).replace(/s$/,'')))return nome+' — '+l;
+  return nome;
+}
+const UDI_ALIAS={'pao de queijo tradicional':'Pão de Queijo Tradicional 30g'};
+function udiParseCombo(desc,qtdCombo){
+  const out=[];const txt=String(desc||'').split(':')[0];
+  txt.split('+').map(t=>t.trim()).filter(Boolean).forEach(pt=>{
+    let m=pt.match(/^(\d+(?:[.,]\d+)?)\s*(kg|g)\s+de\s+(.+)$/i);
+    if(m){let v=parseFloat(m[1].replace(',','.'));if(/^g$/i.test(m[2]))v/=1000;const nome=UDI_ALIAS[udiNorm(m[3])]||m[3].trim();
+      out.push({prodId:null,nome,key:'k|'+udiNorm(nome),forn:udiEhCong(null,null,nome)?UDI_FORN_CONG:UDI_FORN_MINAS,pacote:'kg',qty:v*qtdCombo,pv:false});return;}
+    m=pt.match(/^(\d+)\s*x?\s+(.+)$/i);
+    const n=m?parseInt(m[1],10):1;const nome=(m?m[2]:pt).replace(/\s*\([^)]*\)\s*$/,'').trim();
+    out.push({prodId:null,nome,key:udiNorm(nome)+'|',forn:udiEhCong(null,null,nome)?UDI_FORN_CONG:UDI_FORN_MINAS,pacote:'',qty:n*qtdCombo,pv:false});
+  });
+  return out;
+}
+// opção pelo preço (pedidos antigos que não guardaram o tamanho)
+function udiOpcaoPorPreco(cp,preco){const v=parseFloat(preco);if(!v)return '';const m=cp.ops.filter(o=>Math.abs(o.p-v)<0.01);return m.length===1?m[0].l:'';}
+function udiFornCod(cod,cat,opcao){
+  if(cat==='congelados'){const m=ESTQ_CAND[cod];const ids=m&&(m[String(opcao||'').toLowerCase()]||m['1kg']);const pr=ids&&gP(ids[0]);return pr&&pr.forn?pr.forn:'Congelados';}
+  return UDI_FORN_MINAS;
+}
+// uma linha de compra a partir do produto do catálogo (código exato + opção)
+function udiLinhaCat(cod,cp,opcao,qty,nota,alerta){
+  const cong=cp.cat==='congelados';const kg=cong?udiPesoLabel(opcao):0;const forn=udiFornCod(cod,cp.cat,opcao);
+  const base={prodId:null,cod,forn,pv:false,nota:nota||'',foto:fotoUrl(cp.f),desc:cp.d||'',alerta:!!alerta};
+  if(cong&&kg>0)return Object.assign(base,{nome:cp.n,key:'k|'+cod,pacote:'kg',qty:kg*qty});
+  const nomeOp=(cp.ops.length>1&&/^\d/.test(opcao||'')&&!udiNorm(cp.n).includes(udiNorm(opcao).replace(/s$/,'')))?cp.n+' — '+opcao:cp.n;
+  return Object.assign(base,{nome:nomeOp,key:cod+'|'+udiNorm(opcao),pacote:'',qty});
+}
+// transforma os itens de um pedido em linhas de compra (sempre pelo código do catálogo)
+function udiLinhasPed(p){
+  const out=[];
+  (p.itens||[]).forEach(it=>{
+    const qty=parseFloat(it.qty)||1;
+    if(it.prodId&&gP(it.prodId)){out.push(Object.assign({},it,{qty,key:it.prodId,foto:fotoDoItem(it),desc:descDoItem(it)}));return;}
+    const cod=it.cod||it.codigo||'';
+    let cp=catProd(cod),codR=cod;
+    if(!cp){const c2=catMapa.nomeCod&&(catMapa.nomeCod[udiNorm(it.nomeBase||it.nome)]||catMapa.nomeCod[udiNorm(String(it.nome||'').replace(/\s—\s.*$/,''))]);if(c2&&catProd(c2)){cp=catProd(c2);codR=c2;}}
+    if(!cp){ // sem código válido: não adivinha, marca para conferir
+      out.push({prodId:null,cod,nome:it.nomeBase||it.nome||'?',key:'x|'+udiNorm(it.nomeBase||it.nome||'?'),forn:'Conferir',pacote:'',qty,pv:false,nota:'código não encontrado no catálogo',alerta:true});return;}
+    if(cp.comp&&cp.comp.length){
+      cp.comp.forEach(c=>{const sp=catProd(c.c);
+        if(!sp){out.push({prodId:null,cod:c.c,nome:'Código '+c.c+' (item de '+cp.n+')',key:'x|'+c.c,forn:'Conferir',pacote:'',qty:c.q*qty,pv:false,nota:'combo: '+cp.n,alerta:true});return;}
+        out.push(udiLinhaCat(c.c,sp,c.o,c.q*qty,'combo: '+cp.n,false));});
+      return;}
+    let op=it.label||'';
+    if(!op||!cp.ops.some(o=>o.l===op)){const o2=cp.ops.length===1?cp.ops[0].l:udiOpcaoPorPreco(cp,it.pr!==undefined?it.pr:it.preco);op=o2||op;}
+    const alerta=!cp.ops.some(o=>o.l===op);
+    const porKg=!!(it.kgOpt||it.kg||(cp.ops.find(o=>o.l===op)||{}).kg);
+    out.push(udiLinhaCat(codR,cp,op,qty,porKg?'vendido por kg — pesar':(alerta?'tamanho não identificado':''),alerta));
+  });
+  return out;
+}
 function rendListaUDI(){
   const dataFil=document.getElementById('udi-data-filtro')?.value||'';
   let peds=db.peds.filter(p=>['PENDENTE','PESAGEM','PAGO'].includes(p.st));
   let atPedsL=db.atPeds.filter(p=>['PENDENTE','PAGO'].includes(p.st));
   if(dataFil){peds=peds.filter(p=>isSameDay(p.data,dataFil));atPedsL=atPedsL.filter(p=>isSameDay(p.data,dataFil));}
   const listaMap={};
-  [...peds,...atPedsL].forEach(p=>(p.itens||[]).forEach(it=>{
-    const prod=gP(it.prodId);const key=it.prodId||it.nome;
-    const forn=prod?prod.forn:'Sabor da Roça';const unidade=prod?(prod.pacote||it.pacote||'un'):(it.pacote||'un');
-    if(!listaMap[key])listaMap[key]={nome:it.nome||'?',forn,qtd:0,unidade,pedidos:[],pv:!!it.pv,kgConhecido:0,pecasAPesar:0,isExtra:false};
-    const entry=listaMap[key];
+  [...peds,...atPedsL].forEach(p=>udiLinhasPed(p).forEach(it=>{
+    const prod=it.prodId?gP(it.prodId):null;const key=it.key||it.prodId||it.nome;
+    const forn=prod?prod.forn:(it.forn||UDI_FORN_CONG);const unidade=prod?(prod.pacote||it.pacote||'un'):(it.pacote||'un');
+    if(!listaMap[key])listaMap[key]={nome:it.nome||'?',forn,qtd:0,unidade,pedidos:[],pv:!!it.pv,kgConhecido:0,pecasAPesar:0,isExtra:false,foto:'',desc:'',cod:'',alerta:false};
+    const entry=listaMap[key];if(!entry.foto&&it.foto)entry.foto=it.foto;if(!entry.desc&&it.desc)entry.desc=it.desc;if(!entry.cod&&it.cod)entry.cod=it.cod;if(it.alerta)entry.alerta=true;
     const pedNum=p.num?(p.tipo==='atacado'?nAt(p.num):nP(p.num)):'?';
     const quem=pedNum+' ('+x(p.cli||p.cliNome||'?')+')';
     const isPacote=unidade==='1kg'||unidade==='2kg';
@@ -3136,10 +3319,10 @@ function rendListaUDI(){
       const q=parseFloat(it.qty)||1;entry.qtd+=q;const pesoTotal=parsePesoTotal(unidade,q);
       entry.pedidos.push(quem+' — '+q+' pct ('+pesoTotal+'kg)');
     }else if(isUnidadePeso(unidade)){
-      const q=parseFloat(it.qty)||1;const pesoTotal=parsePesoTotal(unidade,q);entry.qtd+=pesoTotal;
-      entry.pedidos.push(quem+' — '+pesoTotal+'kg');
+      const q=parseFloat(it.qty)||1;const pesoTotal=parsePesoTotal(unidade,q);entry.qtd+=q;
+      entry.pedidos.push(quem+' — '+(pesoTotal%1===0?pesoTotal:parseFloat(pesoTotal.toFixed(2)))+'kg'+(it.nota?' ('+it.nota+')':''));
     }else{
-      entry.qtd+=(parseFloat(it.qty)||1);entry.pedidos.push(quem);
+      entry.qtd+=(parseFloat(it.qty)||1);entry.pedidos.push(quem+(it.nota?' — '+it.nota:''));
     }
   }));
   udiExtras.forEach(e=>{
@@ -3167,11 +3350,13 @@ function rendListaUDI(){
       else if(it.pv){const p=[];if(it.kgConhecido>0)p.push((it.kgConhecido%1===0?it.kgConhecido:parseFloat(it.kgConhecido.toFixed(3)))+'kg');if(it.pecasAPesar>0)p.push(it.pecasAPesar+' peça(s) a pesar');qtdDisplay=p.join(' + ')||'—';}
       else qtdDisplay=it.qtd+' un';
       const extraStyle=it.isExtra?'background:#f0f7ff;':'';
-      html+=`<tr style="${extraStyle}"><td style="font-weight:600;${it.isExtra?'color:var(--congelado)':''}">${it.isExtra?'➕ ':''}${x(it.nome)}</td><td style="font-family:Arial;font-size:18px;font-weight:900;color:var(--vinho)">${qtdDisplay}</td><td style="font-size:12px;color:var(--txt3)">${it.pedidos.join('<br>')}</td></tr>`;
+      html+=`<tr style="${extraStyle}"><td style="font-weight:600;${it.isExtra?'color:var(--congelado)':''}">${it.isExtra?'➕ ':''}${imgUrl(it.foto,46)}${x(it.nome)}${codTag(it.cod)}${it.alerta?' <span style="color:var(--vermelho);font-weight:700;font-size:12px">⚠ conferir</span>':''}${descHtml(it.desc,11)}</td><td style="font-family:Arial;font-size:18px;font-weight:900;color:var(--vinho)">${qtdDisplay}</td><td style="font-size:12px;color:var(--txt3)">${it.pedidos.join('<br>')}</td></tr>`;
     });
     html+='</tbody></table></div>';
   });
-  el.innerHTML=html;
+  const nAlerta=Object.values(listaMap).filter(e=>e.alerta).length;
+  const aviso=!catSincronizado()?'<div style="background:#fdecea;color:#b00020;border:1px solid #f5c2c0;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:13px;font-weight:700">⚠ Catálogo não carregado: a lista pode ter erros. Conecte à internet e recarregue o ERP.</div>':(nAlerta?`<div style="background:#fff4e5;color:#8a4b00;border:1px solid #f3d19e;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:13px;font-weight:700">⚠ ${nAlerta} item(ns) para conferir antes de comprar (marcados em vermelho).</div>`:'<div style="color:var(--verde);font-size:12px;margin-bottom:10px">✓ Todos os itens conferidos com o código do catálogo</div>');
+  el.innerHTML=aviso+html;
 }
 function imprimirListaUDI(){
   const dataFil=document.getElementById('udi-data-filtro')?.value||'';
@@ -3179,14 +3364,14 @@ function imprimirListaUDI(){
   let atPedsL=db.atPeds.filter(p=>['PENDENTE','PAGO'].includes(p.st));
   if(dataFil){peds=peds.filter(p=>isSameDay(p.data,dataFil));atPedsL=atPedsL.filter(p=>isSameDay(p.data,dataFil));}
   const listaMap={};
-  [...peds,...atPedsL].forEach(p=>(p.itens||[]).forEach(it=>{const prod=gP(it.prodId);const key=it.prodId||it.nome;const forn=prod?prod.forn:'Sabor da Roça';const unidade=prod?(prod.pacote||'un'):'un';if(!listaMap[key])listaMap[key]={nome:it.nome||'?',forn,qtd:0,unidade};listaMap[key].qtd+=(parseFloat(it.qty)||1);}));
+  [...peds,...atPedsL].forEach(p=>udiLinhasPed(p).forEach(it=>{const prod=it.prodId?gP(it.prodId):null;const key=it.key||it.prodId||it.nome;const forn=prod?prod.forn:(it.forn||UDI_FORN_CONG);const unidade=prod?(prod.pacote||'un'):(it.pacote||'un');if(!listaMap[key])listaMap[key]={nome:it.nome||'?',forn,qtd:0,unidade,foto:'',desc:'',cod:'',alerta:false};if(!listaMap[key].foto&&it.foto)listaMap[key].foto=it.foto;if(!listaMap[key].desc&&it.desc)listaMap[key].desc=it.desc;if(!listaMap[key].cod&&it.cod)listaMap[key].cod=it.cod;if(it.alerta)listaMap[key].alerta=true;listaMap[key].qtd+=(parseFloat(it.qty)||1);}));
   udiExtras.forEach(e=>{const key='extra_'+e.prodId;if(!listaMap[key])listaMap[key]={nome:'➕ '+e.nome,forn:e.forn,qtd:0,unidade:e.unidade};listaMap[key].qtd+=e.qty;});
   if(!Object.keys(listaMap).length){toast('Nenhum produto','warn');return;}
   const fornMap={};Object.values(listaMap).forEach(it=>{if(!fornMap[it.forn])fornMap[it.forn]=[];fornMap[it.forn].push(it);});
   let rows='';
   Object.entries(fornMap).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([forn,itens])=>{
     rows+=`<h3>🏭 ${forn}</h3><table><thead><tr><th>Produto</th><th>Qtd</th></tr></thead><tbody>`;
-    itens.sort((a,b)=>a.nome.localeCompare(b.nome)).forEach(it=>{const un=it.unidade||'un';const isPacote=un==='1kg'||un==='2kg';let label;if(isPacote){const peso=parsePesoTotal(un,it.qtd);label=it.qtd+' pct ('+peso+'kg)';}else if(isUnidadePeso(un)){const peso=parsePesoTotal(un,it.qtd);label=(peso%1===0?peso:parseFloat(peso.toFixed(1)))+'kg';}else label=it.qtd+' un';rows+=`<tr><td>${x(it.nome)}</td><td style="font-weight:bold;font-size:18px;color:#7b1d1d">${label}</td></tr>`;});
+    itens.sort((a,b)=>a.nome.localeCompare(b.nome)).forEach(it=>{const un=it.unidade||'un';const isPacote=un==='1kg'||un==='2kg';let label;if(isPacote){const peso=parsePesoTotal(un,it.qtd);label=it.qtd+' pct ('+peso+'kg)';}else if(isUnidadePeso(un)){const peso=parsePesoTotal(un,it.qtd);label=(peso%1===0?peso:parseFloat(peso.toFixed(2)))+'kg';}else label=(it.qtd%1===0?it.qtd:parseFloat(it.qtd.toFixed(2)))+' un';rows+=`<tr><td>${imgUrl(it.foto,42)}${x(it.nome)}${codTag(it.cod)}${it.alerta?' <b style="color:#b00020">⚠ conferir</b>':''}${descHtml(it.desc,11)}</td><td style="font-weight:bold;font-size:18px;color:#7b1d1d">${label}</td></tr>`;});
     rows+='</tbody></table>';
   });
   printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial;padding:20px;max-width:500px}h2{text-align:center;color:#7b1d1d}table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px solid #eee}th{background:#f0e8d8}@media print{button{display:none}}</style></head><body><div style="text-align:center"><img src="${LOGO_ESC}" alt="De Minas" style="height:13mm;display:inline-block;margin:0 0 6px"></div><h2>Lista UDI</h2><p style="text-align:center;color:#888">${dF(new Date().toISOString())}</p>${rows}<button onclick="window.print()">Imprimir</button></body></html>`);
@@ -3560,7 +3745,7 @@ function imprimirPedido(id){
     let qtdLabel=it.pv&&it.pesoReal?it.pesoReal.toFixed(3)+' kg':it.sub==='metade'?'½ peça':(it.qty||1)+'x'+(it.pacote&&it.pacote!==''&&it.pacote!=='un'?' ('+it.pacote+')':'');
     const subtotal=calcItemSubFn(it);
     const descInfo=(it.descItem&&it.descItem>0)?` (-${it.descItemTipo==='P'?it.descItem+'%':'R$'+it.descItem})`:'';
-    return`<tr><td>${x(it.nome)}</td><td class="c">${qtdLabel}</td><td class="c">${R(it.pr)}${descInfo}</td><td class="r">${R(subtotal)}</td></tr>`;
+    return`<tr><td>${imgItem(it,34)}${x(it.nome)}${codTag(it.cod||it.codigo)}${descHtml(descDoItem(it),8)}</td><td class="c">${qtdLabel}</td><td class="c">${R(it.pr)}${descInfo}</td><td class="r">${R(subtotal)}</td></tr>`;
   }).join('');
   const sugestao=`Já experimentou nossa linha completa? Chipa 3 Queijos &nbsp;·&nbsp; Pão de Queijo Recheado &nbsp;·&nbsp; Biscoito de Queijo &nbsp;·&nbsp; Broa de Milho. Peça na próxima!`;
   printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>@page{size:A4;margin:14mm 16mm}*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11pt;color:#1a1a1a}.header{border-bottom:2.5px solid #3d2000;padding-bottom:10px;margin-bottom:14px}.logo-print{height:17mm;width:auto;display:block}.brand{font-size:22pt;font-weight:900;color:#3d2000}.brand-sub{font-size:9pt;color:#c8860a;font-weight:600;letter-spacing:3px;text-transform:uppercase;margin-top:2px}.meta{font-size:9.5pt;color:#444;margin-bottom:12px;line-height:1.6}table{width:100%;border-collapse:collapse;margin-bottom:12px}thead tr{background:#3d2000;color:#fff}th{padding:7px 10px;font-size:9pt;font-weight:600;text-align:left}.c{text-align:center}.r{text-align:right}tbody tr:nth-child(even){background:#faf7f4}td{padding:7px 10px;font-size:10pt;border-bottom:1px solid #eee}.total-box{text-align:right;padding:8px 10px;background:#3d2000;color:#fff;border-radius:4px;margin-bottom:14px}.pix-box{border:1.5px solid #c8860a;border-radius:6px;padding:10px 14px;display:flex;align-items:center;gap:16px;background:#fffdf5}.pix-key{font-size:13pt;font-weight:900;color:#3d2000}.pix-name{font-size:9pt;color:#666;margin-top:2px}.sugestao{font-size:9.5pt;color:#3d2000;text-align:center;margin:8px 0;padding:6px 0;border-top:1px dashed #c8860a;border-bottom:1px dashed #c8860a}.footer{margin-top:12px;font-size:10pt;color:#3d2000;text-align:center;border-top:1px solid #eee;padding-top:8px;font-weight:600}@media print{button{display:none}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body>
