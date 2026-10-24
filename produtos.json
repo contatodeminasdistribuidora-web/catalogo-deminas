@@ -120,7 +120,7 @@
    "opcoes": [
     {
      "label": "Combo",
-     "preco": 83.9,
+     "preco": 84.9,
      "de": 88.9
     }
    ],
@@ -155,7 +155,7 @@
    "opcoes": [
     {
      "label": "Combo",
-     "preco": 107.9,
+     "preco": 112.9,
      "de": 114
     }
    ],
@@ -190,7 +190,7 @@
    "opcoes": [
     {
      "label": "Combo",
-     "preco": 104.9,
+     "preco": 108.9,
      "de": 111
     }
    ],
@@ -230,7 +230,7 @@
    "opcoes": [
     {
      "label": "Combo",
-     "preco": 165.9,
+     "preco": 179.9,
      "de": 176
     }
    ],
@@ -310,7 +310,7 @@
    "opcoes": [
     {
      "label": "Combo",
-     "preco": 89.9,
+     "preco": 90.9,
      "de": 94.8
     }
    ],
@@ -375,7 +375,7 @@
    "opcoes": [
     {
      "label": "Combo",
-     "preco": 188.9,
+     "preco": 191.9,
      "de": 199.6
     }
    ],
@@ -1036,7 +1036,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 36.9
+     "preco": 36.0
     }
    ],
    "disponivel": true,
@@ -1053,7 +1053,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40
+     "preco": 36.0
     }
    ],
    "disponivel": false,
@@ -1069,7 +1069,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 36.9
+     "preco": 36.0
     }
    ],
    "disponivel": true,
@@ -1086,7 +1086,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40
+     "preco": 42.0
     }
    ],
    "disponivel": false,
@@ -1102,7 +1102,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 35.0
+     "preco": 30.0
     }
    ],
    "disponivel": true,
@@ -1122,7 +1122,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 41.9
+     "preco": 42.0
     }
    ],
    "disponivel": true,
@@ -1139,7 +1139,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 35.9
+     "preco": 34.0
     }
    ],
    "disponivel": true,
@@ -2535,7 +2535,7 @@
    "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-24T16:24:42.000000Z",
+ "atualizadoEm": "2026-10-24T16:30:06.000000Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
