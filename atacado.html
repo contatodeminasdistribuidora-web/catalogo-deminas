@@ -206,7 +206,7 @@ html.theme-ready body { opacity: 1; }
 <link rel="stylesheet" href="tema-mockup.css?v=20261024b">
 </head>
 
-<body data-b2b="1" data-cats="congelados" data-hero="Pão de queijo mineiro congelado para revenda. Pedido mínimo de R$ 300,00 e preço especial para CNPJ." data-qr1="Escaneie e veja o catálogo de atacado" data-qr2="direto pelo WhatsApp">
+<body data-b2b="1" data-cats="congelados" data-hero="Pão de queijo mineiro congelado para revenda. Pedido mínimo de R$ 300,00 e preço especial para CNPJ ou CPF de revendedor autônomo." data-qr1="Escaneie e veja o catálogo de atacado" data-qr2="direto pelo WhatsApp">
 
 <header class="hero">
   <img src="logo.png" alt="De Minas Pão de Queijaria — Atacado" width="720" height="229">
@@ -258,9 +258,13 @@ html.theme-ready body { opacity: 1; }
         <div class="tot"><span id="totLbl">Total dos produtos</span><b id="cartTotal">R$ 0,00</b></div>
         <p class="note" id="cartNote"></p>
         <div class="upsell" id="upsell" hidden></div>
-        <label class="fld"><span>Nome do estabelecimento / empresa</span><input type="text" id="cName" required autocomplete="organization"></label>
-        <label class="fld"><span>CNPJ</span><input type="text" id="cCnpj" required inputmode="numeric" maxlength="18" placeholder="00.000.000/0000-00" autocomplete="off"></label>
-        <label class="fld"><span>Nome do responsável</span><input type="text" id="cResp" required autocomplete="name"></label>
+        <div class="seg" role="radiogroup" aria-label="Tipo de cadastro">
+          <label><input type="radio" name="pessoa" value="PJ" checked><span>Empresa (CNPJ)</span></label>
+          <label><input type="radio" name="pessoa" value="PF"><span>Revendedor autônomo (CPF)</span></label>
+        </div>
+        <label class="fld"><span id="lblNome">Nome do estabelecimento / empresa</span><input type="text" id="cName" required autocomplete="organization"></label>
+        <label class="fld"><span id="lblDoc">CNPJ</span><input type="text" id="cCnpj" required inputmode="numeric" maxlength="18" placeholder="00.000.000/0000-00" autocomplete="off"></label>
+        <label class="fld" id="respFld"><span>Nome do responsável</span><input type="text" id="cResp" required autocomplete="name"></label>
         <label class="fld"><span>Seu WhatsApp (com DDD)</span><input type="tel" id="cTel" required inputmode="tel" autocomplete="tel" placeholder="(11) 90000-0000"></label>
         <div class="seg" role="radiogroup" aria-label="Entrega ou retirada">
           <label><input type="radio" name="tipo" value="Entrega" checked><span>Entrega</span></label>
@@ -509,10 +513,11 @@ function renderCart() {
 }
 function openCart() {
   const c = store.get('dm_b2b_cust') || {};
+  if (c.pessoa === 'PF') { const r = document.querySelector('input[name=pessoa][value=PF]'); if (r) r.checked = true; syncPessoa(); }
   if (c.nome && !$('#cName').value) $('#cName').value = c.nome;
   if (c.addr && !$('#cAddr').value) $('#cAddr').value = c.addr;
   if (c.tel && !$('#cTel').value) $('#cTel').value = c.tel;
-  if (c.cnpj && !$('#cCnpj').value) $('#cCnpj').value = c.cnpj;
+  if (c.cnpj && !$('#cCnpj').value) $('#cCnpj').value = docMask(c.cnpj);
   if (c.resp && !$('#cResp').value) $('#cResp').value = c.resp;
   syncAddr();
   if (!cartLines().length) { toast('Adicione produtos primeiro'); return; }
@@ -534,6 +539,28 @@ function cnpjOk(c) {
   const dv = n => { let t = 0, w = n - 7; for (let i = 0; i < n; i++) { t += +c[i] * w--; if (w < 2) w = 9; } const r = t % 11; return r < 2 ? 0 : 11 - r; };
   return dv(12) === +c[12] && dv(13) === +c[13];
 }
+function cpfOk(c) {
+  c = String(c).replace(/\D/g, ''); if (c.length !== 11 || /^(\d)\1+$/.test(c)) return false;
+  const dv = n => { let t = 0; for (let i = 0; i < n; i++) t += +c[i] * (n + 1 - i); const r = (t * 10) % 11; return r === 10 ? 0 : r; };
+  return dv(9) === +c[9] && dv(10) === +c[10];
+}
+function cpfFmt(c) { c = String(c).replace(/\D/g, ''); return c.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4'); }
+function ehPF() { const r = $('input[name=pessoa]:checked'); return !!r && r.value === 'PF'; }
+function docMask(v) {
+  const d = String(v).replace(/\D/g, '');
+  if (ehPF()) return d.slice(0, 11).replace(/^(\d{3})(\d)/, '$1.$2').replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3').replace(/\.(\d{3})(\d)/, '.$1-$2');
+  return d.slice(0, 14).replace(/^(\d{2})(\d)/, '$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3').replace(/\.(\d{3})(\d)/, '.$1/$2').replace(/(\d{4})(\d)/, '$1-$2');
+}
+function syncPessoa() {
+  const pf = ehPF();
+  $('#lblNome').textContent = pf ? 'Seu nome completo' : 'Nome do estabelecimento / empresa';
+  $('#lblDoc').textContent = pf ? 'CPF' : 'CNPJ';
+  $('#cCnpj').placeholder = pf ? '000.000.000-00' : '00.000.000/0000-00';
+  $('#cCnpj').maxLength = pf ? 14 : 18;
+  $('#cName').autocomplete = pf ? 'name' : 'organization';
+  $('#respFld').hidden = pf; $('#cResp').required = !pf;
+  $('#cCnpj').value = docMask($('#cCnpj').value);
+}
 function cnpjFmt(c) { c = String(c).replace(/\D/g, ''); return c.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5'); }
 function nomeMsg(p) { return (p.codigo ? p.codigo + ' · ' : '') + p.nome; }
 function buildMessage(codigo) {
@@ -553,9 +580,8 @@ function buildMessage(codigo) {
   const total = r2(L.reduce((a, l) => a + l.sub, 0));
   let m = `Pedido ATACADO — De Minas Pão de Queijaria\n\n`;
   m += `Código: ${codigo}\n`;
-  m += `Empresa: ${nome}\n`;
-  if (resp) m += `Responsável: ${resp}\n`;
-  m += `CNPJ: ${cnpjFmt($('#cCnpj').value)}\n`;
+  if (ehPF()) { m += `Revendedor autônomo: ${nome}\n`; m += `CPF: ${cpfFmt($('#cCnpj').value)}\n`; }
+  else { m += `Empresa: ${nome}\n`; if (resp) m += `Responsável: ${resp}\n`; m += `CNPJ: ${cnpjFmt($('#cCnpj').value)}\n`; }
   m += `Contato: ${tel}\n`;
   m += `${tipo}${tipo === 'Entrega' && addr ? ': ' + addr : ''}\n`;
   m += `\nItens:\n${lines.join('\n')}\n\n`;
@@ -581,6 +607,8 @@ $('#lb').addEventListener('click', e => { if (e.target === $('#lb')) $('#lb').cl
 $('#dlg').addEventListener('click', e => { if (e.target === $('#dlg')) $('#dlg').classList.remove('on'); });
 
 $$('input[name=tipo]').forEach(r => r.addEventListener('change', syncAddr));
+$$('input[name=pessoa]').forEach(r => r.addEventListener('change', syncPessoa));
+$('#cCnpj').addEventListener('input', e => { e.target.value = docMask(e.target.value); });
 
 $('#orderForm').addEventListener('submit', e => {
   e.preventDefault();
@@ -595,11 +623,12 @@ $('#orderForm').addEventListener('submit', e => {
   const telDig = tel.replace(/\D/g, '');
   if (telDig.length < 10 || telDig.length > 13) { toast('Informe seu WhatsApp com DDD, ex.: (11) 98697-5803'); $('#cTel').focus(); return; }
 
-  const resp = $('#cResp').value.trim(), cnpj = $('#cCnpj').value.replace(/\D/g, '');
-  if (!cnpjOk(cnpj)) { toast('CNPJ inválido. Confira os 14 números.'); $('#cCnpj').focus(); return; }
+  const pf = ehPF();
+  const resp = pf ? '' : $('#cResp').value.trim(), cnpj = $('#cCnpj').value.replace(/\D/g, '');
+  if (pf ? !cpfOk(cnpj) : !cnpjOk(cnpj)) { toast(pf ? 'CPF inválido. Confira os 11 números.' : 'CNPJ inválido. Confira os 14 números.'); $('#cCnpj').focus(); return; }
   const min0 = Number(S.data.pedidoMinimo) || 0;
   if (min0 > 0 && r2(L.reduce((a, l) => a + l.sub, 0)) < min0) { toast('Pedido mínimo: ' + brl(min0) + '.'); return; }
-  store.set('dm_b2b_cust', {nome, addr, tel, resp, cnpj});
+  store.set('dm_b2b_cust', {nome, addr, tel, resp, cnpj, pessoa: pf ? 'PF' : 'PJ'});
 
   // Salva o carrinho como "Última Compra" antes de limpar
   store.set('dm_b2b_last_order', S.cart);
