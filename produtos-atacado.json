@@ -1,12 +1,12 @@
 {
- "versao": 3,
- "atualizadoEm": "2026-10-24T04:06:59Z",
+ "versao": 4,
+ "atualizadoEm": "2026-10-24T11:06:51Z",
  "whatsapp": "5511986975803",
  "pedidoMinimo": 300,
  "pix": "(11) 98697-5803",
  "pixNome": "Franklin Rainier",
  "avisos": [
-  "Catálogo exclusivo para empresas e lojistas (CNPJ).",
+  "Catálogo exclusivo para empresas (CNPJ) e revendedores autônomos (CPF).",
   "Pagamento: PIX ou prazo de 7 dias para clientes com cadastro aprovado.",
   "Entrega: frete grátis na Zona Leste de São Paulo em pedidos a partir de R$ 300,00. Dia e horário combinados pelo WhatsApp.",
   "Troca ou devolução de produtos congelados: combinada caso a caso pelo WhatsApp.",
@@ -54,7 +54,7 @@
    "cat": "congelados",
    "grupo": "Pão de Queijo Tradicional",
    "nome": "Pão de Queijo Coquetel 15g",
-   "foto": "atacado-sabor-da-roca-2kg.jpg",
+   "foto": "atacado-sabor-da-roca-coquetel-2kg.jpg",
    "descricao": "Peças de 15g. Pacote de 2kg.",
    "opcoes": [
     {
@@ -108,7 +108,7 @@
    "cat": "congelados",
    "grupo": "Sabores Especiais",
    "nome": "Biscoito de Queijo com 2 Queijos",
-   "foto": "atacado-biscoito-de-queijo-500g.jpg",
+   "foto": "sabor-da-roca-biscoito-de-queijo-com-2-queijos-mve4l26d.jpg",
    "descricao": "Queijo Minas e Provolone.",
    "opcoes": [
     {
@@ -126,7 +126,7 @@
    "cat": "congelados",
    "grupo": "Sabores Especiais",
    "nome": "Chipa com 3 Queijos",
-   "foto": "sabor-da-roca-chipa-com-3-queijos-mve4l0yy.jpg",
+   "foto": "atacado-sabor-da-roca-chipa-3-queijos-1kg.jpg",
    "descricao": "Queijo Minas, Provolone e Parmesão.",
    "opcoes": [
     {
