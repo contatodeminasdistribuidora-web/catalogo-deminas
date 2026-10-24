@@ -1543,7 +1543,7 @@ function desenharNovosPedidos() {
           <span class="ped-num">🆕 ${x(p.cliente || 'Sem nome')}</span>
           <span class="pill pill-pend">${p.canal === 'atacado' ? '🏢 ATACADO' : 'NOVO'}</span>
         </div>
-        ${p.canal === 'atacado' ? '<div class="ped-card-mid" style="font-size:12px;font-weight:700">🏢 CNPJ ' + x(String(p.cnpj || '').replace(/\D/g, '').replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')) + '</div>' : ''}
+        ${p.canal === 'atacado' ? '<div class="ped-card-mid" style="font-size:12px;font-weight:700">' + (String(p.cnpj || '').replace(/\D/g, '').length === 11 ? '🧑 Autônomo · CPF ' + x(String(p.cnpj).replace(/\D/g, '').replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4')) : '🏢 CNPJ ' + x(String(p.cnpj || '').replace(/\D/g, '').replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5'))) + '</div>' : ''}
         <div class="ped-card-mid">📱 ${x(p.whatsapp || '—')} · ${x(p.tipo || 'Entrega')}</div>
         <div class="ped-card-mid" style="font-size:12px">📍 ${x(p.endereco || '—')}</div>
         <div class="ped-card-mid" style="font-size:12px">💳 ${x(p.pagamento || '—')}${p.troco ? ' · troco para ' + x(p.troco) : ''}${p.taxaFrete ? ' · 🚚 ' + x(p.frete || 'Entrega') + ' ' + R(p.taxaFrete) : ''}</div>
@@ -1663,14 +1663,15 @@ async function aprovarPedidoCatalogo(id) {
       };
     });
     const cnpjD = String(ped.cnpj || '').replace(/\D/g, '').slice(0, 14);
-    const cnpjF = cnpjD.length === 14 ? cnpjD.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5') : cnpjD;
+    const ehCPF = cnpjD.length === 11;
+    const cnpjF = cnpjD.length === 14 ? cnpjD.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5') : (ehCPF ? cnpjD.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4') : cnpjD);
     const [empNome, ...respPartes] = String(ped.cliente || 'Cliente Atacado').split(' — ');
     const resp = respPartes.join(' — ');
     const waD = String(ped.whatsapp || '').replace(/\D/g, '');
     let cli = db.atClis.find(c => cnpjD && String(c.doc || '').replace(/\D/g, '') === cnpjD);
     if (!cli && waD) cli = db.atClis.find(c => String(c.w || '').replace(/\D/g, '').slice(-9) === waD.slice(-9));
     if (!cli) {
-      cli = { id: uid(), n: empNome.trim().slice(0, 100), doc: cnpjF, w: String(ped.whatsapp || '').slice(0, 25), c: '', e: String(ped.endereco || '').slice(0, 300), obs: [resp ? 'Responsável: ' + resp : '', '[cadastrado pelo catálogo atacado]'].filter(Boolean).join(' | ') };
+      cli = { id: uid(), n: empNome.trim().slice(0, 100), doc: cnpjF, w: String(ped.whatsapp || '').slice(0, 25), c: '', e: String(ped.endereco || '').slice(0, 300), obs: [ehCPF ? 'Revendedor autônomo (CPF)' : (resp ? 'Responsável: ' + resp : ''), '[cadastrado pelo catálogo atacado]'].filter(Boolean).join(' | ') };
       db.atClis.push(cli);
     } else {
       if (!cli.doc && cnpjF) cli.doc = cnpjF;
@@ -2234,7 +2235,7 @@ function abrirDetPed(id){
     </table>
     <div style="text-align:right;font-size:13px;color:var(--txt3)">Frete: ${R(p.frete)} | Desconto Geral: ${R(p.desc)}</div>
     <div style="text-align:right;font-family:Arial;font-size:22px;font-weight:bold;color:var(--vinho)">Total: ${R(total)}</div>
-    ${(p.st==='PAGO'||p.st==='ENTREGUE')?`<div class="pix-box"><div class="pix-key">${x(cfg.pix)}</div><div class="pix-name">PIX · ${x(cfg.pixNome)}</div></div>`:''}
+    ${(p.st==='PAGO'||p.st==='ENTREGUE')?`<div class="pix-box"><div class="pix-key">${x(pixCliente())}</div><div class="pix-name">PIX · ${x(cfg.pixNome)}</div></div>`:''}
     <div style="margin-top:14px"><label style="font-size:12px;font-weight:600;color:var(--txt2)">Alterar Status:</label>
     <div class="filters" style="margin-top:6px">${['PENDENTE','PESAGEM','PAGO','ENTREGUE','CANCELADO'].map(s=>`<button class="filter-btn${p.st===s?' active':''}" onclick="alterarStPed('${p.id}','${s}')">${s}</button>`).join('')}</div></div>`;
   let foot=`<button class="btn btn-ghost" onclick="fm('mod-det')">Fechar</button>`;
@@ -2654,7 +2655,7 @@ function rendAtTabela(){let html='<div class="tbl-wrap"><div class="tbl-head"><h
 function abrirNovoAtCli(){document.getElementById('at-cli-title').textContent='Novo Cliente B2B';['ac-n','ac-doc','ac-wa','ac-cid','ac-end','ac-obs','ac-prazo'].forEach(id=>document.getElementById(id).value='');document.getElementById('ac-id').value='';am('mod-at-cli');}
 function editAtCli(id){const c=db.atClis.find(cl=>cl.id===id);if(!c)return;document.getElementById('at-cli-title').textContent='Editar Cliente B2B';document.getElementById('ac-n').value=c.n||'';document.getElementById('ac-doc').value=c.doc||'';document.getElementById('ac-wa').value=c.w||'';document.getElementById('ac-cid').value=c.c||'';document.getElementById('ac-end').value=c.e||'';document.getElementById('ac-obs').value=c.obs||'';document.getElementById('ac-prazo').value=c.prazo||'';document.getElementById('ac-id').value=id;am('mod-at-cli');}
 function salvarAtCli(){const n=document.getElementById('ac-n').value.trim();if(!n){toast('Informe o nome','warn');return;}const id=document.getElementById('ac-id').value;const data={n,doc:document.getElementById('ac-doc').value,w:document.getElementById('ac-wa').value,c:document.getElementById('ac-cid').value,e:document.getElementById('ac-end').value,obs:document.getElementById('ac-obs').value,prazo:document.getElementById('ac-prazo').value};if(id)Object.assign(db.atClis.find(c=>c.id===id),data);else db.atClis.push({id:uid(),...data});salvar();fm('mod-at-cli');rendAtClis();toast('Cliente salvo!','ok');}
-function imprimirAtPed(id){const p=db.atPeds.find(pe=>pe.id===id);if(!p)return;printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial;padding:20px;max-width:600px}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #eee}.total{font-size:20px;font-weight:bold;text-align:right}@media print{button{display:none}}</style></head><body><img src="${LOGO_ESC}" alt="De Minas" style="height:13mm;display:block;margin:0 0 6px"><h2>Pedido Atacado — ${nAt(p.num)}</h2><p>Cliente: ${x(p.cliNome)} | Pgto: ${x(p.pgto)}</p><table><thead><tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Subtotal</th></tr></thead><tbody>${p.itens.map(it=>`<tr><td>${imgItem(it,34)}${x(it.nome)}${codTag(it.cod||it.codigo)}${descHtml(descDoItem(it),8)}</td><td>${it.qty}x</td><td>${R(it.pr)}</td><td>${R(it.pr*it.qty)}</td></tr>`).join('')}</tbody></table><p class="total">Total: ${R(p.total||0)}</p><p>PIX: ${x(cfg.pix)} (${x(cfg.pixNome)})</p><button onclick="window.print()">Imprimir</button></body></html>`);}
+function imprimirAtPed(id){const p=db.atPeds.find(pe=>pe.id===id);if(!p)return;printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial;padding:20px;max-width:600px}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #eee}.total{font-size:20px;font-weight:bold;text-align:right}@media print{button{display:none}}</style></head><body><img src="${LOGO_ESC}" alt="De Minas" style="height:13mm;display:block;margin:0 0 6px"><h2>Pedido Atacado — ${nAt(p.num)}</h2><p>Cliente: ${x(p.cliNome)} | Pgto: ${x(p.pgto)}</p><table><thead><tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Subtotal</th></tr></thead><tbody>${p.itens.map(it=>`<tr><td>${imgItem(it,34)}${x(it.nome)}${codTag(it.cod||it.codigo)}${descHtml(descDoItem(it),8)}</td><td>${it.qty}x</td><td>${R(it.pr)}</td><td>${R(it.pr*it.qty)}</td></tr>`).join('')}</tbody></table><p class="total">Total: ${R(p.total||0)}</p><p>PIX: ${x(pixCliente())} (${x(cfg.pixNome)})</p><button onclick="window.print()">Imprimir</button></body></html>`);}
 
 // ============================================================
 // A RECEBER
@@ -3125,7 +3126,7 @@ function imprimirTodosPedidos(){
       const sub=calcItemSubFn(it);
       return`<tr><td>${imgItem(it,34)}${x(it.nome)}${codTag(it.cod||it.codigo)}${descHtml(descDoItem(it),8)}</td><td>${qtd}</td><td>${R(it.pr)}</td><td class="r" style="font-weight:700">${R(sub)}</td></tr>`;
     }).join('');
-    return`<div class="pedido"><div class="header"><div><img class="logo-print" src="${LOGO_ESC}" alt="De Minas Pão de Queijaria"></div><div style="text-align:right"><div class="num-ped">${nP(p.num)}</div><span class="status st-${p.st}">${p.st}</span></div></div><div class="meta"><strong>Cliente:</strong> ${x(p.cli)} ${p.wa?'· '+x(p.wa):''}<br><strong>Endereço:</strong> ${x(end)}<br>${p.horario?'<strong>Horário:</strong> '+x(p.horario)+'<br>':''}${p.obs?'<strong>Obs:</strong> '+x(p.obs)+'<br>':''}<strong>Data:</strong> ${dF(p.data)}</div><table><thead><tr><th>Produto</th><th>Qtd</th><th>Preço Unit.</th><th class="r">Subtotal</th></tr></thead><tbody>${itensHtml}</tbody></table><div class="total-box"><div class="label">Total do Pedido</div><div class="valor">${R(total)}</div></div><div class="pix-box"><div>Pagamento via PIX</div><div style="font-size:12pt;font-weight:900">${x(cfg.pix)}</div><div>${x(cfg.pixNome)}</div></div><div class="footer">A De Minas Pão de Queijaria agradece!</div></div>`;
+    return`<div class="pedido"><div class="header"><div><img class="logo-print" src="${LOGO_ESC}" alt="De Minas Pão de Queijaria"></div><div style="text-align:right"><div class="num-ped">${nP(p.num)}</div><span class="status st-${p.st}">${p.st}</span></div></div><div class="meta"><strong>Cliente:</strong> ${x(p.cli)} ${p.wa?'· '+x(p.wa):''}<br><strong>Endereço:</strong> ${x(end)}<br>${p.horario?'<strong>Horário:</strong> '+x(p.horario)+'<br>':''}${p.obs?'<strong>Obs:</strong> '+x(p.obs)+'<br>':''}<strong>Data:</strong> ${dF(p.data)}</div><table><thead><tr><th>Produto</th><th>Qtd</th><th>Preço Unit.</th><th class="r">Subtotal</th></tr></thead><tbody>${itensHtml}</tbody></table><div class="total-box"><div class="label">Total do Pedido</div><div class="valor">${R(total)}</div></div><div class="pix-box"><div>Pagamento via PIX</div><div style="font-size:12pt;font-weight:900">${x(pixCliente())}</div><div>${x(cfg.pixNome)}</div></div><div class="footer">A De Minas Pão de Queijaria agradece!</div></div>`;
   }).join('');
   const totalGeral=peds.reduce((s,p)=>s+calcTotal(p),0);
   printBlob(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>De Minas — Pedidos em Lote</title><style>${css}</style></head><body>${pedsHtml}<div class="no-print" style="position:fixed;bottom:20px;right:20px;background:#3d2000;color:#fff;padding:12px 20px;border-radius:8px;font-family:Arial;font-size:13px">📦 ${peds.length} pedido(s) · Total: <strong>${R(totalGeral)}</strong></div><button class="no-print" onclick="window.print()" style="position:fixed;top:20px;right:20px;padding:10px 24px;background:#3d2000;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13pt;font-weight:700">🖨️ Imprimir ${peds.length} Pedido(s)</button></body></html>`);
@@ -3180,12 +3181,28 @@ async function catAtualizarFotos(){
     const J=await r.json();const porCod={},porNome={},descCod={},descNome={},prod={},nomeCod={};
     (J.produtos||[]).forEach(p=>{
       prod[p.codigo]={n:p.nome,cat:p.cat,ops:(p.opcoes||[]).map(o=>({l:o.label,p:o.preco,kg:!!o.kg})),comp:(p.componentes||[]).map(c=>({c:c.codigo,o:c.opcao,q:c.qtd})),f:p.foto||'',d:p.descricao||''};
-      nomeCod[udiNorm(p.nome)]=p.codigo;
+      nomeCod[udiNorm(p.nome)]=p.codigo;(p.nomesAntigos||[]).forEach(n=>{nomeCod[udiNorm(n)]=p.codigo;});
       if(p.descricao){descCod[p.codigo]=p.descricao;descNome[udiNorm(p.nome)]=p.descricao;}
       if(!p.foto)return;porCod[p.codigo]=p.foto;porNome[udiNorm(p.nome)]=p.foto;
     });
-    catMapa={porCod,porNome,descCod,descNome,prod,nomeCod,sync:new Date().toISOString()};try{localStorage.setItem('dm_cat_fotos',JSON.stringify(catMapa));}catch(e){}
+    catMapa={porCod,porNome,descCod,descNome,prod,nomeCod,sync:new Date().toISOString()};
+    try{catMigrarCodigos();}catch(e){}try{localStorage.setItem('dm_cat_fotos',JSON.stringify(catMapa));}catch(e){}
   }catch(e){}
+}
+// pedidos aprovados antes do código do catálogo: grava o código pelo nome (inclui nomes antigos), uma vez
+function catMigrarCodigos(){
+  if(!(catMapa.prod&&Object.keys(catMapa.prod).length)||typeof db==='undefined'||!db)return;
+  let n=0;
+  [...(db.peds||[]),...(db.atPeds||[])].forEach(p=>(p.itens||[]).forEach(it=>{
+    if(it.prodId||it.cod)return;
+    const c=catMapa.nomeCod[udiNorm(it.nomeBase||it.nome)]||catMapa.nomeCod[udiNorm(String(it.nome||'').replace(/\s—\s.*$/,''))];
+    if(c&&catMapa.prod[c]){
+      const cp=catMapa.prod[c];it.cod=c;it.nomeBase=cp.n;n++;
+      // pedido antigo sem o tamanho: descobre a opção pelo preço (ex.: R$ 59,90 = 2kgs) e completa o nome
+      if(!it.label&&cp.ops.length>1){const o=udiOpcaoPorPreco(cp,it.pr);if(o){it.label=o;it.nome=udiNomeComLabel(cp.n,o,false);if(cp.cat==='congelados')it.pesoKg=udiPesoLabel(o);}}
+    }
+  }));
+  if(n){try{salvar();}catch(e){}}
 }
 function catSincronizado(){return !!(catMapa.prod&&Object.keys(catMapa.prod).length);}
 function catProd(cod){return cod&&catMapa.prod?catMapa.prod[cod]||null:null;}
@@ -3270,7 +3287,11 @@ function udiFornCod(cod,cat,opcao){
 function udiLinhaCat(cod,cp,opcao,qty,nota,alerta){
   const cong=cp.cat==='congelados';const kg=cong?udiPesoLabel(opcao):0;const forn=udiFornCod(cod,cp.cat,opcao);
   const base={prodId:null,cod,forn,pv:false,nota:nota||'',foto:fotoUrl(cp.f),desc:cp.d||'',alerta:!!alerta};
-  if(cong&&kg>0)return Object.assign(base,{nome:cp.n,key:'k|'+cod,pacote:'kg',qty:kg*qty});
+  if(cong&&kg>0){
+    const pac=kg===0.5?'500g':(kg===1?'1kg':(kg===2?'2kg':''));
+    if(pac)return Object.assign(base,{cod:cod+'-'+pac.toUpperCase(),nome:cp.n+' — '+pac,key:'k|'+cod+'|'+pac,pacote:pac,qty});
+    return Object.assign(base,{nome:cp.n,key:'k|'+cod,pacote:'kg',qty:kg*qty});
+  }
   const nomeOp=(cp.ops.length>1&&/^\d/.test(opcao||'')&&!udiNorm(cp.n).includes(udiNorm(opcao).replace(/s$/,'')))?cp.n+' — '+opcao:cp.n;
   return Object.assign(base,{nome:nomeOp,key:cod+'|'+udiNorm(opcao),pacote:'',qty});
 }
@@ -3311,7 +3332,7 @@ function rendListaUDI(){
     const entry=listaMap[key];if(!entry.foto&&it.foto)entry.foto=it.foto;if(!entry.desc&&it.desc)entry.desc=it.desc;if(!entry.cod&&it.cod)entry.cod=it.cod;if(it.alerta)entry.alerta=true;
     const pedNum=p.num?(p.tipo==='atacado'?nAt(p.num):nP(p.num)):'?';
     const quem=pedNum+' ('+x(p.cli||p.cliNome||'?')+')';
-    const isPacote=unidade==='1kg'||unidade==='2kg';
+    const isPacote=['500g','1kg','2kg'].includes(unidade);
     if(it.pv&&!isUnidadePeso(unidade)){
       if(it.pesoReal){entry.kgConhecido+=it.pesoReal;entry.pedidos.push(quem+' — '+it.pesoReal.toFixed(3)+'kg');}
       else{const q=parseFloat(it.qty)||1;entry.pecasAPesar+=q;entry.qtd+=q;entry.pedidos.push(quem+' — a pesar');}
@@ -3328,7 +3349,7 @@ function rendListaUDI(){
   udiExtras.forEach(e=>{
     const key='extra_'+e.prodId;
     if(!listaMap[key])listaMap[key]={nome:e.nome,forn:e.forn,unidade:e.unidade,qtd:0,pedidos:[],pv:false,kgConhecido:0,pecasAPesar:0,isExtra:true};
-    const isPacote=e.unidade==='1kg'||e.unidade==='2kg';
+    const isPacote=['500g','1kg','2kg'].includes(e.unidade);
     listaMap[key].qtd+=e.qty;
     if(isPacote){const pesoTotal=parsePesoTotal(e.unidade,e.qty);listaMap[key].pedidos.push('➕ Extra'+(e.obs?' ('+e.obs+')':'')+' — '+e.qty+' pct ('+pesoTotal+'kg)');}
     else listaMap[key].pedidos.push('➕ Extra'+(e.obs?' ('+e.obs+')':''));
@@ -3339,12 +3360,12 @@ function rendListaUDI(){
   let html='';
   Object.entries(fornMap).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([forn,itens])=>{
     let totalPesoKg=0,totalPacotes=0;
-    itens.forEach(i=>{const un=i.unidade||'un';if(un==='1kg'||un==='2kg'){totalPacotes+=i.qtd;totalPesoKg+=parsePesoTotal(un,i.qtd);}else if(isUnidadePeso(un)){totalPesoKg+=parsePesoTotal(un,i.qtd);}else if(i.kgConhecido>0)totalPesoKg+=i.kgConhecido;});
+    itens.forEach(i=>{const un=i.unidade||'un';if(['500g','1kg','2kg'].includes(un)){totalPacotes+=i.qtd;totalPesoKg+=parsePesoTotal(un,i.qtd);}else if(isUnidadePeso(un)){totalPesoKg+=parsePesoTotal(un,i.qtd);}else if(i.kgConhecido>0)totalPesoKg+=i.kgConhecido;});
     let headerLabel=totalPacotes>0&&totalPesoKg>0?totalPacotes+' pct ('+totalPesoKg+'kg)':totalPesoKg>0?(totalPesoKg%1===0?totalPesoKg:parseFloat(totalPesoKg.toFixed(1)))+' kg':itens.length+' item(ns)';
     html+=`<div class="tbl-wrap" style="margin-bottom:16px"><div class="tbl-head"><h3>🏭 ${x(forn)}</h3><span style="font-size:13px;color:var(--txt3)">${headerLabel}</span></div><table><thead><tr><th>Produto</th><th>Total</th><th>Pedidos</th></tr></thead><tbody>`;
     itens.sort((a,b)=>a.nome.localeCompare(b.nome)).forEach(it=>{
       const un=it.unidade||'un';let qtdDisplay='';
-      const isPacote=un==='1kg'||un==='2kg';
+      const isPacote=['500g','1kg','2kg'].includes(un);
       if(isPacote)qtdDisplay=it.qtd+' pct ('+parsePesoTotal(un,it.qtd)+'kg)';
       else if(isUnidadePeso(un)){const peso=parsePesoTotal(un,it.qtd);qtdDisplay=(peso%1===0?peso:parseFloat(peso.toFixed(1)))+'kg';}
       else if(it.pv){const p=[];if(it.kgConhecido>0)p.push((it.kgConhecido%1===0?it.kgConhecido:parseFloat(it.kgConhecido.toFixed(3)))+'kg');if(it.pecasAPesar>0)p.push(it.pecasAPesar+' peça(s) a pesar');qtdDisplay=p.join(' + ')||'—';}
@@ -3364,14 +3385,14 @@ function imprimirListaUDI(){
   let atPedsL=db.atPeds.filter(p=>['PENDENTE','PAGO'].includes(p.st));
   if(dataFil){peds=peds.filter(p=>isSameDay(p.data,dataFil));atPedsL=atPedsL.filter(p=>isSameDay(p.data,dataFil));}
   const listaMap={};
-  [...peds,...atPedsL].forEach(p=>udiLinhasPed(p).forEach(it=>{const prod=it.prodId?gP(it.prodId):null;const key=it.key||it.prodId||it.nome;const forn=prod?prod.forn:(it.forn||UDI_FORN_CONG);const unidade=prod?(prod.pacote||'un'):(it.pacote||'un');if(!listaMap[key])listaMap[key]={nome:it.nome||'?',forn,qtd:0,unidade,foto:'',desc:'',cod:'',alerta:false};if(!listaMap[key].foto&&it.foto)listaMap[key].foto=it.foto;if(!listaMap[key].desc&&it.desc)listaMap[key].desc=it.desc;if(!listaMap[key].cod&&it.cod)listaMap[key].cod=it.cod;if(it.alerta)listaMap[key].alerta=true;listaMap[key].qtd+=(parseFloat(it.qty)||1);}));
+  [...peds,...atPedsL].forEach(p=>udiLinhasPed(p).forEach(it=>{const prod=it.prodId?gP(it.prodId):null;const key=it.key||it.prodId||it.nome;const forn=prod?prod.forn:(it.forn||UDI_FORN_CONG);const unidade=prod?(prod.pacote||'un'):(it.pacote||'un');if(!listaMap[key])listaMap[key]={nome:it.nome||'?',forn,qtd:0,unidade,foto:'',desc:'',cod:'',alerta:false,pedidos:[]};{const pn=p.num?(p.tipo==='atacado'?nAt(p.num):nP(p.num)):'';if(pn&&!listaMap[key].pedidos.includes(pn))listaMap[key].pedidos.push(pn);}if(!listaMap[key].foto&&it.foto)listaMap[key].foto=it.foto;if(!listaMap[key].desc&&it.desc)listaMap[key].desc=it.desc;if(!listaMap[key].cod&&it.cod)listaMap[key].cod=it.cod;if(it.alerta)listaMap[key].alerta=true;listaMap[key].qtd+=(parseFloat(it.qty)||1);}));
   udiExtras.forEach(e=>{const key='extra_'+e.prodId;if(!listaMap[key])listaMap[key]={nome:'➕ '+e.nome,forn:e.forn,qtd:0,unidade:e.unidade};listaMap[key].qtd+=e.qty;});
   if(!Object.keys(listaMap).length){toast('Nenhum produto','warn');return;}
   const fornMap={};Object.values(listaMap).forEach(it=>{if(!fornMap[it.forn])fornMap[it.forn]=[];fornMap[it.forn].push(it);});
   let rows='';
   Object.entries(fornMap).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([forn,itens])=>{
     rows+=`<h3>🏭 ${forn}</h3><table><thead><tr><th>Produto</th><th>Qtd</th></tr></thead><tbody>`;
-    itens.sort((a,b)=>a.nome.localeCompare(b.nome)).forEach(it=>{const un=it.unidade||'un';const isPacote=un==='1kg'||un==='2kg';let label;if(isPacote){const peso=parsePesoTotal(un,it.qtd);label=it.qtd+' pct ('+peso+'kg)';}else if(isUnidadePeso(un)){const peso=parsePesoTotal(un,it.qtd);label=(peso%1===0?peso:parseFloat(peso.toFixed(2)))+'kg';}else label=(it.qtd%1===0?it.qtd:parseFloat(it.qtd.toFixed(2)))+' un';rows+=`<tr><td>${imgUrl(it.foto,42)}${x(it.nome)}${codTag(it.cod)}${it.alerta?' <b style="color:#b00020">⚠ conferir</b>':''}${descHtml(it.desc,11)}</td><td style="font-weight:bold;font-size:18px;color:#7b1d1d">${label}</td></tr>`;});
+    itens.sort((a,b)=>a.nome.localeCompare(b.nome)).forEach(it=>{const un=it.unidade||'un';const isPacote=['500g','1kg','2kg'].includes(un);let label;if(isPacote){const peso=parsePesoTotal(un,it.qtd);label=it.qtd+' pct ('+peso+'kg)';}else if(isUnidadePeso(un)){const peso=parsePesoTotal(un,it.qtd);label=(peso%1===0?peso:parseFloat(peso.toFixed(2)))+'kg';}else label=(it.qtd%1===0?it.qtd:parseFloat(it.qtd.toFixed(2)))+' un';rows+=`<tr><td>${imgUrl(it.foto,42)}${x(it.nome)}${codTag(it.cod)}${it.alerta?' <b style="color:#b00020">⚠ conferir</b>':''}${descHtml(it.desc,11)}${(it.pedidos&&it.pedidos.length)?'<div style="font-size:10px;color:#888;margin-top:2px">Pedidos: '+it.pedidos.join(', ')+'</div>':''}</td><td style="font-weight:bold;font-size:18px;color:#7b1d1d">${label}</td></tr>`;});
     rows+='</tbody></table>';
   });
   printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial;padding:20px;max-width:500px}h2{text-align:center;color:#7b1d1d}table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px solid #eee}th{background:#f0e8d8}@media print{button{display:none}}</style></head><body><div style="text-align:center"><img src="${LOGO_ESC}" alt="De Minas" style="height:13mm;display:inline-block;margin:0 0 6px"></div><h2>Lista UDI</h2><p style="text-align:center;color:#888">${dF(new Date().toISOString())}</p>${rows}<button onclick="window.print()">Imprimir</button></body></html>`);
@@ -3431,7 +3452,7 @@ function rendProdHist(){
   db.vendas.filter(v=>!v.cancelado).forEach(v=>{(v.itens||[]).forEach(it=>{if(it.prodId!==prodId)return;encontrados.push({num:v.num,id:v.id,canal:'PDV',cli:'PDV',data:v.data,st:'PDV',qty:it.qty||1,pr:it.pr,pesoReal:null,unidade:prod.pacote||'un',pv:false,subtotal:it.pr*(it.qty||1),_tipo:'pdv'});});});
   encontrados.sort((a,b)=>new Date(b.data)-new Date(a.data));
   const visiveis=prodHistFiltroSt==='TODOS'?encontrados:encontrados.filter(e=>e.st===prodHistFiltroSt);
-  const isPacote=prod.pacote==='1kg'||prod.pacote==='2kg';
+  const isPacote=['500g','1kg','2kg'].includes(prod.pacote);
   const isGramas=prod.pacote&&prod.pacote.endsWith('g')&&!isPacote;
   const totalQty=visiveis.reduce((s,e)=>s+(e.qty||0),0);
   const totalKg=isPacote?parsePesoTotal(prod.pacote,totalQty):isGramas?parsePesoTotal(prod.pacote,totalQty):null;
@@ -3755,7 +3776,7 @@ function imprimirPedido(id){
 ${p.frete?`<div style="text-align:right;font-size:9.5pt;color:#666;margin-bottom:4px">Frete: ${R(p.frete)}</div>`:''}
 ${p.desc?`<div style="text-align:right;font-size:9.5pt;color:#666;margin-bottom:4px">Desconto Geral: -${R(p.desc)}</div>`:''}
 <div class="total-box"><span style="font-size:9pt;opacity:.8">Total do Pedido</span><br><strong style="font-size:16pt">${R(total)}</strong></div>
-<div class="pix-box"><div style="flex:1"><div style="font-size:8pt;font-weight:700;color:#c8860a;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Pagamento via PIX</div><div class="pix-key">${x(cfg.pix)}</div><div class="pix-name">${x(cfg.pixNome)}</div></div><div style="font-size:28pt;opacity:.15">◈</div></div>
+<div class="pix-box"><div style="flex:1"><div style="font-size:8pt;font-weight:700;color:#c8860a;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Pagamento via PIX</div><div class="pix-key">${x(pixCliente())}</div><div class="pix-name">${x(cfg.pixNome)}</div></div><div style="font-size:28pt;opacity:.15">◈</div></div>
 <div class="sugestao">${sugestao}</div>
 <div class="footer">A De Minas Pão de Queijaria agradece por adquirir o nosso Autêntico Pão de Queijo Mineiro</div>
 <button onclick="window.print()" style="margin-top:16px;padding:8px 20px;background:#3d2000;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:11pt">🖨️ Imprimir</button></body></html>`);
