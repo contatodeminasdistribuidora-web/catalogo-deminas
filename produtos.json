@@ -56,7 +56,7 @@
    "grupo": "",
    "nome": "Combo Dupla Minas no Pote",
    "foto": "combo-dupla-minas-no-pote.jpg",
-   "descricao": "1 Doce de Leite Moreno (pote) + 1 Goiabada Cascão de Colher (pote)",
+   "descricao": "1 Doce de Leite Moreno + 1 Goiabada Cascão de Colher",
    "opcoes": [
     {
      "label": "Combo",
@@ -65,7 +65,19 @@
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "componentes": [
+    {
+     "codigo": "DC-001",
+     "opcao": "Pote",
+     "qtd": 1
+    },
+    {
+     "codigo": "DC-012",
+     "opcao": "Pote",
+     "qtd": 1
+    }
+   ]
   },
   {
    "id": "combo-romeu-e-julieta",
@@ -73,7 +85,7 @@
    "cat": "combos",
    "grupo": "",
    "nome": "Combo Romeu e Julieta",
-   "descricao": "1 Queijo Fresco (peça) + 1 Goiabada Cascão de Corte 400g: a sobremesa mais mineira que existe",
+   "descricao": "1 Queijo Fresco + 1 Goiabada Cascão Corte 400g: a sobremesa mais mineira que existe",
    "foto": "combo-romeu-e-julieta.jpg",
    "opcoes": [
     {
@@ -83,7 +95,19 @@
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "componentes": [
+    {
+     "codigo": "QJ-003",
+     "opcao": "Peça",
+     "qtd": 1
+    },
+    {
+     "codigo": "DC-010",
+     "opcao": "400g",
+     "qtd": 1
+    }
+   ]
   },
   {
    "id": "combo-cafe-da-manha",
@@ -91,7 +115,7 @@
    "cat": "combos",
    "grupo": "",
    "nome": "Combo Café da Manhã Mineiro",
-   "descricao": "1 kg de Pão de Queijo Tradicional + 1 Doce de Leite Moreno (pote) + 1 Biscoito de Queijo Canastra (pacote)",
+   "descricao": "1 kg de Pão de Queijo Tradicional 30g + 1 Doce de Leite Moreno + 1 Biscoito de Queijo Canastra",
    "foto": "combo-cafe-da-manha-mineiro.jpg",
    "opcoes": [
     {
@@ -101,7 +125,24 @@
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "componentes": [
+    {
+     "codigo": "PQ-001",
+     "opcao": "1kg",
+     "qtd": 1
+    },
+    {
+     "codigo": "DC-001",
+     "opcao": "Pote",
+     "qtd": 1
+    },
+    {
+     "codigo": "BP-004",
+     "opcao": "Pacote",
+     "qtd": 1
+    }
+   ]
   },
   {
    "id": "combo-tabua-mineira",
@@ -110,7 +151,7 @@
    "grupo": "",
    "nome": "Combo Tábua Mineira",
    "foto": "combo-tabua-mineira.jpg",
-   "descricao": "1 Kit 4 Queijos Serra da Canastra + 1 Geleia de Pimenta 250g + 1 Goiabada Cascão de Corte 400g",
+   "descricao": "1 Kit 4 Queijos Serra da Canastra + 1 Geleia de Pimenta 250g + 1 Goiabada Cascão Corte 400g",
    "opcoes": [
     {
      "label": "Combo",
@@ -119,7 +160,24 @@
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "componentes": [
+    {
+     "codigo": "QJ-002",
+     "opcao": "Kit",
+     "qtd": 1
+    },
+    {
+     "codigo": "MC-003",
+     "opcao": "Unidade",
+     "qtd": 1
+    },
+    {
+     "codigo": "DC-010",
+     "opcao": "400g",
+     "qtd": 1
+    }
+   ]
   },
   {
    "id": "combo-presente-mineiro",
@@ -127,7 +185,7 @@
    "cat": "combos",
    "grupo": "",
    "nome": "Combo Presente Mineiro",
-   "descricao": "1 Mel Silvestre 250g + 1 Doce de Leite Moreno (pote) + 1 Geleia de Pimenta 250g + 1 Casadinho de Goiabada (pote)",
+   "descricao": "1 Mel Florada Silvestre 250g + 1 Doce de Leite Moreno + 1 Geleia de Pimenta 250g + 1 Casadinho de Goiabada",
    "foto": "combo-presente-mineiro.jpg",
    "opcoes": [
     {
@@ -137,7 +195,29 @@
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "componentes": [
+    {
+     "codigo": "ML-001",
+     "opcao": "250g",
+     "qtd": 1
+    },
+    {
+     "codigo": "DC-001",
+     "opcao": "Pote",
+     "qtd": 1
+    },
+    {
+     "codigo": "MC-003",
+     "opcao": "Unidade",
+     "qtd": 1
+    },
+    {
+     "codigo": "BP-001",
+     "opcao": "Pote",
+     "qtd": 1
+    }
+   ]
   },
   {
    "id": "combo-cesta-fim-de-ano",
@@ -146,7 +226,7 @@
    "grupo": "",
    "nome": "Combo Cesta Mineira de Fim de Ano",
    "foto": "combo-cesta-mineira-de-fim-de-ano.jpg",
-   "descricao": "1 Doce de Leite Viçosa 400g + 1 Goiabada Cascão de Corte 500g + 1 Mel Silvestre 330g + 1 Geleia de Pimenta 250g + 1 Biscoito de Queijo Canastra + 1 Casadinho de Goiabada",
+   "descricao": "1 Doce de Leite Viçosa 400g + 1 Goiabada Cascão Corte 500g + 1 Mel Silvestre 330g + 1 Geleia de Pimenta 250g + 1 Biscoito de Queijo Canastra + 1 Casadinho de Goiabada",
    "opcoes": [
     {
      "label": "Combo",
@@ -155,7 +235,39 @@
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "componentes": [
+    {
+     "codigo": "DC-003",
+     "opcao": "400g",
+     "qtd": 1
+    },
+    {
+     "codigo": "DC-010",
+     "opcao": "500g",
+     "qtd": 1
+    },
+    {
+     "codigo": "ML-005",
+     "opcao": "330g",
+     "qtd": 1
+    },
+    {
+     "codigo": "MC-003",
+     "opcao": "Unidade",
+     "qtd": 1
+    },
+    {
+     "codigo": "BP-004",
+     "opcao": "Pacote",
+     "qtd": 1
+    },
+    {
+     "codigo": "BP-001",
+     "opcao": "Pote",
+     "qtd": 1
+    }
+   ]
   },
   {
    "id": "combo-cafe-da-tarde-pq",
@@ -163,7 +275,7 @@
    "cat": "congelados",
    "grupo": "Combos de Pão de Queijo",
    "nome": "Combo Café da Tarde (2 kg)",
-   "descricao": "1 kg de Pão de Queijo Tradicional + 1 kg de Recheado de Goiabada",
+   "descricao": "1 kg de Pão de Queijo Tradicional 30g + 1 kg de Recheado de Goiabada",
    "foto": "combo-cafe-da-tarde-pq-mve4krz5.jpg",
    "opcoes": [
     {
@@ -173,7 +285,19 @@
     }
    ],
    "disponivel": true,
-   "consultarEstoque": true
+   "consultarEstoque": true,
+   "componentes": [
+    {
+     "codigo": "PQ-001",
+     "opcao": "1kg",
+     "qtd": 1
+    },
+    {
+     "codigo": "PQ-010",
+     "opcao": "1kg",
+     "qtd": 1
+    }
+   ]
   },
   {
    "id": "combo-familia-pq",
@@ -181,7 +305,7 @@
    "cat": "congelados",
    "grupo": "Combos de Pão de Queijo",
    "nome": "Combo Família (3 kg)",
-   "descricao": "2 kg de Pão de Queijo Tradicional + 1 kg de Chipa com 3 Queijos",
+   "descricao": "2 kg de Pão de Queijo Tradicional 30g + 1 kg de Chipa com 3 Queijos",
    "foto": "combo-familia-pq-mve4kteq.jpg",
    "opcoes": [
     {
@@ -191,7 +315,19 @@
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "componentes": [
+    {
+     "codigo": "PQ-001",
+     "opcao": "1kg",
+     "qtd": 2
+    },
+    {
+     "codigo": "PQ-003",
+     "opcao": "1kg",
+     "qtd": 1
+    }
+   ]
   },
   {
    "id": "combo-recheados-pq",
@@ -209,7 +345,24 @@
     }
    ],
    "disponivel": true,
-   "consultarEstoque": true
+   "consultarEstoque": true,
+   "componentes": [
+    {
+     "codigo": "PQ-010",
+     "opcao": "1kg",
+     "qtd": 1
+    },
+    {
+     "codigo": "PQ-011",
+     "opcao": "1kg",
+     "qtd": 1
+    },
+    {
+     "codigo": "PQ-012",
+     "opcao": "1kg",
+     "qtd": 1
+    }
+   ]
   },
   {
    "id": "combo-festa-pq",
@@ -217,7 +370,7 @@
    "cat": "congelados",
    "grupo": "Combos de Pão de Queijo",
    "nome": "Combo Festa (6 kg)",
-   "descricao": "4 kg de Pão de Queijo Tradicional + 1 kg de Chipa com 3 Queijos + 1 kg de Recheado de Frango",
+   "descricao": "4 kg de Pão de Queijo Tradicional 30g + 1 kg de Chipa com 3 Queijos + 1 kg de Recheado de Frango",
    "foto": "combo-festa-pq-mve4kw07.jpg",
    "opcoes": [
     {
@@ -227,7 +380,24 @@
     }
    ],
    "disponivel": true,
-   "consultarEstoque": true
+   "consultarEstoque": true,
+   "componentes": [
+    {
+     "codigo": "PQ-001",
+     "opcao": "1kg",
+     "qtd": 4
+    },
+    {
+     "codigo": "PQ-003",
+     "opcao": "1kg",
+     "qtd": 1
+    },
+    {
+     "codigo": "PQ-011",
+     "opcao": "1kg",
+     "qtd": 1
+    }
+   ]
   },
   {
    "id": "pq-023",
@@ -699,11 +869,12 @@
    "opcoes": [
     {
      "label": "Kit",
-     "preco": 60
+     "preco": 63
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "descricao": "Kit com 4 queijos da Serra da Canastra, cerca de 500g no total."
   },
   {
    "id": "canastra-e-meia-cura-queijo-fresco",
@@ -748,7 +919,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 80,
+     "preco": 100.0,
      "kg": true
     }
    ],
@@ -799,7 +970,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 67,
+     "preco": 75.0,
      "kg": true
     }
    ],
@@ -833,7 +1004,7 @@
    "opcoes": [
     {
      "label": "Peça",
-     "preco": 90
+     "preco": 100.0
     }
    ],
    "disponivel": false,
@@ -849,7 +1020,7 @@
    "opcoes": [
     {
      "label": "Peça",
-     "preco": 90
+     "preco": 113.0
     }
    ],
    "disponivel": true,
@@ -865,11 +1036,12 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40
+     "preco": 36.9
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "descricao": "Peso médio de cada peça: 300g."
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-tranca-com-alho",
@@ -897,7 +1069,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 35.9
+     "preco": 36.9
     }
    ],
    "disponivel": true,
@@ -925,17 +1097,17 @@
    "codigo": "QJ-016",
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
-   "nome": "Queijo Palito Temperado",
-   "foto": "palito-temperado.jpg",
+   "nome": "Queijo Palito de Mussarela Temperada",
+   "foto": "queijo-palito-mussarela.jpg",
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 29.9
+     "preco": 35.0
     }
    ],
    "disponivel": true,
    "consultarEstoque": false,
-   "descricao": "Peso médio de cada peça: 250g."
+   "descricao": "Queijo mussarela condimentado em palito. Peso médio de cada peça: 250g."
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-nozinho-temperado",
@@ -964,7 +1136,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 33.9
+     "preco": 35.9
     }
    ],
    "disponivel": true,
@@ -981,7 +1153,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 100,
+     "preco": 119.0,
      "kg": true
     }
    ],
@@ -1096,7 +1268,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 25
+     "preco": 44.0
     }
    ],
    "disponivel": true,
@@ -1164,7 +1336,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 28
+     "preco": 44.0
     }
    ],
    "disponivel": true,
@@ -1180,7 +1352,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 25
+     "preco": 29.0
     }
    ],
    "disponivel": true,
@@ -1252,7 +1424,7 @@
    "opcoes": [
     {
      "label": "Lata",
-     "preco": 28
+     "preco": 30.0
     }
    ],
    "disponivel": true,
@@ -1268,7 +1440,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 30
+     "preco": 40.0
     }
    ],
    "disponivel": true,
@@ -1284,7 +1456,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 30
+     "preco": 38.0
     }
    ],
    "disponivel": true,
@@ -1300,7 +1472,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 35
+     "preco": 38.0
     }
    ],
    "disponivel": true,
@@ -1316,7 +1488,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 30
+     "preco": 33.0
     }
    ],
    "disponivel": true,
@@ -1348,7 +1520,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 38
+     "preco": 40.0
     }
    ],
    "disponivel": true,
@@ -1364,7 +1536,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 38
+     "preco": 40.0
     }
    ],
    "disponivel": true,
@@ -1396,7 +1568,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 35
+     "preco": 40.0
     }
    ],
    "disponivel": true,
@@ -1444,7 +1616,7 @@
    "opcoes": [
     {
      "label": "Lata",
-     "preco": 50
+     "preco": 63.0
     }
    ],
    "disponivel": true,
@@ -1460,7 +1632,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 60
+     "preco": 63.0
     }
    ],
    "disponivel": true,
@@ -1492,7 +1664,7 @@
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 40
+     "preco": 44.0
     }
    ],
    "disponivel": true,
@@ -1508,7 +1680,7 @@
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 40
+     "preco": 50.0
     }
    ],
    "disponivel": true,
@@ -1616,7 +1788,7 @@
    "opcoes": [
     {
      "label": "330g",
-     "preco": 39
+     "preco": 44.0
     }
    ],
    "disponivel": true,
@@ -1648,7 +1820,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 28
+     "preco": 33.0
     }
    ],
    "disponivel": true,
@@ -1680,7 +1852,7 @@
    "opcoes": [
     {
      "label": "500g",
-     "preco": 35
+     "preco": 38.0
     }
    ],
    "disponivel": true,
@@ -1696,7 +1868,7 @@
    "opcoes": [
     {
      "label": "Garrafa",
-     "preco": 30
+     "preco": 33.0
     }
    ],
    "disponivel": true,
@@ -1707,7 +1879,7 @@
    "codigo": "MC-003",
    "cat": "mercearia",
    "grupo": "",
-   "nome": "Geleias de Pimenta 250g",
+   "nome": "Geleia de Pimenta 250g",
    "foto": "geleias-pimenta.jpg",
    "opcoes": [
     {
@@ -1840,7 +2012,7 @@
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 22
+     "preco": 23.0
     }
    ],
    "disponivel": true,
@@ -2356,7 +2528,7 @@
    "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-21T22:03:40.000000Z",
+ "atualizadoEm": "2026-10-24T00:27:34.000000Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
