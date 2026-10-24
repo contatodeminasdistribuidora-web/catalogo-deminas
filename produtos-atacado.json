@@ -1,0 +1,455 @@
+{
+ "versao": 3,
+ "atualizadoEm": "2026-10-24T04:06:59Z",
+ "whatsapp": "5511986975803",
+ "pedidoMinimo": 300,
+ "pix": "(11) 98697-5803",
+ "pixNome": "Franklin Rainier",
+ "avisos": [
+  "Catálogo exclusivo para empresas e lojistas (CNPJ).",
+  "Pagamento: PIX ou prazo de 7 dias para clientes com cadastro aprovado.",
+  "Entrega: frete grátis na Zona Leste de São Paulo em pedidos a partir de R$ 300,00. Dia e horário combinados pelo WhatsApp.",
+  "Troca ou devolução de produtos congelados: combinada caso a caso pelo WhatsApp.",
+  "Valores sujeitos a alteração conforme reajuste do fornecedor.",
+  "Recheados, linha especial e gourmet: consultar estoque."
+ ],
+ "sugestoes": [
+  "PQ-003",
+  "PQ-002",
+  "PQ-004"
+ ],
+ "categorias": [
+  {
+   "id": "congelados",
+   "nome": "Pão de Queijo Mineiro"
+  }
+ ],
+ "produtos": [
+  {
+   "id": "pq-001",
+   "codigo": "PQ-001",
+   "cat": "congelados",
+   "grupo": "Pão de Queijo Tradicional",
+   "nome": "Pão de Queijo Tradicional 30g",
+   "foto": "atacado-sabor-da-roca-2kg.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 20.0,
+     "rev": 30.9
+    },
+    {
+     "label": "2kgs",
+     "preco": 40.0,
+     "rev": 59.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
+   "id": "pq-023",
+   "codigo": "PQ-023",
+   "cat": "congelados",
+   "grupo": "Pão de Queijo Tradicional",
+   "nome": "Pão de Queijo Coquetel 15g",
+   "foto": "atacado-sabor-da-roca-2kg.jpg",
+   "descricao": "Peças de 15g. Pacote de 2kg.",
+   "opcoes": [
+    {
+     "label": "2kgs",
+     "preco": 40.0,
+     "rev": 59.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
+   "id": "pq-024",
+   "codigo": "PQ-024",
+   "cat": "congelados",
+   "grupo": "Pão de Queijo Tradicional",
+   "nome": "Pão de Queijo Lanche 80g",
+   "foto": "atacado-sabor-da-roca-2kg.jpg",
+   "descricao": "Peças de 80g. Pacote de 2kg.",
+   "opcoes": [
+    {
+     "label": "2kgs",
+     "preco": 40.0,
+     "rev": 59.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
+   "id": "pq-025",
+   "codigo": "PQ-025",
+   "cat": "congelados",
+   "grupo": "Pão de Queijo Tradicional",
+   "nome": "Pão de Queijo Super Lanche 100g",
+   "foto": "atacado-sabor-da-roca-2kg.jpg",
+   "descricao": "Peças de 100g. Pacote de 2kg.",
+   "opcoes": [
+    {
+     "label": "2kgs",
+     "preco": 40.0,
+     "rev": 59.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
+   "id": "pq-002",
+   "codigo": "PQ-002",
+   "cat": "congelados",
+   "grupo": "Sabores Especiais",
+   "nome": "Biscoito de Queijo com 2 Queijos",
+   "foto": "atacado-biscoito-de-queijo-500g.jpg",
+   "descricao": "Queijo Minas e Provolone.",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 22.0,
+     "rev": 32.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-003",
+   "codigo": "PQ-003",
+   "cat": "congelados",
+   "grupo": "Sabores Especiais",
+   "nome": "Chipa com 3 Queijos",
+   "foto": "sabor-da-roca-chipa-com-3-queijos-mve4l0yy.jpg",
+   "descricao": "Queijo Minas, Provolone e Parmesão.",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 24.9,
+     "rev": 34.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-007",
+   "codigo": "PQ-007",
+   "cat": "congelados",
+   "grupo": "Broas de Milho",
+   "nome": "Broa de Doce",
+   "foto": "pq-007-mvfrk7y0.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 20.0,
+     "rev": 30.9
+    },
+    {
+     "label": "2kgs",
+     "preco": 40.0,
+     "rev": 61.8
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
+   "id": "pq-008",
+   "codigo": "PQ-008",
+   "cat": "congelados",
+   "grupo": "Broas de Milho",
+   "nome": "Broa de Doce com Erva-doce",
+   "foto": "pq-008-mvfrk99z.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 20.0,
+     "rev": 30.9
+    },
+    {
+     "label": "2kgs",
+     "preco": 40.0,
+     "rev": 61.8
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
+   "id": "pq-009",
+   "codigo": "PQ-009",
+   "cat": "congelados",
+   "grupo": "Broas de Milho",
+   "nome": "Broa de Sal Temperada",
+   "foto": "pq-009-mvfrkal5.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 20.0,
+     "rev": 30.9
+    },
+    {
+     "label": "2kgs",
+     "preco": 40.0,
+     "rev": 61.8
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
+   "id": "pq-010",
+   "codigo": "PQ-010",
+   "cat": "congelados",
+   "grupo": "Recheados Artesanais",
+   "nome": "Recheado de Goiabada",
+   "foto": "pq-010-mvg4j96i.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 28.9,
+     "rev": 44.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-011",
+   "codigo": "PQ-011",
+   "cat": "congelados",
+   "grupo": "Recheados Artesanais",
+   "nome": "Recheado de Frango",
+   "foto": "garcia-de-minas-recheado-frango-mve4l9mn.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 28.9,
+     "rev": 44.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-013",
+   "codigo": "PQ-013",
+   "cat": "congelados",
+   "grupo": "Recheados Artesanais",
+   "nome": "Recheado de Calabresa",
+   "foto": "garcia-de-minas-recheado-calabresa-mve4laws.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 28.9,
+     "rev": 44.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-012",
+   "codigo": "PQ-012",
+   "cat": "congelados",
+   "grupo": "Recheados Artesanais",
+   "nome": "Recheado de Requeijão",
+   "foto": "garcia-de-minas-recheado-requeijao-mve4lc2z.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 28.9,
+     "rev": 44.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-004",
+   "codigo": "PQ-004",
+   "cat": "congelados",
+   "grupo": "Sabores Especiais",
+   "nome": "Pão de Queijo Gourmet 4 Queijos",
+   "foto": "encanto-de-minas-brasil-mineiro-gourmet-4-queijos-mve4ljfk.jpg",
+   "descricao": "Queijo Minas Artesanal, Mussarela, Parmesão e Provolone",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 37.2,
+     "rev": 54.9
+    },
+    {
+     "label": "2kgs",
+     "preco": 69.7,
+     "rev": 98.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-005",
+   "codigo": "PQ-005",
+   "cat": "congelados",
+   "grupo": "Sabores Especiais",
+   "nome": "Palito de Provolone",
+   "foto": "encanto-de-minas-brasil-mineiro-palitinho-provolone-mve4lkk8.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 28.5,
+     "rev": 34.9
+    },
+    {
+     "label": "2kgs",
+     "preco": 56.2,
+     "rev": 69.8
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-006",
+   "codigo": "PQ-006",
+   "cat": "congelados",
+   "grupo": "Sabores Especiais",
+   "nome": "Pão de Queijo Temperado",
+   "foto": "encanto-de-minas-brasil-mineiro-temperado-mve4lfuh.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 24.3,
+     "rev": 33.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-020",
+   "codigo": "PQ-020",
+   "cat": "congelados",
+   "grupo": "Multigrãos",
+   "nome": "Pão de Queijo Multigrãos",
+   "foto": "encanto-de-minas-brasil-mineiro-multigraos-mve4lic7.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 21.7,
+     "rev": 30.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
+   "id": "pq-021",
+   "codigo": "PQ-021",
+   "cat": "congelados",
+   "grupo": "Dadinho de Tapioca",
+   "nome": "Dadinho de Tapioca",
+   "foto": "encanto-de-minas-brasil-mineiro-dadinho-de-tapioca-mve4ltz9.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "500g",
+     "preco": 24.1,
+     "rev": 29.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
+   "id": "pq-016",
+   "codigo": "PQ-016",
+   "cat": "congelados",
+   "grupo": "Recheados Empanados",
+   "nome": "Empanado de Doce de Leite",
+   "foto": "pq-016-mvg4jcvv.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 35.1,
+     "rev": 47.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-017",
+   "codigo": "PQ-017",
+   "cat": "congelados",
+   "grupo": "Recheados Empanados",
+   "nome": "Empanado de Requeijão",
+   "foto": "encanto-de-minas-brasil-mineiro-requeijao-empanado-mve4lmv5.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 35.1,
+     "rev": 47.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-018",
+   "codigo": "PQ-018",
+   "cat": "congelados",
+   "grupo": "Recheados Empanados",
+   "nome": "Empanado de Goiabada",
+   "foto": "pq-018-mvg4jeax.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 35.1,
+     "rev": 47.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-019",
+   "codigo": "PQ-019",
+   "cat": "congelados",
+   "grupo": "Recheados Empanados",
+   "nome": "Empanado de Frango",
+   "foto": "encanto-de-minas-brasil-mineiro-frango-empanado-mve4lp4n.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg",
+     "preco": 37.6,
+     "rev": 47.9
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  }
+ ]
+}
