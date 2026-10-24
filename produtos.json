@@ -1098,7 +1098,7 @@
    "cat": "queijos",
    "grupo": "Tranças, Nozinhos e Provolones",
    "nome": "Queijo Palito de Mussarela Temperada",
-   "foto": "queijo-palito-mussarela.jpg",
+   "foto": "queijo-palito-mussarela-lara.jpg",
    "opcoes": [
     {
      "label": "Unidade",
@@ -1107,7 +1107,7 @@
    ],
    "disponivel": true,
    "consultarEstoque": false,
-   "descricao": "Queijo mussarela condimentado em palito. Peso médio de cada peça: 250g.",
+   "descricao": "Mussarela condimentada em palitos, com orégano e pimenta calabresa. Peso médio de cada peça: 250g. Depois de aberto, consumir em até 7 dias.",
    "nomesAntigos": [
     "Queijo Palito Temperado"
    ]
@@ -2535,7 +2535,7 @@
    "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-24T11:21:46.000000Z",
+ "atualizadoEm": "2026-10-24T16:24:42.000000Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
