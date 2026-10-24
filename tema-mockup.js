@@ -14,6 +14,7 @@ const I = {
 const al = $('#admLink'); if (al) al.remove();
 if (/(^|[#?&])admin\b/.test(location.hash + location.search)) return; // admin mantém layout original
 
+const B2B = document.body.hasAttribute('data-b2b');   // catálogo de atacado: sem textos e botões do varejo
 const logo = ($('.hero img') || {}).src || 'logo.png';
 const top = document.createElement('div');
 top.className = 'topbar';
@@ -24,13 +25,16 @@ setTbh(); addEventListener('resize', setTbh); addEventListener('load', setTbh); 
 
 const ban = document.createElement('div');
 ban.className = 'banner';
-ban.innerHTML = `<div class="in" id="banIn"><h1>Pão de queijo mineiro de verdade.</h1><p>Muito queijo Minas artesanal. Respeito à receita e tradição.</p><button class="go" type="button" id="banGo">Ver todos os produtos</button></div>`;
+ban.innerHTML = B2B
+  ? `<div class="in" id="banIn"><h1>Atacado para empresas e lojistas.</h1><p>${(document.body.dataset.hero || 'Pão de queijo mineiro congelado para revenda.').replace(/</g, '&lt;')}</p><button class="go" type="button" id="banGo">Ver todos os produtos</button></div>`
+  : `<div class="in" id="banIn"><h1>Pão de queijo mineiro de verdade.</h1><p>Muito queijo Minas artesanal. Respeito à receita e tradição.</p><button class="go" type="button" id="banGo">Ver todos os produtos</button></div>`;
 top.after(ban);
 
 const promo = document.createElement('div');
 promo.className = 'promo';
 promo.innerHTML = `<div class="in" id="prIn"><b>Combos especiais</b><span>Uma seleção de sabores para cada momento.</span><button type="button" id="prGo">Ver todos os combos</button></div>`;
 $('#stick').after(promo);
+if (B2B) promo.style.display = 'none';
 
 // --- NOVO: BARRA DE RECORRÊNCIA E FAVORITOS ---
 const recur = document.createElement('div');
@@ -164,6 +168,7 @@ function compartilhar() {
 }
 document.addEventListener('dm-pedido-enviado', () => {
   setTimeout(() => {
+    if (B2B) { openModal('Pedido de atacado enviado!', '<p>Recebemos o seu pedido. Vamos confirmar os itens, o prazo e a entrega pelo WhatsApp. Obrigado pela parceria!</p>'); return; }
     openModal('Pedido enviado!', '<p>Seu pedido foi enviado pelo WhatsApp. Obrigado por apoiar um pequeno negócio da Vila Carrão.</p><p><b>Comprou, gostou, espalhou.</b> Mande o catálogo para um amigo e ajude a De Minas a levar o melhor de Minas para mais mesas.</p><button type="button" class="btn-share" id="mdShare">Compartilhar com um amigo</button><p class="mdl-av">#EspalhaMinas</p>');
     const b = $('#mdShare'); if (b) b.onclick = compartilhar;
   }, 1200);
@@ -196,7 +201,7 @@ function extras(d) {
   EXTRA_ITEMS = acts.concat(deps.length ? [{l: 'Depoimentos', f: () => rolar('depoimentos')}] : []);
 }
 let CATMAP = null;
-fetch('produtos.json?v=' + Date.now()).then(r => r.json()).then(d => { CATMAP = {}; (d.produtos || []).forEach(p => { CATMAP[p.id] = p.cat; if (p.selo) SELO[p.id] = p.selo; }); document.querySelectorAll('#catalog .card').forEach(c => { frz(c); setSelo(c); }); extras(d); }).catch(() => {});
+fetch((B2B ? 'produtos-atacado.json' : 'produtos.json') + '?v=' + Date.now()).then(r => r.json()).then(d => { CATMAP = {}; (d.produtos || []).forEach(p => { CATMAP[p.id] = p.cat; if (p.selo) SELO[p.id] = p.selo; }); document.querySelectorAll('#catalog .card').forEach(c => { frz(c); setSelo(c); }); if (!B2B) extras(d); }).catch(() => {});
 function frz(c) {
   if (!CATMAP || c.querySelector('.frz') || c.querySelector('.soon') || CATMAP[c.dataset.pid] !== 'congelados') return;
   const nm = $('.nm', c); if (nm) nm.insertAdjacentHTML('afterend', '<div class="frz">❄ Congelado · Pronto para assar</div>');
