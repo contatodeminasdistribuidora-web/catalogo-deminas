@@ -124,7 +124,7 @@ section.cat>h2 svg{width:26px;height:16px;flex:none}
 .btn-limpar{background:transparent;border:1.5px solid var(--red);color:var(--red);height:34px;padding:0 14px;font-size:13px;font-weight:800;border-radius:999px;cursor:pointer;flex:none}
 .btn-limpar:hover{background:var(--red);color:#fff}
 .dh-acoes{display:flex;align-items:center;gap:8px;flex:none}
-.cartmodal{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:#2a0d0399;overflow:hidden}
+.cartmodal{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:#2a0d0399;overflow:hidden;overflow:clip}
 .cartmodal.on{display:flex}
 .cartmodal-inner{background:var(--cream);color:var(--ink);border-radius:22px 22px 0 0;width:100%;max-width:580px;max-height:92dvh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -8px 40px #00000040}
 @media (min-width:601px){.cartmodal{align-items:center}.cartmodal-inner{border-radius:22px;max-height:88dvh}}
@@ -138,8 +138,8 @@ section.cat>h2 svg{width:26px;height:16px;flex:none}
 .fld input[type=text],.fld input[type=number],.fld input[type=tel],.fld input[type=password],.fld input[type=url],.fld select,.fld textarea{width:100%;border:1.5px solid #d9bf85;background:#fffdf6;border-radius:12px;padding:11px 12px;font-size:16px}
 .fld textarea{min-height:76px;resize:vertical}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.seg label{border:1.5px solid #d9bf85;border-radius:12px;padding:11px 12px;font-weight:800;text-align:center;cursor:pointer;background:#fffdf6}
-.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{position:relative;border:1.5px solid #d9bf85;border-radius:12px;padding:11px 12px;font-weight:800;text-align:center;cursor:pointer;background:#fffdf6}
+.seg input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;pointer-events:none}
 .seg input:checked+span{color:#fff}
 .seg label:has(input:checked){background:var(--brown);border-color:var(--brown);color:#fff}
 .seg label:has(input:focus-visible){outline:3px solid var(--gold)}
@@ -607,6 +607,7 @@ $('#lb').addEventListener('click', e => { if (e.target === $('#lb')) $('#lb').cl
 $('#dlg').addEventListener('click', e => { if (e.target === $('#dlg')) $('#dlg').classList.remove('on'); });
 
 $$('input[name=tipo]').forEach(r => r.addEventListener('change', syncAddr));
+$$('.seg input').forEach(r => r.addEventListener('change', () => { const d = $('#cartDlg'); if (d) { d.scrollTop = 0; d.scrollLeft = 0; } }));
 $$('input[name=pessoa]').forEach(r => r.addEventListener('change', syncPessoa));
 $('#cCnpj').addEventListener('input', e => { e.target.value = docMask(e.target.value); });
 
