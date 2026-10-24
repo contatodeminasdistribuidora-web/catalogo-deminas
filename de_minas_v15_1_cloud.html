@@ -446,6 +446,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
     </div>
     <div class="page" id="p-atacado">
       <div class="sec-header"><h2>Atacado B2B</h2><button class="btn btn-primary" onclick="abrirNovoAtPed()">+ Novo Pedido B2B</button></div>
+      <div class="tbl-wrap" style="margin-bottom:16px"><div class="tbl-head"><h3>🔗 Links para enviar aos clientes</h3><span style="font-size:12px;color:var(--txt3)">copie ou mande direto pelo WhatsApp</span></div><div id="at-links" style="padding:4px 16px 12px"></div></div>
       <div class="tabs">
         <button class="tab-btn active" onclick="tabAt('pedidos',this)">Pedidos</button>
         <button class="tab-btn" onclick="tabAt('clientes',this)">Clientes</button>
@@ -1669,7 +1670,8 @@ async function aprovarPedidoCatalogo(id) {
     const resp = respPartes.join(' — ');
     const waD = String(ped.whatsapp || '').replace(/\D/g, '');
     let cli = db.atClis.find(c => cnpjD && String(c.doc || '').replace(/\D/g, '') === cnpjD);
-    if (!cli && waD) cli = db.atClis.find(c => String(c.w || '').replace(/\D/g, '').slice(-9) === waD.slice(-9));
+    // o telefone só serve para achar o cliente quando o pedido não tem documento ou o cadastro ainda não tem; documentos diferentes = clientes diferentes
+    if (!cli && waD) cli = db.atClis.find(c => String(c.w || '').replace(/\D/g, '').slice(-9) === waD.slice(-9) && (!cnpjD || !String(c.doc || '').replace(/\D/g, '')));
     if (!cli) {
       cli = { id: uid(), n: empNome.trim().slice(0, 100), doc: cnpjF, w: String(ped.whatsapp || '').slice(0, 25), c: '', e: String(ped.endereco || '').slice(0, 300), obs: [ehCPF ? 'Revendedor autônomo (CPF)' : (resp ? 'Responsável: ' + resp : ''), '[cadastrado pelo catálogo atacado]'].filter(Boolean).join(' | ') };
       db.atClis.push(cli);
@@ -2644,11 +2646,43 @@ function excluirAtPedComPin(id){
     salvar();fm('mod-at-det');rendAtPeds();atualizaBadges();if(curPage==='congelados')rendCongelados();toast('Pedido B2B movido para lixeira','warn');
   });
 }
+const SITE_DM='https://deminaspaodequeijaria.com.br/';
+const LINKS_DM=[
+ {g:'Atacado',n:'Catálogo de atacado (pedido online)',u:SITE_DM+'atacado.html',t:'Olá! Segue o catálogo de atacado da De Minas, para você montar o pedido online:'},
+ {g:'Atacado',n:'Tabela de preços (página)',u:SITE_DM+'tabela-atacado.html',t:'Olá! Segue a tabela de preços de atacado da De Minas:'},
+ {g:'Atacado',n:'Tabela de preços (PDF)',u:SITE_DM+'tabela-atacado-de-minas.pdf',t:'Olá! Segue a tabela de atacado da De Minas em PDF:'},
+ {g:'Atacado',n:'Regras do atacado (PDF)',u:SITE_DM+'regras-atacado.pdf',t:'Olá! Seguem as regras do atacado da De Minas:'},
+ {g:'Varejo',n:'Catálogo completo',u:SITE_DM,t:'Olá! Conheça o catálogo completo da De Minas:'},
+ {g:'Varejo',n:'Catálogo de congelados',u:SITE_DM+'congelados.html',t:'Olá! Veja o catálogo de pão de queijo congelado da De Minas:'}
+];
+function rendAtLinks(){
+  const el=document.getElementById('at-links');if(!el)return;let g='',h='';
+  LINKS_DM.forEach((l,i)=>{
+    if(l.g!==g){g=l.g;h+=`<div style="font-size:11px;font-weight:800;letter-spacing:1px;color:var(--txt3);margin:10px 0 4px">${x(g.toUpperCase())}</div>`;}
+    h+=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 0;border-bottom:1px solid var(--borda)"><div style="flex:1;min-width:220px"><div style="font-weight:700;font-size:13px">${x(l.n)}</div><div style="font-size:11px;color:var(--txt3);word-break:break-all">${x(l.u)}</div></div><button class="btn btn-ghost btn-sm" onclick="copiarLinkDm(${i})">📋 Copiar</button><button class="btn btn-ghost btn-sm" onclick="enviarLinkDm(${i})">📲 WhatsApp</button><button class="btn btn-ghost btn-sm" onclick="window.open(LINKS_DM[${i}].u,'_blank')">↗ Abrir</button></div>`;
+  });
+  el.innerHTML=h;
+}
+function copiarLinkDm(i){
+  const u=LINKS_DM[i].u;
+  const ok=()=>toast('Link copiado!','ok');
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(ok).catch(()=>{prompt('Copie o link:',u);});}
+  else prompt('Copie o link:',u);
+}
+function enviarLinkDm(i){const l=LINKS_DM[i];window.open('https://wa.me/?text='+encodeURIComponent(l.t+'\n'+l.u),'_blank');}
+// manda ao cliente B2B o catálogo + tabela + regras (pelo WhatsApp dele)
+function enviarMateriaisAt(cliId){
+  const c=db.atClis.find(z=>z.id===cliId);const d=String(c&&c.w||'').replace(/\D/g,'');
+  if(!d){toast('Cliente sem WhatsApp cadastrado','warn');return;}
+  const msg='Olá, '+(c.n||'')+'! Aqui é a De Minas Pão de Queijaria 🧀\n\nFaça seu pedido de atacado pelo catálogo:\n'+LINKS_DM[0].u+'\n\nTabela de preços:\n'+LINKS_DM[2].u+'\n\nRegras do atacado:\n'+LINKS_DM[3].u;
+  window.open('https://wa.me/'+(d.length<=11?'55'+d:d)+'?text='+encodeURIComponent(msg),'_blank');
+}
+document.addEventListener('DOMContentLoaded',rendAtLinks);setTimeout(rendAtLinks,0);
 function rendAtClis(){
   let html=`<div style="display:flex;justify-content:flex-end;margin-bottom:14px"><button class="btn btn-primary btn-sm" onclick="abrirNovoAtCli()">+ Novo Cliente</button></div>`;
   if(!db.atClis.length){html+='<div style="text-align:center;padding:40px;color:var(--txt3)">Nenhum cliente B2B</div>';document.getElementById('at-tab-clientes').innerHTML=html;return;}
   html+='<div class="tbl-wrap"><table><thead><tr><th>Empresa</th><th>WhatsApp</th><th>Pedidos</th><th>Total</th><th></th></tr></thead><tbody>';
-  db.atClis.forEach(c=>{const peds=db.atPeds.filter(p=>p.cliId===c.id);const total=peds.reduce((s,p)=>s+(p.total||0),0);html+=`<tr><td style="font-weight:600">${x(c.n)}${c.prazo==='7d'?' <span class="pill pill-pend" style="font-size:10px">7 DIAS</span>':''}</td><td>${c.w?x(c.w):'—'}</td><td>${peds.length}</td><td style="font-weight:700">${R(total)}</td><td><button class="btn btn-ghost btn-sm" onclick="editAtCli('${c.id}')">✏️</button></td></tr>`;});
+  db.atClis.forEach(c=>{const peds=db.atPeds.filter(p=>p.cliId===c.id);const total=peds.reduce((s,p)=>s+(p.total||0),0);html+=`<tr><td style="font-weight:600">${x(c.n)}${c.prazo==='7d'?' <span class="pill pill-pend" style="font-size:10px">7 DIAS</span>':''}</td><td>${c.w?x(c.w):'—'}</td><td>${peds.length}</td><td style="font-weight:700">${R(total)}</td><td style="white-space:nowrap"><button class="btn btn-ghost btn-sm" title="Enviar catálogo, tabela e regras pelo WhatsApp" onclick="enviarMateriaisAt('${c.id}')">📲</button> <button class="btn btn-ghost btn-sm" onclick="editAtCli('${c.id}')">✏️</button></td></tr>`;});
   html+='</tbody></table></div>';document.getElementById('at-tab-clientes').innerHTML=html;
 }
 function rendAtTabela(){let html='<div class="tbl-wrap"><div class="tbl-head"><h3>Tabela de Preços Atacado</h3></div><table><thead><tr><th>Produto</th><th>Varejo</th><th>Atacado</th></tr></thead><tbody>';db.prods.filter(p=>p.cat==='Congelados').forEach(p=>{html+=`<tr><td>${x(p.n)}</td><td>${R(p.pr)}</td><td style="color:var(--verde);font-weight:600">${R(p.prAtacado||p.pr)}</td></tr>`;});html+='</tbody></table></div>';document.getElementById('at-tab-tabela').innerHTML=html;}
