@@ -1107,7 +1107,10 @@
    ],
    "disponivel": true,
    "consultarEstoque": false,
-   "descricao": "Queijo mussarela condimentado em palito. Peso médio de cada peça: 250g."
+   "descricao": "Queijo mussarela condimentado em palito. Peso médio de cada peça: 250g.",
+   "nomesAntigos": [
+    "Queijo Palito Temperado"
+   ]
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-nozinho-temperado",
@@ -1888,7 +1891,11 @@
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "nomesAntigos": [
+    "Geleias de Pimenta 250g",
+    "Geleia de Pimenta"
+   ]
   },
   {
    "id": "farinha-de-mandioca-biju-800g",
@@ -2528,7 +2535,7 @@
    "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-24T00:27:34.000000Z",
+ "atualizadoEm": "2026-10-24T11:21:46.000000Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
