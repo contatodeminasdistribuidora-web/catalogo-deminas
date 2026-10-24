@@ -194,7 +194,7 @@ html.theme-ready body { opacity: 1; }
   document.documentElement.classList.add('theme-loading');
 </script>
 
-<link rel="stylesheet" href="tema-mockup.css?v=20261021f">
+<link rel="stylesheet" href="tema-mockup.css?v=20261024b">
 </head>
 
 <body data-cats="congelados" data-hero="Pão de queijo mineiro para assar em casa — direto no WhatsApp" data-qr1="Escaneie e peça seu pão de queijo" data-qr2="direto pelo WhatsApp">
@@ -720,7 +720,8 @@ $('#orderForm').addEventListener('submit', e => {
 
   const itensFire = L.map(l => ({
     codigo: l.p.codigo || '', nome: l.p.nome, label: l.o.label, qtd: l.q,
-    preco: l.o.preco, kg: !!l.o.kg, subtotal: l.sub
+    preco: l.o.preco, kg: !!l.o.kg, subtotal: l.sub,
+    cat: l.p.cat || '', foto: String(l.p.foto || '').slice(0, 80), desc: String(l.p.descricao || '').slice(0, 160), comp: /^CB-/.test(l.p.codigo || '') ? String(l.p.descricao || '').slice(0, 240) : ''
   }));
   const totalSnap = r2(L.reduce((a, l) => a + l.sub, 0) + freteVal);
   const pedido = {
@@ -1075,6 +1076,6 @@ setTimeout(() => document.documentElement.classList.replace('theme-loading', 'th
 })();
 </script>
 <!-- TEMA APP (Script) -->
-<script src="tema-mockup.js?v=20261021f" defer></script>
+<script src="tema-mockup.js?v=20261024b" defer></script>
 </body>
 </html>
