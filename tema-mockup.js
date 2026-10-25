@@ -359,3 +359,14 @@ if (sessionStorage.getItem('dm_open_cart')) {
   let n = 0; const t = setInterval(() => { const cb = $('#cartbar'); if (cb && cb.classList.contains('on')) { clearInterval(t); $('#cbOpen').click(); } else if (++n > 40) clearInterval(t); }, 250);
 }
 })();
+
+// foto que não carregou (arquivo ainda não enviado ao GitHub): mostra a logo suave em vez do ícone quebrado
+document.addEventListener('error', function (e) {
+  var im = e.target;
+  if (!im || im.tagName !== 'IMG' || im.dataset.semFoto) return;
+  if (!im.closest('.card, .sug, .cartmodal, .modal, #catalog, [class*="card"]')) return;
+  im.dataset.semFoto = '1';
+  im.removeAttribute('srcset'); im.alt = '';
+  im.src = 'logo.png';
+  im.style.objectFit = 'contain'; im.style.padding = '18%'; im.style.opacity = '.35'; im.style.background = '#f3ead8';
+}, true);
