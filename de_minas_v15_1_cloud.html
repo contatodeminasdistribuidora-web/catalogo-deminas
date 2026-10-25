@@ -299,6 +299,43 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
 .venc-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
 .venc-ok{background:#e8f5ee;color:var(--verde)}.venc-warn{background:#fff3cd;color:#856404}.venc-red{background:var(--vermelho2);color:var(--vermelho)}
 .vend-sel-wrap{display:flex;align-items:center;gap:8px}
+
+/* ===== celular: janelas (modais) ocupam a tela e nada passa da borda ===== */
+@media(max-width:640px){
+  .modal-overlay{padding:var(--barra-h,28px) 0 0;overflow-x:hidden}
+  .modal,.modal.modal-lg{max-width:100%;width:100%;border-radius:0;margin:0;min-height:100%}
+  .modal-head{padding:12px 14px;position:sticky;top:0;background:#fff;z-index:3}
+  .modal-body{padding:14px}
+  .modal-body *{min-width:0}
+  .modal-body input,.modal-body select,.modal-body textarea{max-width:100%}
+  .modal-body input[style*="width:"]{width:100%!important}
+  .modal-body [style*="grid-template-columns:auto auto auto auto auto 1fr"],
+  .modal-body [style*="grid-template-columns:1fr 1fr 1fr"],
+  .modal-body [style*="grid-template-columns:1fr auto auto auto"]{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .modal-body table{max-width:100%}
+  .modal-body td,.modal-body th{padding:6px 5px!important;word-break:break-word}
+}
+
+/* ===== celular: barra do topo com título em uma linha ===== */
+@media(max-width:768px){
+  #topbar{padding:0 10px;gap:8px;height:50px}
+  #topbar>div:first-child{flex:1;min-width:0;gap:6px!important}
+  #topbar h2{font-size:15px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .topbar-right{gap:8px;flex-shrink:0}
+  #topbar-date{display:none}
+  #storage-indicator{font-size:10px;white-space:nowrap}
+  #btn-sair{padding:5px 10px!important;font-size:12px!important;white-space:nowrap}
+}
+@media(max-width:380px){#topbar h2{font-size:14px}#storage-indicator{display:none}}
+
+/* ===== celular: cabeçalhos de tela e linhas de campos quebram em vez de passar da borda ===== */
+@media(max-width:768px){
+  .sec-header{flex-wrap:wrap;gap:8px}
+  .sec-header>div[style*="display:flex"]{flex-wrap:wrap}
+  #content [style*="grid-template-columns:1fr auto auto auto"]{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #content [style*="grid-template-columns:1fr auto auto auto"]>*{min-width:0}
+  #content [style*="grid-template-columns:1fr auto auto auto"] input[style*="width:"]{width:100%!important}
+}
 </style>
 <style>
 #novos-flut{position:fixed;right:16px;bottom:16px;z-index:900;width:340px;max-width:calc(100vw - 32px);background:#fff;border:2px solid var(--verde);border-radius:12px;box-shadow:var(--shadow2);display:none;font-size:13px}
@@ -445,7 +482,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
       </div>
     </div>
     <div class="page" id="p-atacado">
-      <div class="sec-header"><h2>Atacado B2B</h2><button class="btn btn-primary" onclick="abrirNovoAtPed()">+ Novo Pedido B2B</button></div>
+      <div class="sec-header"><h2>Atacado B2B</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-outline" onclick="imprimirTodosAtPed()">🖨️ Pedidos B2B em lote</button><button class="btn btn-primary" onclick="abrirNovoAtPed()">+ Novo Pedido B2B</button></div></div>
       <div class="tbl-wrap" style="margin-bottom:16px"><div class="tbl-head"><h3>🔗 Links para enviar aos clientes</h3><span style="font-size:12px;color:var(--txt3)">copie ou mande direto pelo WhatsApp</span></div><div id="at-links" style="padding:4px 16px 12px"></div></div>
       <div class="tabs">
         <button class="tab-btn active" onclick="tabAt('pedidos',this)">Pedidos</button>
@@ -496,7 +533,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
       <div id="lista-clis"></div>
     </div>
     <div class="page" id="p-produtos">
-      <div class="sec-header"><h2>Catálogo de Produtos</h2><div style="display:flex;gap:8px"><button class="btn btn-outline btn-sm" onclick="abrirBuscaPorProduto()">🔍 Quem comprou?</button><button class="btn btn-primary" onclick="abrirNovoProd()">+ Novo Produto</button></div></div>
+      <div class="sec-header"><h2>Catálogo de Produtos</h2><div style="display:flex;gap:8px"><button class="btn btn-outline btn-sm" onclick="abrirBuscaPorProduto()">🔍 Quem comprou?</button><button class="btn btn-outline btn-sm" onclick="sincPrecosMinasAbrir()">🔄 Atualizar cadastro pelo catálogo</button><button class="btn btn-primary" onclick="abrirNovoProd()">+ Novo Produto</button></div></div>
       <div class="filters">
         <button class="filter-btn active" onclick="filtrarProds('TODOS',this)">Todos</button>
         <button class="filter-btn" onclick="filtrarProds('Congelados',this)">🧊 Congelados</button>
@@ -1925,7 +1962,7 @@ function abrirNovoPedido(){
   const vSel=document.getElementById('ped-vendedor');
   if(vSel)vSel.innerHTML='<option value="">— Nenhum —</option>'+db.vends.map(v=>`<option value="${x(v.n)}">${x(v.n)}</option>`).join('');
   document.getElementById('ped-prod-sel').innerHTML='<option value="">Selecionar...</option>'+db.prods.map(p=>`<option value="${p.id}">${x(p.n)}</option>`).join('');
-  rendPedItensList();calcPedTotal();am('mod-ped');
+  prodBuscaIniciar('ped-prod-sel');rendPedItensList();calcPedTotal();am('mod-ped');
 }
 function fecharModalPed(){if(modalPedDirty&&editingPedItems.length&&!confirm('Descartar alterações?'))return;fm('mod-ped');}
 
@@ -1942,7 +1979,7 @@ function autocompletarCliPed(){
 function onProdSel(){
   const p=gP(document.getElementById('ped-prod-sel').value);
   if(!p){document.getElementById('ped-pv-fields').style.display='none';return;}
-  document.getElementById('ped-prod-pr').value=p.pr;
+  document.getElementById('ped-prod-pr').value=pcat(p);
   if(p.prm){document.getElementById('ped-prod-tipo').innerHTML='<option value="peca">Peça</option><option value="metade">Metade</option>';}
   else if(p.pacote&&p.pacote!==''&&p.pacote!=='un'){document.getElementById('ped-prod-tipo').innerHTML=`<option value="peca">Pacote ${p.pacote}</option>`;}
   else{document.getElementById('ped-prod-tipo').innerHTML='<option value="peca">Unidade</option>';}
@@ -1952,7 +1989,7 @@ function onProdSel(){
   if(p.pv){
     pvFields.style.display='block';
     document.getElementById('ped-pv-peso').value='';
-    document.getElementById('ped-pv-prkg').value=p.pr||'';
+    document.getElementById('ped-pv-prkg').value=pcat(p)||'';
     document.getElementById('ped-pv-preview').textContent='—';
   }else{
     pvFields.style.display='none';
@@ -1961,7 +1998,7 @@ function onProdSel(){
   }
   atualizaPreviewItem();
 }
-function onTipoSel(){const p=gP(document.getElementById('ped-prod-sel').value);if(!p)return;const tipo=document.getElementById('ped-prod-tipo').value;document.getElementById('ped-prod-pr').value=(tipo==='metade'&&p.prm)?p.prm:p.pr;atualizaPreviewItem();}
+function onTipoSel(){const p=gP(document.getElementById('ped-prod-sel').value);if(!p)return;const tipo=document.getElementById('ped-prod-tipo').value;document.getElementById('ped-prod-pr').value=(tipo==='metade'&&p.prm)?p.prm:pcat(p);atualizaPreviewItem();}
 function atualizaPreviewItem(){
   const pr=parseFloat(document.getElementById('ped-prod-pr')?.value)||0;
   const qty=parseFloat(document.getElementById('ped-prod-qty')?.value)||1;
@@ -1988,7 +2025,7 @@ function addItemPed(){
   const descItemTipo=document.getElementById('ped-prod-desc-tipo').value||'P';
   const pacoteDetectado=document.getElementById('ped-prod-sel').dataset.pacoteDetectado||p.pacote||'';
   let pesoReal=null;
-  let pr=parseFloat(document.getElementById('ped-prod-pr').value)||p.pr;
+  let pr=parseFloat(document.getElementById('ped-prod-pr').value)||pcat(p);
   if(p.pv){
     const pesoInline=parseFloat(document.getElementById('ped-pv-peso')?.value)||0;
     const prkgInline=parseFloat(document.getElementById('ped-pv-prkg')?.value)||0;
@@ -2000,13 +2037,13 @@ function addItemPed(){
   if(p.tipo==='estoque'&&qty>(p.est||0)){
     toast('⚠️ '+p.n+' — estoque atual: '+(p.est||0),'warn');
   }
-  editingPedItems.push({id:uid(),prodId,nome:p.n,qty,pr,sub,tipoLabel,pv:p.pv,pesoReal,pacote:pacoteDetectado,descItem,descItemTipo});
+  editingPedItems.push({id:uid(),prodId,nome:p.n,cod:codDoProd(p),qty,pr,sub,tipoLabel,pv:p.pv,pesoReal,pacote:pacoteDetectado,descItem,descItemTipo});
   if(p.pv){
     document.getElementById('ped-pv-peso').value='';
-    document.getElementById('ped-pv-prkg').value=p.pr||'';
+    document.getElementById('ped-pv-prkg').value=pcat(p)||'';
     document.getElementById('ped-pv-preview').textContent='—';
   }
-  modalPedDirty=true;rendPedItensList();calcPedTotal();
+  modalPedDirty=true;rendPedItensList();calcPedTotal();prodBuscaReset('ped-prod-sel',true);
 }
 function remItemPed(idx){editingPedItems.splice(idx,1);modalPedDirty=editingPedItems.length>0;rendPedItensList();calcPedTotal();}
 
@@ -2030,11 +2067,12 @@ function rendPedItensList(){
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px">
         <span style="font-size:13.5px;font-weight:700;color:var(--cafe);flex:1">${x(it.nome)} ${it.pv?'⚖️':''}</span>
         <span style="font-size:12px;color:var(--txt3);background:var(--creme2);padding:2px 8px;border-radius:12px">${qtdLabel}</span>
+        <button onclick="renomearItemPed(${i})" title="Mudar o nome deste item no pedido" style="background:var(--creme2);border:none;border-radius:4px;padding:3px 8px;cursor:pointer;font-size:13px">✏️</button>
         <button onclick="remItemPed(${i})" style="background:var(--vermelho2);border:none;border-radius:4px;padding:3px 8px;cursor:pointer;color:var(--vermelho);font-size:13px;font-weight:700">✕</button>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;align-items:end">
         <div><div style="font-size:10px;color:var(--txt3);font-weight:600;text-transform:uppercase;margin-bottom:3px">Preço Unit.</div>
-          <input type="number" min="0" step=".01" value="${it.pr}" style="width:100%;padding:6px 8px;border:2px solid var(--ouro);border-radius:5px;font-size:14px;font-weight:700;background:#fffdf5" oninput="editItemPr(${i},this.value)"></div>
+          <input type="number" min="0" step=".01" value="${it.pr}" style="width:100%;padding:6px 8px;border:2px solid var(--ouro);border-radius:5px;font-size:14px;font-weight:700;background:#fffdf5" oninput="editItemPr(${i},this.value)">${marcadorPrecoCat(it,i)}</div>
         <div><div style="font-size:10px;color:var(--txt3);font-weight:600;text-transform:uppercase;margin-bottom:3px">Desconto</div>
           <div style="display:flex;gap:4px">
             <input type="number" min="0" step=".01" value="${it.descItem||0}" style="flex:1;min-width:0;padding:6px;border:1.5px solid var(--borda);border-radius:5px;font-size:13px;text-align:right" oninput="editItemDescVal(${i},this.value)">
@@ -2202,7 +2240,7 @@ function abrirEditPed(id){
   if(vSel){vSel.innerHTML='<option value="">— Nenhum —</option>'+db.vends.map(v=>`<option value="${x(v.n)}"${p.vendedor===v.n?' selected':''}>${x(v.n)}</option>`).join('');}
   document.getElementById('cli-list').innerHTML=db.clis.map(c=>`<option value="${x(c.n)}">`).join('');
   document.getElementById('ped-prod-sel').innerHTML='<option value="">Selecionar...</option>'+db.prods.map(pr=>`<option value="${pr.id}">${x(pr.n)}</option>`).join('');
-  rendPedItensList();calcPedTotal();am('mod-ped');
+  prodBuscaIniciar('ped-prod-sel');rendPedItensList();calcPedTotal();am('mod-ped');
 }
 
 function abrirDetPed(id){
@@ -2216,7 +2254,8 @@ function abrirDetPed(id){
     if(it.tipoLabel&&it.tipoLabel!=='Unidade'&&it.tipoLabel!=='Peça')qtdDisplay+=' ('+it.tipoLabel+')';
     const subtotal=calcItemSubFn(it);
     const descInfo=(it.descItem&&it.descItem>0)?`<span style="font-size:10px;color:var(--laranja)"> -${it.descItemTipo==='P'?it.descItem+'%':'R$'+it.descItem}</span>`:'';
-    return`<tr><td>${imgItem(it,40)}${x(it.nome)}${codTag(it.cod||it.codigo)}${it.pv?' ⚖️':''}${descHtml(descDoItem(it),11)}</td><td>${qtdDisplay}</td><td>${R(it.pr)}${descInfo}</td><td style="font-weight:700">${R(subtotal)}</td></tr>`;
+    const _e=precoCatItem(it);const _mk=(_e!=null&&Math.abs((it.pr||0)-_e)>0.005)?`<div style="font-size:11px;font-weight:700;color:#b00020">⚠ catálogo ${R(_e)}</div>`:'';
+    return`<tr><td>${imgItem(it,40)}${x(it.nome)}${codTag(it.cod||it.codigo)}${it.pv?' ⚖️':''}${descHtml(descDoItem(it),11)}</td><td>${qtdDisplay}</td><td>${R(it.pr)}${descInfo}${_mk}</td><td style="font-weight:700">${R(subtotal)}</td></tr>`;
   }).join('');
   const end=enderecoCompleto(p);
   document.getElementById('det-title').textContent='Pedido '+nP(p.num);
@@ -2231,6 +2270,7 @@ function abrirDetPed(id){
       <div><strong>Data:</strong> ${dF(p.data)}</div>
       <div><strong>Status:</strong> ${pillSt(p.st)}</div>
       ${(p.st==='PAGO'||p.st==='ENTREGUE')?`<div><strong>Recebido:</strong> ${p.recebido?'✅ Sim':'⏳ Aguardando'}</div>`:''}</div>
+    ${(()=>{const d=diffsPrecoPed(p);if(!d.length)return '';const n2=JSON.parse(JSON.stringify(p));d.forEach(z=>{n2.itens[z.i].pr=z.exp;});return `<div style="background:#fff3cd;border:1.5px solid #e0a800;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:13px">⚠ <b>${d.length} item(ns) com preço diferente do catálogo.</b> Total hoje ${R(total)}; pelo catálogo ${R(calcTotal(n2))}. <button class="btn btn-ouro btn-sm" style="margin-left:6px" onclick="alinharPedidoCat('${p.id}')">Corrigir pelo catálogo</button></div>`;})()}
     <table style="width:100%;margin-bottom:12px">
       <thead><tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Subtotal</th></tr></thead>
       <tbody>${itHtml}</tbody>
@@ -2380,13 +2420,13 @@ function addPDV(prodId){
     if(kgTxt===null)return;
     const kg=parseFloat(String(kgTxt).replace(',','.'));
     if(!(kg>0)||kg>50){toast('Peso inválido','err');return;}
-    pdvCartItems.push({id:uid(),prodId,nome:p.n+' ('+kg.toFixed(3).replace('.',',')+' kg)',pr:Math.round(p.pr*kg*100)/100,qty:1,pv:true,pesoKg:kg,cat:p.cat,pacote:p.pacote||''});
+    pdvCartItems.push({id:uid(),prodId,nome:p.n+' ('+kg.toFixed(3).replace('.',',')+' kg)',pr:Math.round(pcat(p)*kg*100)/100,qty:1,pv:true,pesoKg:kg,cat:p.cat,pacote:p.pacote||''});
     rendCart();return;
   }
   const ex=pdvCartItems.find(it=>it.prodId===prodId);
   if(p.tipo==='estoque'&&ex&&ex.qty+1>p.est){toast('Estoque insuficiente','err');return;}
   if(ex)ex.qty++;
-  else pdvCartItems.push({id:uid(),prodId,nome:p.n,pr:p.pr,qty:1,pv:p.pv,cat:p.cat,pacote:p.pacote||''});
+  else pdvCartItems.push({id:uid(),prodId,nome:p.n,pr:pcat(p),qty:1,pv:p.pv,cat:p.cat,pacote:p.pacote||''});
   rendCart();
 }
 
@@ -2590,14 +2630,14 @@ function abrirNovoAtPed(){
       <div class="form-group"><label>Desc. R$</label><input id="atp-desc" type="number" value="0" oninput="calcAtTotal()"></div>
     </div>
     <div style="background:var(--vinho);color:#fff;border-radius:10px;padding:14px 24px;display:flex;justify-content:space-between"><div style="font-size:12px;opacity:.75">Total</div><div id="atp-total-disp" style="font-family:Arial;font-size:28px;font-weight:bold">R$ 0,00</div></div>`;
-  document.getElementById('at-ped-title').textContent='Novo Pedido B2B';am('mod-at-ped');onAtProdSel();
+  document.getElementById('at-ped-title').textContent='Novo Pedido B2B';am('mod-at-ped');prodBuscaIniciar('atp-prod');onAtProdSel();
 }
-function onAtProdSel(){const p=gP(document.getElementById('atp-prod')?.value);if(!p)return;document.getElementById('atp-pr').value=p.prAtacado||p.pr;}
+function onAtProdSel(){const p=gP(document.getElementById('atp-prod')?.value);if(!p)return;document.getElementById('atp-pr').value=precoAtacCat(p);}
 function addAtItem(){
   const prodId=document.getElementById('atp-prod').value;const p=gP(prodId);if(!p){toast('Selecione um produto','warn');return;}
-  const qty=parseFloat(document.getElementById('atp-qty').value)||1;const pr=parseFloat(document.getElementById('atp-pr').value)||p.prAtacado||p.pr;
+  const qty=parseFloat(document.getElementById('atp-qty').value)||1;const pr=parseFloat(document.getElementById('atp-pr').value)||precoAtacCat(p);
   if(p.tipo==='estoque'&&qty>(p.est||0)){toast('⚠️ '+p.n+' — estoque atual: '+(p.est||0),'warn');}
-  atPedItems.push({id:uid(),prodId,nome:p.n,qty,pr,pv:p.pv,pacote:p.pacote||''});rendAtItensList();calcAtTotal();
+  atPedItems.push({id:uid(),prodId,nome:p.n,cod:codDoProd(p),qty,pr,pv:p.pv,pacote:p.pacote||''});rendAtItensList();calcAtTotal();prodBuscaReset('atp-prod',true);
 }
 function remAtItem(i){atPedItems.splice(i,1);rendAtItensList();calcAtTotal();}
 function rendAtItensList(){let html=atPedItems.length?'':'<div style="color:var(--txt3);font-size:13px;padding:8px">Nenhum item</div>';atPedItems.forEach((it,i)=>{html+=`<div style="display:flex;align-items:center;gap:8px;padding:6px;background:var(--creme);border-radius:6px;margin-bottom:6px"><span style="flex:1;font-size:13px;font-weight:500">${x(it.nome)}</span><span style="font-size:12px;color:var(--txt3)">${it.qty}x</span><span style="font-weight:bold;color:var(--vinho)">${R(it.pr*it.qty)}</span><button onclick="remAtItem(${i})" style="background:none;border:none;cursor:pointer;color:var(--vermelho);font-size:16px">✕</button></div>`;});document.getElementById('at-itens-list').innerHTML=html;}
@@ -2689,7 +2729,29 @@ function rendAtTabela(){let html='<div class="tbl-wrap"><div class="tbl-head"><h
 function abrirNovoAtCli(){document.getElementById('at-cli-title').textContent='Novo Cliente B2B';['ac-n','ac-doc','ac-wa','ac-cid','ac-end','ac-obs','ac-prazo'].forEach(id=>document.getElementById(id).value='');document.getElementById('ac-id').value='';am('mod-at-cli');}
 function editAtCli(id){const c=db.atClis.find(cl=>cl.id===id);if(!c)return;document.getElementById('at-cli-title').textContent='Editar Cliente B2B';document.getElementById('ac-n').value=c.n||'';document.getElementById('ac-doc').value=c.doc||'';document.getElementById('ac-wa').value=c.w||'';document.getElementById('ac-cid').value=c.c||'';document.getElementById('ac-end').value=c.e||'';document.getElementById('ac-obs').value=c.obs||'';document.getElementById('ac-prazo').value=c.prazo||'';document.getElementById('ac-id').value=id;am('mod-at-cli');}
 function salvarAtCli(){const n=document.getElementById('ac-n').value.trim();if(!n){toast('Informe o nome','warn');return;}const id=document.getElementById('ac-id').value;const data={n,doc:document.getElementById('ac-doc').value,w:document.getElementById('ac-wa').value,c:document.getElementById('ac-cid').value,e:document.getElementById('ac-end').value,obs:document.getElementById('ac-obs').value,prazo:document.getElementById('ac-prazo').value};if(id)Object.assign(db.atClis.find(c=>c.id===id),data);else db.atClis.push({id:uid(),...data});salvar();fm('mod-at-cli');rendAtClis();toast('Cliente salvo!','ok');}
-function imprimirAtPed(id){const p=db.atPeds.find(pe=>pe.id===id);if(!p)return;printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial;padding:20px;max-width:600px}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #eee}.total{font-size:20px;font-weight:bold;text-align:right}@media print{button{display:none}}</style></head><body><img src="${LOGO_ESC}" alt="De Minas" style="height:13mm;display:block;margin:0 0 6px"><h2>Pedido Atacado — ${nAt(p.num)}</h2><p>Cliente: ${x(p.cliNome)} | Pgto: ${x(p.pgto)}</p><table><thead><tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Subtotal</th></tr></thead><tbody>${p.itens.map(it=>`<tr><td>${imgItem(it,34)}${x(it.nome)}${codTag(it.cod||it.codigo)}${descHtml(descDoItem(it),8)}</td><td>${it.qty}x</td><td>${R(it.pr)}</td><td>${R(it.pr*it.qty)}</td></tr>`).join('')}</tbody></table><p class="total">Total: ${R(p.total||0)}</p><p>PIX: ${x(pixCliente())} (${x(cfg.pixNome)})</p><button onclick="window.print()">Imprimir</button></body></html>`);}
+// ---- documentos em PDF (a janela de imprimir abre sozinha; escolha "Salvar como PDF") ----
+const AUTO_PRINT_JS='<script>window.addEventListener("load",function(){setTimeout(function(){window.print()},700)})<\/script>';
+const docNome=t=>String(t||'Documento').replace(/[\\/:*?"<>|]+/g,' ').replace(/\s+/g,' ').trim().slice(0,90);
+const CSS_DOC=`*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:10.5pt;color:#1a1a1a;background:#fff}.pedido{page-break-after:always;padding:14mm 16mm}.pedido:last-child{page-break-after:auto}.header{border-bottom:2.5px solid #3d2000;padding-bottom:8px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-end}.logo-print{height:17mm;width:auto;display:block}.num-ped{font-size:18pt;font-weight:900;color:#3d2000}.status{display:inline-block;padding:3px 10px;border-radius:12px;font-size:8pt;font-weight:700;margin-left:8px}.st-PENDENTE{background:#fff3cd;color:#856404}.st-PESAGEM{background:#cfe2ff;color:#084298}.st-PAGO,.st-ENTREGUE{background:#e8f5ee;color:#1e7e3e}.st-CANCELADO{background:#f8d7da;color:#842029}.meta{font-size:9pt;color:#444;margin-bottom:10px;line-height:1.7}table{width:100%;border-collapse:collapse;margin-bottom:10px}thead tr{background:#3d2000;color:#fff}th{padding:6px 10px;font-size:8.5pt;font-weight:600;text-align:left}th.r,td.r{text-align:right}th.c,td.c{text-align:center}td{padding:6px 10px;font-size:9.5pt;border-bottom:1px solid #eee}.lin{text-align:right;font-size:9pt;color:#444;margin-bottom:4px}.total-box{text-align:right;padding:8px 12px;background:#3d2000;color:#fff;border-radius:4px;margin-bottom:12px}.total-box .label{font-size:8pt;opacity:.85}.total-box .valor{font-size:16pt;font-weight:900}.pix-box{border:1.5px solid #c8860a;border-radius:6px;padding:8px 14px;background:#fffdf5;margin-bottom:10px}.footer{font-size:9pt;color:#3d2000;text-align:center;border-top:1px solid #eee;padding-top:6px;font-weight:600}@page{size:A4;margin:0}@media print{.no-print{display:none}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}`;
+const PGTO_AT={AVista:'À vista (PIX)','7d':'Prazo de 7 dias','14d':'Prazo de 14 dias','30d':'Prazo de 30 dias'};
+function blocoAtPed(p){
+  const c=db.atClis.find(z=>z.id===p.cliId)||{};
+  const itens=(p.itens||[]).map(it=>`<tr><td>${imgItem(it,34)}${x(it.nome)}${codTag(it.cod||it.codigo)}${descHtml(descDoItem(it),8)}</td><td class="c">${it.qty}x</td><td class="c">${R(it.pr)}</td><td class="r">${R(it.pr*it.qty)}</td></tr>`).join('');
+  const m=/^(\d+)d$/.exec(p.pgto||'');let venc='';if(m){const d=new Date(p.data);d.setDate(d.getDate()+parseInt(m[1]));venc=' · vence em '+d.toLocaleDateString('pt-BR');}
+  const end=[c.e,c.c].filter(Boolean).join(' — ');
+  return `<div class="pedido"><div class="header"><div><img class="logo-print" src="${LOGO_ESC}" alt="De Minas Pão de Queijaria"></div><div style="text-align:right"><div class="num-ped">${nAt(p.num)}</div><span class="status st-${p.st}">${p.st}</span><div style="font-size:8pt;color:#c8860a;font-weight:700;letter-spacing:1.5px;margin-top:3px">PEDIDO ATACADO</div></div></div><div class="meta"><strong>Cliente:</strong> ${x(p.cliNome)}${c.doc?' · '+x(c.doc):''}<br>${c.w?'<strong>WhatsApp:</strong> '+x(c.w)+'<br>':''}${end?'<strong>Endereço:</strong> '+x(end)+'<br>':''}${p.obs?'<strong>Obs:</strong> '+x(p.obs)+'<br>':''}<strong>Pagamento:</strong> ${x(PGTO_AT[p.pgto]||p.pgto||'—')}${venc}<br><strong>Data:</strong> ${dF(p.data)}</div><table><thead><tr><th>Produto</th><th class="c">Qtd</th><th class="c">Preço Unit.</th><th class="r">Subtotal</th></tr></thead><tbody>${itens}</tbody></table>${p.frete?`<div class="lin">Frete: ${R(p.frete)}</div>`:''}${p.desc?`<div class="lin">Desconto: ${R(p.desc)}</div>`:''}<div class="total-box"><div class="label">Total do Pedido</div><div class="valor">${R(calcTotal(p))}</div></div><div class="pix-box"><div>Pagamento via PIX</div><div style="font-size:12pt;font-weight:900">${x(pixCliente())}</div><div>${x(cfg.pixNome)}</div></div><div class="footer">A De Minas Pão de Queijaria agradece a parceria!</div></div>`;
+}
+function imprimirAtPed(id){
+  const p=db.atPeds.find(pe=>pe.id===id);if(!p)return;
+  printBlob(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>${docNome('Pedido Atacado '+nAt(p.num)+' - '+(p.cliNome||''))}</title><style>${CSS_DOC}</style></head><body>${blocoAtPed(p)}${AUTO_PRINT_JS}</body></html>`);
+}
+function imprimirTodosAtPed(){
+  const peds=[...db.atPeds].filter(p=>['PENDENTE','PAGO'].includes(p.st)).sort((a,b)=>new Date(a.data)-new Date(b.data));
+  if(!peds.length){toast('⚠️ Nenhum pedido B2B em aberto para imprimir','warn');return;}
+  const tot=peds.reduce((s,p)=>s+calcTotal(p),0);
+  printBlob(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>${docNome('Pedidos B2B em lote '+hoje+' ('+peds.length+')')}</title><style>${CSS_DOC}</style></head><body>${peds.map(blocoAtPed).join('')}<div class="no-print" style="position:fixed;bottom:20px;right:20px;background:#3d2000;color:#fff;padding:12px 20px;border-radius:8px;font-family:Arial;font-size:13px">🏢 ${peds.length} pedido(s) B2B · Total: <strong>${R(tot)}</strong></div><button class="no-print" onclick="window.print()" style="position:fixed;top:20px;right:20px;padding:10px 24px;background:#3d2000;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13pt;font-weight:700">🖨️ Imprimir ${peds.length} Pedido(s)</button>${AUTO_PRINT_JS}</body></html>`);
+  toast(peds.length+' pedido(s) B2B prontos — escolha “Salvar como PDF”','ok');
+}
 
 // ============================================================
 // A RECEBER
@@ -3013,6 +3075,7 @@ function verHistCli(id){
 // ============================================================
 function filtrarProds(f,btn){prodFiltro=f;document.querySelectorAll('#p-produtos .filter-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');rendProds();}
 function rendProds(){
+  try{rendSincAviso();}catch(e){}
   let prods=prodFiltro==='TODOS'?db.prods:db.prods.filter(p=>p.cat===prodFiltro);
   const catCor={Congelados:'var(--congelado)',Queijos:'var(--vinho)',Doces:'var(--verde)',Outros:'var(--azul)'};
   document.getElementById('lista-prods').innerHTML=prods.map(p=>{
@@ -3163,7 +3226,7 @@ function imprimirTodosPedidos(){
     return`<div class="pedido"><div class="header"><div><img class="logo-print" src="${LOGO_ESC}" alt="De Minas Pão de Queijaria"></div><div style="text-align:right"><div class="num-ped">${nP(p.num)}</div><span class="status st-${p.st}">${p.st}</span></div></div><div class="meta"><strong>Cliente:</strong> ${x(p.cli)} ${p.wa?'· '+x(p.wa):''}<br><strong>Endereço:</strong> ${x(end)}<br>${p.horario?'<strong>Horário:</strong> '+x(p.horario)+'<br>':''}${p.obs?'<strong>Obs:</strong> '+x(p.obs)+'<br>':''}<strong>Data:</strong> ${dF(p.data)}</div><table><thead><tr><th>Produto</th><th>Qtd</th><th>Preço Unit.</th><th class="r">Subtotal</th></tr></thead><tbody>${itensHtml}</tbody></table><div class="total-box"><div class="label">Total do Pedido</div><div class="valor">${R(total)}</div></div><div class="pix-box"><div>Pagamento via PIX</div><div style="font-size:12pt;font-weight:900">${x(pixCliente())}</div><div>${x(cfg.pixNome)}</div></div><div class="footer">A De Minas Pão de Queijaria agradece!</div></div>`;
   }).join('');
   const totalGeral=peds.reduce((s,p)=>s+calcTotal(p),0);
-  printBlob(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>De Minas — Pedidos em Lote</title><style>${css}</style></head><body>${pedsHtml}<div class="no-print" style="position:fixed;bottom:20px;right:20px;background:#3d2000;color:#fff;padding:12px 20px;border-radius:8px;font-family:Arial;font-size:13px">📦 ${peds.length} pedido(s) · Total: <strong>${R(totalGeral)}</strong></div><button class="no-print" onclick="window.print()" style="position:fixed;top:20px;right:20px;padding:10px 24px;background:#3d2000;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13pt;font-weight:700">🖨️ Imprimir ${peds.length} Pedido(s)</button></body></html>`);
+  printBlob(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>${docNome('Pedidos em lote '+(dataFil||hoje)+' ('+peds.length+')')}</title><style>${css}</style></head><body>${pedsHtml}<div class="no-print" style="position:fixed;bottom:20px;right:20px;background:#3d2000;color:#fff;padding:12px 20px;border-radius:8px;font-family:Arial;font-size:13px">📦 ${peds.length} pedido(s) · Total: <strong>${R(totalGeral)}</strong></div><button class="no-print" onclick="window.print()" style="position:fixed;top:20px;right:20px;padding:10px 24px;background:#3d2000;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13pt;font-weight:700">🖨️ Imprimir ${peds.length} Pedido(s)</button>${AUTO_PRINT_JS}</body></html>`);
   toast(`${peds.length} pedido(s) prontos para imprimir!`,'ok');
 }
 
@@ -3173,7 +3236,7 @@ function imprimirTodosPedidos(){
 function rendListaUDIPage(){
   const sel=document.getElementById('udi-extra-prod');
   if(sel)sel.innerHTML='<option value="">Selecionar...</option>'+db.prods.map(p=>`<option value="${p.id}">${x(p.n)}${p.pacote?' ('+p.pacote+')':''}</option>`).join('');
-  rendExtrasUDI();rendListaUDI();
+  prodBuscaIniciar('udi-extra-prod');rendExtrasUDI();rendListaUDI();
 }
 function addExtraUDI(){
   const prodId=document.getElementById('udi-extra-prod').value;if(!prodId){toast('Selecione um produto','warn');return;}
@@ -3212,15 +3275,21 @@ function catCarregarCache(){try{const j=JSON.parse(localStorage.getItem('dm_cat_
 async function catAtualizarFotos(){
   try{
     const r=await fetch(CAT_BASE+'produtos.json',{cache:'no-cache'});if(!r.ok)return;
-    const J=await r.json();const porCod={},porNome={},descCod={},descNome={},prod={},nomeCod={};
+    const txt=await r.text();const J=JSON.parse(txt);const sigAntes=catMapa&&catMapa.sig;
+    const hs=t=>{let h=5381;for(let k=0;k<t.length;k++)h=((h<<5)+h+t.charCodeAt(k))|0;return (h>>>0).toString(36)+t.length;};
+    const porCod={},porNome={},descCod={},descNome={},prod={},nomeCod={},minas=[];
     (J.produtos||[]).forEach(p=>{
+      if(p.cat!=='congelados')minas.push({c:p.codigo,n:p.nome,ant:p.nomesAntigos||[],kg:p.precoKg||null,ops:(p.opcoes||[]).map(o=>({l:o.label,p:o.preco,kg:!!o.kg})),disp:p.disponivel!==false});
       prod[p.codigo]={n:p.nome,cat:p.cat,ops:(p.opcoes||[]).map(o=>({l:o.label,p:o.preco,kg:!!o.kg})),comp:(p.componentes||[]).map(c=>({c:c.codigo,o:c.opcao,q:c.qtd})),f:p.foto||'',d:p.descricao||''};
       nomeCod[udiNorm(p.nome)]=p.codigo;(p.nomesAntigos||[]).forEach(n=>{nomeCod[udiNorm(n)]=p.codigo;});
       if(p.descricao){descCod[p.codigo]=p.descricao;descNome[udiNorm(p.nome)]=p.descricao;}
       if(!p.foto)return;porCod[p.codigo]=p.foto;porNome[udiNorm(p.nome)]=p.foto;
     });
-    catMapa={porCod,porNome,descCod,descNome,prod,nomeCod,sync:new Date().toISOString()};
+    let atac={};try{const ra=await fetch(CAT_BASE+'produtos-atacado.json',{cache:'no-cache'});if(ra.ok){const A=await ra.json();(A.produtos||[]).forEach(a=>(a.opcoes||[]).forEach(o=>{atac[a.codigo+'|'+o.label]=o.preco;}));}}catch(e){}
+    const sig=hs(txt)+'|'+hs(JSON.stringify(atac));
+    catMapa={porCod,porNome,descCod,descNome,prod,nomeCod,minas,atac,sig,sync:new Date().toISOString()};_catRev=null;_minasIdx=null;
     try{catMigrarCodigos();}catch(e){}try{localStorage.setItem('dm_cat_fotos',JSON.stringify(catMapa));}catch(e){}
+    if(sigAntes&&sigAntes!==sig){try{catAvisarMudancas();}catch(e){console.error(e);}}
   }catch(e){}
 }
 // pedidos aprovados antes do código do catálogo: grava o código pelo nome (inclui nomes antigos), uma vez
@@ -3236,8 +3305,212 @@ function catMigrarCodigos(){
       if(!it.label&&cp.ops.length>1){const o=udiOpcaoPorPreco(cp,it.pr);if(o){it.label=o;it.nome=udiNomeComLabel(cp.n,o,false);if(cp.cat==='congelados')it.pesoKg=udiPesoLabel(o);}}
     }
   }));
+  // itens que já têm código mas ainda trazem o nome antigo do produto: passam a usar o nome atual do catálogo
+  [...(db.peds||[]),...(db.atPeds||[])].forEach(p=>(p.itens||[]).forEach(it=>{
+    if(it.prodId||!it.cod)return;const cp=catMapa.prod[it.cod];if(!cp)return;
+    const base=String(it.nome||'').replace(/\s—\s.*$/,'');
+    if(udiNorm(base)!==udiNorm(cp.n)&&catMapa.nomeCod[udiNorm(base)]===it.cod){it.nome=it.label?udiNomeComLabel(cp.n,it.label,false):cp.n;it.nomeBase=cp.n;n++;}
+  }));
   if(n){try{salvar();}catch(e){}}
 }
+// ---- produto do ERP <-> código do catálogo ----
+let _catRev=null,_catRevSync='',_minasIdx=null,_minasIdxSync='';
+const nkNome=t=>udiNorm(t).replace(/\([^)]*\)/g,' ').replace(/\b\d+([.,]\d+)?\s?(g|kg|ml|l)\b/g,' ').replace(/\s+/g,' ').trim();
+function catRev(){
+  if(_catRev&&_catRevSync===catMapa.sync)return _catRev;
+  _catRev={};_catRevSync=catMapa.sync;
+  for(const cod in ESTQ_CAND){const m=ESTQ_CAND[cod];for(const lab in m){m[lab].forEach(id=>{if(!_catRev[id])_catRev[id]={cod,label:lab};});}}
+  db.prods.forEach(p=>{if(p.cod&&p.opcaoCat&&p.cat==='Congelados'&&!_catRev[p.id])_catRev[p.id]={cod:p.cod,label:p.opcaoCat};});
+  return _catRev;
+}
+function minasIdx(){
+  if(_minasIdx&&_minasIdxSync===catMapa.sync)return _minasIdx;
+  _minasIdx={};_minasIdxSync=catMapa.sync;(catMapa.minas||[]).forEach(c=>{[c.n,...(c.ant||[])].forEach(n=>{_minasIdx[nkNome(n)]=c;});});return _minasIdx;
+}
+function codDoProd(p){
+  if(!p)return '';if(p.cod)return p.cod;if(!catSincronizado())return '';
+  if(p.cat==='Congelados'){const r=catRev()[p.id];return r?r.cod:'';}
+  const c=minasIdx()[nkNome(p.n)];return c?c.c:'';
+}
+// ---- preço do catálogo: a fonte única dos valores ----
+function precoCatDoProd(p){
+  if(!p||!catSincronizado())return null;
+  if(p.cat==='Congelados'){
+    const r=catRev()[p.id];if(!r)return null;const cp=catProd(r.cod);if(!cp)return null;
+    const pk=udiPesoLabel(String(p.pacote||'1kg'));
+    const o=cp.ops.find(z=>pk>0&&udiPesoLabel(z.l)===pk)||cp.ops.find(z=>z.l===r.label);
+    return o?{preco:o.p,cod:r.cod,label:o.l}:null;
+  }
+  const c=minasIdx()[nkNome(p.n)];if(!c)return null;
+  if(p.pv){const k=c.kg||(c.ops.find(o=>o.kg)||{}).p;return k?{preco:k,cod:c.c,label:'kg'}:null;}
+  const m=udiNorm(p.n).match(/\b(\d+([.,]\d+)?)\s?(g|kg|ml|l)\b/),t=m?m[1].replace(',','.')+m[3]:'';
+  const o=c.ops.length===1?c.ops[0]:c.ops.find(z=>t&&udiNorm(z.l).replace(/\s/g,'').includes(t));
+  return(o&&!o.kg)?{preco:o.p,cod:c.c,label:o.l}:null;
+}
+function pcat(p){const r=precoCatDoProd(p);return r?r.preco:p.pr;}
+function precoAtacCat(p){
+  const r=precoCatDoProd(p);if(r&&catMapa.atac){const a=catMapa.atac[r.cod+'|'+r.label];if(a!=null)return a;}
+  return p.prAtacado||pcat(p);
+}
+// preço que o catálogo cobra por um item de pedido (null = não dá para saber)
+function precoCatItem(it){
+  if(!it||!catSincronizado())return null;
+  const cod=it.cod||it.codigo||'';const cp=cod&&catProd(cod);
+  if(cp&&!(cp.comp&&cp.comp.length)){
+    let o=null;
+    if(it.label)o=cp.ops.find(z=>z.l===it.label);
+    if(!o&&cp.ops.length===1)o=cp.ops[0];
+    if(!o&&it.prodId){const r=precoCatDoProd(gP(it.prodId));return r?r.preco:null;}
+    if(!o&&it.pv){const k=cp.ops.find(z=>z.kg);if(k)o=k;}
+    return o?o.p:null;
+  }
+  if(it.prodId){const r=precoCatDoProd(gP(it.prodId));return r?r.preco:null;}
+  return null;
+}
+function diffsPrecoPed(p){return(p.itens||[]).map((it,i)=>({it,i,exp:precoCatItem(it)})).filter(d=>d.exp!=null&&Math.abs((d.it.pr||0)-d.exp)>0.005);}
+function marcadorPrecoCat(it,i){const e=precoCatItem(it);if(e==null||Math.abs((it.pr||0)-e)<=0.005)return '';return `<div style="margin-top:4px;font-size:11px;font-weight:700;color:#b00020">⚠ catálogo ${R(e)} <button type="button" onclick="usarPrecoCatItem(${i})" style="margin-left:4px;border:1px solid #b00020;background:#fff;color:#b00020;border-radius:4px;font-size:11px;font-weight:700;padding:1px 6px;cursor:pointer">usar</button></div>`;}
+function usarPrecoCatItem(i){const it=editingPedItems[i];const e=precoCatItem(it);if(!it||e==null)return;it.pr=e;modalPedDirty=true;rendPedItensList();calcPedTotal();}
+function alinharPedidoCat(id){
+  const p=db.peds.find(z=>z.id===id);if(!p)return;const d=diffsPrecoPed(p);if(!d.length){toast('Os preços já estão iguais ao catálogo','ok');return;}
+  const antes=calcTotal(p);const nova=JSON.parse(JSON.stringify(p));d.forEach(z=>{nova.itens[z.i].pr=z.exp;});const depois=calcTotal(nova);
+  if(!confirm('Corrigir '+d.length+' item(ns) pelo catálogo?\n\n'+d.map(z=>z.it.nome+': '+R(z.it.pr)+' → '+R(z.exp)).join('\n')+'\n\nTotal: '+R(antes)+' → '+R(depois)))return;
+  d.forEach(z=>{p.itens[z.i].pr=z.exp;});salvar();abrirDetPed(id);if(typeof rendPedidos==='function')rendPedidos();toast('✅ Preços do pedido iguais ao catálogo','ok');
+}
+function rendSincAviso(){
+  const lista=document.getElementById('lista-prods');if(!lista)return;let el=document.getElementById('sinc-aviso');
+  if(!el){el=document.createElement('div');el.id='sinc-aviso';lista.parentNode.insertBefore(el,lista);}
+  if(!catSincronizado()){el.innerHTML='';return;}
+  const {A}=sincCadCalcular();const n=A.filter(a=>/^[23]\./.test(a.sec)).length,f=A.filter(a=>/^[45]\./.test(a.sec)).length;
+  el.innerHTML=(n||f)?`<div style="background:#fff3cd;border:1.5px solid #e0a800;border-radius:8px;padding:10px 14px;margin:6px 0 10px;font-size:13px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span style="flex:1;min-width:220px">⚠ ${n?n+' preço(s) do ERP diferente(s) do catálogo':''}${n&&f?' · ':''}${f?f+' produto(s) do catálogo que faltam no ERP':''}</span><button class="btn btn-ouro btn-sm" onclick="sincPrecosMinasAbrir()">Ver e atualizar</button></div>`:'<div style="font-size:12px;color:#2f7d32;margin:6px 0 10px">✓ Preços do ERP iguais ao catálogo</div>';
+}
+// ---- busca de produto por nome ou código (no lugar da lista que só rola) ----
+function prodBuscaIniciar(selId){
+  const sel=document.getElementById(selId);if(!sel)return;
+  let box=document.getElementById(selId+'-busca');
+  if(!box){
+    box=document.createElement('div');box.id=selId+'-busca';box.style.cssText='position:relative;margin-bottom:6px';
+    box.innerHTML='<input type="search" id="'+selId+'-q" placeholder="🔍 Nome ou código do produto" autocomplete="off" style="width:100%;padding:10px 12px;border:2px solid var(--ouro);border-radius:var(--radius2);font-size:14px;background:#fffdf5"><div id="'+selId+'-r" style="display:none;position:absolute;left:0;right:0;top:100%;z-index:80;background:#fff;border:1px solid var(--borda);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.2);max-height:300px;overflow:auto"></div>';
+    sel.parentNode.insertBefore(box,sel);sel.style.display='none';
+    const q=box.querySelector('input');
+    q.addEventListener('input',()=>prodBuscaFiltrar(selId));q.addEventListener('focus',()=>prodBuscaFiltrar(selId));
+    q.addEventListener('keydown',e=>{
+      if(e.key==='Enter'){e.preventDefault();const it=document.querySelector('#'+selId+'-r .pb-it');if(it)prodBuscaEscolher(selId,it.dataset.id);}
+      else if(e.key==='Escape'){document.getElementById(selId+'-r').style.display='none';}
+    });
+    q.addEventListener('blur',()=>setTimeout(()=>{const r=document.getElementById(selId+'-r');if(r)r.style.display='none';},180));
+  }
+  prodBuscaReset(selId,false);
+}
+function prodBuscaFiltrar(selId){
+  const q=document.getElementById(selId+'-q'),r=document.getElementById(selId+'-r');if(!q||!r)return;
+  const tk=udiNorm(q.value).split(' ').filter(Boolean);
+  if(!tk.length){r.style.display='none';return;}
+  const hit=db.prods.map(p=>({p,h:udiNorm(p.n+' '+(p.forn||'')+' '+(p.cat||'')+' '+codDoProd(p)+' '+(p.pacote||''))})).filter(o=>tk.every(t=>o.h.includes(t))).slice(0,15);
+  r.innerHTML=hit.length?hit.map(o=>{const p=o.p,c=codDoProd(p);return `<div class="pb-it" data-id="${x(p.id)}" onmousedown="prodBuscaEscolher('${selId}','${x(p.id)}')" style="padding:9px 12px;border-bottom:1px solid #f0e8da;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center"><span style="font-size:13px;font-weight:600">${x(p.n)} ${c?'<span style="font-size:10px;color:#9a8c77;font-weight:700">'+x(c)+'</span>':''}<span style="display:block;font-size:11px;color:#8a7d6a;font-weight:400">${x(p.cat||'')}${p.forn?' · '+x(p.forn):''}${p.tipo==='estoque'?' · estoque '+(p.est||0):''}</span></span><span style="font-weight:800;color:var(--vinho);white-space:nowrap">${R(p.pr||0)}${p.pv?'/kg':''}</span></div>`;}).join(''):'<div style="padding:12px;color:#8a7d6a;font-size:13px">Nenhum produto encontrado. Use “🔄 Atualizar cadastro pelo catálogo” em Produtos para trazer os que faltam.</div>';
+  r.style.display='block';
+}
+function prodBuscaEscolher(selId,id){
+  const sel=document.getElementById(selId),q=document.getElementById(selId+'-q'),r=document.getElementById(selId+'-r');if(!sel)return;
+  if(![...sel.options].some(o=>o.value===id)){const p=gP(id);if(p){const o=document.createElement('option');o.value=id;o.textContent=p.n;sel.appendChild(o);}}
+  sel.value=id;sel.dispatchEvent(new Event('change'));
+  const p=gP(id);if(q&&p)q.value=p.n;if(r)r.style.display='none';
+}
+function prodBuscaReset(selId,foco){
+  const sel=document.getElementById(selId),q=document.getElementById(selId+'-q'),r=document.getElementById(selId+'-r');
+  if(q)q.value='';if(r)r.style.display='none';if(sel&&foco)sel.value='';if(q&&foco)q.focus();
+}
+// ---- renomear um item do pedido (só neste pedido) ----
+function renomearItemPed(i){const it=editingPedItems[i];if(!it)return;const n=prompt('Nome do item neste pedido:',it.nome);if(n&&n.trim()){it.nome=n.trim().slice(0,120);modalPedDirty=true;rendPedItensList();}}
+// ---- atualizar o cadastro do ERP pelo catálogo: embalagem, preços e produtos que faltam, com prévia ----
+let _sincAcoes=[];
+function sincCadCalcular(){
+  const A=[],sem=[];const rev=catRev();
+  // (1) congelados que o catálogo só vende em pacote de 2kg
+  [['cong_pqcok','PQ-023'],['cong_pql80','PQ-024'],['cong_pqs100','PQ-025']].forEach(([id,cod])=>{
+    const p=gP(id),cp=catProd(cod),o=cp&&cp.ops.find(z=>z.l==='2kgs');if(!p||!o)return;
+    const nome=cp.n+' Sabor da Roça — 2kg',at=(catMapa.atac||{})[cod+'|2kgs'];
+    if(p.pacote!=='2kg'||p.n!==nome||Math.abs((p.pr||0)-o.p)>0.005||(at!=null&&Math.abs((p.prAtacado||0)-at)>0.005))
+      A.push({sec:'1. Embalagem de 2kg (só vendem pacote de 2kg)',txt:p.n+'  →  '+nome,det:'pacote 2kg · '+R(o.p)+(at!=null?' · atacado '+R(at):'')+' · estoque hoje: '+(p.est||0)+' (passa a contar pacotes de 2kg — confira)',on:true,fn:()=>{p.n=nome;p.pacote='2kg';p.pr=o.p;if(at!=null)p.prAtacado=at;}});
+  });
+  // (2) preços dos congelados (varejo e atacado)
+  db.prods.filter(p=>p.cat==='Congelados'&&!A.some(a=>a.txt.startsWith(p.n))).forEach(p=>{
+    const r=rev[p.id];if(!r)return;const cp=catProd(r.cod),o=cp&&cp.ops.find(z=>z.l===r.label);if(!o)return;
+    if(Math.abs((p.pr||0)-o.p)>0.005)A.push({sec:'2. Preços dos congelados',txt:p.n+' — varejo',det:R(p.pr||0)+'  →  '+R(o.p)+'  ('+r.cod+' '+r.label+')',on:true,fn:()=>{p.pr=o.p;}});
+    const at=(catMapa.atac||{})[r.cod+'|'+r.label];if(at!=null&&Math.abs((p.prAtacado==null?-1:p.prAtacado)-at)>0.005)A.push({sec:'2. Preços dos congelados',txt:p.n+' — atacado',det:(p.prAtacado==null?'vazio':R(p.prAtacado))+'  →  '+R(at),on:true,fn:()=>{p.prAtacado=at;}});
+  });
+  // (3) preços dos produtos de Minas
+  const idx=minasIdx(),usados=new Set();
+  const tam=t=>{const m=udiNorm(t).match(/\b(\d+([.,]\d+)?)\s?(g|kg|ml|l)\b/);return m?m[1].replace(',','.')+m[3]:'';};
+  db.prods.filter(p=>p.cat!=='Congelados').forEach(p=>{
+    const c=idx[nkNome(p.n)];if(!c){sem.push([p.n,'não achei no catálogo']);return;}usados.add(c.c);
+    let novo=null,como='';
+    if(p.pv){const k=c.kg||(c.ops.find(o=>o.kg)||{}).p;if(k){novo=k;como='por kg';}else{sem.push([p.n,'o catálogo vende por peça e não tem preço por kg']);return;}}
+    else{const o=c.ops.length===1?c.ops[0]:c.ops.find(z=>tam(p.n)&&udiNorm(z.l).replace(/\s/g,'').includes(tam(p.n)));if(!o||o.kg){sem.push([p.n,'escolher o tamanho/opção no catálogo']);return;}novo=o.p;como='unidade ('+o.l+')';}
+    if(Math.abs((p.pr||0)-novo)>0.005)A.push({sec:'3. Preços dos produtos de Minas',txt:p.n+(c.disp?'':' (em falta)'),det:R(p.pr||0)+'  →  '+R(novo)+'  ('+como+')',on:true,fn:()=>{p.pr=novo;}});
+  });
+  // (5) congelados novos do catálogo: nascem no controle de estoque
+  Object.keys(catMapa.prod||{}).forEach(cod=>{
+    const cp=catMapa.prod[cod];if(cp.cat!=='congelados'||(cp.comp&&cp.comp.length))return;
+    cp.ops.forEach(o=>{
+      if(udiEstqCod(cod,o.l).length)return;
+      const id='cat_'+cod.toLowerCase().replace(/[^a-z0-9]/g,'')+'_'+udiNorm(o.l).replace(/[^a-z0-9]/g,'');if(db.prods.some(p=>p.id===id))return;
+      const pk=udiPesoLabel(o.l),pac=pk>=2?'2kg':(pk>=1?'1kg':(pk>0?Math.round(pk*1000)+'g':'')),at=(catMapa.atac||{})[cod+'|'+o.l];
+      A.push({sec:'5. Congelados novos (entram no controle de estoque)',txt:cp.n+' — '+o.l+' ['+cod+']',det:R(o.p)+(at!=null?' · atacado '+R(at):'')+' · estoque começa em 0 · fornecedor: defina depois',on:true,fn:()=>{db.prods.push({id,n:cp.n+' — '+o.l,cat:'Congelados',forn:'A definir',tipo:'estoque',pr:o.p,prAtacado:at!=null?at:null,pacote:pac,pv:false,est:0,estMin:0,cod,opcaoCat:o.l});_catRev=null;}});
+    });
+  });
+  // (4) produtos do catálogo que não existem no ERP
+  const catMap={queijos:'Queijos',doces:'Doces'};
+  (catMapa.minas||[]).filter(c=>!usados.has(c.c)&&!c.c.startsWith('CB-')).forEach(c=>{
+    const multi=c.ops.length>1;
+    c.ops.forEach(o=>{
+      const nome=multi?c.n+' — '+o.l:c.n,id='cat_'+c.c.toLowerCase().replace(/[^a-z0-9]/g,'')+(multi?'_'+udiNorm(o.l).replace(/[^a-z0-9]/g,''):'');
+      if(db.prods.some(p=>p.id===id))return;
+      A.push({sec:'4. Produtos do catálogo que faltam no ERP',txt:nome+' '+(c.c?'['+c.c+']':''),det:R(o.p)+(o.kg?' por kg':'')+(c.disp?'':' · em falta no catálogo'),on:c.disp,fn:()=>{
+        db.prods.push({id,n:nome,cat:catMap[(c.c.startsWith('QJ')?'queijos':c.c.startsWith('DC')?'doces':'')]||'Outros',forn:'Artesanal MG',tipo:'encomenda',pr:o.p,pv:!!o.kg,est:0,estMin:0,cod:c.c});}});
+    });
+  });
+  return {A,sem};
+}
+function sincPrecosMinasAbrir(){
+  if(!catSincronizado()||!(catMapa.minas||[]).length){toast('O catálogo ainda não carregou. Tente de novo em alguns segundos.','warn');return;}
+  const {A,sem}=sincCadCalcular();_sincAcoes=A;
+  const old=document.getElementById('mod-sinc-precos');if(old)old.remove();
+  let h='',sec='';
+  A.forEach((a,i)=>{if(a.sec!==sec){sec=a.sec;h+=`<tr><td colspan="3" style="background:#f6efe2;font-weight:800;font-size:12px;padding:8px 10px">${x(sec)} <a href="#" onclick="document.querySelectorAll('#mod-sinc-precos .sp-ck[data-sec=\\'${i}\\']').forEach(c=>c.checked=true);return false" style="font-weight:600;font-size:11px;margin-left:8px"></a></td></tr>`;}
+    h+=`<tr><td style="width:28px"><input type="checkbox" class="sp-ck" data-i="${i}" ${a.on?'checked':''}></td><td style="font-size:13px">${x(a.txt)}</td><td style="font-size:12px;color:var(--txt3)">${x(a.det)}</td></tr>`;});
+  const d=document.createElement('div');d.className='modal-overlay on';d.id='mod-sinc-precos';
+  d.innerHTML=`<div class="modal" style="max-width:860px;max-height:90vh;overflow:auto"><div class="modal-head"><h3>🔄 Atualizar cadastro pelo catálogo</h3><button class="cl" onclick="document.getElementById('mod-sinc-precos').remove()">✕</button></div>
+  <div class="modal-body"><p style="font-size:13px;color:var(--txt3);margin-bottom:10px">Nada muda até você tocar em <b>Aplicar</b>. Desmarque o que ainda está revisando. Pedidos que já existem não são alterados.</p>
+  <div style="display:flex;gap:8px;margin-bottom:8px"><button class="btn btn-outline btn-sm" onclick="document.querySelectorAll('#mod-sinc-precos .sp-ck').forEach(c=>c.checked=true)">Marcar todos</button><button class="btn btn-outline btn-sm" onclick="document.querySelectorAll('#mod-sinc-precos .sp-ck').forEach(c=>c.checked=false)">Desmarcar todos</button><span style="font-size:12px;color:var(--txt3);align-self:center">${A.length} sugestão(ões)</span></div>
+  ${A.length?`<table class="tbl" style="width:100%"><tbody>${h}</tbody></table>`:'<p style="font-weight:700">✓ O cadastro já está igual ao catálogo.</p>'}
+  ${sem.length?`<details style="margin-top:10px"><summary style="cursor:pointer;font-weight:700;font-size:13px">${sem.length} do ERP sem correspondência (mexer à mão)</summary><ul style="font-size:12px;margin:6px 0 0 18px">${sem.map(z=>`<li>${x(z[0])} — ${x(z[1])}</li>`).join('')}</ul></details>`:''}
+  </div><div class="modal-foot" style="display:flex;gap:8px;justify-content:flex-end;padding:12px 16px"><button class="btn btn-outline" onclick="document.getElementById('mod-sinc-precos').remove()">Cancelar</button>${A.length?'<button class="btn btn-primary" onclick="sincPrecosMinasAplicar()">Aplicar nos marcados</button>':''}</div></div>`;
+  document.body.appendChild(d);
+}
+function sincPrecosMinasAplicar(){
+  let n=0;document.querySelectorAll('#mod-sinc-precos .sp-ck:checked').forEach(ck=>{const a=_sincAcoes[parseInt(ck.dataset.i)];if(a){try{a.fn();n++;}catch(e){console.error(e);}}});
+  if(n){_catRev=null;salvar();if(typeof rendProds==='function')rendProds();}
+  const m=document.getElementById('mod-sinc-precos');if(m)m.remove();
+  toast(n?('✅ '+n+' alteração(ões) aplicada(s)'):'Nada marcado','ok');
+}
+// aviso na hora: o catálogo no GitHub mudou enquanto o ERP estava aberto (ou desde a última vez que abriu)
+function catAvisarMudancas(){
+  if(typeof db==='undefined'||!db||!db.prods)return;
+  const {A}=sincCadCalcular();
+  const pr=A.filter(a=>/^[23]\./.test(a.sec)).length,nv=A.filter(a=>/^[45]\./.test(a.sec)).length;
+  const ped=(db.peds||[]).filter(p=>!['PAGO','ENTREGUE','CANCELADO'].includes(p.st)&&diffsPrecoPed(p).length).length;
+  try{rendProds();}catch(e){}
+  const old=document.getElementById('cat-aviso-bar');if(old)old.remove();
+  if(!(pr||nv||ped)){toast('🔄 Catálogo atualizado — o ERP já está igual.','ok');return;}
+  const partes=[];if(pr)partes.push(pr+' preço(s) diferente(s) no cadastro');if(nv)partes.push(nv+' produto(s) novo(s) para trazer');if(ped)partes.push(ped+' pedido(s) aberto(s) com preço diferente (abra o pedido e toque em “Corrigir pelo catálogo”)');
+  const d=document.createElement('div');d.id='cat-aviso-bar';
+  d.style.cssText='position:fixed;left:50%;transform:translateX(-50%);top:12px;z-index:9999;max-width:min(680px,94vw);background:#fff3cd;border:2px solid #e0a800;border-radius:10px;padding:12px 16px;box-shadow:0 8px 28px rgba(0,0,0,.28);font-size:13px;display:flex;gap:10px;align-items:center;flex-wrap:wrap';
+  d.innerHTML='<span style="flex:1;min-width:220px">🔄 <b>O catálogo foi atualizado.</b> '+x(partes.join(' · '))+'.</span>'+((pr||nv)?'<button class="btn btn-ouro btn-sm" onclick="document.getElementById(\'cat-aviso-bar\').remove();sincPrecosMinasAbrir()">Ver e atualizar</button>':'')+'<button class="btn btn-outline btn-sm" onclick="document.getElementById(\'cat-aviso-bar\').remove()">Depois</button>';
+  document.body.appendChild(d);
+}
+let _catVig=0;
+async function catVigiar(){if(Date.now()-_catVig<20000)return;_catVig=Date.now();await catAtualizarFotos();}
+setInterval(catVigiar,120000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)catVigiar();});
 function catSincronizado(){return !!(catMapa.prod&&Object.keys(catMapa.prod).length);}
 function catProd(cod){return cod&&catMapa.prod?catMapa.prod[cod]||null:null;}
 function codTag(cod){return cod?`<span style="font-size:10px;font-weight:600;color:#9a8f80;margin-left:6px;letter-spacing:.3px">${x(cod)}</span>`:'';}
@@ -3255,6 +3528,8 @@ function descDoItem(it){
   return it.desc||(cod&&catMapa.descCod&&catMapa.descCod[cod])||(catMapa.descNome&&(catMapa.descNome[udiNorm(it.nomeBase||it.nome)]||catMapa.descNome[udiNorm(String(it.nome||'').replace(/\s—\s.*$/,''))]))||'';
 }
 function descHtml(d,px){return d?`<div style="font-size:${px||11}px;font-weight:400;color:#7a7a7a;line-height:1.25;margin-top:2px">${x(d)}</div>`:'';}
+function medirBarra(){const b=document.getElementById('cloud-bar');if(b)document.documentElement.style.setProperty('--barra-h',Math.ceil(b.getBoundingClientRect().height)+'px');}
+medirBarra();window.addEventListener('resize',medirBarra);window.addEventListener('orientationchange',medirBarra);setTimeout(medirBarra,800);setInterval(medirBarra,5000);
 catCarregarCache();setTimeout(catAtualizarFotos,1500);
 // ===== ESTOQUE DOS CONGELADOS: código do catálogo -> produtos do estoque =====
 // por opção: lista de candidatos; usa o primeiro com estoque, senão o primeiro da lista (fica "a repor")
@@ -3274,10 +3549,12 @@ function estqEscolher(ids){for(const id of ids){const p=gP(id);if(p&&(p.est||0)>
 function udiEstqCod(cod,label){
   const out=[];const cp=catProd(cod);
   if(cp&&cp.comp&&cp.comp.length){cp.comp.forEach(c=>udiEstqCod(c.c,c.o).forEach(e=>out.push({id:e.id,q:e.q*c.q})));return out;}
-  const m=ESTQ_CAND[cod];if(!m)return out;
+  const m=Object.assign({},ESTQ_CAND[cod]||{});
+  db.prods.forEach(p=>{if(p.cod===cod&&p.cat==='Congelados'&&p.opcaoCat){const k=String(p.opcaoCat).toLowerCase().replace(/\s/g,'');(m[k]=m[k]||[]).includes(p.id)||(m[k]=[...(m[k]||[]),p.id]);}});
+  if(!Object.keys(m).length)return out;
   const lab=String(label||'').toLowerCase().replace(/\s/g,'');
   if(m[lab]){const id=estqEscolher(m[lab]);if(id)out.push({id,q:1});return out;}
-  const kg=udiPesoLabel(lab);if(kg>0&&m['1kg']){const id=estqEscolher(m['1kg']);if(id)out.push({id,q:kg});}
+  const kg=udiPesoLabel(lab);if(kg>0&&m['1kg']){const id=estqEscolher(m['1kg']);if(id){const pe=gP(id);const pk=udiPesoLabel(String((pe&&pe.pacote)||'1kg'))||1;out.push({id,q:kg/pk});}}
   return out;
 }
 // ===== LISTA DE COMPRAS (UDI): itens vindos do catálogo =====
@@ -3803,7 +4080,7 @@ function imprimirPedido(id){
     return`<tr><td>${imgItem(it,34)}${x(it.nome)}${codTag(it.cod||it.codigo)}${descHtml(descDoItem(it),8)}</td><td class="c">${qtdLabel}</td><td class="c">${R(it.pr)}${descInfo}</td><td class="r">${R(subtotal)}</td></tr>`;
   }).join('');
   const sugestao=`Já experimentou nossa linha completa? Chipa 3 Queijos &nbsp;·&nbsp; Pão de Queijo Recheado &nbsp;·&nbsp; Biscoito de Queijo &nbsp;·&nbsp; Broa de Milho. Peça na próxima!`;
-  printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>@page{size:A4;margin:14mm 16mm}*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11pt;color:#1a1a1a}.header{border-bottom:2.5px solid #3d2000;padding-bottom:10px;margin-bottom:14px}.logo-print{height:17mm;width:auto;display:block}.brand{font-size:22pt;font-weight:900;color:#3d2000}.brand-sub{font-size:9pt;color:#c8860a;font-weight:600;letter-spacing:3px;text-transform:uppercase;margin-top:2px}.meta{font-size:9.5pt;color:#444;margin-bottom:12px;line-height:1.6}table{width:100%;border-collapse:collapse;margin-bottom:12px}thead tr{background:#3d2000;color:#fff}th{padding:7px 10px;font-size:9pt;font-weight:600;text-align:left}.c{text-align:center}.r{text-align:right}tbody tr:nth-child(even){background:#faf7f4}td{padding:7px 10px;font-size:10pt;border-bottom:1px solid #eee}.total-box{text-align:right;padding:8px 10px;background:#3d2000;color:#fff;border-radius:4px;margin-bottom:14px}.pix-box{border:1.5px solid #c8860a;border-radius:6px;padding:10px 14px;display:flex;align-items:center;gap:16px;background:#fffdf5}.pix-key{font-size:13pt;font-weight:900;color:#3d2000}.pix-name{font-size:9pt;color:#666;margin-top:2px}.sugestao{font-size:9.5pt;color:#3d2000;text-align:center;margin:8px 0;padding:6px 0;border-top:1px dashed #c8860a;border-bottom:1px dashed #c8860a}.footer{margin-top:12px;font-size:10pt;color:#3d2000;text-align:center;border-top:1px solid #eee;padding-top:8px;font-weight:600}@media print{button{display:none}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body>
+  printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${docNome("Pedido "+nP(p.num)+" - "+(p.cli||""))}</title><style>@page{size:A4;margin:14mm 16mm}*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11pt;color:#1a1a1a}.header{border-bottom:2.5px solid #3d2000;padding-bottom:10px;margin-bottom:14px}.logo-print{height:17mm;width:auto;display:block}.brand{font-size:22pt;font-weight:900;color:#3d2000}.brand-sub{font-size:9pt;color:#c8860a;font-weight:600;letter-spacing:3px;text-transform:uppercase;margin-top:2px}.meta{font-size:9.5pt;color:#444;margin-bottom:12px;line-height:1.6}table{width:100%;border-collapse:collapse;margin-bottom:12px}thead tr{background:#3d2000;color:#fff}th{padding:7px 10px;font-size:9pt;font-weight:600;text-align:left}.c{text-align:center}.r{text-align:right}tbody tr:nth-child(even){background:#faf7f4}td{padding:7px 10px;font-size:10pt;border-bottom:1px solid #eee}.total-box{text-align:right;padding:8px 10px;background:#3d2000;color:#fff;border-radius:4px;margin-bottom:14px}.pix-box{border:1.5px solid #c8860a;border-radius:6px;padding:10px 14px;display:flex;align-items:center;gap:16px;background:#fffdf5}.pix-key{font-size:13pt;font-weight:900;color:#3d2000}.pix-name{font-size:9pt;color:#666;margin-top:2px}.sugestao{font-size:9.5pt;color:#3d2000;text-align:center;margin:8px 0;padding:6px 0;border-top:1px dashed #c8860a;border-bottom:1px dashed #c8860a}.footer{margin-top:12px;font-size:10pt;color:#3d2000;text-align:center;border-top:1px solid #eee;padding-top:8px;font-weight:600}@media print{button{display:none}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body>
 <div class="header"><img class="logo-print" src="${LOGO_ESC}" alt="De Minas Pão de Queijaria"><div style="font-size:8pt;color:#666;margin-top:3px">Rua Engenheiro Pegado 332 · Vila Carrão · São Paulo - SP</div></div>
 <div class="meta"><strong>${nP(p.num)}</strong> &nbsp;·&nbsp; ${dF(p.data)}<br><strong>Cliente:</strong> ${x(p.cli)}&nbsp;${p.wa?'· '+x(p.wa):''}${p.vendedor?'<br><strong>Vendedor:</strong> '+x(p.vendedor):''}<br><strong>Endereço:</strong> ${x(end)}<br>${p.horario?'<strong>Horário:</strong> '+x(p.horario)+'<br>':''}${p.obs?'<strong>Obs:</strong> '+x(p.obs)+'<br>':''}</div>
 <table><thead><tr><th>Produto</th><th class="c">Qtd</th><th class="c">Preço Unit.</th><th class="r">Subtotal</th></tr></thead><tbody>${itens}</tbody></table>
@@ -3813,7 +4090,7 @@ ${p.desc?`<div style="text-align:right;font-size:9.5pt;color:#666;margin-bottom:
 <div class="pix-box"><div style="flex:1"><div style="font-size:8pt;font-weight:700;color:#c8860a;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Pagamento via PIX</div><div class="pix-key">${x(pixCliente())}</div><div class="pix-name">${x(cfg.pixNome)}</div></div><div style="font-size:28pt;opacity:.15">◈</div></div>
 <div class="sugestao">${sugestao}</div>
 <div class="footer">A De Minas Pão de Queijaria agradece por adquirir o nosso Autêntico Pão de Queijo Mineiro</div>
-<button onclick="window.print()" style="margin-top:16px;padding:8px 20px;background:#3d2000;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:11pt">🖨️ Imprimir</button></body></html>`);
+<button onclick="window.print()" style="margin-top:16px;padding:8px 20px;background:#3d2000;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:11pt">🖨️ Imprimir</button>${AUTO_PRINT_JS}</body></html>`);
 }
 
 // ============================================================
