@@ -1041,7 +1041,9 @@
    ],
    "disponivel": true,
    "consultarEstoque": false,
-   "descricao": "Peso médio de cada peça: 300g."
+   "descricao": "Peso médio de cada peça: 300g.",
+   "precoKg": 119,
+   "pesoKg": 0.3
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-tranca-com-alho",
@@ -1057,7 +1059,9 @@
     }
    ],
    "disponivel": false,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "precoKg": 119,
+   "pesoKg": 0.3
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-tranca-ao-vinho",
@@ -1074,7 +1078,9 @@
    ],
    "disponivel": true,
    "consultarEstoque": false,
-   "descricao": "Peso médio de cada peça: 300g."
+   "descricao": "Peso médio de cada peça: 300g.",
+   "precoKg": 119,
+   "pesoKg": 0.3
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-nozinho-provolone-defumado",
@@ -1090,7 +1096,9 @@
     }
    ],
    "disponivel": false,
-   "consultarEstoque": false
+   "consultarEstoque": false,
+   "precoKg": 119,
+   "pesoKg": 0.35
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-palito-temperado",
@@ -1102,7 +1110,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 30.0
+     "preco": 35.0
     }
    ],
    "disponivel": true,
@@ -1110,7 +1118,9 @@
    "descricao": "Mussarela condimentada em palitos, com orégano e pimenta calabresa. Peso médio de cada peça: 250g. Depois de aberto, consumir em até 7 dias.",
    "nomesAntigos": [
     "Queijo Palito Temperado"
-   ]
+   ],
+   "precoKg": 119,
+   "pesoKg": 0.25
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-nozinho-temperado",
@@ -1127,7 +1137,9 @@
    ],
    "disponivel": true,
    "consultarEstoque": false,
-   "descricao": "Peso médio de cada peça: 350g."
+   "descricao": "Peso médio de cada peça: 350g.",
+   "precoKg": 119,
+   "pesoKg": 0.35
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-tranca",
@@ -1139,12 +1151,14 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 34.0
+     "preco": 35.9
     }
    ],
    "disponivel": true,
    "consultarEstoque": false,
-   "descricao": "Peso médio de cada peça: 300g."
+   "descricao": "Peso médio de cada peça: 300g.",
+   "precoKg": 113,
+   "pesoKg": 0.3
   },
   {
    "id": "trancas-nozinhos-e-provolones-queijo-provolone-fresco-defumado",
@@ -2535,7 +2549,7 @@
    "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-24T16:30:06.000000Z",
+ "atualizadoEm": "2026-10-25T12:24:35.000000Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
