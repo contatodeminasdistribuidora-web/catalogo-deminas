@@ -3389,24 +3389,35 @@ function prodBuscaIniciar(selId){
   let box=document.getElementById(selId+'-busca');
   if(!box){
     box=document.createElement('div');box.id=selId+'-busca';box.style.cssText='position:relative;margin-bottom:6px';
-    box.innerHTML='<input type="search" id="'+selId+'-q" placeholder="🔍 Nome ou código do produto" autocomplete="off" style="width:100%;padding:10px 12px;border:2px solid var(--ouro);border-radius:var(--radius2);font-size:14px;background:#fffdf5"><div id="'+selId+'-r" style="display:none;position:absolute;left:0;right:0;top:100%;z-index:80;background:#fff;border:1px solid var(--borda);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.2);max-height:300px;overflow:auto"></div>';
+    box.innerHTML='<input type="search" id="'+selId+'-q" placeholder="🔍 Nome ou código do produto" autocomplete="off" style="width:100%;padding:10px 40px 10px 12px;border:2px solid var(--ouro);border-radius:var(--radius2);font-size:14px;background:#fffdf5"><button type="button" tabindex="-1" id="'+selId+'-seta" title="Ver todos os produtos" style="position:absolute;right:4px;top:4px;bottom:4px;width:34px;border:none;background:transparent;font-size:16px;color:var(--ouro);cursor:pointer">▾</button><div id="'+selId+'-r" style="display:none;position:absolute;left:0;right:0;top:100%;z-index:80;background:#fff;border:1px solid var(--borda);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.2);max-height:min(340px,48vh);overflow:auto;overscroll-behavior:contain"></div>';
     sel.parentNode.insertBefore(box,sel);sel.style.display='none';
     const q=box.querySelector('input');
-    q.addEventListener('input',()=>prodBuscaFiltrar(selId));q.addEventListener('focus',()=>prodBuscaFiltrar(selId));
+    q.addEventListener('input',()=>{_pbIdx=-1;prodBuscaFiltrar(selId);});
+    q.addEventListener('focus',()=>{_pbIdx=-1;prodBuscaFiltrar(selId);});
     q.addEventListener('keydown',e=>{
-      if(e.key==='Enter'){e.preventDefault();const it=document.querySelector('#'+selId+'-r .pb-it');if(it)prodBuscaEscolher(selId,it.dataset.id);}
-      else if(e.key==='Escape'){document.getElementById(selId+'-r').style.display='none';}
+      const r=document.getElementById(selId+'-r');const its=[...r.querySelectorAll('.pb-it')];
+      if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(r.style.display==='none')prodBuscaFiltrar(selId);const n=its.length;if(!n)return;_pbIdx=e.key==='ArrowDown'?Math.min(n-1,_pbIdx+1):Math.max(0,_pbIdx-1);its.forEach((el,i)=>{el.style.background=i===_pbIdx?'#fff3d6':'';});its[_pbIdx].scrollIntoView({block:'nearest'});}
+      else if(e.key==='Enter'){e.preventDefault();const it=its[_pbIdx>=0?_pbIdx:0];if(it)prodBuscaEscolher(selId,it.dataset.id);}
+      else if(e.key==='Escape'){r.style.display='none';}
     });
-    q.addEventListener('blur',()=>setTimeout(()=>{const r=document.getElementById(selId+'-r');if(r)r.style.display='none';},180));
+    q.addEventListener('blur',()=>setTimeout(()=>{const r=document.getElementById(selId+'-r');if(r)r.style.display='none';},200));
+    box.querySelector('button').addEventListener('mousedown',e=>{e.preventDefault();const r=document.getElementById(selId+'-r');if(r.style.display==='block'){r.style.display='none';}else{q.focus();_pbIdx=-1;prodBuscaFiltrar(selId);}});
   }
   prodBuscaReset(selId,false);
 }
+let _pbIdx=-1;
 function prodBuscaFiltrar(selId){
   const q=document.getElementById(selId+'-q'),r=document.getElementById(selId+'-r');if(!q||!r)return;
   const tk=udiNorm(q.value).split(' ').filter(Boolean);
-  if(!tk.length){r.style.display='none';return;}
-  const hit=db.prods.map(p=>({p,h:udiNorm(p.n+' '+(p.forn||'')+' '+(p.cat||'')+' '+codDoProd(p)+' '+(p.pacote||''))})).filter(o=>tk.every(t=>o.h.includes(t))).slice(0,15);
-  r.innerHTML=hit.length?hit.map(o=>{const p=o.p,c=codDoProd(p);return `<div class="pb-it" data-id="${x(p.id)}" onmousedown="prodBuscaEscolher('${selId}','${x(p.id)}')" style="padding:9px 12px;border-bottom:1px solid #f0e8da;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center"><span style="font-size:13px;font-weight:600">${x(p.n)} ${c?'<span style="font-size:10px;color:#9a8c77;font-weight:700">'+x(c)+'</span>':''}<span style="display:block;font-size:11px;color:#8a7d6a;font-weight:400">${x(p.cat||'')}${p.forn?' · '+x(p.forn):''}${p.tipo==='estoque'?' · estoque '+(p.est||0):''}</span></span><span style="font-weight:800;color:var(--vinho);white-space:nowrap">${R(p.pr||0)}${p.pv?'/kg':''}</span></div>`;}).join(''):'<div style="padding:12px;color:#8a7d6a;font-size:13px">Nenhum produto encontrado. Use “🔄 Atualizar cadastro pelo catálogo” em Produtos para trazer os que faltam.</div>';
+  const ordem={Congelados:0,Queijos:1,Doces:2,Outros:3};
+  let lista=db.prods.map(p=>({p,h:udiNorm(p.n+' '+(p.forn||'')+' '+(p.cat||'')+' '+codDoProd(p)+' '+(p.pacote||''))}));
+  if(tk.length)lista=lista.filter(o=>tk.every(t=>o.h.includes(t)));
+  lista.sort((a,b)=>(ordem[a.p.cat]??9)-(ordem[b.p.cat]??9)||String(a.p.n).localeCompare(String(b.p.n),'pt-BR'));
+  let cat='',h='';
+  lista.forEach(o=>{const p=o.p,c=codDoProd(p);
+    if(p.cat!==cat){cat=p.cat;h+=`<div style="position:sticky;top:0;background:#f6efe2;padding:5px 12px;font-size:11px;font-weight:800;letter-spacing:.5px;color:#7a6a50;text-transform:uppercase">${x(cat||'Outros')}</div>`;}
+    h+=`<div class="pb-it" data-id="${x(p.id)}" onmousedown="prodBuscaEscolher('${selId}','${x(p.id)}')" style="padding:9px 12px;border-bottom:1px solid #f0e8da;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center"><span style="font-size:13px;font-weight:600">${x(p.n)} ${c?'<span style="font-size:10px;color:#9a8c77;font-weight:700">'+x(c)+'</span>':''}<span style="display:block;font-size:11px;color:#8a7d6a;font-weight:400">${p.forn?x(p.forn):''}${p.tipo==='estoque'?' · estoque '+(p.est||0):''}</span></span><span style="font-weight:800;color:var(--vinho);white-space:nowrap">${R(pcat(p)||0)}${p.pv?'/kg':''}</span></div>`;});
+  r.innerHTML=h||'<div style="padding:12px;color:#8a7d6a;font-size:13px">Nenhum produto encontrado. Use “🔄 Atualizar cadastro pelo catálogo” em Produtos para trazer os que faltam.</div>';
   r.style.display='block';
 }
 function prodBuscaEscolher(selId,id){
