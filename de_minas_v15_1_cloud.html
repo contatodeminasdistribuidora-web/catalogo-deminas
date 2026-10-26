@@ -3347,6 +3347,15 @@ function precoCatDoProd(p){
   const o=c.ops.length===1?c.ops[0]:c.ops.find(z=>t&&udiNorm(z.l).replace(/\s/g,'').includes(t));
   return(o&&!o.kg)?{preco:o.p,cod:c.c,label:o.l}:null;
 }
+function sfxTam(l){return String(l||'').toUpperCase().replace(/\s+/g,'').replace(',','.').replace(/(\d)KGS$/,'$1KG');}
+function codTam(p){
+  const c=codDoProd(p);if(!c)return '';
+  let n=0;const cp=catProd(c);if(cp)n=cp.ops.length;else{const m=(catMapa.minas||[]).find(z=>z.c===c);if(m)n=m.ops.length;}
+  if(n<2)return c;
+  let l=p.opcaoCat||((precoCatDoProd(p)||{}).label);
+  if(!l){const m=String(p.n||'').match(/ — (.+)$/);if(m){const ops=cp?cp.ops:((catMapa.minas||[]).find(z=>z.c===c)||{ops:[]}).ops;const o=ops.find(z=>udiNorm(z.l)===udiNorm(m[1]));if(o)l=o.l;}}
+  return (l&&l!=='kg')?c+'-'+sfxTam(l):c;
+}
 function pcat(p){const r=precoCatDoProd(p);return r?r.preco:p.pr;}
 function precoAtacCat(p){
   const r=precoCatDoProd(p);if(r&&catMapa.atac){const a=catMapa.atac[r.cod+'|'+r.label];if(a!=null)return a;}
@@ -3411,10 +3420,18 @@ function prodBuscaFiltrar(selId){
   const tk=udiNorm(q.value).split(' ').filter(Boolean);
   let lista=db.prods.map(p=>({p,h:udiNorm(p.n+' '+(p.forn||'')+' '+(p.cat||'')+' '+codDoProd(p)+' '+(p.pacote||''))}));
   const filtrando=tk.length>0;
-  if(filtrando)lista=lista.filter(o=>tk.every(t=>o.h.includes(t))).slice(0,60);
+  lista.forEach(o=>{o.h+=' '+udiNorm(codTam(o.p));});
+  let modoCod=false;
+  if(filtrando){
+    // parece um código (ex.: PQ, PQ-00, pq001, QJ-016)? mostra só os códigos que começam assim, em ordem de código
+    const qk=q.value.toLowerCase().replace(/[^a-z0-9]/g,''),digs=/^[a-z]{1,3}\d*$/.test(qk);
+    if(digs){const ck=o=>String(codTam(o.p)||'').toLowerCase().replace(/[^a-z0-9]/g,'');const porCod=lista.filter(o=>ck(o).startsWith(qk));
+      if(porCod.length){lista=porCod.sort((m,n)=>ck(m).localeCompare(ck(n),'pt-BR',{numeric:true})||String(m.p.n).localeCompare(String(n.p.n),'pt-BR')).slice(0,80);modoCod=true;}}
+    if(!modoCod)lista=lista.filter(o=>tk.every(t=>o.h.includes(t))).slice(0,60);
+  }
   else{const ordem=['Congelados','Queijos','Doces','Outros'];lista.sort((a,b)=>{const ca=ordem.indexOf(a.p.cat),cb=ordem.indexOf(b.p.cat);return (ca<0?9:ca)-(cb<0?9:cb)||String(a.p.n).localeCompare(String(b.p.n),'pt-BR');});}
   let cat='',h='';
-  lista.forEach(o=>{const p=o.p,c=codDoProd(p);
+  lista.forEach(o=>{const p=o.p,c=codTam(p);
     if(!filtrando&&p.cat!==cat){cat=p.cat;h+=`<div style="position:sticky;top:0;background:#f6efe2;padding:5px 12px;font-size:11px;font-weight:800;letter-spacing:1px;color:#6d4c1f;z-index:1">${x(String(cat||'OUTROS').toUpperCase())}</div>`;}
     h+=`<div class="pb-it" data-id="${x(p.id)}" onmousedown="prodBuscaEscolher('${selId}','${x(p.id)}')" style="padding:9px 12px;border-bottom:1px solid #f0e8da;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center"><span style="font-size:13px;font-weight:600">${x(p.n)} ${c?'<span style="font-size:10px;color:#9a8c77;font-weight:700">'+x(c)+'</span>':''}<span style="display:block;font-size:11px;color:#8a7d6a;font-weight:400">${x(p.cat||'')}${p.forn?' · '+x(p.forn):''}${p.tipo==='estoque'?' · estoque '+(p.est||0):''}</span></span><span style="font-weight:800;color:var(--vinho);white-space:nowrap">${R(pcat(p)||0)}${p.pv?'/kg':''}</span></div>`;});
   r.innerHTML=lista.length?h:'<div style="padding:12px;color:#8a7d6a;font-size:13px">Nenhum produto encontrado. Use “🔄 Atualizar cadastro pelo catálogo” em Produtos para trazer os que faltam.</div>';
@@ -3477,7 +3494,7 @@ function sincCadCalcular(){
       const nome=multi?c.n+' — '+o.l:c.n,id='cat_'+c.c.toLowerCase().replace(/[^a-z0-9]/g,'')+(multi?'_'+udiNorm(o.l).replace(/[^a-z0-9]/g,''):'');
       if(db.prods.some(p=>p.id===id))return;
       A.push({sec:'4. Produtos do catálogo que faltam no ERP',txt:nome+' '+(c.c?'['+c.c+']':''),det:R(o.p)+(o.kg?' por kg':'')+(c.disp?'':' · em falta no catálogo'),on:c.disp,fn:()=>{
-        db.prods.push({id,n:nome,cat:catMap[(c.c.startsWith('QJ')?'queijos':c.c.startsWith('DC')?'doces':'')]||'Outros',forn:'Artesanal MG',tipo:'encomenda',pr:o.p,pv:!!o.kg,est:0,estMin:0,cod:c.c});}});
+        db.prods.push({id,n:nome,cat:catMap[(c.c.startsWith('QJ')?'queijos':c.c.startsWith('DC')?'doces':'')]||'Outros',forn:'Artesanal MG',tipo:'encomenda',pr:o.p,pv:!!o.kg,est:0,estMin:0,cod:c.c,opcaoCat:multi?o.l:''});}});
     });
   });
   return {A,sem};
