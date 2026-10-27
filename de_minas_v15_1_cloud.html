@@ -1588,6 +1588,7 @@ function desenharNovosPedidos() {
         ${p.indicadoPor ? '<div class="ped-card-mid" style="font-size:12px">🤝 Indicado por ' + x(p.indicadoPor) + '</div>' : ''}
         ${p.obs ? `<div class="ped-card-mid" style="font-size:12px;color:var(--laranja)">💬 ${x(p.obs)}</div>` : ''}
         <div style="background:var(--creme);border-radius:6px;padding:8px 10px;margin:8px 0;font-size:12.5px">${itens}</div>
+        ${(p.canal !== 'atacado' && p.tipo !== 'Retirada' && !(Number(p.taxaFrete) > 0)) ? `<div style="background:#fff3cd;border:1.5px solid #e0a800;border-radius:8px;padding:10px;margin:8px 0;font-size:12.5px"><div style="font-weight:700;margin-bottom:6px">🚚 Entrega sem taxa: adicione antes de aprovar</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="tx-sel-${p.id}" onchange="taxaNovoSel('${p.id}')" style="flex:2;min-width:150px;padding:8px;border-radius:6px;border:1px solid #d9c9a3">${optsBairrosTaxa()}</select><input id="tx-val-${p.id}" type="number" min="0" step=".01" placeholder="R$ taxa" oninput="taxaNovoCalc('${p.id}')" style="flex:1;min-width:90px;padding:8px;border-radius:6px;border:1px solid #d9c9a3"></div><div id="tx-tot-${p.id}" style="margin-top:6px">Total com taxa: <b>${R(p.total || 0)}</b></div></div>` : ''}
         <div class="ped-card-bot">
           <span class="ped-total">${R(p.total || 0)}</span>
           <span class="ped-data">${dt}</span>
@@ -1679,6 +1680,16 @@ async function aprovarPedidoCatalogo(id) {
   if (!catSincronizado()) { await catAtualizarFotos(); if (!catSincronizado()) toast('⚠️ Catálogo não carregado: o estoque e a lista de compras podem ficar incompletos', 'warn'); }
   const ped = novosPedidosCache.find(p => p.id === id);
   if (!ped) { toast('Pedido não encontrado', 'err'); return; }
+  // taxa escolhida no cartão antes de aprovar
+  if (ped.canal !== 'atacado' && ped.tipo !== 'Retirada' && !(Number(ped.taxaFrete) > 0)) {
+    const tv = parseFloat((document.getElementById('tx-val-' + id) || {}).value) || 0;
+    if (tv > 0) {
+      const ts = document.getElementById('tx-sel-' + id);
+      ped.taxaFrete = Math.round(tv * 100) / 100;
+      ped.frete = (ts && ts.value && ts.value !== 'outro|0') ? ts.value.split('|')[0] : 'Taxa informada no ERP';
+      ped.total = Math.round(((ped.itens || []).reduce((a, i) => a + (Number(i.subtotal) || 0), 0) + ped.taxaFrete) * 100) / 100;
+    }
+  }
 
   // se uma tentativa anterior já criou o pedido no ERP, só refaz a marcação na nuvem (não duplica)
   const ehAt = ped.canal === 'atacado';
@@ -2248,6 +2259,49 @@ function abrirEditPed(id){
   prodBuscaIniciar('ped-prod-sel');rendPedItensList();calcPedTotal();am('mod-ped');
 }
 
+
+// ===== TAXA DE ENTREGA: escolher o bairro ou digitar o valor =====
+const BAIRROS_ERP_PADRAO=[{"n": "Vila Carrão", "taxa": 6}, {"n": "Chácara Califórnia", "taxa": 6}, {"n": "Vila Matilde", "taxa": 6}, {"n": "Vila Formosa", "taxa": 6}, {"n": "Vila Gomes Cardim", "taxa": 6}, {"n": "Vila Nova Manchester", "taxa": 6}, {"n": "Vila Santa Isabel", "taxa": 6}, {"n": "Tatuapé", "taxa": 8}, {"n": "Penha", "taxa": 8}, {"n": "Vila Invernada", "taxa": 8}, {"n": "Parque São Jorge", "taxa": 8}, {"n": "Vila Diva", "taxa": 8}, {"n": "Vila Regente Feijó", "taxa": 8}, {"n": "Anália Franco", "taxa": 6}, {"n": "Água Rasa", "taxa": 8}, {"n": "Belém", "taxa": 10}, {"n": "Vila Prudente", "taxa": 10}, {"n": "Parque São Lucas", "taxa": 10}, {"n": "Vila Alpina", "taxa": 10}, {"n": "Vila Bertioga", "taxa": 10}, {"n": "Vila Ema", "taxa": 10}, {"n": "Jardim Novo Carrão", "taxa": 10}, {"n": "Vila Zelina", "taxa": 10}, {"n": "Mooca", "taxa": 10}, {"n": "Jardim Grimaldi", "taxa": 12}];
+function bairrosERP(){const b=(catMapa&&catMapa.bairros&&catMapa.bairros.length)?catMapa.bairros:BAIRROS_ERP_PADRAO;return b.slice().sort((a,c)=>a.taxa-c.taxa||String(a.n).localeCompare(String(c.n),'pt-BR'));}
+function optsBairrosTaxa(){return '<option value="">— escolher o bairro —</option>'+bairrosERP().map(b=>`<option value="${x(b.n)}|${b.taxa}">${x(b.n)} · ${R(b.taxa)}</option>`).join('')+'<option value="outro|0">Outro bairro (digitar o valor)</option>';}
+function taxaNovoSel(id){const s=document.getElementById('tx-sel-'+id),v=document.getElementById('tx-val-'+id);if(!s||!v)return;const o=s.value;if(o&&o!=='outro|0')v.value=o.split('|')[1]||'';else if(o==='outro|0'){v.value='';v.focus();}taxaNovoCalc(id);}
+function taxaNovoCalc(id){const p=novosPedidosCache.find(z=>z.id===id);if(!p)return;const v=parseFloat((document.getElementById('tx-val-'+id)||{}).value)||0;const sub=(p.itens||[]).reduce((a,i)=>a+(Number(i.subtotal)||0),0);const el=document.getElementById('tx-tot-'+id);if(el)el.innerHTML='Total com taxa: <b>'+R(sub+v)+'</b>';}
+function abrirTaxaPed(id){
+  const p=db.peds.find(pe=>pe.id===id);if(!p)return;
+  if(['PAGO','ENTREGUE','CANCELADO'].includes(p.st)){toast('Pedido já '+p.st.toLowerCase()+': use ✏️ Editar para mexer no frete','warn');return;}
+  window._taxaPedId=id;const old=document.getElementById('mod-taxa-ped');if(old)old.remove();
+  const sub=(p.itens||[]).reduce((a,it)=>a+calcItemSubFn(it),0);
+  const d=document.createElement('div');d.className='modal-overlay on';d.id='mod-taxa-ped';
+  d.innerHTML=`<div class="modal" style="max-width:480px"><div class="modal-head"><h3>🚚 Taxa de entrega · ${x(nP(p.num))}</h3><button class="cl" onclick="document.getElementById('mod-taxa-ped').remove()">✕</button></div>
+  <div class="modal-body"><p style="font-size:13px;color:var(--txt3);margin-bottom:10px">${x(p.cli)} · ${x(enderecoCompleto(p))}</p>
+  <label style="font-size:12px;font-weight:600">Bairro</label><select id="tp-sel" onchange="taxaPedSel()" style="width:100%;padding:10px;border-radius:6px;border:1px solid #d9c9a3;margin:4px 0 10px">${optsBairrosTaxa()}</select>
+  <label style="font-size:12px;font-weight:600">Taxa (R$)</label><input id="tp-val" type="number" min="0" step=".01" oninput="taxaPedCalc()" style="width:100%;padding:10px;border-radius:6px;border:1px solid #d9c9a3;margin:4px 0 10px">
+  <div style="font-size:13px;color:var(--txt3)">Produtos: ${R(sub)}${p.desc?' · Desconto: -'+R(p.desc):''}</div>
+  <div id="tp-tot" style="font-family:Arial;font-size:22px;font-weight:bold;color:var(--vinho);margin-top:4px">Total: ${R(calcTotal(p))}</div></div>
+  <div class="modal-foot" style="display:flex;gap:8px;justify-content:flex-end;padding:12px 16px"><button class="btn btn-outline" onclick="document.getElementById('mod-taxa-ped').remove()">Cancelar</button><button class="btn btn-verde" onclick="aplicarTaxaPed('${p.id}')">Adicionar taxa</button></div></div>`;
+  document.body.appendChild(d);
+}
+function taxaPedSel(){const s=document.getElementById('tp-sel'),v=document.getElementById('tp-val');if(!s||!v)return;const o=s.value;if(o&&o!=='outro|0')v.value=o.split('|')[1]||'';else if(o==='outro|0'){v.value='';v.focus();}taxaPedCalc();}
+function taxaPedCalc(){const p=db.peds.find(pe=>pe.id===window._taxaPedId);if(!p)return;const v=parseFloat((document.getElementById('tp-val')||{}).value)||0;const sub=(p.itens||[]).reduce((a,it)=>a+calcItemSubFn(it),0);const el=document.getElementById('tp-tot');if(el)el.textContent='Total: '+R(Math.max(0,sub+v-(p.desc||0)));}
+function aplicarTaxaPed(id){
+  const p=db.peds.find(pe=>pe.id===id);if(!p)return;
+  const v=parseFloat((document.getElementById('tp-val')||{}).value)||0;if(!(v>0)){toast('Informe o valor da taxa','warn');return;}
+  const s=document.getElementById('tp-sel');const bn=s&&s.value&&s.value!=='outro|0'?s.value.split('|')[0]:'';
+  p.frete=Math.round(v*100)/100;p.freteNome=bn||'Taxa informada no ERP';p.fretePendente=false;
+  const linha='Entrega ('+p.freteNome+'): '+R(p.frete);
+  p.obs=String(p.obs||'').split(' | ').filter(t=>!/ENTREGA SEM TAXA/.test(t)&&!/^Entrega \(/.test(t)).concat([linha]).join(' | ');
+  p.total=calcTotal(p);
+  salvar();
+  document.getElementById('mod-taxa-ped').remove();
+  toast('🚚 Taxa de '+R(p.frete)+' adicionada. Total: '+R(p.total),'ok');
+  try{abrirDetPed(p.id);}catch(e){}
+  try{ir&&typeof rendPedidos==='function'&&rendPedidos();}catch(e){}
+  if(p.wa&&confirm('Avisar '+p.cli+' no WhatsApp sobre a taxa e o novo total?')){
+    const msg=`Olá ${p.cli}! 😊\nSou Franklin da *De Minas Pão de Queijaria* 🧀\n\nNo seu pedido ${nP(p.num)} somamos a taxa de entrega (${p.freteNome}): *${R(p.frete)}*.\nO total ficou em *${R(p.total)}*.\n\nPIX: ${pixCliente()} (${cfg.pixNome})\n\nObrigado! 🙏`;
+    const num=String(p.wa).replace(/\D/g,'');window.open(`https://wa.me/${num.startsWith('55')?num:'55'+num}?text=${encodeURIComponent(msg)}`,'_blank');
+  }
+}
+
 function abrirDetPed(id){
   const p=db.peds.find(pe=>pe.id===id);if(!p)return;
   const total=calcTotal(p);
@@ -2287,6 +2341,7 @@ function abrirDetPed(id){
     <div class="filters" style="margin-top:6px">${['PENDENTE','PESAGEM','PAGO','ENTREGUE','CANCELADO'].map(s=>`<button class="filter-btn${p.st===s?' active':''}" onclick="alterarStPed('${p.id}','${s}')">${s}</button>`).join('')}</div></div>`;
   let foot=`<button class="btn btn-ghost" onclick="fm('mod-det')">Fechar</button>`;
   if(p.temPV&&!['PAGO','ENTREGUE','CANCELADO'].includes(p.st))foot+=`<button class="btn" style="background:var(--azul);color:#fff" onclick="abrirPesagem('${p.id}')">⚖️ Pesagem</button>`;
+  if(!p.frete&&p.tipo!=='atacado'&&!/retirada/i.test(p.logradouro||'')&&!['PAGO','ENTREGUE','CANCELADO'].includes(p.st))foot+=`<button class="btn btn-ouro" onclick="abrirTaxaPed('${p.id}')">🚚 Adicionar taxa</button>`;
   foot+=`<button class="btn btn-outline" onclick="abrirEditPed('${p.id}');fm('mod-det')">✏️ Editar</button>
     <button class="btn btn-ghost" onclick="imprimirEtiqueta('${p.id}')">🏷️ Etiqueta</button>
     <button class="btn btn-ouro" onclick="enviarWA('${p.id}')">📲 WhatsApp</button>
@@ -3292,7 +3347,7 @@ async function catAtualizarFotos(){
     });
     let atac={};try{const ra=await fetch(CAT_BASE+'produtos-atacado.json',{cache:'no-cache'});if(ra.ok){const A=await ra.json();(A.produtos||[]).forEach(a=>(a.opcoes||[]).forEach(o=>{atac[a.codigo+'|'+o.label]=o.preco;}));}}catch(e){}
     const sig=hs(txt)+'|'+hs(JSON.stringify(atac));
-    catMapa={porCod,porNome,descCod,descNome,prod,nomeCod,minas,atac,sig,sync:new Date().toISOString()};_catRev=null;_minasIdx=null;
+    catMapa={porCod,porNome,descCod,descNome,prod,nomeCod,minas,atac,bairros:(J.bairros||[]).map(b=>({n:b.n,taxa:Number(b.taxa)||0})),sig,sync:new Date().toISOString()};_catRev=null;_minasIdx=null;
     try{catMigrarCodigos();}catch(e){}try{localStorage.setItem('dm_cat_fotos',JSON.stringify(catMapa));}catch(e){}
     if(sigAntes&&sigAntes!==sig){try{catAvisarMudancas();}catch(e){console.error(e);}}
   }catch(e){}
