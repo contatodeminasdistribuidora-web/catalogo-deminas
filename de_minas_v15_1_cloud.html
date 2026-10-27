@@ -1584,7 +1584,7 @@ function desenharNovosPedidos() {
         ${p.canal === 'atacado' ? '<div class="ped-card-mid" style="font-size:12px;font-weight:700">' + (String(p.cnpj || '').replace(/\D/g, '').length === 11 ? '🧑 Autônomo · CPF ' + x(String(p.cnpj).replace(/\D/g, '').replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4')) : '🏢 CNPJ ' + x(String(p.cnpj || '').replace(/\D/g, '').replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5'))) + '</div>' : ''}
         <div class="ped-card-mid">📱 ${x(p.whatsapp || '—')} · ${x(p.tipo || 'Entrega')}</div>
         <div class="ped-card-mid" style="font-size:12px">📍 ${x(p.endereco || '—')}</div>
-        <div class="ped-card-mid" style="font-size:12px">💳 ${x(p.pagamento || '—')}${p.troco ? ' · troco para ' + x(p.troco) : ''}${p.taxaFrete ? ' · 🚚 ' + x(p.frete || 'Entrega') + ' ' + R(p.taxaFrete) : ''}</div>
+        <div class="ped-card-mid" style="font-size:12px">💳 ${x(p.pagamento || '—')}${p.troco ? ' · troco para ' + x(p.troco) : ''}${p.taxaFrete ? ' · 🚚 ' + x(p.frete || 'Entrega') + ' ' + R(p.taxaFrete) : (p.tipo !== 'Retirada' ? ' · <b style="color:#b00020">⚠ taxa de entrega a combinar</b>' : '')}</div>
         ${p.indicadoPor ? '<div class="ped-card-mid" style="font-size:12px">🤝 Indicado por ' + x(p.indicadoPor) + '</div>' : ''}
         ${p.obs ? `<div class="ped-card-mid" style="font-size:12px;color:var(--laranja)">💬 ${x(p.obs)}</div>` : ''}
         <div style="background:var(--creme);border-radius:6px;padding:8px 10px;margin:8px 0;font-size:12.5px">${itens}</div>
@@ -1757,8 +1757,10 @@ async function aprovarPedidoCatalogo(id) {
     const temPV = itensERP.some(it => it.pv);
     let msg = `Criar pedido no ERP para "${ped.cliente}"?`;
     if (temPV) msg += '\n\n⚖️ Tem item de peso variável: o pedido entra em PESAGEM.';
+    if (ped.tipo !== 'Retirada' && !(Number(ped.taxaFrete) > 0)) msg += '\n\n🚚 ATENÇÃO: este pedido é de ENTREGA e veio SEM taxa (bairro fora da lista ou não informado). Combine o valor com o cliente e coloque em Frete.';
     if (avisos.length) msg += '\n\n⚠️ Confira os preços (será mantido o preço do site):\n' + avisos.join('\n');
     if (avisos.length) setTimeout(() => toast('⚠️ ' + avisos.length + ' aviso(s) neste pedido: ' + avisos.slice(0, 2).join(' · '), 'warn'), 700);
+    if (ped.tipo !== 'Retirada' && !(Number(ped.taxaFrete) > 0)) setTimeout(() => toast('🚚 ENTREGA SEM TAXA: combine o valor com ' + (ped.cliente || 'o cliente') + ' e coloque em Frete', 'warn'), 1400);
 
     novoPed = {
       id: uid(),
@@ -1770,11 +1772,13 @@ async function aprovarPedidoCatalogo(id) {
       complemento: '',
       condominio: '',
       horario: '',
-      obs: [String(ped.obs || '').slice(0, 380), ped.pagamento ? 'Pgto: ' + String(ped.pagamento).slice(0, 30) + (ped.troco ? ' (troco p/ ' + String(ped.troco).slice(0, 20) + ')' : '') : '', ped.indicadoPor ? 'Indicado por: ' + String(ped.indicadoPor).slice(0, 30) : '', '[via catálogo]'].filter(Boolean).join(' | '),
+      obs: [String(ped.obs || '').slice(0, 380), ped.pagamento ? 'Pgto: ' + String(ped.pagamento).slice(0, 30) + (ped.troco ? ' (troco p/ ' + String(ped.troco).slice(0, 20) + ')' : '') : '', ped.indicadoPor ? 'Indicado por: ' + String(ped.indicadoPor).slice(0, 30) : '', ped.tipo === 'Retirada' ? '' : (Number(ped.taxaFrete) > 0 ? 'Entrega (' + String(ped.frete || '').slice(0, 40) + '): ' + R(Number(ped.taxaFrete)) : '⚠ ENTREGA SEM TAXA: combinar o valor (' + String(ped.frete || 'bairro não informado').slice(0, 50) + ')'), '[via catálogo]'].filter(Boolean).join(' | '),
       vendedor: '',
       st: temPV ? 'PESAGEM' : 'PENDENTE',
       itens: itensERP,
       frete: Math.max(0, Number(ped.taxaFrete) || 0),
+      freteNome: String(ped.frete || '').slice(0, 60),
+      fretePendente: ped.tipo !== 'Retirada' && !(Number(ped.taxaFrete) > 0),
       desc: 0,
       temPV,
       data: new Date().toISOString(),
@@ -2112,6 +2116,7 @@ function salvarPedido(){
   const obs=document.getElementById('ped-obs').value.trim();
   const vendedor=document.getElementById('ped-vendedor')?.value||'';
   const frete=parseFloat(document.getElementById('ped-frete').value)||0;
+  if(!editingPedId&&!frete&&logradouro&&!/retirada/i.test(logradouro)&&!confirm('Este pedido é de ENTREGA e está SEM taxa de frete.\n\nSalvar mesmo assim?'))return;
   const desc=parseFloat(document.getElementById('ped-desc').value)||0;
   const temPV=editingPedItems.some(it=>it.pv);
   const precisaPesar=editingPedItems.some(it=>it.pv&&(it.pesoReal==null||it.pesoReal<=0));
@@ -4112,7 +4117,7 @@ function imprimirPedido(id){
 <div class="header"><img class="logo-print" src="${LOGO_ESC}" alt="De Minas Pão de Queijaria"><div style="font-size:8pt;color:#666;margin-top:3px">Rua Engenheiro Pegado 332 · Vila Carrão · São Paulo - SP</div></div>
 <div class="meta"><strong>${nP(p.num)}</strong> &nbsp;·&nbsp; ${dF(p.data)}<br><strong>Cliente:</strong> ${x(p.cli)}&nbsp;${p.wa?'· '+x(p.wa):''}${p.vendedor?'<br><strong>Vendedor:</strong> '+x(p.vendedor):''}<br><strong>Endereço:</strong> ${x(end)}<br>${p.horario?'<strong>Horário:</strong> '+x(p.horario)+'<br>':''}${p.obs?'<strong>Obs:</strong> '+x(p.obs)+'<br>':''}</div>
 <table><thead><tr><th>Produto</th><th class="c">Qtd</th><th class="c">Preço Unit.</th><th class="r">Subtotal</th></tr></thead><tbody>${itens}</tbody></table>
-${p.frete?`<div style="text-align:right;font-size:9.5pt;color:#666;margin-bottom:4px">Frete: ${R(p.frete)}</div>`:''}
+${p.frete?`<div style="text-align:right;font-size:9.5pt;color:#666;margin-bottom:4px">Frete: ${R(p.frete)}</div>`:(p.fretePendente?`<div style="text-align:right;font-size:9.5pt;color:#b00020;font-weight:700;margin-bottom:4px">Frete: A COMBINAR (não incluído no total)</div>`:'')}
 ${p.desc?`<div style="text-align:right;font-size:9.5pt;color:#666;margin-bottom:4px">Desconto Geral: -${R(p.desc)}</div>`:''}
 <div class="total-box"><span style="font-size:9pt;opacity:.8">Total do Pedido</span><br><strong style="font-size:16pt">${R(total)}</strong></div>
 <div class="pix-box"><div style="flex:1"><div style="font-size:8pt;font-weight:700;color:#c8860a;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Pagamento via PIX</div><div class="pix-key">${x(pixCliente())}</div><div class="pix-name">${x(cfg.pixNome)}</div></div><div style="font-size:28pt;opacity:.15">◈</div></div>
