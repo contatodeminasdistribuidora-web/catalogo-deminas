@@ -608,7 +608,7 @@ function buildMessage(codigo) {
   m += `${kgIn ? 'Total estimado' : 'Subtotal'}: ${kgIn ? '≈ ' : ''}${brl(subtotal)}`;
   
   if (tipo === 'Entrega') {
-    m += `\nEntrega (${freteNome}): ${freteVal > 0 ? brl(freteVal) : 'A combinar'}`;
+    m += `\nEntrega (${freteNome}): ${freteVal > 0 ? brl(freteVal) : 'taxa a combinar (a De Minas confirma o valor pelo WhatsApp)'}`;
     if (freteVal > 0) m += `\n*Total:* ${kgIn ? '≈ ' : ''}${brl(totalFinal)}`;
   }
 
@@ -653,7 +653,7 @@ $('#cPag').addEventListener('change', e => {
 $('#cFrete').addEventListener('change', atualizarTotais);
 
 // ---- Bairro digitado -> taxa de entrega (consulta a tabela "bairros" do catálogo) ----
-const BAIRROS_PADRAO = [{"n": "Vila Carrão", "taxa": 6, "alias": ["carrao"]}, {"n": "Chácara Califórnia", "taxa": 6}, {"n": "Vila Matilde", "taxa": 6}, {"n": "Vila Formosa", "taxa": 6}, {"n": "Vila Gomes Cardim", "taxa": 6}, {"n": "Vila Nova Manchester", "taxa": 6}, {"n": "Vila Santa Isabel", "taxa": 6}, {"n": "Tatuapé", "taxa": 8}, {"n": "Penha", "taxa": 8, "alias": ["penha de franca"]}, {"n": "Vila Invernada", "taxa": 8}, {"n": "Parque São Jorge", "taxa": 8}, {"n": "Vila Diva", "taxa": 8, "alias": ["diva"]}, {"n": "Vila Regente Feijó", "taxa": 8}, {"n": "Anália Franco", "taxa": 6, "alias": ["jardim analia franco", "jd analia franco", "analia"]}, {"n": "Água Rasa", "taxa": 10}, {"n": "Belém", "taxa": 10}, {"n": "Vila Prudente", "taxa": 10}, {"n": "Parque São Lucas", "taxa": 10}, {"n": "Vila Alpina", "taxa": 10}, {"n": "Vila Bertioga", "taxa": 10}, {"n": "Vila Ema", "taxa": 10}, {"n": "Jardim Novo Carrão", "taxa": 10}, {"n": "Vila Zelina", "taxa": 10}, {"n": "Mooca", "taxa": 12}, {"n": "Jardim Grimaldi", "taxa": 12, "alias": ["grimaldi"]}];
+const BAIRROS_PADRAO = [{"n": "Vila Carrão", "taxa": 6, "alias": ["carrao"]}, {"n": "Chácara Califórnia", "taxa": 6}, {"n": "Vila Matilde", "taxa": 6}, {"n": "Vila Formosa", "taxa": 6}, {"n": "Vila Gomes Cardim", "taxa": 6}, {"n": "Vila Nova Manchester", "taxa": 6}, {"n": "Vila Santa Isabel", "taxa": 6}, {"n": "Tatuapé", "taxa": 8}, {"n": "Penha", "taxa": 8, "alias": ["penha de franca"]}, {"n": "Vila Invernada", "taxa": 8}, {"n": "Parque São Jorge", "taxa": 8}, {"n": "Vila Diva", "taxa": 8, "alias": ["diva"]}, {"n": "Vila Regente Feijó", "taxa": 8}, {"n": "Anália Franco", "taxa": 6, "alias": ["jardim analia franco", "jd analia franco", "analia"]}, {"n": "Água Rasa", "taxa": 8}, {"n": "Belém", "taxa": 10}, {"n": "Vila Prudente", "taxa": 10}, {"n": "Parque São Lucas", "taxa": 10}, {"n": "Vila Alpina", "taxa": 10}, {"n": "Vila Bertioga", "taxa": 10}, {"n": "Vila Ema", "taxa": 10}, {"n": "Jardim Novo Carrão", "taxa": 10}, {"n": "Vila Zelina", "taxa": 10}, {"n": "Mooca", "taxa": 10}, {"n": "Jardim Grimaldi", "taxa": 12, "alias": ["grimaldi"]}];
 const bairrosLista = () => (S.data && Array.isArray(S.data.bairros) && S.data.bairros.length) ? S.data.bairros : BAIRROS_PADRAO;
 const normB = s => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\b(vila|vl|jardim|jd|parque|pq|chacara|ch|bairro)\b/g, ' ').replace(/\s+/g, ' ').trim();
 function acharBairro(txt) {
@@ -707,6 +707,10 @@ $('#orderForm').addEventListener('submit', e => {
   const tel = $('#cTel').value.trim();
   const telDig = tel.replace(/\D/g, '');
   if (telDig.length < 10 || telDig.length > 13) { toast('Informe seu WhatsApp com DDD, ex.: (11) 98697-5803'); $('#cTel').focus(); return; }
+  if (tipo === 'Entrega') {
+    const bTxt = $('#cBairro') ? $('#cBairro').value.trim() : '';
+    if (!bTxt) { toast('Digite o seu bairro para calcularmos a taxa de entrega'); const bf = $('#cBairro'); if (bf) { bf.focus(); try { bf.scrollIntoView({block: 'center'}); } catch (e) {} } return; }
+  }
 
   store.set('dm_cust', {nome, addr, tel});
   store.set('dm_last_order', S.cart);
