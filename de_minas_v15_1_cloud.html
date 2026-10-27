@@ -660,7 +660,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
       <div id="ped-itens-list" style="margin-bottom:12px"></div>
       <div class="sep"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-        <div class="form-group"><label>Frete R$</label><input id="ped-frete" type="number" min="0" step=".01" value="0" oninput="calcPedTotal()"></div>
+        <div class="form-group"><label>Taxa de entrega R$</label><input id="ped-frete" type="number" min="0" step=".01" value="0" oninput="calcPedTotal()"></div>
         <div class="form-group"><label>Desconto Geral R$</label><input id="ped-desc" type="number" min="0" step=".01" value="0" oninput="calcPedTotal()"></div>
       </div>
       <div style="background:var(--vinho);color:#fff;border-radius:10px;padding:14px 24px;display:flex;align-items:center;justify-content:space-between">
@@ -1768,10 +1768,10 @@ async function aprovarPedidoCatalogo(id) {
     const temPV = itensERP.some(it => it.pv);
     let msg = `Criar pedido no ERP para "${ped.cliente}"?`;
     if (temPV) msg += '\n\n⚖️ Tem item de peso variável: o pedido entra em PESAGEM.';
-    if (ped.tipo !== 'Retirada' && !(Number(ped.taxaFrete) > 0)) msg += '\n\n🚚 ATENÇÃO: este pedido é de ENTREGA e veio SEM taxa (bairro fora da lista ou não informado). Combine o valor com o cliente e coloque em Frete.';
+    if (ped.tipo !== 'Retirada' && !(Number(ped.taxaFrete) > 0)) msg += '\n\n🚚 ATENÇÃO: este pedido é de ENTREGA e veio SEM taxa (bairro fora da lista ou não informado). Combine o valor com o cliente e coloque na Taxa de entrega.';
     if (avisos.length) msg += '\n\n⚠️ Confira os preços (será mantido o preço do site):\n' + avisos.join('\n');
     if (avisos.length) setTimeout(() => toast('⚠️ ' + avisos.length + ' aviso(s) neste pedido: ' + avisos.slice(0, 2).join(' · '), 'warn'), 700);
-    if (ped.tipo !== 'Retirada' && !(Number(ped.taxaFrete) > 0)) setTimeout(() => toast('🚚 ENTREGA SEM TAXA: combine o valor com ' + (ped.cliente || 'o cliente') + ' e coloque em Frete', 'warn'), 1400);
+    if (ped.tipo !== 'Retirada' && !(Number(ped.taxaFrete) > 0)) setTimeout(() => toast('🚚 ENTREGA SEM TAXA: combine o valor com ' + (ped.cliente || 'o cliente') + ' e coloque na Taxa de entrega', 'warn'), 1400);
 
     novoPed = {
       id: uid(),
@@ -2127,7 +2127,7 @@ function salvarPedido(){
   const obs=document.getElementById('ped-obs').value.trim();
   const vendedor=document.getElementById('ped-vendedor')?.value||'';
   const frete=parseFloat(document.getElementById('ped-frete').value)||0;
-  if(!editingPedId&&!frete&&logradouro&&!/retirada/i.test(logradouro)&&!confirm('Este pedido é de ENTREGA e está SEM taxa de frete.\n\nSalvar mesmo assim?'))return;
+  if(!editingPedId&&!frete&&logradouro&&!/retirada/i.test(logradouro)&&!confirm('Este pedido é de ENTREGA e está SEM taxa de entrega.\n\nSalvar mesmo assim?'))return;
   const desc=parseFloat(document.getElementById('ped-desc').value)||0;
   const temPV=editingPedItems.some(it=>it.pv);
   const precisaPesar=editingPedItems.some(it=>it.pv&&(it.pesoReal==null||it.pesoReal<=0));
@@ -2334,7 +2334,7 @@ function abrirDetPed(id){
       <thead><tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Subtotal</th></tr></thead>
       <tbody>${itHtml}</tbody>
     </table>
-    <div style="text-align:right;font-size:13px;color:var(--txt3)">Frete: ${R(p.frete)} | Desconto Geral: ${R(p.desc)}</div>
+    <div style="text-align:right;font-size:13px;color:var(--txt3)">Taxa de entrega: ${R(p.frete)} | Desconto Geral: ${R(p.desc)}</div>
     <div style="text-align:right;font-family:Arial;font-size:22px;font-weight:bold;color:var(--vinho)">Total: ${R(total)}</div>
     ${(p.st==='PAGO'||p.st==='ENTREGUE')?`<div class="pix-box"><div class="pix-key">${x(pixCliente())}</div><div class="pix-name">PIX · ${x(cfg.pixNome)}</div></div>`:''}
     <div style="margin-top:14px"><label style="font-size:12px;font-weight:600;color:var(--txt2)">Alterar Status:</label>
@@ -2686,7 +2686,7 @@ function abrirNovoAtPed(){
     </div>
     <div id="at-itens-list" style="margin-bottom:12px"></div><div class="sep"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-      <div class="form-group"><label>Frete R$</label><input id="atp-frete" type="number" value="0" oninput="calcAtTotal()"></div>
+      <div class="form-group"><label>Taxa de entrega R$</label><input id="atp-frete" type="number" value="0" oninput="calcAtTotal()"></div>
       <div class="form-group"><label>Desc. R$</label><input id="atp-desc" type="number" value="0" oninput="calcAtTotal()"></div>
     </div>
     <div style="background:var(--vinho);color:#fff;border-radius:10px;padding:14px 24px;display:flex;justify-content:space-between"><div style="font-size:12px;opacity:.75">Total</div><div id="atp-total-disp" style="font-family:Arial;font-size:28px;font-weight:bold">R$ 0,00</div></div>`;
@@ -2799,7 +2799,7 @@ function blocoAtPed(p){
   const itens=(p.itens||[]).map(it=>`<tr><td>${imgItem(it,34)}${x(it.nome)}${codTag(it.cod||it.codigo)}${descHtml(descDoItem(it),8)}</td><td class="c">${it.qty}x</td><td class="c">${R(it.pr)}</td><td class="r">${R(it.pr*it.qty)}</td></tr>`).join('');
   const m=/^(\d+)d$/.exec(p.pgto||'');let venc='';if(m){const d=new Date(p.data);d.setDate(d.getDate()+parseInt(m[1]));venc=' · vence em '+d.toLocaleDateString('pt-BR');}
   const end=[c.e,c.c].filter(Boolean).join(' — ');
-  return `<div class="pedido"><div class="header"><div><img class="logo-print" src="${LOGO_ESC}" alt="De Minas Pão de Queijaria"></div><div style="text-align:right"><div class="num-ped">${nAt(p.num)}</div><span class="status st-${p.st}">${p.st}</span><div style="font-size:8pt;color:#c8860a;font-weight:700;letter-spacing:1.5px;margin-top:3px">PEDIDO ATACADO</div></div></div><div class="meta"><strong>Cliente:</strong> ${x(p.cliNome)}${c.doc?' · '+x(c.doc):''}<br>${c.w?'<strong>WhatsApp:</strong> '+x(c.w)+'<br>':''}${end?'<strong>Endereço:</strong> '+x(end)+'<br>':''}${p.obs?'<strong>Obs:</strong> '+x(p.obs)+'<br>':''}<strong>Pagamento:</strong> ${x(PGTO_AT[p.pgto]||p.pgto||'—')}${venc}<br><strong>Data:</strong> ${dF(p.data)}</div><table><thead><tr><th>Produto</th><th class="c">Qtd</th><th class="c">Preço Unit.</th><th class="r">Subtotal</th></tr></thead><tbody>${itens}</tbody></table>${p.frete?`<div class="lin">Frete: ${R(p.frete)}</div>`:''}${p.desc?`<div class="lin">Desconto: ${R(p.desc)}</div>`:''}<div class="total-box"><div class="label">Total do Pedido</div><div class="valor">${R(calcTotal(p))}</div></div><div class="pix-box"><div>Pagamento via PIX</div><div style="font-size:12pt;font-weight:900">${x(pixCliente())}</div><div>${x(cfg.pixNome)}</div></div><div class="footer">A De Minas Pão de Queijaria agradece a parceria!</div></div>`;
+  return `<div class="pedido"><div class="header"><div><img class="logo-print" src="${LOGO_ESC}" alt="De Minas Pão de Queijaria"></div><div style="text-align:right"><div class="num-ped">${nAt(p.num)}</div><span class="status st-${p.st}">${p.st}</span><div style="font-size:8pt;color:#c8860a;font-weight:700;letter-spacing:1.5px;margin-top:3px">PEDIDO ATACADO</div></div></div><div class="meta"><strong>Cliente:</strong> ${x(p.cliNome)}${c.doc?' · '+x(c.doc):''}<br>${c.w?'<strong>WhatsApp:</strong> '+x(c.w)+'<br>':''}${end?'<strong>Endereço:</strong> '+x(end)+'<br>':''}${p.obs?'<strong>Obs:</strong> '+x(p.obs)+'<br>':''}<strong>Pagamento:</strong> ${x(PGTO_AT[p.pgto]||p.pgto||'—')}${venc}<br><strong>Data:</strong> ${dF(p.data)}</div><table><thead><tr><th>Produto</th><th class="c">Qtd</th><th class="c">Preço Unit.</th><th class="r">Subtotal</th></tr></thead><tbody>${itens}</tbody></table>${p.frete?`<div class="lin">Taxa de entrega: ${R(p.frete)}</div>`:''}${p.desc?`<div class="lin">Desconto: ${R(p.desc)}</div>`:''}<div class="total-box"><div class="label">Total do Pedido</div><div class="valor">${R(calcTotal(p))}</div></div><div class="pix-box"><div>Pagamento via PIX</div><div style="font-size:12pt;font-weight:900">${x(pixCliente())}</div><div>${x(cfg.pixNome)}</div></div><div class="footer">A De Minas Pão de Queijaria agradece a parceria!</div></div>`;
 }
 function imprimirAtPed(id){
   const p=db.atPeds.find(pe=>pe.id===id);if(!p)return;
@@ -4172,7 +4172,7 @@ function imprimirPedido(id){
 <div class="header"><img class="logo-print" src="${LOGO_ESC}" alt="De Minas Pão de Queijaria"><div style="font-size:8pt;color:#666;margin-top:3px">Rua Engenheiro Pegado 332 · Vila Carrão · São Paulo - SP</div></div>
 <div class="meta"><strong>${nP(p.num)}</strong> &nbsp;·&nbsp; ${dF(p.data)}<br><strong>Cliente:</strong> ${x(p.cli)}&nbsp;${p.wa?'· '+x(p.wa):''}${p.vendedor?'<br><strong>Vendedor:</strong> '+x(p.vendedor):''}<br><strong>Endereço:</strong> ${x(end)}<br>${p.horario?'<strong>Horário:</strong> '+x(p.horario)+'<br>':''}${p.obs?'<strong>Obs:</strong> '+x(p.obs)+'<br>':''}</div>
 <table><thead><tr><th>Produto</th><th class="c">Qtd</th><th class="c">Preço Unit.</th><th class="r">Subtotal</th></tr></thead><tbody>${itens}</tbody></table>
-${p.frete?`<div style="text-align:right;font-size:9.5pt;color:#666;margin-bottom:4px">Frete: ${R(p.frete)}</div>`:(p.fretePendente?`<div style="text-align:right;font-size:9.5pt;color:#b00020;font-weight:700;margin-bottom:4px">Frete: A COMBINAR (não incluído no total)</div>`:'')}
+${p.frete?`<div style="text-align:right;font-size:9.5pt;color:#666;margin-bottom:4px">Taxa de entrega: ${R(p.frete)}</div>`:(p.fretePendente?`<div style="text-align:right;font-size:9.5pt;color:#b00020;font-weight:700;margin-bottom:4px">Taxa de entrega: A COMBINAR (não incluída no total)</div>`:'')}
 ${p.desc?`<div style="text-align:right;font-size:9.5pt;color:#666;margin-bottom:4px">Desconto Geral: -${R(p.desc)}</div>`:''}
 <div class="total-box"><span style="font-size:9pt;opacity:.8">Total do Pedido</span><br><strong style="font-size:16pt">${R(total)}</strong></div>
 <div class="pix-box"><div style="flex:1"><div style="font-size:8pt;font-weight:700;color:#c8860a;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Pagamento via PIX</div><div class="pix-key">${x(pixCliente())}</div><div class="pix-name">${x(cfg.pixNome)}</div></div><div style="font-size:28pt;opacity:.15">◈</div></div>
@@ -4192,7 +4192,7 @@ function enviarWA(pedId){
     return`• ${it.nome} — ${q} ${R(calcItemSubFn(it))}`;
   }).join('\n');
   const sugestao=`\n\nJá experimentou nossos outros produtos?\n• Chipa 3 Queijos\n• Pão de Queijo Recheado (vários sabores)\n• Biscoito de Queijo 2 Queijos\n• Broa de Milho (doce e salgada)\n\nPeça na próxima!`;
-  const msg=`*🧀 DE MINAS — ${nP(p.num)}*\n————\n*Cliente:* ${p.cli}\n*Endereço:* ${end||'—'}\n${p.horario?'🕐 *'+p.horario+'*\n':''}${p.obs?'*Obs:* '+p.obs+'\n':''}${p.vendedor?'👔 *Vendedor:* '+p.vendedor+'\n':''}————\n*ITENS:*\n${itens}\n————\n${p.frete?'Frete: '+R(p.frete)+'\n':''}*Total:* ${R(total)}\n\n*PIX:* ${pixCliente()} (${cfg.pixNome})${sugestao}\n\nA De Minas Pão de Queijaria agradece! ❤️`;
+  const msg=`*🧀 DE MINAS — ${nP(p.num)}*\n————\n*Cliente:* ${p.cli}\n*Endereço:* ${end||'—'}\n${p.horario?'🕐 *'+p.horario+'*\n':''}${p.obs?'*Obs:* '+p.obs+'\n':''}${p.vendedor?'👔 *Vendedor:* '+p.vendedor+'\n':''}————\n*ITENS:*\n${itens}\n————\n${p.frete?'Taxa de entrega: '+R(p.frete)+'\n':''}*Total:* ${R(total)}\n\n*PIX:* ${pixCliente()} (${cfg.pixNome})${sugestao}\n\nA De Minas Pão de Queijaria agradece! ❤️`;
   const num=String(p.wa||'').replace(/\D/g,'');
   if(!num){toast('Este pedido está sem WhatsApp do cliente','warn');return;}
   window.open(`https://wa.me/${num.startsWith('55')?num:'55'+num}?text=${encodeURIComponent(msg)}`,'_blank');
