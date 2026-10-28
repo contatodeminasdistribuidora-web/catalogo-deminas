@@ -195,6 +195,23 @@ footer .adm{display:none!important} /* <--- ESCONDE O LINK DO RODAPÉ */
 /* Otimização: Evita o piscar do site antes do tema carregar */
 html.theme-loading body { opacity: 0; transition: opacity 0.2s; }
 html.theme-ready body { opacity: 1; }
+/* portão de acesso ao atacado */
+body.gate #stick,body.gate .cartbar,body.gate #avisos,body.gate #banGo,body.gate #tCart,body.gate .tabs,body.gate .drawer,body.gate div:has(> #btnRepeat){display:none!important}
+.gate-box{max-width:620px;margin:6px auto 30px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:24px 20px}
+.gate-box h2{margin:0 0 6px;font-size:26px;line-height:1.15;color:var(--brown)}
+.gate-box p{margin:0 0 10px;color:var(--muted)}
+.gate-box ul{margin:0 0 14px;padding-left:20px;color:var(--ink);font-weight:600}
+.gate-box input,.gate-box select,.gate-box textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font:inherit;background:#fff;color:var(--ink)}
+.gate-box .seg2{display:flex;gap:8px;margin-top:12px}
+.gate-box .seg2 label{flex:1;border:1.5px solid var(--line);border-radius:12px;padding:11px 8px;text-align:center;font-weight:800;cursor:pointer;background:#fff}
+.gate-box .seg2 input{display:none}
+.gate-box .seg2 label:has(input:checked){background:var(--brown);color:var(--gold-l);border-color:var(--brown)}
+.gate-box .btn{width:100%;margin-top:16px;height:50px}
+.gate-box .okbox{background:#eaf6ee;border:1.5px solid #9fd3b0;border-radius:14px;padding:16px;margin-top:6px}
+.gate-box .okbox b{color:#0d6e3a}
+.gate-box details{margin-top:18px;border-top:1px solid var(--line);padding-top:12px}
+.gate-box summary{cursor:pointer;font-weight:800;color:var(--brown)}
+.gate-erro{color:var(--red);font-weight:700;margin:10px 0 0}
 </style>
 
 <script>
@@ -203,7 +220,7 @@ html.theme-ready body { opacity: 1; }
 </script>
 
 <!-- TEMA APP -->
-<link rel="stylesheet" href="tema-mockup.css?v=20261024b">
+<link rel="stylesheet" href="tema-mockup.css?v=20261027c">
 </head>
 
 <body data-b2b="1" data-cats="congelados" data-hero="Pão de queijo mineiro congelado para revenda. Pedido mínimo de R$ 300,00 e preço especial para CNPJ ou CPF de revendedor autônomo." data-qr1="Escaneie e veja o catálogo de atacado" data-qr2="direto pelo WhatsApp">
@@ -351,8 +368,100 @@ async function load() {
     $('#catalog').innerHTML = '<p class="empty-msg">Não foi possível carregar o catálogo agora.<br>Chame a gente no <a href="https://wa.me/5511986975803">WhatsApp (11) 98697-5803</a>.</p>';
     return;
   }
+  // Preços de atacado: só quem tem o código de acesso (link enviado pela De Minas) vê a tabela
+  if (!S.admin) {
+    const cod = (new URLSearchParams(location.search).get('c') || store.get('dm_b2b_acesso') || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (!cod) { mostrarPortao(); return; }
+    $('#catalog').innerHTML = '<p class="empty-msg">Conferindo seu acesso…</p>';
+    let ac = null, falhou = false;
+    try { await aguardaFB(7000); ac = await window.DM_lerAcessoAtacado(cod); } catch (e) { falhou = true; }
+    if (!ac || ac.ativo === false) {
+      if (!falhou) store.set('dm_b2b_acesso', '');
+      mostrarPortao(falhou ? 'Não conseguimos conferir seu acesso agora. Tente de novo em instantes ou chame no WhatsApp.' : 'Esse código de acesso não foi encontrado ou está desativado. Peça um novo acesso ou chame no WhatsApp.');
+      return;
+    }
+    S.acesso = Object.assign({codigo: cod}, ac);
+    store.set('dm_b2b_acesso', cod);
+    aplicarPrecos(S.data, ac.precos);
+    const dc = String(ac.doc || '').replace(/\D/g, ''), cu = store.get('dm_b2b_cust') || {};
+    if (cu.cnpj !== dc) store.set('dm_b2b_cust', {nome: ac.nome || cu.nome || '', addr: cu.addr || '', tel: ac.whatsapp || cu.tel || '', resp: cu.resp || '', cnpj: dc, pessoa: dc.length === 11 ? 'PF' : 'PJ'});
+    if (ac.nome) toast('Acesso liberado: ' + ac.nome, 4000);
+  }
   reconcileCart();
   renderAll();
+}
+function aguardaFB(ms) {
+  return new Promise((ok, no) => {
+    const t0 = Date.now();
+    (function w() { if (window.DM_lerAcessoAtacado && window.DM_solicitarAcessoAtacado) return ok(); if (Date.now() - t0 > ms) return no(new Error('banco indisponível')); setTimeout(w, 150); })();
+  });
+}
+// junta os preços do cliente (código|opção) ao catálogo público, que não traz preços
+function aplicarPrecos(data, precos) {
+  const P = precos || {};
+  data.produtos = (data.produtos || []).map(p => {
+    p.opcoes = (p.opcoes || []).map(o => {
+      const k = p.codigo + '|' + o.label;
+      if (P[k] == null) return null;
+      o.preco = Number(P[k]);
+      if (P['rev|' + k] != null) o.rev = Number(P['rev|' + k]); else delete o.rev;
+      return o;
+    }).filter(Boolean);
+    return p;
+  }).filter(p => p.opcoes.length);
+}
+function stripPrecos(d) { (d.produtos || []).forEach(p => (p.opcoes || []).forEach(o => { delete o.preco; delete o.rev; })); return d; }
+function mostrarPortao(aviso) {
+  document.body.classList.add('gate');
+  const min = Number((S.data && S.data.pedidoMinimo) || 300);
+  const ja = store.get('dm_b2b_solic');
+  $('#catalog').innerHTML = `<div class="gate-box">
+    <h2>Atacado para empresas e revendedores</h2>
+    <p>Os preços de atacado são liberados para <b>empresas (CNPJ)</b> e <b>revendedores autônomos (CPF)</b> cadastrados. Peça seu acesso: conferimos e liberamos pelo WhatsApp.</p>
+    <ul><li>Pedido mínimo de ${brl(min)}</li><li>Pagamento por PIX; prazo de 7 dias para clientes aprovados</li><li>Frete grátis na Zona Leste a partir de ${brl(min)}</li></ul>
+    ${aviso ? `<p class="gate-erro" role="alert">${esc(aviso)}</p>` : ''}
+    <div id="gOk" class="okbox" ${ja ? '' : 'hidden'}><b>Pedido de acesso enviado.</b><br>Assim que conferirmos, mandamos o link pelo WhatsApp${ja && ja.tel ? ' (' + esc(ja.tel) + ')' : ''}. Para agilizar, avise a gente:<br><a class="btn gold" id="gWa" target="_blank" rel="noopener" href="https://wa.me/${waNumber()}?text=${encodeURIComponent('Olá! Pedi acesso ao atacado da De Minas' + (ja && ja.nome ? ' (' + ja.nome + ')' : '') + '. Pode liberar?')}">Avisar no WhatsApp</a></div>
+    <form id="gForm" novalidate ${ja ? 'hidden' : ''}>
+      <div class="seg2" role="radiogroup" aria-label="Tipo de cadastro"><label><input type="radio" name="gp" value="PJ" checked><span>Empresa (CNPJ)</span></label><label><input type="radio" name="gp" value="PF"><span>Autônomo (CPF)</span></label></div>
+      <label class="fld"><span id="gNomeL">Nome da empresa *</span><input id="gNome" autocomplete="organization" maxlength="120"></label>
+      <label class="fld"><span id="gDocL">CNPJ *</span><input id="gDoc" inputmode="numeric" autocomplete="off" placeholder="00.000.000/0000-00"></label>
+      <label class="fld"><span>WhatsApp com DDD *</span><input id="gTel" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999"></label>
+      <label class="fld"><span>Tipo de negócio</span><select id="gNeg"><option value="">Escolha…</option><option>Padaria</option><option>Café ou lanchonete</option><option>Restaurante</option><option>Mercado ou empório</option><option>Revendedor autônomo</option><option>Outro</option></select></label>
+      <label class="fld"><span>Observações (opcional)</span><textarea id="gObs" rows="2" maxlength="300"></textarea></label>
+      <p class="gate-erro" id="gErro" role="alert" hidden></p>
+      <button class="btn gold" type="submit" id="gBtn">Solicitar acesso</button>
+    </form>
+    <details><summary>Já tenho um código de acesso</summary>
+      <label class="fld"><span>Código</span><input id="gCod" autocapitalize="characters" autocomplete="off" placeholder="Código que enviamos pelo WhatsApp"></label>
+      <button class="btn" style="background:var(--brown);color:#fff" type="button" id="gEntrar">Entrar</button>
+    </details>
+  </div>`;
+  const f = $('#gForm'); if (!f) return;
+  const pf = () => (document.querySelector('input[name=gp]:checked') || {}).value === 'PF';
+  const sync = () => { $('#gNomeL').textContent = pf() ? 'Seu nome *' : 'Nome da empresa *'; $('#gDocL').textContent = pf() ? 'CPF *' : 'CNPJ *'; $('#gDoc').placeholder = pf() ? '000.000.000-00' : '00.000.000/0000-00'; $('#gDoc').value = ''; };
+  f.querySelectorAll('input[name=gp]').forEach(r => r.addEventListener('change', sync));
+  const mCPF = d => d.replace(/^(\d{3})(\d{0,3})(\d{0,3})(\d{0,2}).*/, (m, a, b, c, e) => a + (b ? '.' + b : '') + (c ? '.' + c : '') + (e ? '-' + e : ''));
+  const mCNPJ = d => d.replace(/^(\d{2})(\d{0,3})(\d{0,3})(\d{0,4})(\d{0,2}).*/, (m, a, b, c, e, g) => a + (b ? '.' + b : '') + (c ? '.' + c : '') + (e ? '/' + e : '') + (g ? '-' + g : ''));
+  $('#gDoc').addEventListener('input', e => { const d = e.target.value.replace(/\D/g, '').slice(0, pf() ? 11 : 14); e.target.value = pf() ? mCPF(d) : mCNPJ(d); });
+  f.addEventListener('submit', async e => {
+    e.preventDefault();
+    const erro = m => { const el = $('#gErro'); el.textContent = m; el.hidden = !m; };
+    const nome = $('#gNome').value.trim(), dg = $('#gDoc').value.replace(/\D/g, ''), tel = $('#gTel').value.replace(/\D/g, '');
+    if (nome.length < 2) return erro('Informe o nome.');
+    if (pf() ? !cpfOk(dg) : !cnpjOk(dg)) return erro(pf() ? 'CPF inválido. Confira os 11 números.' : 'CNPJ inválido. Confira os 14 números.');
+    if (tel.length < 10 || tel.length > 13) return erro('Informe o WhatsApp com DDD.');
+    erro(''); const b = $('#gBtn'); b.disabled = true; b.textContent = 'Enviando…';
+    try {
+      await aguardaFB(7000);
+      await window.DM_solicitarAcessoAtacado({nome, doc: dg, whatsapp: tel.length <= 11 ? '55' + tel : tel, tipoNegocio: $('#gNeg').value, obs: $('#gObs').value.trim()});
+      store.set('dm_b2b_solic', {nome, tel: $('#gTel').value.trim(), em: Date.now()});
+      mostrarPortao();
+    } catch (err) {
+      console.error(err); b.disabled = false; b.textContent = 'Solicitar acesso';
+      erro('Não conseguimos enviar agora. Chame a gente no WhatsApp (11) 98697-5803 que liberamos por lá.');
+    }
+  });
+  const ent = $('#gEntrar'); if (ent) ent.addEventListener('click', () => { const c = ($('#gCod').value || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); if (!c) return; store.set('dm_b2b_acesso', c); location.search = '?c=' + c; });
 }
 function waNumber() { return (S.data && S.data.whatsapp) || '5511986975803'; }
 function saveDraft() {
@@ -519,6 +628,13 @@ function openCart() {
   if (c.tel && !$('#cTel').value) $('#cTel').value = c.tel;
   if (c.cnpj && !$('#cCnpj').value) $('#cCnpj').value = docMask(c.cnpj);
   if (c.resp && !$('#cResp').value) $('#cResp').value = c.resp;
+  // com acesso liberado, o CNPJ ou CPF é o do cadastro aprovado e não muda
+  if (S.acesso && S.acesso.doc) {
+    const dg = String(S.acesso.doc).replace(/\D/g, ''), pfa = dg.length === 11;
+    const rb = document.querySelector('input[name=pessoa][value=' + (pfa ? 'PF' : 'PJ') + ']'); if (rb) rb.checked = true; syncPessoa();
+    $('#cCnpj').value = docMask(dg); $('#cCnpj').readOnly = true;
+    document.querySelectorAll('input[name=pessoa]').forEach(r => { r.disabled = true; });
+  }
   syncAddr();
   if (!cartLines().length) { toast('Adicione produtos primeiro'); return; }
   renderCart();
@@ -647,6 +763,7 @@ $('#orderForm').addEventListener('submit', e => {
     endereco: tipo === 'Entrega' ? addr : '',
     tipo, obs, itens: itensFire, total: totalSnap, pago: false
   };
+  if (S.acesso && S.acesso.codigo) pedido.acesso = S.acesso.codigo;
 
   (async () => {
     try {
@@ -942,6 +1059,7 @@ async function publish() {
     }
     toast('Publicando catálogo…', 20000);
     d.atualizadoEm = new Date().toISOString();
+    stripPrecos(d);   // os preços de atacado ficam no ERP, nunca no arquivo público
     await putFile('produtos-atacado.json', b64utf8(JSON.stringify(d, null, 1)), 'Atualiza catálogo', g.branch || 'main');
     S.data = d; S.published = clone(d); S.dirty = false; store.del('dm_b2b_draft');
     renderAll();
@@ -986,6 +1104,6 @@ setTimeout(() => document.documentElement.classList.replace('theme-loading', 'th
 })();
 </script>
 <!-- TEMA APP (Script) -->
-<script src="tema-mockup.js?v=20261024b" defer></script>
+<script src="tema-mockup.js?v=20261027c" defer></script>
 </body>
 </html>
