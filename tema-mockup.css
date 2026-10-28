@@ -217,3 +217,11 @@ section.cat,.grp{scroll-margin-top:calc(var(--stickh,120px) + var(--tbh))}
 .card.destaque{border:2px solid var(--gold-l);box-shadow:0 4px 16px #b8860b33}
 .card.destaque .tagb{background:var(--gold-d)}
 .btn-more{background:none;border:0;color:var(--red);font:800 13px 'Nunito Sans',sans-serif;text-decoration:underline;text-underline-offset:3px;padding:6px 0 0;text-align:left}
+
+/* navegação entre as páginas do site */
+.dmnav{max-width:1100px;margin:0 auto;padding:0 12px 8px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;background:var(--cream)}
+.dmnav::-webkit-scrollbar{display:none}
+.dmnav a{flex:none;font-weight:700;font-size:13px;text-decoration:none;color:var(--brown);background:var(--cream2);border-radius:999px;padding:7px 13px}
+.dmnav a.on{background:var(--brown);color:var(--gold-l)}
+
+.dmnav a svg{width:16px;height:16px;vertical-align:-3px;margin-right:6px;display:inline-block}
