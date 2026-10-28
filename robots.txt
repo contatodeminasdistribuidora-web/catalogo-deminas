@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /congelados.html
+Sitemap: https://deminaspaodequeijaria.com.br/sitemap.xml
