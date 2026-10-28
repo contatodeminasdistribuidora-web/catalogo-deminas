@@ -331,6 +331,45 @@ export async function deletarPedidoCatalogo(id) {
   await deleteDoc(doc(db, "pedidosCatalogo", id));
 }
 
+
+// ------------------------------------------------------------
+// ATACADO: pedidos de acesso e acessos liberados (cada cliente com código e preços)
+// ------------------------------------------------------------
+
+export function observarSolicitacoesAtacado(callback, onError) {
+  const q = query(collection(db, "solicitacoesAtacado"), where("status", "==", "pendente"));
+  return onSnapshot(q, snap => {
+    const lista = [];
+    snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
+    lista.sort((a, b) => (b.criadoEm?.seconds || Date.now() / 1000) - (a.criadoEm?.seconds || Date.now() / 1000));
+    callback(lista);
+  }, err => { if (onError) onError(err); else console.error(err); });
+}
+
+export async function atualizarSolicitacaoAtacado(id, dados) {
+  await updateDoc(doc(db, "solicitacoesAtacado", id), { ...dados, atualizadoEm: serverTimestamp() });
+}
+
+export async function listarAcessosAtacado() {
+  const snap = await getDocs(collection(db, "atacadoAcessos"));
+  const lista = [];
+  snap.forEach(d => lista.push({ codigo: d.id, ...d.data() }));
+  return lista;
+}
+
+export async function salvarAcessoAtacado(codigo, dados) {
+  await setDoc(doc(db, "atacadoAcessos", codigo), { ...dados, atualizadoEm: serverTimestamp() }, { merge: true });
+}
+
+export async function salvarAcessosAtacadoLote(lista) {
+  // lista: [{codigo, dados}]; grava em lotes de até 400
+  for (let i = 0; i < lista.length; i += 400) {
+    const batch = writeBatch(db);
+    lista.slice(i, i + 400).forEach(it => batch.set(doc(db, "atacadoAcessos", it.codigo), { ...it.dados, atualizadoEm: serverTimestamp() }, { merge: true }));
+    await batch.commit();
+  }
+}
+
 // ------------------------------------------------------------
 // EXCLUSÕES
 // ------------------------------------------------------------
