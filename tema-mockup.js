@@ -18,17 +18,18 @@ const B2B = document.body.hasAttribute('data-b2b');   // catálogo de atacado: s
 const logo = ($('.hero img') || {}).src || 'logo.png';
 const top = document.createElement('div');
 top.className = 'topbar';
-top.innerHTML = `<button class="ib" type="button" id="tMenu" aria-label="Ir para contato">${I.menu}</button><img src="${logo}" alt="De Minas Pão de Queijaria"><button class="ib" type="button" id="tCart" aria-label="Ver pedido">${I.cart}<span class="bdg" id="tBdg" data-n="0"></span></button>`;
+top.innerHTML = `<button class="ib" type="button" id="tMenu" aria-label="Ir para contato">${I.menu}</button><a href="./" class="logo-a" aria-label="Voltar ao site da De Minas"><img src="${logo}" alt="De Minas Pão de Queijaria"></a><button class="ib" type="button" id="tCart" aria-label="Ver pedido">${I.cart}<span class="bdg" id="tBdg" data-n="0"></span></button>`;
 document.body.prepend(top);
 // navegação entre as páginas do site (não aparece no atacado)
 if (!B2B) {
   const ind = new URLSearchParams(location.search).get('ind'), qs = ind ? '?ind=' + encodeURIComponent(ind) : '';
   const here = location.pathname.split('/').pop().replace(/\.html$/, '');
-  const L = [['./', 'Início', ''], ['pao-de-queijo.html', 'Pão de queijo', 'pao-de-queijo'], ['cadim-de-minas.html', 'Cadim de Minas', 'cadim-de-minas'], ['atacado.html', 'Para empresas', 'atacado']];
+  const L = [['./', '← Voltar ao site', ''], ['pao-de-queijo.html', 'Pão de queijo', 'pao-de-queijo'], ['emporio-mineiro.html', 'Empório Mineiro', 'emporio-mineiro'], ['atacado.html', 'Para empresas', 'atacado']];
   const nav = document.createElement('nav'); nav.className = 'dmnav'; nav.setAttribute('aria-label', 'Páginas do site');
-  const ICO = {'pao-de-queijo': '<svg viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="56" rx="38" ry="32" fill="#a97812"/><ellipse cx="50" cy="48" rx="38" ry="32" fill="#c7951d"/><path d="M26 46C30 36 38 38 43 44C48 50 54 44 59 39C63 35 70 37 74 42M54 41L55 33" fill="none" stroke="#faf2e2" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>', 'cadim-de-minas': '<svg viewBox="0 0 100 70" aria-hidden="true"><rect x="3" y="3" width="94" height="64" rx="9" fill="#faf2e2" stroke="#d9c49a" stroke-width="3"/><path d="M50 14L77 56H23Z" fill="#cf1f2e"/></svg>'};
+  const ICO = {};
   nav.innerHTML = L.map(([h, tx, k]) => `<a href="${h}${h === './' ? '' : qs}"${k && here === k ? ' class="on" aria-current="page"' : ''}>${ICO[k] || ''}${tx}</a>`).join('');
   top.after(nav);
+  const tbh = () => document.documentElement.style.setProperty('--tbh', top.offsetHeight + 'px'); tbh(); addEventListener('resize', tbh); addEventListener('load', tbh);
 }
 const setTbh = () => document.documentElement.style.setProperty('--tbh', top.offsetHeight + 'px');
 setTbh(); addEventListener('resize', setTbh); addEventListener('load', setTbh); setTimeout(setTbh, 600);
