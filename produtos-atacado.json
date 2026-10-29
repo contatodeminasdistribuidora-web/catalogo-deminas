@@ -1,5 +1,5 @@
 {
- "versao": 4,
+ "versao": 5,
  "atualizadoEm": "2026-10-24T11:06:51Z",
  "whatsapp": "5511986975803",
  "pedidoMinimo": 300,
@@ -35,14 +35,10 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 20.0,
-     "rev": 30.9
+     "label": "1kg"
     },
     {
-     "label": "2kgs",
-     "preco": 40.0,
-     "rev": 59.9
+     "label": "2kgs"
     }
    ],
    "disponivel": true,
@@ -58,9 +54,7 @@
    "descricao": "Peças de 15g. Pacote de 2kg.",
    "opcoes": [
     {
-     "label": "2kgs",
-     "preco": 40.0,
-     "rev": 59.9
+     "label": "2kgs"
     }
    ],
    "disponivel": true,
@@ -76,9 +70,7 @@
    "descricao": "Peças de 80g. Pacote de 2kg.",
    "opcoes": [
     {
-     "label": "2kgs",
-     "preco": 40.0,
-     "rev": 59.9
+     "label": "2kgs"
     }
    ],
    "disponivel": true,
@@ -94,9 +86,7 @@
    "descricao": "Peças de 100g. Pacote de 2kg.",
    "opcoes": [
     {
-     "label": "2kgs",
-     "preco": 40.0,
-     "rev": 59.9
+     "label": "2kgs"
     }
    ],
    "disponivel": true,
@@ -112,9 +102,7 @@
    "descricao": "Queijo Minas e Provolone.",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 22.0,
-     "rev": 32.9
+     "label": "1kg"
     }
    ],
    "disponivel": true,
@@ -130,9 +118,7 @@
    "descricao": "Queijo Minas, Provolone e Parmesão.",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 24.9,
-     "rev": 34.9
+     "label": "1kg"
     }
    ],
    "disponivel": true,
@@ -148,14 +134,10 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 20.0,
-     "rev": 30.9
+     "label": "1kg"
     },
     {
-     "label": "2kgs",
-     "preco": 40.0,
-     "rev": 61.8
+     "label": "2kgs"
     }
    ],
    "disponivel": true,
@@ -171,14 +153,10 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 20.0,
-     "rev": 30.9
+     "label": "1kg"
     },
     {
-     "label": "2kgs",
-     "preco": 40.0,
-     "rev": 61.8
+     "label": "2kgs"
     }
    ],
    "disponivel": true,
@@ -194,14 +172,10 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 20.0,
-     "rev": 30.9
+     "label": "1kg"
     },
     {
-     "label": "2kgs",
-     "preco": 40.0,
-     "rev": 61.8
+     "label": "2kgs"
     }
    ],
    "disponivel": true,
@@ -217,9 +191,7 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 28.9,
-     "rev": 44.9
+     "label": "1kg"
     }
    ],
    "disponivel": true,
@@ -235,9 +207,7 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 28.9,
-     "rev": 44.9
+     "label": "1kg"
     }
    ],
    "disponivel": true,
@@ -253,9 +223,7 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 28.9,
-     "rev": 44.9
+     "label": "1kg"
     }
    ],
    "disponivel": true,
@@ -271,9 +239,7 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 28.9,
-     "rev": 44.9
+     "label": "1kg"
     }
    ],
    "disponivel": true,
@@ -289,14 +255,10 @@
    "descricao": "Queijo Minas Artesanal, Mussarela, Parmesão e Provolone",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 37.2,
-     "rev": 54.9
+     "label": "1kg"
     },
     {
-     "label": "2kgs",
-     "preco": 69.7,
-     "rev": 98.9
+     "label": "2kgs"
     }
    ],
    "disponivel": true,
@@ -312,14 +274,10 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 28.5,
-     "rev": 34.9
+     "label": "1kg"
     },
     {
-     "label": "2kgs",
-     "preco": 56.2,
-     "rev": 69.8
+     "label": "2kgs"
     }
    ],
    "disponivel": true,
@@ -335,9 +293,7 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 24.3,
-     "rev": 33.9
+     "label": "1kg"
     }
    ],
    "disponivel": true,
@@ -353,9 +309,7 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 21.7,
-     "rev": 30.9
+     "label": "1kg"
     }
    ],
    "disponivel": true,
@@ -371,9 +325,7 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "500g",
-     "preco": 24.1,
-     "rev": 29.9
+     "label": "500g"
     }
    ],
    "disponivel": true,
@@ -389,9 +341,7 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 35.1,
-     "rev": 47.9
+     "label": "1kg"
     }
    ],
    "disponivel": true,
@@ -407,9 +357,7 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 35.1,
-     "rev": 47.9
+     "label": "1kg"
     }
    ],
    "disponivel": true,
@@ -425,9 +373,7 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 35.1,
-     "rev": 47.9
+     "label": "1kg"
     }
    ],
    "disponivel": true,
@@ -443,13 +389,62 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg",
-     "preco": 37.6,
-     "rev": 47.9
+     "label": "1kg"
     }
    ],
    "disponivel": true,
    "consultarEstoque": true
+  },
+  {
+   "id": "pq-014",
+   "codigo": "PQ-014",
+   "cat": "congelados",
+   "grupo": "Recheados Artesanais",
+   "nome": "Recheado de Doce de Leite",
+   "foto": "pq-014-mvg4jala.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg"
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-015",
+   "codigo": "PQ-015",
+   "cat": "congelados",
+   "grupo": "Recheados Artesanais",
+   "nome": "Recheado de Costela",
+   "foto": "pq-015-mvg4jbrb.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg"
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-022",
+   "codigo": "PQ-022",
+   "cat": "congelados",
+   "grupo": "Pão de Queijo Tradicional",
+   "nome": "Chipa Tradicional",
+   "foto": "pq-022-mvfrk6rb.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "500g"
+    },
+    {
+     "label": "1kg"
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
   }
  ]
 }
