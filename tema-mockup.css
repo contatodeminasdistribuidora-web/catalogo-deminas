@@ -219,7 +219,9 @@ section.cat,.grp{scroll-margin-top:calc(var(--stickh,120px) + var(--tbh))}
 .btn-more{background:none;border:0;color:var(--red);font:800 13px 'Nunito Sans',sans-serif;text-decoration:underline;text-underline-offset:3px;padding:6px 0 0;text-align:left}
 
 /* navegação entre as páginas do site */
-.dmnav{max-width:1100px;margin:0 auto;padding:0 12px 8px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;background:var(--cream)}
+.dmnav{max-width:none;margin:0;padding:6px max(12px,calc((100vw - 1100px)/2)) 8px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;background:var(--cream);position:sticky;top:var(--tbh,58px);z-index:39;border-bottom:1px solid var(--line)}
+.topbar a.logo-a{display:block;margin:0 auto}
+.dmnav a:first-child{background:var(--brown);color:var(--gold-l)}
 .dmnav::-webkit-scrollbar{display:none}
 .dmnav a{flex:none;font-weight:700;font-size:13px;text-decoration:none;color:var(--brown);background:var(--cream2);border-radius:999px;padding:7px 13px}
 .dmnav a.on{background:var(--brown);color:var(--gold-l)}
