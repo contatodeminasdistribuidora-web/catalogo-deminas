@@ -2369,7 +2369,7 @@ function abrirDetPed(id){
       ${p.obs?`<div style="grid-column:1/-1"><strong>Obs:</strong> <span style="color:var(--laranja)">${x(p.obs)}</span></div>`:''}
       <div><strong>Data:</strong> ${dF(p.data)}</div>
       <div><strong>Status:</strong> ${pillSt(p.st)}</div>
-      ${(p.st==='PAGO'||p.st==='ENTREGUE')?`<div><strong>Recebido:</strong> ${p.recebido?'✅ Sim':'⏳ Aguardando'}</div>`:''}</div>
+      ${(p.st==='PAGO'||p.st==='ENTREGUE')?`<div><strong>Recebido:</strong> ${p.recebido?'✅ Sim <button class="btn btn-ghost btn-sm" style="margin-left:8px;border-color:#c0392b;color:#c0392b" onclick="desfazerRecebimento(\''+p.id+'\',\'whatsapp\')">↩ Desfazer</button>':'⏳ Aguardando'}</div>`:''}</div>
     ${(()=>{const d=diffsPrecoPed(p);if(!d.length)return '';const n2=JSON.parse(JSON.stringify(p));d.forEach(z=>{n2.itens[z.i].pr=z.exp;});return `<div style="background:#fff3cd;border:1.5px solid #e0a800;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:13px">⚠ <b>${d.length} item(ns) com preço diferente do catálogo.</b> Total hoje ${R(total)}; pelo catálogo ${R(calcTotal(n2))}. <button class="btn btn-ouro btn-sm" style="margin-left:6px" onclick="alinharPedidoCat('${p.id}')">Corrigir pelo catálogo</button></div>`;})()}
     <table style="width:100%;margin-bottom:12px">
       <thead><tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Subtotal</th></tr></thead>
@@ -2793,7 +2793,7 @@ const LINKS_DM=[
  {g:'Atacado',n:'Regras do atacado (PDF)',u:SITE_DM+'regras-atacado.pdf',t:'Olá! Seguem as regras do atacado da De Minas:'},
  {g:'Varejo',n:'Site da De Minas',u:SITE_DM,t:'Olá! Conheça a De Minas Pão de Queijaria:'},
  {g:'Varejo',n:'Catálogo de pão de queijo',u:SITE_DM+'pao-de-queijo.html',t:'Olá! Veja o catálogo de pão de queijo da De Minas e faça seu pedido:'},
- {g:'Varejo',n:'Cadim de Minas (catálogo completo)',u:SITE_DM+'cadim-de-minas.html',t:'Olá! Conheça o Cadim de Minas, com queijos, doces, mel e muito mais:'}
+ {g:'Varejo',n:'Empório Mineiro (catálogo completo)',u:SITE_DM+'emporio-mineiro.html',t:'Olá! Conheça o Empório Mineiro, com queijos, doces, mel e muito mais:'}
 ];
 function rendAtLinks(){
   const el=document.getElementById('at-links');if(!el)return;let g='',h='';
@@ -3029,9 +3029,21 @@ function rendReceber(){
       <div class="ped-card-mid" style="font-size:12px">📍 ${x(end)}</div>
       <div class="ped-card-bot"><span class="ped-total">${R(total)}</span><span class="ped-data">${dF(p.data)}</span></div>
       ${!p.recebido&&(p.st==='PAGO'||p.st==='ENTREGUE')?`<button class="btn btn-verde btn-sm" style="margin-top:8px" onclick="event.stopPropagation();confirmarRecebimento('${p.id}','${p._tipo}')">✅ Confirmar Recebimento</button>`:''}
+      ${p.recebido?`<button class="btn btn-ghost btn-sm" style="margin-top:8px;border-color:#c0392b;color:#c0392b" onclick="event.stopPropagation();desfazerRecebimento('${p.id}','${p._tipo}')">↩ Desfazer recebimento</button>`:''}
     </div>`;
   });
   document.getElementById('receber-lista').innerHTML=html;
+}
+function desfazerRecebimento(id,tipo){
+  const p=tipo==='atacado'?db.atPeds.find(pe=>pe.id===id):db.peds.find(pe=>pe.id===id);if(!p||!p.recebido)return;
+  const num=tipo==='atacado'?nAt(p.num):nP(p.num);
+  if(!confirm('Desfazer o recebimento do pedido '+num+'?\n\nEle volta para "Aguardando" e o valor sai dos recebidos.'))return;
+  p.recebido=false;delete p.recebidoEm;
+  const ar=(db.ar||[]).find(a=>a.pedidoId===id&&a.status==='recebido');
+  if(ar){ar.status='pendente';delete ar.recebidoEm;delete ar.valorRecebido;}
+  salvar();rendReceber();atualizaBadges();if(curPage==='painel')rendPainel();
+  try{if(document.getElementById('mod-det')&&document.getElementById('mod-det').classList.contains('on'))(tipo==='atacado'?abrirDetAt:abrirDetPed)(id);}catch(e){}
+  toast('Recebimento desfeito: voltou para Aguardando','warn');
 }
 function confirmarRecebimento(id,tipo){
   const p=tipo==='atacado'?db.atPeds.find(pe=>pe.id===id):db.peds.find(pe=>pe.id===id);if(!p)return;
