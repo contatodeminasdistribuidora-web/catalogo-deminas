@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /congelados.html
+Disallow: /cadim-de-minas.html
 Sitemap: https://deminaspaodequeijaria.com.br/sitemap.xml
