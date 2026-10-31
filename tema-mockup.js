@@ -24,15 +24,44 @@ document.body.prepend(top);
 if (!B2B) {
   const ind = new URLSearchParams(location.search).get('ind'), qs = ind ? '?ind=' + encodeURIComponent(ind) : '';
   const here = location.pathname.split('/').pop().replace(/\.html$/, '');
-  const L = [['./', '← Voltar ao site', ''], ['pao-de-queijo.html', 'Pão de queijo', 'pao-de-queijo'], ['emporio-mineiro.html', 'Empório Mineiro', 'emporio-mineiro'], ['atacado.html', 'Para empresas', 'atacado']];
+  const L = [['./', '← Voltar ao site', ''], ['atacado.html', 'Atacado', 'atacado']];
   const nav = document.createElement('nav'); nav.className = 'dmnav'; nav.setAttribute('aria-label', 'Páginas do site');
   const ICO = {};
   nav.innerHTML = L.map(([h, tx, k]) => `<a href="${h}${h === './' ? '' : qs}"${k && here === k ? ' class="on" aria-current="page"' : ''}>${ICO[k] || ''}${tx}</a>`).join('');
   top.after(nav);
+  // frase de Minas, em uma faixa fina abaixo do menu
+  const cit = document.createElement('div'); cit.className = 'citbar';
+  cit.innerHTML = '<span>“É junto dos bão que a gente fica mió.”</span><em>Guimarães Rosa</em>';
+  nav.after(cit);
   const tbh = () => document.documentElement.style.setProperty('--tbh', top.offsetHeight + 'px'); tbh(); addEventListener('resize', tbh); addEventListener('load', tbh);
 }
 const setTbh = () => document.documentElement.style.setProperty('--tbh', top.offsetHeight + 'px');
 setTbh(); addEventListener('resize', setTbh); addEventListener('load', setTbh); setTimeout(setTbh, 600);
+
+// busca vinda do menu do site: ?busca=palavra
+(() => {
+  const b = new URLSearchParams(location.search).get('busca'); if (!b) return;
+  let n = 0; const tenta = () => { const i = document.getElementById('q'); if (i && document.querySelector('.card, .pcard, .prod, [data-cod]')) { i.value = b; i.dispatchEvent(new Event('input', {bubbles: true})); } else if (n++ < 40) setTimeout(tenta, 250); };
+  tenta();
+})();
+// Pingo, o mascote, ajuda pelo WhatsApp (só nos catálogos de varejo)
+if (!B2B) {
+  const ind2 = (new URLSearchParams(location.search).get('ind') || '').slice(0, 40);
+  const txt = 'Olá! Vim pelo catálogo da De Minas e preciso de ajuda.' + (ind2 ? ' (origem: ' + ind2 + ')' : '');
+  const pf = document.createElement('div'); pf.className = 'pfab';
+  pf.innerHTML = '<div class="bb" role="note">Uai, precisa de ajuda? Chama no Zap!<button type="button" aria-label="Fechar">×</button></div>' +
+    '<a class="av" href="https://wa.me/5511940507018?text=' + encodeURIComponent(txt) + '" target="_blank" rel="noopener" aria-label="Falar no WhatsApp com o Pingo"><img src="pingo-rosto.png" alt="" width="300" height="300"></a>';
+  pf.querySelector('.bb button').addEventListener('click', () => pf.querySelector('.bb').remove());
+  document.body.appendChild(pf);
+  // fica sempre logo acima da barra de baixo e da barra do pedido
+  const ajusta = () => {
+    const tabs = document.querySelector('.tabs'), cb = document.querySelector('.cartbar');
+    let topo = innerHeight;
+    [tabs, cb].forEach(el => { if (!el) return; const r = el.getBoundingClientRect(); if (r.height > 0 && getComputedStyle(el).display !== 'none' && r.top < topo) topo = r.top; });
+    pf.style.bottom = Math.max(12, innerHeight - topo + 12) + 'px';
+  };
+  ajusta(); setInterval(ajusta, 500); addEventListener('resize', ajusta);
+}
 
 const ban = document.createElement('div');
 ban.className = 'banner';
