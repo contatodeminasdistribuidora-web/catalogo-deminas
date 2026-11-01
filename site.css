@@ -173,7 +173,7 @@ h2{font-size:clamp(28px,3.8vw,40px);line-height:1.1;margin:0 0 14px;color:var(--
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px;padding:0;list-style:none}
 .chips li{border:1px solid rgba(233,196,106,.55);color:var(--gold-l);border-radius:999px;padding:6px 15px;font-weight:700;font-size:14px}
 /* marcas */
-.marcas .g{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.marcas .g{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
 .marcas .m{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:28px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;min-height:160px;justify-content:center}
 .marcas .m img{max-height:56px;width:auto;max-width:80%}
 .marcas .m .nm{font:800 24px/1.1 'Fraunces',serif;color:var(--brown)}
@@ -298,7 +298,7 @@ footer .copy{grid-column:1/-1;border-top:1px solid rgba(233,196,106,.2);padding-
 .ingfotos img{width:100%;height:100%;object-fit:cover;display:block}
 .ingfotos figcaption{position:absolute;left:0;right:0;bottom:0;padding:34px 14px 12px;color:#fff;font:800 17px/1.15 'Fraunces',serif;background:linear-gradient(transparent,rgba(30,12,4,.85))}
 .citacao{background:var(--brown);color:var(--cream);padding:70px 0}
-.citacao .box{display:grid;grid-template-columns:1.3fr .7fr;gap:30px;align-items:center}
+.citacao .box{display:grid;grid-template-columns:1fr;gap:30px;align-items:center;max-width:860px}
 .citacao blockquote{margin:0 0 18px}
 .citacao blockquote p{font:italic 800 clamp(30px,4.6vw,52px)/1.1 'Fraunces',serif;color:var(--gold-l);margin:0 0 10px;letter-spacing:-.01em}
 .citacao .autor{display:block;font-style:normal;font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:13px;color:#e8d7b4}
@@ -494,10 +494,10 @@ body.noscroll{overflow:hidden}
 .hteaser img{width:100%;border-radius:26px;box-shadow:0 18px 40px rgba(62,26,10,.22)}
 .pcafe{border-radius:28px;overflow:hidden;box-shadow:0 18px 40px rgba(62,26,10,.22);aspect-ratio:4/5;background:#c9a98a}
 .pcafe img{width:100%;height:100%;object-fit:cover;object-position:50% 74%;display:block}
-.mesa .box>.pcafe{max-height:560px}
+.mesa .box>.pcafe{max-height:none;max-width:460px;justify-self:center;width:100%}
 .hint{display:none}
 @media(max-width:1000px){.explore{grid-template-columns:1fr 1fr}.ex{min-height:210px}.hteaser .box{grid-template-columns:1fr}}
-@media(max-width:820px){.cmtabs{top:66px}.mesa .box>.pcafe{max-height:380px;aspect-ratio:16/11}}
+@media(max-width:820px){.cmtabs{top:66px}.mesa .box>.pcafe{max-height:none;aspect-ratio:4/5;max-width:420px;width:100%;margin:0 auto}}
 @media(max-width:700px){
   .car{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-left:-20px;margin-right:-20px;padding:2px 20px 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch;grid-template-columns:none!important}
   .car::-webkit-scrollbar{display:none}
@@ -521,3 +521,38 @@ body.noscroll{overflow:hidden}
 .rtile img{width:100%;height:100%;object-fit:cover;display:block}
 .rtile figcaption{position:absolute;left:0;right:0;bottom:0;padding:30px 14px 10px;color:#fff;font:800 15px/1.2 'Fraunces',serif;background:linear-gradient(transparent,rgba(25,9,3,.85))}
 @media(max-width:700px){.rtile{width:240px;height:160px}.rtile figcaption{font-size:13.5px;padding:24px 12px 8px}}
+
+.ouro{display:grid;grid-template-columns:230px 1fr;gap:22px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:26px;overflow:hidden;margin:26px 0 8px}
+.ouro img{width:100%;height:auto;object-fit:contain;display:block;align-self:center;padding:12px 0 12px 14px;box-sizing:border-box}
+.ouro>div{padding:20px 26px 20px 0}
+.ouro h3{margin:0 0 8px;font-size:24px;color:var(--brown)}
+.ouro p{margin:0;color:#4b2a18;font-size:16.5px}.ouro .eyebrow{margin-bottom:4px}
+.pcafe img{object-position:50% 50%}
+@media(max-width:820px){.ouro{grid-template-columns:42% 1fr;gap:14px}.ouro>div{padding:14px 16px 14px 0}.ouro h3{font-size:20px}.ouro p{font-size:15px}}
+
+
+/* Minas por região */
+.rgs{display:grid;gap:12px;margin-top:22px}
+details.rg{background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden}
+details.rg>summary{list-style:none;cursor:pointer;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+details.rg>summary::-webkit-details-marker{display:none}
+details.rg .n{display:block;font:800 22px/1.15 'Fraunces',serif;color:var(--brown)}
+details.rg .sub{display:block;margin-top:3px;font-size:15px;color:var(--muted)}
+details.rg .pl{flex:none;width:34px;height:34px;border-radius:50%;background:var(--cream2);color:var(--brown);display:grid;place-items:center;font-weight:800;font-size:22px;line-height:1}
+details.rg[open] .pl{transform:rotate(45deg)}
+details.rg .bd{padding:0 20px 20px;display:grid;gap:10px}
+.rg .cid{display:flex;flex-wrap:wrap;gap:6px}
+.rg .cid span{background:var(--cream2);border-radius:99px;padding:4px 11px;font-size:13.5px;font-weight:700;color:var(--brown)}
+.rg h4{margin:8px 0 0;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-d)}
+.rg .bd p{margin:0;color:#4b2a18;font-size:16.5px}
+@media(min-width:900px){.rgs{grid-template-columns:1fr 1fr;align-items:start}}
+
+.mapacol{margin:6px auto 22px;max-width:760px}.mapacol img{width:100%;height:auto;display:block}
+
+.st.quente .n{position:static;margin:0 auto 12px;left:auto;top:auto}
+
+.st .tx .n{position:static;left:auto;top:auto;margin:0 0 10px;box-shadow:none}
+
+/* Pingo de joia nas dicas: tamanho */
+.dp2 .mascote img{width:auto;max-width:100%;max-height:325px;height:auto;display:block;margin:0 auto}
+@media(max-width:820px){.dp2 .mascote img{max-height:285px}}
