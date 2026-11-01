@@ -24,16 +24,23 @@ document.body.prepend(top);
 if (!B2B) {
   const ind = new URLSearchParams(location.search).get('ind'), qs = ind ? '?ind=' + encodeURIComponent(ind) : '';
   const here = location.pathname.split('/').pop().replace(/\.html$/, '');
-  const L = [['./', '← Voltar ao site', ''], ['atacado.html', 'Atacado', 'atacado']];
+  const L = [['./', 'Conheça nosso site →', ''], ['atacado.html', 'Atacado', 'atacado']];
   const nav = document.createElement('nav'); nav.className = 'dmnav'; nav.setAttribute('aria-label', 'Páginas do site');
   const ICO = {};
   nav.innerHTML = L.map(([h, tx, k]) => `<a href="${h}${h === './' ? '' : qs}"${k && here === k ? ' class="on" aria-current="page"' : ''}>${ICO[k] || ''}${tx}</a>`).join('');
   top.after(nav);
   // frase de Minas, em uma faixa fina abaixo do menu
   const cit = document.createElement('div'); cit.className = 'citbar';
-  cit.innerHTML = '<span>“É junto dos bão que a gente fica mió.”</span><em>Guimarães Rosa</em>';
-  nav.after(cit);
+  const FR = [['É junto dos bão que a gente fica mió.', 'Guimarães Rosa'], ['Uai, uai é uai, uai!', ''], ['Pão de queijo quentinho e cafezim coado: o resto é prosa.', ''], ['Vai não, sô, tá cedo!', ''], ['Quando o forno cheira a queijo, a casa vira Minas.', ''], ['Nuuuh! Que cheiro bão é esse?', ''], ['Trem bão é trem que a gente divide.', ''], ['Em Minas, sempre tem lugar na mesa.', ''], ['Um dedim de prosa e um pão de queijo: o dia melhora.', ''], ['Quem prova pão de queijo de verdade, volta.', ''], ['Saudadocê é saudade com cheiro de queijo.', '']];
+  const poe = (k) => { const [tx, au] = FR[k]; cit.innerHTML = '<span>“' + tx + '”</span>' + (au ? '<em>' + au + '</em>' : ''); };
+  poe(0); nav.after(cit);
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { let k = 0; setInterval(() => { k = (k + 1) % FR.length; cit.style.opacity = 0; setTimeout(() => { poe(k); cit.style.opacity = 1; }, 320); }, 8000); }
   const tbh = () => document.documentElement.style.setProperty('--tbh', top.offsetHeight + 'px'); tbh(); addEventListener('resize', tbh); addEventListener('load', tbh);
+} else {
+  // atacado: só o botão de voltar ao site, sem a frase nem os outros links do varejo
+  const nav = document.createElement('nav'); nav.className = 'dmnav'; nav.setAttribute('aria-label', 'Páginas do site');
+  nav.innerHTML = '<a href="./">Conheça nosso site →</a>';
+  top.after(nav);
 }
 const setTbh = () => document.documentElement.style.setProperty('--tbh', top.offsetHeight + 'px');
 setTbh(); addEventListener('resize', setTbh); addEventListener('load', setTbh); setTimeout(setTbh, 600);
@@ -113,6 +120,12 @@ const openDr = () => {
   if (EXTRA_ITEMS.length) {
     const sep = document.createElement('div'); sep.className = 'dr-sep'; list.appendChild(sep);
     EXTRA_ITEMS.forEach(x => { const b = document.createElement('button'); b.type = 'button'; b.className = 'dr-item'; b.textContent = x.l; b.onclick = () => { closeDr(); setTimeout(x.f, 240); }; list.appendChild(b); });
+  }
+  { // links do site (funciona também no atacado)
+    const sep = document.createElement('div'); sep.className = 'dr-sep'; list.appendChild(sep);
+    const ttl = document.createElement('div'); ttl.className = 'dr-ttl'; ttl.textContent = 'No nosso site'; list.appendChild(ttl);
+    const ind = new URLSearchParams(location.search).get('ind'), q = ind ? '?ind=' + encodeURIComponent(ind) : '', aqui = location.pathname.split('/').pop();
+    [['Conheça nosso site', './'], ['Nossos pães de queijo', 'nossos-paes-de-queijo.html'], ['Como assar', 'como-assar.html'], ['Nossa história e receita', 'nossa-historia.html'], ['Conheça Minas', 'conheca-minas.html'], ['Pão de queijo (catálogo)', 'pao-de-queijo.html'], ['Empório Mineiro', 'emporio-mineiro.html'], ['Atacado', 'atacado.html']].filter(([x, u]) => u !== aqui).forEach(([x, u]) => { const a = document.createElement('a'); a.className = 'dr-item'; a.href = u + (u === './' ? '' : q); a.textContent = x; list.appendChild(a); });
   }
   const wa = $('#waLink2'); if (wa) $('#drWa').href = wa.href;
   drawer.hidden = false; requestAnimationFrame(() => drawer.classList.add('on')); document.body.style.overflow = 'hidden';
