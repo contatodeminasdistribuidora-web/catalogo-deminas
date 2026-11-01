@@ -240,3 +240,10 @@ section.cat,.grp{scroll-margin-top:calc(var(--stickh,120px) + var(--tbh))}
 .pfab .av img{width:100%;height:100%;object-fit:cover;display:block}
 @media(min-width:1000px){.pfab{bottom:calc(96px + env(safe-area-inset-bottom));right:20px}.pfab .av{width:78px;height:78px}}
 @media(max-width:700px){.pfab .bb{display:none}.citbar span{font-size:14.5px}.citbar{padding:8px 12px}}
+
+/* menu do catálogo: links do site, aviso de pedido com o Pingo, frases que alternam */
+a.dr-item{display:block;text-decoration:none;box-sizing:border-box}
+.dr-ttl{font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-d,#8a6006);margin:4px 2px 0}
+.mdl-body .pj{display:block;width:104px;height:104px;border-radius:50%;object-fit:cover;margin:0 auto 12px;border:4px solid var(--gold,#c7951d)}
+.citbar{transition:opacity .32s ease;min-height:54px;align-items:center}
+@media(max-width:700px){.citbar{min-height:58px}}
