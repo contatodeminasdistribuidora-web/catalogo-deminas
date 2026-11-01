@@ -29,7 +29,7 @@
     ['A receita: nove ingredientes', 'nossa-historia.html#receita', 'receita ingredientes polvilho queijo leite ovos oleo sal agua'],
     ['Monte a sua mesa de café mineira', 'nossa-historia.html#mesa-de-cafe', 'cafe da manha mesa cafezim'],
     ['História do pão de queijo', 'conheca-minas.html#historia', 'historia origem pao de queijo seculo'],
-    ['Rota dos queijos de Minas', 'conheca-minas.html#queijos', 'regioes queijeiras canastra serro araxa cerrado salitre queijo minas artesanal'],
+    ['Minas por região', 'conheca-minas.html#regioes', 'regioes roteiro cidades culinaria quitanda azeite queijo furnas mantiqueira canastra espinhaco triangulo caparao'], ['Rota dos queijos de Minas', 'conheca-minas.html#queijos', 'regioes queijeiras canastra serro araxa cerrado salitre queijo minas artesanal'],
     ['Doces de Minas', 'conheca-minas.html#doces', 'doce de leite goiabada vicosa sao bartolomeu ponte nova'],
     ['Cidades históricas', 'conheca-minas.html#cidades', 'ouro preto mariana tiradentes sao joao del rei congonhas diamantina sabara'],
     ['Mineiros que fizeram história', 'conheca-minas.html#mineiros', 'tiradentes aleijadinho drummond guimaraes rosa santos dumont jk pele'],
@@ -48,7 +48,7 @@
   const wrapTopo = document.querySelector('.top .wrap'); if (wrapTopo) wrapTopo.appendChild(burger);
 
   const dr = document.createElement('div'); dr.className = 'drawer'; dr.id = 'drawer'; dr.setAttribute('role', 'dialog'); dr.setAttribute('aria-modal', 'true'); dr.setAttribute('aria-label', 'Menu do site');
-  dr.innerHTML = '<div class="bk" data-x></div><div class="pn"><div class="hd"><img src="logo.png" alt="De Minas Pão de Queijaria" width="720" height="229"><button type="button" class="x" aria-label="Fechar o menu" data-x>×</button></div>' +
+  dr.innerHTML = '<div class="bk" data-x></div><div class="pn"><div class="hd"><img src="logo.png" alt="De Minas Pão de Queijaria" width="720" height="210"><button type="button" class="x" aria-label="Fechar o menu" data-x>×</button></div>' +
     '<div class="sbox"><label class="sr" for="dsq" style="position:absolute;left:-999px">Buscar no site</label><input id="dsq" type="search" placeholder="Buscar produto ou assunto…" autocomplete="off" enterkeyhint="search"></div>' +
     '<div class="res" id="dres" aria-live="polite"></div>' +
     '<nav class="lst" id="dlst" aria-label="Páginas do site">' + NAV.map(([t, u]) => `<a href="${u}" data-int${atual(u) ? ' aria-current="page"' : ''}>${esc(t)}</a>`).join('') + '</nav>' +
@@ -83,7 +83,7 @@
 
   /* ---------- aparecer ao rolar ---------- */
   if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold: .08});
+    const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold: 0, rootMargin: '0px 0px -6% 0px'});
     document.querySelectorAll('section:not(.slider):not(.cmtabs) .wrap > *').forEach(el => { el.classList.add('rv'); io.observe(el); });
   }
 })();
