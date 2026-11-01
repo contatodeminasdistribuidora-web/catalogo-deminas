@@ -919,7 +919,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 100.0,
+     "preco": 100,
      "kg": true
     }
    ],
@@ -970,7 +970,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 75.0,
+     "preco": 75,
      "kg": true
     }
    ],
@@ -1004,7 +1004,7 @@
    "opcoes": [
     {
      "label": "Peça",
-     "preco": 100.0
+     "preco": 100
     }
    ],
    "disponivel": false,
@@ -1020,7 +1020,7 @@
    "opcoes": [
     {
      "label": "Peça",
-     "preco": 113.0
+     "preco": 113
     }
    ],
    "disponivel": true,
@@ -1036,7 +1036,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 36.0
+     "preco": 36
     }
    ],
    "disponivel": true,
@@ -1055,7 +1055,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 36.0
+     "preco": 36
     }
    ],
    "disponivel": false,
@@ -1073,7 +1073,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 36.0
+     "preco": 36
     }
    ],
    "disponivel": true,
@@ -1092,7 +1092,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 42.0
+     "preco": 42
     }
    ],
    "disponivel": false,
@@ -1110,7 +1110,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 35.0
+     "preco": 35
     }
    ],
    "disponivel": true,
@@ -1132,7 +1132,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 42.0
+     "preco": 42
     }
    ],
    "disponivel": true,
@@ -1170,7 +1170,7 @@
    "opcoes": [
     {
      "label": "Preço por kg",
-     "preco": 119.0,
+     "preco": 119,
      "kg": true
     }
    ],
@@ -1285,7 +1285,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 44.0
+     "preco": 44
     }
    ],
    "disponivel": true,
@@ -1353,7 +1353,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 44.0
+     "preco": 44
     }
    ],
    "disponivel": true,
@@ -1369,7 +1369,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 29.0
+     "preco": 29
     }
    ],
    "disponivel": true,
@@ -1441,7 +1441,7 @@
    "opcoes": [
     {
      "label": "Lata",
-     "preco": 30.0
+     "preco": 30
     }
    ],
    "disponivel": true,
@@ -1457,7 +1457,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 40.0
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1473,7 +1473,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 38.0
+     "preco": 38
     }
    ],
    "disponivel": true,
@@ -1489,7 +1489,7 @@
    "opcoes": [
     {
      "label": "Unidade",
-     "preco": 38.0
+     "preco": 38
     }
    ],
    "disponivel": true,
@@ -1505,7 +1505,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 33.0
+     "preco": 33
     }
    ],
    "disponivel": true,
@@ -1537,7 +1537,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 40.0
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1553,7 +1553,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 40.0
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1585,7 +1585,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 40.0
+     "preco": 40
     }
    ],
    "disponivel": true,
@@ -1617,7 +1617,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 38
+     "preco": 42
     }
    ],
    "disponivel": true,
@@ -1633,7 +1633,7 @@
    "opcoes": [
     {
      "label": "Lata",
-     "preco": 63.0
+     "preco": 63
     }
    ],
    "disponivel": true,
@@ -1649,7 +1649,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 63.0
+     "preco": 63
     }
    ],
    "disponivel": true,
@@ -1665,7 +1665,7 @@
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 35
+     "preco": 45
     }
    ],
    "disponivel": true,
@@ -1676,12 +1676,12 @@
    "codigo": "DC-028",
    "cat": "doces",
    "grupo": "Balas",
-   "nome": "Bala Doce de Leite (pacote maior)",
+   "nome": "Bala Doce de Leite Serra Negra",
    "foto": "bala-dl-40.jpg",
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 44.0
+     "preco": 44
     }
    ],
    "disponivel": true,
@@ -1697,7 +1697,7 @@
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 50.0
+     "preco": 50
     }
    ],
    "disponivel": true,
@@ -1805,7 +1805,7 @@
    "opcoes": [
     {
      "label": "330g",
-     "preco": 44.0
+     "preco": 44
     }
    ],
    "disponivel": true,
@@ -1837,7 +1837,7 @@
    "opcoes": [
     {
      "label": "Pote",
-     "preco": 33.0
+     "preco": 33
     }
    ],
    "disponivel": true,
@@ -1869,7 +1869,7 @@
    "opcoes": [
     {
      "label": "500g",
-     "preco": 38.0
+     "preco": 38
     }
    ],
    "disponivel": true,
@@ -1885,7 +1885,7 @@
    "opcoes": [
     {
      "label": "Garrafa",
-     "preco": 33.0
+     "preco": 33
     }
    ],
    "disponivel": true,
@@ -2033,7 +2033,7 @@
    "opcoes": [
     {
      "label": "Pacote",
-     "preco": 23.0
+     "preco": 23
     }
    ],
    "disponivel": true,
@@ -2549,7 +2549,7 @@
    "selo": "Zero Açúcar"
   }
  ],
- "atualizadoEm": "2026-10-27T18:12:04.000000Z",
+ "atualizadoEm": "2026-11-01T13:14:19.251Z",
  "conteudo": {
   "comoAssar": {
    "titulo": "Como assar",
