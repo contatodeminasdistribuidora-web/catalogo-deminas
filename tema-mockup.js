@@ -263,8 +263,7 @@ function decorate() {
   document.querySelectorAll('#catalog .card:not([data-x])').forEach(c => {
     c.dataset.x = 1;
     const id = c.dataset.pid;
-    const grp = c.closest('section') && (c.parentElement.previousElementSibling || {});
-    const tag = c.dataset.selo || (grp && grp.classList && grp.classList.contains('grp') ? grp.textContent.trim() : '');
+    const tag = c.dataset.selo || '';   // só aparece o selo escolhido no produto (ex.: Mais pedido); o nome do grupo já está no título da seção
     if (tag) c.insertAdjacentHTML('afterbegin', `<span class="tagb">${tag.replace(/</g, '&lt;')}</span>`);
     c.insertAdjacentHTML('afterbegin', `<button class="fav" type="button" aria-label="Favoritar" aria-pressed="${favs.has(id)}">${I.heart}</button>`);
     frz(c); setSelo(c);
