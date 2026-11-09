@@ -2386,6 +2386,8 @@ function abrirDetPed(id){
   foot+=`<button class="btn btn-outline" onclick="abrirEditPed('${p.id}');fm('mod-det')">✏️ Editar</button>
     <button class="btn btn-ghost" onclick="imprimirEtiqueta('${p.id}')">🏷️ Etiqueta</button>
     <button class="btn btn-ouro" onclick="enviarWA('${p.id}')">📲 WhatsApp</button>
+    <button class="btn btn-outline" onclick="cupomImprimir('${p.id}')">🧾 Cupom</button>
+    <button class="btn btn-outline" onclick="cupomPDF('${p.id}',true)">📄 PDF</button>
     <button class="btn btn-ghost" onclick="enviarMsgHorario('${p.id}')" style="background:#e8f2fa;border-color:var(--azul);color:var(--azul)">🕐 Horário</button>
     <button class="btn btn-primary" onclick="imprimirPedido('${p.id}')">🖨️ Imprimir</button>
     <button class="btn btn-danger" onclick="excluirPedComPin('${p.id}')">🗑️ Excluir</button>`;
@@ -4414,17 +4416,106 @@ ${p.desc?`<div style="text-align:right;font-size:9.5pt;color:#666;margin-bottom:
 // ============================================================
 // WHATSAPP
 // ============================================================
+// ============================================================
+// CUPOM NÃO FISCAL: impressão, PDF e WhatsApp no mesmo formato
+// ============================================================
+const CUPOM_W=32;
+function _cupWrap(t,w,ind){const pre=ind||'';const out=[];let s=String(t==null?'':t).replace(/\s+/g,' ').trim();if(!s)return[''];while(true){const lim=w-(out.length?pre.length:0);if(s.length<=lim)break;let cut=s.lastIndexOf(' ',lim);if(cut<lim*0.4)cut=lim;out.push((out.length?pre:'')+s.slice(0,cut).trimEnd());s=s.slice(cut).trimStart();}out.push((out.length?pre:'')+s);return out;}
+function _cupLR(a,b,w){a=String(a);b=String(b);return a+' '.repeat(Math.max(1,w-a.length-b.length))+b;}
+function _cupCampo(rot,val,w){return _cupWrap(rot+' '+val,w,' '.repeat(Math.min(rot.length+1,9)));}
+function _cupFone(n){const d=String(n||'').replace(/\D/g,'').replace(/^55/,'');return d.length>=10?'('+d.slice(0,2)+') '+d.slice(2,d.length-4)+'-'+d.slice(-4):String(n||'');}
+function cupomLinhas(p){
+  const W=CUPOM_W,SEP='-'.repeat(W),DUP='='.repeat(W);
+  const ctr=t=>{t=String(t);return ' '.repeat(Math.max(0,Math.floor((W-t.length)/2)))+t;};
+  const L=[];const total=calcTotal(p);
+  let forma='',troco='';const obsCli=[];
+  String(p.obs||'').split(' | ').map(s=>s.trim()).filter(Boolean).forEach(s=>{
+    const m=s.match(/^Pgto:\s*([^(]+?)\s*(?:\(troco p\/\s*([^)]*)\))?\s*$/i);
+    if(m){forma=m[1].trim();troco=(m[2]||'').trim();return;}
+    if(/^(Indicado por:|Entrega \(|⚠|\[via cat)/i.test(s))return;
+    obsCli.push(s);});
+  const retirada=/retirada/i.test(p.logradouro||'');
+  const pago=['PAGO','ENTREGUE'].includes(p.st);
+  L.push(ctr('DE MINAS PÃO DE QUEIJARIA'),ctr('Rua Engenheiro Pegado, 332'),ctr('Vila Carrão - São Paulo/SP'),DUP);
+  L.push(_cupLR('Pedido:',nP(p.num),W));
+  L.push('Data: '+dF(p.data).replace(',',''));
+  if(p.horario)L.push(..._cupCampo('Previsão:',p.horario,W));
+  L.push(SEP,'DADOS DO CLIENTE');
+  L.push(..._cupCampo('Nome:',p.cli||'-',W));
+  if(p.wa)L.push(..._cupCampo('Telefone:',_cupFone(p.wa),W));
+  L.push('Modo: '+(retirada?'Retirada na loja':'Entrega'));
+  if(!retirada){
+    L.push(..._cupCampo('Endereço:',p.logradouro||p.end||'-',W));
+    if(p.complemento)L.push(..._cupCampo('Compl.:',p.complemento,W));
+    if(p.condominio)L.push(..._cupCampo('Cond.:',p.condominio,W));
+  }
+  L.push(SEP,'ITENS DO PEDIDO');
+  let sub=0;
+  (p.itens||[]).forEach(it=>{
+    const s=calcItemSubFn(it);sub+=s;
+    const q=it.pv&&it.pesoReal!=null?Number(it.pesoReal).toFixed(3).replace('.',',')+' kg':it.sub==='metade'?'1/2':String(it.qty||1);
+    L.push(..._cupWrap(String(it.nome||'Item'),W));
+    L.push(_cupLR('  '+q+' x '+R(it.pr),R(s),W));
+    if(it.descItem&&it.descItem>0)L.push('  desconto '+(it.descItemTipo==='P'?it.descItem+'%':R(it.descItem)));
+  });
+  L.push(SEP,_cupLR('Subtotal',R(sub),W));
+  if(p.frete>0)L.push(_cupLR('Taxa de entrega',R(p.frete),W));
+  else if(p.fretePendente)L.push('Taxa de entrega: a combinar');
+  if(p.desc>0)L.push(_cupLR('Desconto','-'+R(p.desc),W));
+  L.push(_cupLR('TOTAL',R(total),W),SEP);
+  L.push(..._cupCampo('Pagamento:',forma||'a combinar',W));
+  if(troco)L.push(..._cupCampo('Troco para:',troco,W));
+  L.push('Status: '+(pago?'pagamento confirmado':'aguardando pagamento'));
+  if(!pago&&(!forma||/pix/i.test(forma))){L.push(..._cupCampo('Chave PIX:',pixCliente(),W));L.push(..._cupCampo('Favorecido:',cfg.pixNome||'',W));}
+  if(obsCli.length)L.push(SEP,..._cupCampo('Obs:',obsCli.join('; '),W));
+  L.push(DUP,ctr('Obrigado pela preferência!'),ctr('Autêntico Pão de Queijo Mineiro'),ctr(_cupFone(cfg.wa1||'5511940507018')));
+  return L;
+}
+function cupomTexto(p){return cupomLinhas(p).join('\n');}
+// ---- PDF (sem biblioteca): papel de 80 mm, fonte Courier, logo em JPEG ----
+function _lat1(s){const a=new Uint8Array(s.length);for(let i=0;i<s.length;i++){let c=s.charCodeAt(i);if(c>255)c=({0x2013:45,0x2014:45,0x2022:45,0x2018:39,0x2019:39,0x201C:34,0x201D:34}[c]||63);a[i]=c;}return a;}
+function _logoJpeg(){return new Promise(res=>{try{const im=new Image();im.onload=()=>{try{const w=im.naturalWidth,h=im.naturalHeight;const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,w,h);g.drawImage(im,0,0);const bin=atob(c.toDataURL('image/jpeg',0.92).split(',')[1]);const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);res({bytes:u,w,h});}catch(e){res(null);}};im.onerror=()=>res(null);im.src=LOGO_ESC;}catch(e){res(null);}});}
+async function cupomPDFBlob(p){
+  const linhas=cupomLinhas(p),FS=9.5,LH=12,PW=226.77,MX=(PW-CUPOM_W*0.6*FS)/2,logo=await _logoJpeg();
+  const lw=logo?120:0,lh=logo?Math.round(lw*logo.h/logo.w):0,top=16,ph=Math.ceil(top+(logo?lh+12:0)+linhas.length*LH+22);
+  const esc=s=>s.replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');
+  let cs='';if(logo)cs+=`q ${lw} 0 0 ${lh} ${((PW-lw)/2).toFixed(2)} ${(ph-top-lh).toFixed(2)} cm /Im1 Do Q\n`;
+  const y0=ph-top-(logo?lh+12:0)-FS;cs+=`BT /F1 ${FS} Tf ${LH} TL ${MX.toFixed(2)} ${y0.toFixed(2)} Td\n`;
+  const neg=l=>/^(\s*DE MINAS PÃO|DADOS DO CLIENTE|ITENS DO PEDIDO|TOTAL)/.test(l);let fb=false;
+  linhas.forEach((l,i)=>{const n=neg(l);if(n!==fb){cs+=`/F${n?2:1} ${FS} Tf\n`;fb=n;}cs+=(i?'T* ':'')+'('+esc(l)+') Tj\n';});cs+='ET';
+  const parts=[];let off=0;const offs=[];const push=u=>{parts.push(u);off+=u.length;};const st=t=>push(_lat1(t));
+  st('%PDF-1.4\n');
+  const obj=(n,body)=>{offs[n]=off;st(n+' 0 obj\n'+body+'\nendobj\n');};
+  obj(1,'<< /Type /Catalog /Pages 2 0 R >>');obj(2,'<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+  obj(3,`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW} ${ph}] /Resources << /Font << /F1 4 0 R /F2 6 0 R >>${logo?' /XObject << /Im1 7 0 R >>':''} >> /Contents 5 0 R >>`);
+  obj(4,'<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>');
+  const cb=_lat1(cs);offs[5]=off;st('5 0 obj\n<< /Length '+cb.length+' >>\nstream\n');push(cb);st('\nendstream\nendobj\n');
+  obj(6,'<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold /Encoding /WinAnsiEncoding >>');
+  let n=7;if(logo){offs[7]=off;st('7 0 obj\n<< /Type /XObject /Subtype /Image /Width '+logo.w+' /Height '+logo.h+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+logo.bytes.length+' >>\nstream\n');push(logo.bytes);st('\nendstream\nendobj\n');n=8;}
+  const xo=off;st('xref\n0 '+n+'\n0000000000 65535 f \n');for(let i=1;i<n;i++)st(String(offs[i]).padStart(10,'0')+' 00000 n \n');
+  st('trailer\n<< /Size '+n+' /Root 1 0 R >>\nstartxref\n'+xo+'\n%%EOF');
+  return new Blob(parts,{type:'application/pdf'});
+}
+async function cupomPDF(id,compartilhar){
+  const p=db.peds.find(pe=>pe.id===id);if(!p)return;
+  let blob;try{blob=await cupomPDFBlob(p);}catch(e){toast('Não foi possível gerar o PDF','warn');return;}
+  const nome='Pedido-'+String(p.num).padStart(5,'0')+'.pdf';const file=new File([blob],nome,{type:'application/pdf'});
+  if(compartilhar&&navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file],title:'Pedido '+nP(p.num),text:'Segue o cupom do seu pedido '+nP(p.num)+'. Obrigado!'});return;}catch(e){if(e&&e.name==='AbortError')return;}
+  }
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=nome;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+  toast(compartilhar?'PDF baixado: anexe no WhatsApp do cliente':'PDF baixado','ok');
+  if(compartilhar){const num=String(p.wa||'').replace(/\D/g,'');if(num)window.open('https://wa.me/'+(num.startsWith('55')?num:'55'+num)+'?text='+encodeURIComponent('Segue o cupom do seu pedido '+nP(p.num)+'. Obrigado!'),'_blank');}
+}
+function cupomImprimir(id){
+  const p=db.peds.find(pe=>pe.id===id);if(!p)return;
+  printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${x('Cupom '+nP(p.num))}</title><style>@page{margin:4mm}*{box-sizing:border-box}body{margin:0;background:#fff;color:#000;font-family:"Courier New",Courier,monospace}.c{width:72mm;margin:0 auto;padding:2mm 0}.c img{display:block;width:44mm;margin:0 auto 3mm}pre{font:12.5px/1.28 "Courier New",Courier,monospace;white-space:pre}.bt{display:flex;gap:6px;justify-content:center;margin:12px 0;font-family:Arial,sans-serif}.bt button{padding:9px 14px;border:0;border-radius:6px;background:#3d2000;color:#fff;font-size:14px;cursor:pointer}@media print{.bt{display:none}}</style></head><body><div class="c"><img src="${LOGO_ESC}" alt=""><pre>${x(cupomTexto(p))}</pre></div><div class="bt"><button onclick="window.print()">🖨️ Imprimir</button><button onclick="opener&&opener.cupomPDF('${p.id}',false)">📄 Baixar PDF</button><button onclick="opener&&opener.cupomPDF('${p.id}',true)">📲 Enviar PDF</button></div></body></html>`);
+}
 function enviarWA(pedId){
   const p=db.peds.find(pe=>pe.id===pedId);if(!p)return;
-  const total=calcTotal(p);const end=enderecoCompleto(p);
-  const itens=(p.itens||[]).map(it=>{
-    let q=it.pv&&it.pesoReal?it.pesoReal.toFixed(3)+' kg':it.sub==='metade'?'½':(it.qty||1)+'x'+(it.pacote&&it.pacote!==''&&it.pacote!=='un'?' ('+it.pacote+')':'');
-    return`• ${it.nome} — ${q} ${R(calcItemSubFn(it))}`;
-  }).join('\n');
-  const sugestao=`\n\nJá experimentou nossos outros produtos?\n• Chipa 3 Queijos\n• Pão de Queijo Recheado (vários sabores)\n• Biscoito de Queijo 2 Queijos\n• Broa de Milho (doce e salgada)\n\nPeça na próxima!`;
-  const msg=`*🧀 DE MINAS — ${nP(p.num)}*\n————\n*Cliente:* ${p.cli}\n*Endereço:* ${end||'—'}\n${p.horario?'🕐 *'+p.horario+'*\n':''}${p.obs?'*Obs:* '+p.obs+'\n':''}${p.vendedor?'👔 *Vendedor:* '+p.vendedor+'\n':''}————\n*ITENS:*\n${itens}\n————\n${p.frete?'Taxa de entrega: '+R(p.frete)+'\n':''}*Total:* ${R(total)}\n\n*PIX:* ${pixCliente()} (${cfg.pixNome})${sugestao}\n\nA De Minas Pão de Queijaria agradece! ❤️`;
   const num=String(p.wa||'').replace(/\D/g,'');
   if(!num){toast('Este pedido está sem WhatsApp do cliente','warn');return;}
+  const msg='*Recebemos o seu pedido!* 🧀\n```\n'+cupomTexto(p)+'\n```';
   window.open(`https://wa.me/${num.startsWith('55')?num:'55'+num}?text=${encodeURIComponent(msg)}`,'_blank');
 }
 
