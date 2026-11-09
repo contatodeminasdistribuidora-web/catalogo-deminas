@@ -4468,15 +4468,16 @@ function cupomLinhas(p){
   L.push('Status: '+(pago?'pagamento confirmado':'aguardando pagamento'));
   if(!pago&&(!forma||/pix/i.test(forma))){L.push(..._cupCampo('Chave PIX:',pixCliente(),W));L.push(..._cupCampo('Favorecido:',cfg.pixNome||'',W));}
   if(obsCli.length)L.push(SEP,..._cupCampo('Obs:',obsCli.join('; '),W));
-  L.push(DUP,ctr('Obrigado pela preferência!'),ctr('Autêntico Pão de Queijo Mineiro'),ctr(_cupFone(cfg.wa1||'5511940507018')));
+  L.push(DUP,ctr('Obrigado pela preferência!'),ctr('O Autêntico'),ctr('Pão de Queijo Mineiro'),ctr(_cupFone(cfg.wa1||'5511940507018')));
   return L;
 }
 function cupomTexto(p){return cupomLinhas(p).join('\n');}
 // ---- PDF (sem biblioteca): papel de 80 mm, fonte Courier, logo em JPEG ----
 function _lat1(s){const a=new Uint8Array(s.length);for(let i=0;i<s.length;i++){let c=s.charCodeAt(i);if(c>255)c=({0x2013:45,0x2014:45,0x2022:45,0x2018:39,0x2019:39,0x201C:34,0x201D:34}[c]||63);a[i]=c;}return a;}
 function _logoJpeg(){return new Promise(res=>{try{const im=new Image();im.onload=()=>{try{const w=im.naturalWidth,h=im.naturalHeight;const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,w,h);g.drawImage(im,0,0);const bin=atob(c.toDataURL('image/jpeg',0.92).split(',')[1]);const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);res({bytes:u,w,h});}catch(e){res(null);}};im.onerror=()=>res(null);im.src=LOGO_ESC;}catch(e){res(null);}});}
-async function cupomPDFBlob(p){
-  const linhas=cupomLinhas(p),FS=9.5,LH=12,PW=226.77,MX=(PW-CUPOM_W*0.6*FS)/2,logo=await _logoJpeg();
+async function cupomPDFBlob(p){return cupomPDFBlobDeLinhas(cupomLinhas(p));}
+async function cupomPDFBlobDeLinhas(linhas){
+  const FS=9.5,LH=12,PW=226.77,MX=(PW-CUPOM_W*0.6*FS)/2,logo=await _logoJpeg();
   const lw=logo?120:0,lh=logo?Math.round(lw*logo.h/logo.w):0,top=16,ph=Math.ceil(top+(logo?lh+12:0)+linhas.length*LH+22);
   const esc=s=>s.replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');
   let cs='';if(logo)cs+=`q ${lw} 0 0 ${lh} ${((PW-lw)/2).toFixed(2)} ${(ph-top-lh).toFixed(2)} cm /Im1 Do Q\n`;
@@ -4509,13 +4510,29 @@ async function cupomPDF(id,compartilhar){
 }
 function cupomImprimir(id){
   const p=db.peds.find(pe=>pe.id===id);if(!p)return;
-  printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${x('Cupom '+nP(p.num))}</title><style>@page{margin:4mm}*{box-sizing:border-box}body{margin:0;background:#fff;color:#000;font-family:"Courier New",Courier,monospace}.c{width:72mm;margin:0 auto;padding:2mm 0}.c img{display:block;width:44mm;margin:0 auto 3mm}pre{font:12.5px/1.28 "Courier New",Courier,monospace;white-space:pre}.bt{display:flex;gap:6px;justify-content:center;margin:12px 0;font-family:Arial,sans-serif}.bt button{padding:9px 14px;border:0;border-radius:6px;background:#3d2000;color:#fff;font-size:14px;cursor:pointer}@media print{.bt{display:none}}</style></head><body><div class="c"><img src="${LOGO_ESC}" alt=""><pre>${x(cupomTexto(p))}</pre></div><div class="bt"><button onclick="window.print()">🖨️ Imprimir</button><button onclick="opener&&opener.cupomPDF('${p.id}',false)">📄 Baixar PDF</button><button onclick="opener&&opener.cupomPDF('${p.id}',true)">📲 Enviar PDF</button></div></body></html>`);
+  const linhas=cupomLinhas(p),num=String(p.wa||'').replace(/\D/g,''),fone=num?(num.startsWith('55')?num:'55'+num):'';
+  const nome='Pedido-'+String(p.num).padStart(5,'0')+'.pdf',msg='Segue o cupom do seu pedido '+nP(p.num)+'. Obrigado!';
+  const js=`const CUPOM_W=${CUPOM_W};const LOGO_ESC=document.getElementById('lg').src;
+${_lat1.toString()}
+${_logoJpeg.toString()}
+${cupomPDFBlobDeLinhas.toString()}
+const LINHAS=${JSON.stringify(linhas).replace(/</g,'\\u003c')},NOME=${JSON.stringify(nome)},FONE=${JSON.stringify(fone)},MSG=${JSON.stringify(msg)};
+function aviso(t){document.getElementById('av').textContent=t;}
+async function gerar(compartilhar){
+  let blob;try{blob=await cupomPDFBlobDeLinhas(LINHAS);}catch(e){aviso('Não foi possível gerar o PDF');return;}
+  const file=new File([blob],NOME,{type:'application/pdf'});
+  if(compartilhar&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:NOME,text:MSG});return;}catch(e){if(e&&e.name==='AbortError')return;}}
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=NOME;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+  aviso(compartilhar?'PDF baixado: anexe na conversa do cliente':'PDF baixado');
+  if(compartilhar&&FONE)window.open('https://wa.me/'+FONE+'?text='+encodeURIComponent(MSG),'_blank');
+}`;
+  printBlob(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${x('Cupom '+nP(p.num))}</title><style>@page{margin:4mm}*{box-sizing:border-box}body{margin:0;background:#fff;color:#000}.c{width:max-content;margin:0 auto;padding:3mm 0}.c img{display:block;width:44mm;margin:0 auto 3mm}pre{font:12.5px/1.28 "Courier New",Courier,monospace;white-space:pre;margin:0}.bt{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:12px 0 4px;font-family:Arial,sans-serif}.bt button{padding:9px 14px;border:0;border-radius:6px;background:#3d2000;color:#fff;font-size:14px;cursor:pointer}#av{text-align:center;font:13px Arial,sans-serif;color:#555;min-height:18px}@media print{.bt,#av{display:none}}</style></head><body><div class="c"><img id="lg" src="${LOGO_ESC}" alt=""><pre>${x(linhas.join('\n'))}</pre></div><div class="bt"><button onclick="window.print()">🖨️ Imprimir</button><button onclick="gerar(false)">📄 Baixar PDF</button><button onclick="gerar(true)">📲 Enviar PDF</button></div><div id="av"></div><script>${js}<\/script></body></html>`);
 }
 function enviarWA(pedId){
   const p=db.peds.find(pe=>pe.id===pedId);if(!p)return;
   const num=String(p.wa||'').replace(/\D/g,'');
   if(!num){toast('Este pedido está sem WhatsApp do cliente','warn');return;}
-  const msg='*Recebemos o seu pedido!* 🧀\n```\n'+cupomTexto(p)+'\n```';
+  const msg='*Recebemos o seu pedido!* 🧀\n```'+cupomTexto(p)+'```';
   window.open(`https://wa.me/${num.startsWith('55')?num:'55'+num}?text=${encodeURIComponent(msg)}`,'_blank');
 }
 
