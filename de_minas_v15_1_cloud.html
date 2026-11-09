@@ -4532,7 +4532,7 @@ function enviarWA(pedId){
   const p=db.peds.find(pe=>pe.id===pedId);if(!p)return;
   const num=String(p.wa||'').replace(/\D/g,'');
   if(!num){toast('Este pedido está sem WhatsApp do cliente','warn');return;}
-  const msg='*Recebemos o seu pedido!* 🧀\n```'+cupomTexto(p)+'```';
+  const msg='*Recebemos o seu pedido!* 🧀\n```\n'+cupomTexto(p)+'\n```';
   window.open(`https://wa.me/${num.startsWith('55')?num:'55'+num}?text=${encodeURIComponent(msg)}`,'_blank');
 }
 
