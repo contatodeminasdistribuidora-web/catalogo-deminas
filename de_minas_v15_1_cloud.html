@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="erp-192.png">
 <link rel="apple-touch-icon" href="erp-180.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>De Minas — Pão de Queijaria v15.1 Cloud</title>
+<title>De Minas — Pão de Queijaria v15.2 Cloud</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
@@ -422,7 +422,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--creme)}
     <button class="sb-item" onclick="ir('lixeira')"><span class="icon">🗑️</span> <span>Lixeira</span> <span class="sb-badge" id="badge-lixeira" style="display:none">0</span></button>
     <button class="sb-item" onclick="ir('config')"><span class="icon">⚙️</span> <span>Config</span></button>
   </nav>
-  <div class="sb-footer">De Minas v15.1 Cloud · Franklin Rainier</div>
+  <div class="sb-footer">De Minas v15.2 Cloud · Franklin Rainier</div>
 </div>
 <div class="overlay-close" id="overlay-close" onclick="closeSidebar()"></div>
 <button class="sb-toggle" onclick="toggleCollapse()" id="sb-toggle-btn">◀</button>
@@ -1617,6 +1617,10 @@ function desenharNovosPedidos() {
         <div class="ped-card-mid" style="font-size:12px">📍 ${x(p.endereco || '—')}</div>
         <div class="ped-card-mid" style="font-size:12px">💳 ${x(p.pagamento || '—')}${p.troco ? ' · troco para ' + x(p.troco) : ''}${p.taxaFrete ? ' · 🚚 ' + x(p.frete || 'Entrega') + ' ' + R(p.taxaFrete) : (p.tipo !== 'Retirada' ? ' · <b style="color:#b00020">⚠ taxa de entrega a combinar</b>' : '')}</div>
         ${p.indicadoPor ? '<div class="ped-card-mid" style="font-size:12px">🤝 Indicado por ' + x(p.indicadoPor) + '</div>' : ''}
+        ${(()=>{const pr=promo1oPedido(p);if(!pr.mostra)return'';
+          return pr.elegivel
+          ? '<div style="background:#e8f5e9;border:1.5px solid #2e7d32;color:#1b5e20;border-radius:8px;padding:7px 9px;margin:7px 0;font-size:12.5px;font-weight:700">🎁 1ª COMPRA pelo QR — aplicar '+PROMO_PCT+'% de desconto (−'+R(pr.valor)+')<div style="font-weight:600;font-size:11px;margin-top:2px">O desconto entra sozinho quando você aprovar.</div></div>'
+          : '<div style="background:#fff3cd;border:1.5px solid #e0a800;color:#7a5b00;border-radius:8px;padding:7px 9px;margin:7px 0;font-size:12.5px;font-weight:700">⚠ JÁ COMPROU '+pr.qtd+'x ('+pr.porque+')'+promoDataAnt(pr.anterior)+'<div style="font-weight:600;font-size:11px;margin-top:2px">Sem o desconto de 1ª compra.</div></div>';})()}
         ${p.obs ? `<div class="ped-card-mid" style="font-size:12px;color:var(--laranja)">💬 ${x(p.obs)}</div>` : ''}
         <div style="background:var(--creme);border-radius:6px;padding:8px 10px;margin:8px 0;font-size:12.5px">${itens}</div>
         ${(p.canal !== 'atacado' && p.tipo !== 'Retirada' && !(Number(p.taxaFrete) > 0)) ? `<div style="background:#fff3cd;border:1.5px solid #e0a800;border-radius:8px;padding:10px;margin:8px 0;font-size:12.5px"><div style="font-weight:700;margin-bottom:6px">${cadTx ? '🚚 Taxa do cadastro de ' + x(cadTx.n) + ': ' + (cadTx.bairroEnt ? x(cadTx.bairroEnt) + ' · ' : '') + R(cadTx.taxaEnt) + ' (confira antes de aprovar)' : '🚚 Entrega sem taxa: adicione antes de aprovar'}</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="tx-sel-${p.id}" onchange="taxaNovoSel('${p.id}')" style="flex:2;min-width:150px;padding:8px;border-radius:6px;border:1px solid #d9c9a3">${optsBairrosTaxa(cadTx && cadTx.bairroEnt ? cadTx.bairroEnt + '|' + cadTx.taxaEnt : '')}</select><input id="tx-val-${p.id}" type="number" min="0" step=".01" placeholder="R$ taxa" value="${cadTx ? cadTx.taxaEnt : ''}" oninput="taxaNovoCalc('${p.id}')" style="flex:1;min-width:90px;padding:8px;border-radius:6px;border:1px solid #d9c9a3"></div><div id="tx-tot-${p.id}" style="margin-top:6px">Total com taxa: <b>${R(subPed + (cadTx ? cadTx.taxaEnt : 0))}</b></div></div>` : ''}
@@ -1829,6 +1833,15 @@ async function aprovarPedidoCatalogo(id) {
       recebido: false,
       origem: 'catalogo'
     };
+    const promo = promo1oPedido(ped);
+    if (promo.mostra && promo.elegivel) {
+      const subPromo = novoPed.itens.reduce((s2, it) => s2 + calcItemSubFn(it), 0);
+      novoPed.desc = Math.round(subPromo * PROMO_PCT) / 100;
+      novoPed.obs = String((novoPed.obs ? novoPed.obs + ' · ' : '') + 'Desconto ' + PROMO_PCT + '% 1o pedido (QR ' + String(ped.indicadoPor || '').slice(0, 20) + ')').slice(0, 420);
+      setTimeout(() => toast('🎁 Aplicado ' + PROMO_PCT + '% do 1º pedido: −' + R(novoPed.desc), 'ok'), 900);
+    } else if (promo.mostra) {
+      setTimeout(() => toast('⚠️ ' + (ped.cliente || 'Cliente') + ' já comprou antes (' + promo.porque + '): desconto do 1º pedido NÃO aplicado', 'warn'), 900);
+    }
     novoPed.total = calcTotal(novoPed);
     db.peds.push(novoPed);
     debitarEstoque(novoPed.itens);
@@ -2213,6 +2226,32 @@ function telChave(w){let d=String(w||'').replace(/\D/g,'');if(d.length>11&&d.sta
 function nomeNorm(n){return String(n||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();}
 function cliTemNome(c,nn){return nomeNorm(c.n)===nn||(c.nomes||[]).some(x=>nomeNorm(x)===nn);}
 // acha o cadastro: 1º pelo telefone; sem telefone, pelo nome exato. Com telefone novo, só junta pelo nome se o cadastro ainda não tem telefone.
+// ===== 10% do 1o pedido (QR do panfleto) =====
+const PROMO_IND=/panfleto|banner|flyer|qr/i, PROMO_PCT=10;
+function endChave(e){
+  let s=String(e||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  if(/retirada na loja/.test(s))return '';
+  s=s.replace(/[^a-z0-9]+/g,' ');
+  s=s.replace(/\b(rua|r|av|avenida|alameda|al|travessa|tv|praca|estrada|rodovia|apto|apartamento|ap|bloco|bl|casa|fundos|cep|numero|n|no|compl|complemento|sao|paulo|sp|brasil)\b/g,' ');
+  const num=(s.match(/\d{1,6}/)||[''])[0];
+  const letras=s.replace(/\d+/g,' ').split(/\s+/).filter(w=>w.length>2).slice(0,3).join(' ');
+  return (letras.length>=6&&num)?letras+'|'+num:'';
+}
+function comprasAnteriores(wa,end,ignoraCatId){
+  const tk=telChave(wa),ek=endChave(end);
+  if(!tk&&!ek)return[];
+  return (db.peds||[]).filter(p=>p.st!=='CANCELADO'&&(!ignoraCatId||p.catalogoId!==ignoraCatId)&&((tk&&telChave(p.wa)===tk)||(ek&&endChave(p.logradouro)===ek)))
+    .sort((a,b)=>String(b.data||'').localeCompare(String(a.data||'')));
+}
+function promo1oPedido(ped){
+  if(!ped||!PROMO_IND.test(String(ped.indicadoPor||''))||ped.canal==='atacado')return{mostra:false};
+  const ant=comprasAnteriores(ped.whatsapp,ped.endereco,ped.id);
+  const sub=(ped.itens||[]).reduce((a,i)=>a+(Number(i.subtotal)||0),0);
+  const tk=telChave(ped.whatsapp);
+  return{mostra:true,elegivel:ant.length===0,valor:Math.round(sub*PROMO_PCT)/100,anterior:ant[0]||null,qtd:ant.length,
+    porque:ant.length?((tk&&telChave(ant[0].wa)===tk)?'mesmo WhatsApp':'mesmo endereco'):''};
+}
+function promoDataAnt(a){try{const d=new Date(a.data);return isNaN(d)?'':' · ultimo em '+d.toLocaleDateString('pt-BR');}catch(e){return '';}}
 function acharCli(nome,wa){
   const tk=telChave(wa);
   if(tk){const c=db.clis.find(cl=>telChave(cl.wa)===tk);if(c)return c;}
@@ -2490,8 +2529,8 @@ function rendPDV(){
     </div>
   </div>
 </div>`;
-  rendPDVGrid();rendCart();rendPDVHist();selPgto(pdvPgto);
   const dh=document.getElementById('pdv-data-hist');if(dh)dh.value=today();
+  rendPDVGrid();rendCart();rendPDVHist();selPgto(pdvPgto);
 }
 
 let pdvCatFil='TODOS';
@@ -2618,8 +2657,18 @@ function rendPDVHist(){
   const el=document.getElementById('pdv-hist');if(!el)return;
   if(!vh.length){el.innerHTML='<div style="color:var(--txt3);font-size:13px;padding:6px 0">Nenhuma venda</div>';return;}
   const tot=vh.reduce((s,v)=>s+v.total,0);
-  el.innerHTML=vh.map(v=>`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--creme2);font-size:12.5px"><div>${v.num} ${v.vendedor?`<span style="font-size:10px;color:var(--azul)">${x(v.vendedor)}</span>`:''}</div><span style="font-weight:700">${R(v.total)}</span></div>`).join('')
+  el.innerHTML=vh.map(v=>`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--creme2);font-size:12.5px"><div>${v.num} ${v.vendedor?`<span style="font-size:10px;color:var(--azul)">${x(v.vendedor)}</span>`:''} <span style="font-size:10px;color:var(--txt3)">${x(v.pgto||'')}</span></div><span style="display:flex;align-items:center;gap:8px"><span style="font-weight:700">${R(v.total)}</span><button title="Cancelar venda" onclick="cancelarVendaComPin('${v.id}')" style="border:1px solid var(--vermelho);background:#fff;color:var(--vermelho);border-radius:6px;font-size:11px;padding:2px 7px;cursor:pointer">✕</button></span></div>`).join('')
     +`<div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:700;font-size:13px;color:var(--vinho)"><span>Total</span><span>${R(tot)}</span></div>`;
+}
+function cancelarVendaComPin(id){
+  const v=db.vendas.find(vd=>vd.id===id);if(!v||v.cancelado)return;
+  pedirPin(`Cancelar a venda ${v.num} de ${R(v.total)}? Os produtos voltam para o estoque.`,()=>{
+    restaurarEstoque(v.itens);
+    v.cancelado=true;v.canceladoEm=new Date().toISOString();
+    salvar();rendPDVHist();rendPDVGrid();atualizaBadges();
+    if(curPage==='painel')rendPainel();if(curPage==='congelados')rendCongelados();
+    toast('Venda '+v.num+' cancelada. Estoque devolvido.','warn');
+  });
 }
 function pdvNavData(d){const inp=document.getElementById('pdv-data-hist');if(!inp)return;const dt=inp.value?new Date(inp.value+'T12:00:00'):new Date();dt.setDate(dt.getDate()+d);inp.value=dISO(dt);rendPDVHist();}
 function limparCarrinho(){if(!pdvCartItems.length)return;if(!confirm('Limpar carrinho?'))return;pdvCartItems=[];rendCart();toast('Carrinho limpo','warn');}
@@ -4325,7 +4374,7 @@ function salvarPin(){
   ['cfg-pin-atual','cfg-pin-novo','cfg-pin-conf'].forEach(id=>document.getElementById(id).value='');
 }
 function exportBackup(){
-  const payload=JSON.stringify({db,cfg:cfgSemPin(),v:'15.1',exportedAt:new Date().toISOString()},null,2);
+  const payload=JSON.stringify({db,cfg:cfgSemPin(),v:'15.2',exportedAt:new Date().toISOString()},null,2);
   const url='data:application/json;charset=utf-8,'+encodeURIComponent(payload);
   const a=document.createElement('a');a.href=url;a.download='deminas_backup_'+hoje+'.json';a.click();
   setTimeout(()=>URL.revokeObjectURL(url),60000);
@@ -4338,7 +4387,7 @@ function importBackup(e){
     try{
       const data=JSON.parse(ev.target.result);
       if(!data.db){toast('Arquivo inválido','err');return;}
-      if(data.v&&!['15.0','15.1'].includes(data.v)&&!confirm(`Backup versão ${data.v}. Dados podem diferir. Continuar?`))return;
+      if(data.v&&!['15.0','15.1','15.2'].includes(data.v)&&!confirm(`Backup versão ${data.v}. Dados podem diferir. Continuar?`))return;
       if(!confirm('Substituir TODOS os dados atuais?'))return;
       const antigoDb=db;
       db=data.db;
@@ -4432,11 +4481,12 @@ function cupomLinhas(p){
   String(p.obs||'').split(' | ').map(s=>s.trim()).filter(Boolean).forEach(s=>{
     const m=s.match(/^Pgto:\s*([^(]+?)\s*(?:\(troco p\/\s*([^)]*)\))?\s*$/i);
     if(m){forma=m[1].trim();troco=(m[2]||'').trim();return;}
-    if(/^(Indicado por:|Entrega \(|⚠|\[via cat)/i.test(s))return;
+    if(/^(Indicado por:|Entrega \(|Entrega:|RETIRADA NA LOJA$|⚠|\[via cat)/i.test(s))return;
     obsCli.push(s);});
   const retirada=/retirada/i.test(p.logradouro||'');
   const pago=['PAGO','ENTREGUE'].includes(p.st);
-  L.push(ctr('DE MINAS PÃO DE QUEIJARIA'),ctr('Rua Engenheiro Pegado, 332'),ctr('Vila Carrão - São Paulo/SP'),DUP);
+  const ehAt=p.tipo==='atacado'||/\[via cat[aá]logo atacado\]/i.test(p.obs||'');
+  L.push(ctr(ehAt?'DE MINAS DISTRIBUIDORA LTDA':'DE MINAS PÃO DE QUEIJARIA'),ctr('Rua Engenheiro Pegado, 332'),ctr('Vila Carrão - São Paulo/SP'),DUP);
   L.push(_cupLR('Pedido:',nP(p.num),W));
   L.push('Data: '+dF(p.data).replace(',',''));
   if(p.horario)L.push(..._cupCampo('Previsão:',p.horario,W));
@@ -4468,7 +4518,7 @@ function cupomLinhas(p){
   L.push('Status: '+(pago?'pagamento confirmado':'aguardando pagamento'));
   if(!pago&&(!forma||/pix/i.test(forma))){L.push(..._cupCampo('Chave PIX:',pixCliente(),W));L.push(..._cupCampo('Favorecido:',cfg.pixNome||'',W));}
   if(obsCli.length)L.push(SEP,..._cupCampo('Obs:',obsCli.join('; '),W));
-  L.push(DUP,ctr('Obrigado pela preferência!'),ctr('O Autêntico'),ctr('Pão de Queijo Mineiro'),ctr(_cupFone(cfg.wa1||'5511940507018')));
+  L.push(DUP,ctr('Obrigado pela preferência!'),ctr('O Autêntico'),ctr('Pão de Queijo Mineiro'),ctr(_cupFone(cfg.wa1||'5511940507018')),SEP,ctr(ehAt?'De Minas Distribuidora Ltda':'De Minas Pão de Queijaria'),ctr('CNPJ 70.065.785/0001-66'),ctr('Documento sem valor fiscal'));
   return L;
 }
 function cupomTexto(p){return cupomLinhas(p).join('\n');}
@@ -4561,5 +4611,507 @@ const _badgeInterval=setInterval(atualizaBadges,30000);
 document.addEventListener('click',e=>{if(!e.target.closest('.busca-global-wrap'))fecharBuscaGlobal();});
 </script>
 <div id="novos-flut"></div>
+<script>
+// ============================================================
+// CAIXINHA DO IMÓVEL — módulo aditivo (v15.2)
+// Não altera nada do ERP existente: só acrescenta.
+// ============================================================
+
+const CX_META_VALOR = 5000000;      // R$ 5.000.000
+const CX_META_KG    = 1000000;      // 1.000.000 kg
+const CX_MES_INICIO = '2026-12';    // primeiro mês da meta
+
+function cxCfg(){
+  if(!cfg.caixinha) cfg.caixinha = {};
+  const c = cfg.caixinha;
+  if(c.valorVarejo==null)  c.valorVarejo  = 5.00;
+  if(c.valorAtacado==null) c.valorAtacado = 1.50;
+  if(c.fabricaAtiva==null) c.fabricaAtiva = false;
+  if(c.fabricaDesde==null) c.fabricaDesde = '';
+  if(c.metaBase==null)     c.metaBase     = 200;
+  if(!c.crescimentos)      c.crescimentos = {a1:30, a2:10, a3:6, a4:2};
+  if(!Array.isArray(c.depositos))   c.depositos   = [];
+  if(!Array.isArray(c.consumoLoja)) c.consumoLoja = [];
+  return c;
+}
+
+// ---------- peso por embalagem ----------
+function cxInferirPeso(pacote){
+  if(!pacote) return null;
+  const s = String(pacote).trim().toLowerCase().replace(',', '.');
+  let m = s.match(/^(\d+(?:\.\d+)?)\s*kg$/);        if(m) return parseFloat(m[1]);
+  m = s.match(/^(\d+(?:\.\d+)?)\s*g$/);             if(m) return parseFloat(m[1])/1000;
+  m = s.match(/(\d+(?:\.\d+)?)\s*kg/);              if(m) return parseFloat(m[1]);
+  m = s.match(/(\d+(?:\.\d+)?)\s*g\b/);             if(m) return parseFloat(m[1])/1000;
+  return null;
+}
+function cxPesoKg(prod){
+  if(!prod) return null;
+  if(prod.pesoKg!=null && prod.pesoKg!=='' && !isNaN(parseFloat(prod.pesoKg))) return parseFloat(prod.pesoKg);
+  return cxInferirPeso(prod.pacote);
+}
+function cxEhCongelado(prod){ return !!prod && prod.cat==='Congelados'; }
+function cxCongeladosSemPeso(){
+  return db.prods.filter(p=>cxEhCongelado(p) && cxPesoKg(p)==null);
+}
+
+// kg de congelados de uma lista de itens
+function cxKgItens(itens){
+  let kg = 0;
+  (itens||[]).forEach(it=>{
+    const prod = gP(it.prodId);
+    if(!cxEhCongelado(prod)) return;
+    const q = parseFloat(it.qty)||0;
+    if(it.pv && it.pesoKg!=null){ kg += parseFloat(it.pesoKg)*q; return; }
+    if(it.pv && it.pesoReal!=null){ kg += parseFloat(it.pesoReal); return; }
+    const pk = cxPesoKg(prod);
+    if(pk==null) return;
+    kg += pk*q;
+  });
+  return Math.round(kg*1000)/1000;
+}
+
+// ---------- taxa por kg ----------
+function cxTaxa(canal, dataISO){
+  const c = cxCfg();
+  if(canal==='atacado'){
+    if(c.fabricaAtiva && c.fabricaDesde && diaDe(dataISO) >= c.fabricaDesde) return parseFloat(c.valorVarejo)||0;
+    return parseFloat(c.valorAtacado)||0;
+  }
+  return parseFloat(c.valorVarejo)||0;
+}
+
+const cxPago = st => st==='PAGO' || st==='ENTREGUE';
+
+// ---------- lançamentos ----------
+function cxLancamentos(){
+  const out = [], vistos = {};
+  const add = o => { if(vistos[o.id]) return; vistos[o.id]=1; if(o.kg>0) out.push(o); };
+
+  (db.peds||[]).forEach(p=>{
+    if(!cxPago(p.st) || p.st==='CANCELADO') return;
+    const kg = cxKgItens(p.itens);
+    add({id:'ped_'+p.id, ref:p.id, num:nP(p.num), cliente:p.cli||'', canal:'varejo',
+         canalLabel:'WhatsApp / Delivery', data:p.data, kg, valor:Math.round(kg*cxTaxa('varejo',p.data)*100)/100});
+  });
+
+  (db.vendas||[]).forEach(v=>{
+    if(v.cancelado) return;
+    const kg = cxKgItens(v.itens);
+    add({id:'pdv_'+v.id, ref:v.id, num:v.num||'PDV', cliente:'Balcão', canal:'varejo',
+         canalLabel:'PDV', data:v.data, kg, valor:Math.round(kg*cxTaxa('varejo',v.data)*100)/100});
+  });
+
+  (db.atPeds||[]).forEach(p=>{
+    if(!cxPago(p.st) || p.st==='CANCELADO') return;
+    const kg = cxKgItens(p.itens);
+    add({id:'at_'+p.id, ref:p.id, num:nAt(p.num), cliente:p.cliNome||'', canal:'atacado',
+         canalLabel:'Atacado B2B', data:p.data, kg, valor:Math.round(kg*cxTaxa('atacado',p.data)*100)/100});
+  });
+
+  cxCfg().consumoLoja.forEach(c=>{
+    const kg = parseFloat(c.kg)||0;
+    add({id:'loja_'+c.id, ref:c.id, num:'LOJA', cliente:c.obs||'Consumo da loja (assados)', canal:'varejo',
+         canalLabel:'Consumo da loja', data:c.data, kg, valor:Math.round(kg*cxTaxa('varejo',c.data)*100)/100});
+  });
+
+  return out.sort((a,b)=>String(b.data).localeCompare(String(a.data)));
+}
+
+function cxTotais(){
+  const l = cxLancamentos();
+  let gerado=0, kgTotal=0, kgVarejo=0, kgAtacado=0;
+  const porMes = {};
+  l.forEach(o=>{
+    gerado += o.valor; kgTotal += o.kg;
+    if(o.canal==='atacado') kgAtacado += o.kg; else kgVarejo += o.kg;
+    const m = mesDe(o.data);
+    if(!porMes[m]) porMes[m] = {mes:m, kgVarejo:0, kgAtacado:0, kg:0, gerado:0, depositado:0};
+    porMes[m].kg += o.kg; porMes[m].gerado += o.valor;
+    if(o.canal==='atacado') porMes[m].kgAtacado += o.kg; else porMes[m].kgVarejo += o.kg;
+  });
+  let depositado = 0;
+  cxCfg().depositos.forEach(d=>{
+    const v = parseFloat(d.valor)||0; depositado += v;
+    const m = mesDe(d.data);
+    if(!porMes[m]) porMes[m] = {mes:m, kgVarejo:0, kgAtacado:0, kg:0, gerado:0, depositado:0};
+    porMes[m].depositado += v;
+  });
+  gerado = Math.round(gerado*100)/100; depositado = Math.round(depositado*100)/100;
+  return {lanc:l, gerado, depositado, aDepositar:Math.round((gerado-depositado)*100)/100,
+          kgTotal:Math.round(kgTotal*1000)/1000, kgVarejo, kgAtacado, porMes};
+}
+
+// ---------- meta mês a mês ----------
+function cxCrescimentoDoAno(anoIdx){
+  const c = cxCfg().crescimentos;
+  const p = anoIdx===0?c.a1 : anoIdx===1?c.a2 : anoIdx===2?c.a3 : c.a4;
+  return (parseFloat(p)||0)/100;
+}
+function cxIndiceMes(mes){ // mes = 'YYYY-MM'
+  const [ay,am] = CX_MES_INICIO.split('-').map(Number);
+  const [by,bm] = String(mes).split('-').map(Number);
+  return (by-ay)*12 + (bm-am);
+}
+function cxMesDoIndice(i){
+  const [ay,am] = CX_MES_INICIO.split('-').map(Number);
+  const d = new Date(Date.UTC(ay, am-1+i, 1));
+  return d.toISOString().slice(0,7);
+}
+function cxMetaKgMes(i){
+  if(i<0) return null;   // antes do início da meta não há meta
+  let v = parseFloat(cxCfg().metaBase)||0;
+  for(let k=0;k<=i;k++) v = v*(1+cxCrescimentoDoAno(Math.floor(k/12)));
+  return Math.round(v*10)/10;
+}
+
+function cxPrevisao(t){
+  const falta = CX_META_VALOR - t.gerado;
+  if(falta<=0) return 'Meta de R$ 5 milhões atingida 🎉';
+  const mesAtual = mesDe(new Date().toISOString());
+  const idx = cxIndiceMes(mesAtual);
+  let soma=0, n=0;
+  for(let k=1;k<=3;k++){
+    const m = cxMesDoIndice(idx-k);
+    if(t.porMes[m]){ soma += t.porMes[m].gerado; n++; }
+  }
+  if(!n && t.porMes[mesAtual]){ soma = t.porMes[mesAtual].gerado; n = 1; }
+  if(!n || soma<=0) return {txt:'Sem histórico ainda', sub:'a previsão aparece depois do primeiro mês fechado'};
+  const media = soma/n;
+  const meses = Math.ceil(falta/media);
+  if(meses > 600) return {txt:'Mais de 50 anos', sub:'no ritmo atual de '+R(media)+'/mês — ainda é pouco histórico'};
+  const d = new Date(); d.setDate(1); d.setMonth(d.getMonth()+meses);
+  const mesNome = d.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  return {txt: mesNome.charAt(0).toUpperCase()+mesNome.slice(1),
+          sub: meses+' meses ('+(meses/12).toFixed(1).replace('.',',')+' anos) a '+R(media)+'/mês'};
+}
+
+// ---------- tela ----------
+function cxBarra(pct, cor){
+  const p = Math.max(0, Math.min(100, pct));
+  return `<div style="background:#e8e2d8;border-radius:999px;height:14px;overflow:hidden;margin-top:8px">
+    <div style="width:${p}%;height:100%;background:${cor};border-radius:999px;transition:.4s"></div></div>`;
+}
+function cxCard(titulo, valor, extra){
+  return `<div style="background:#fff;border:1.5px solid var(--borda);border-radius:var(--radius2);padding:16px">
+    <div style="font-size:12px;color:#8a7a68;font-weight:600;text-transform:uppercase;letter-spacing:.4px">${titulo}</div>
+    <div style="font-size:24px;font-weight:800;color:#3d2000;margin-top:6px">${valor}</div>
+    ${extra||''}</div>`;
+}
+
+function rendCaixinha(){
+  const el = document.getElementById('p-caixinha'); if(!el) return;
+  const c = cxCfg(), t = cxTotais();
+  const mesAtual = mesDe(new Date().toISOString());
+  const idx = cxIndiceMes(mesAtual);
+  const metaMes = cxMetaKgMes(idx);
+  const kgMes = t.porMes[mesAtual] ? t.porMes[mesAtual].kg : 0;
+  const temMeta = metaMes!=null;
+  const okMes = temMeta ? kgMes >= metaMes : true;
+  const prev = cxPrevisao(t);
+  const semPeso = cxCongeladosSemPeso();
+
+  const pctValor = t.gerado/CX_META_VALOR*100;
+  const pctKg = t.kgTotal/CX_META_KG*100;
+
+  let html = `<div class="sec-header"><h2>🏠 Caixinha do Imóvel</h2>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-outline" onclick="cxAbrirConsumo()">🔥 Consumo da loja</button>
+      <button class="btn btn-outline" onclick="cxAbrirCfg()">⚙️ Configurações</button>
+      <button class="btn btn-primary" onclick="cxAbrirDeposito()">💰 Registrar depósito</button>
+    </div></div>`;
+
+  if(semPeso.length){
+    html += `<div style="background:#fff8e6;border:1.5px solid #e0b84c;border-radius:var(--radius2);padding:14px;margin-bottom:16px">
+      <strong>⚠️ ${semPeso.length} congelado(s) sem peso cadastrado</strong>
+      <div style="font-size:13px;color:#7a6a58;margin-top:6px">Esses produtos não entram na conta da caixinha. Abra Produtos e preencha o campo "Peso (kg)".</div>
+      <div style="font-size:13px;margin-top:8px">${semPeso.map(p=>'• '+x(p.n)).join('<br>')}</div></div>`;
+  }
+
+  html += `<div class="stat-grid" style="margin-bottom:18px">
+    ${cxCard('A depositar agora', R(t.aDepositar), `<div style="font-size:12px;color:#8a7a68;margin-top:4px">gerado ${R(t.gerado)} − depositado ${R(t.depositado)}</div>`)}
+    ${cxCard('Total depositado', R(t.depositado), `<div style="font-size:12px;color:#8a7a68;margin-top:4px">${c.depositos.length} depósito(s)</div>`)}
+    ${cxCard('Progresso até R$ 5 milhões', pctValor.toFixed(2).replace('.',',')+'%', cxBarra(pctValor,'#2e7d32')+`<div style="font-size:12px;color:#8a7a68;margin-top:6px">${R(t.gerado)} de ${R(CX_META_VALOR)}</div>`)}
+    ${cxCard('kg acumulados', pctKg.toFixed(2).replace('.',',')+'%', cxBarra(pctKg,'#1565c0')+`<div style="font-size:12px;color:#8a7a68;margin-top:6px">${Rn(t.kgTotal)} kg de ${Rn(CX_META_KG)} kg</div>`)}
+    ${cxCard('Este mês', `<span style="color:${temMeta?(okMes?'#2e7d32':'#c0392b'):'#3d2000'}">${Rn(kgMes)} kg</span>`, `<div style="font-size:12px;color:#8a7a68;margin-top:4px">${temMeta?('meta do mês: '+Rn(metaMes)+' kg '+(okMes?'✅':'⚠️')):('a meta começa em '+CX_MES_INICIO.split('-').reverse().join('/'))}</div>`)}
+    ${cxCard('Previsão dos R$ 5 milhões', `<span style="font-size:19px">${prev.txt}</span>`, `<div style="font-size:12px;color:#8a7a68;margin-top:4px">${prev.sub}</div>`)}
+  </div>`;
+
+  html += `<div style="background:#fff;border:1.5px solid var(--borda);border-radius:var(--radius2);padding:14px;margin-bottom:18px;display:flex;gap:18px;flex-wrap:wrap;align-items:center">
+    <div><strong>Varejo:</strong> ${R(c.valorVarejo)}/kg</div>
+    <div><strong>Atacado:</strong> ${R(c.valorAtacado)}/kg</div>
+    <div><strong>Fábrica própria:</strong> ${c.fabricaAtiva?('✅ ativa desde '+dFD(c.fabricaDesde)+' — atacado a '+R(c.valorVarejo)+'/kg'):'— desligada'}</div>
+    <div style="color:#8a7a68;font-size:13px">kg varejo ${Rn(t.kgVarejo)} · kg atacado ${Rn(t.kgAtacado)}</div></div>`;
+
+  // depósitos
+  html += `<div class="tbl-wrap" style="margin-bottom:18px"><div class="tbl-head"><h3>💰 Histórico de depósitos</h3></div>
+    <table><thead><tr><th>Data</th><th>Valor</th><th>Observação</th><th></th></tr></thead><tbody>`;
+  const deps = c.depositos.slice().sort((a,b)=>String(b.data).localeCompare(String(a.data)));
+  html += deps.length ? deps.map(d=>`<tr><td>${dFD(d.data)}</td><td><strong>${R(d.valor)}</strong></td><td>${x(d.obs||'')}</td>
+    <td><button class="btn btn-ghost btn-sm" style="border-color:#c0392b;color:#c0392b" onclick="cxExcluirDeposito('${d.id}')">Excluir</button></td></tr>`).join('')
+    : `<tr><td colspan="4" style="text-align:center;color:#8a7a68;padding:18px">Nenhum depósito registrado</td></tr>`;
+  html += `</tbody></table></div>`;
+
+  // pedidos do mês
+  const doMes = t.lanc.filter(o=>mesDe(o.data)===mesAtual);
+  html += `<div class="tbl-wrap" style="margin-bottom:18px"><div class="tbl-head"><h3>📦 Pedidos que geraram caixinha em ${mesAtual.split('-').reverse().join('/')}</h3></div>
+    <table><thead><tr><th>Nº</th><th>Cliente</th><th>Canal</th><th>kg</th><th>Valor</th><th>Data</th></tr></thead><tbody>`;
+  html += doMes.length ? doMes.map(o=>`<tr><td>${x(o.num)}</td><td>${x(o.cliente)}</td><td>${x(o.canalLabel)}</td>
+    <td>${Rn(o.kg)}</td><td><strong>${R(o.valor)}</strong></td><td>${dFD(o.data)}</td></tr>`).join('')
+    : `<tr><td colspan="6" style="text-align:center;color:#8a7a68;padding:18px">Nenhum pedido pago com congelados neste mês</td></tr>`;
+  html += `</tbody></table></div>`;
+
+  // resumo mês a mês
+  const meses = Object.keys(t.porMes).sort().reverse();
+  html += `<div class="tbl-wrap"><div class="tbl-head"><h3>📅 Resumo mês a mês</h3></div>
+    <table><thead><tr><th>Mês</th><th>kg varejo</th><th>kg atacado</th><th>kg total</th><th>Meta kg</th><th>Gerado</th><th>Depositado</th></tr></thead><tbody>`;
+  html += meses.length ? meses.map(m=>{
+      const r = t.porMes[m], meta = cxMetaKgMes(cxIndiceMes(m));
+      const bate = meta!=null && r.kg>=meta;
+      const cel = meta==null ? '<span style="color:#8a7a68">—</span>'
+                : `<span style="color:${bate?'#2e7d32':'#c0392b'}">${Rn(meta)} ${bate?'✅':'⚠️'}</span>`;
+      return `<tr><td>${m.split('-').reverse().join('/')}</td><td>${Rn(r.kgVarejo)}</td><td>${Rn(r.kgAtacado)}</td>
+        <td><strong>${Rn(r.kg)}</strong></td><td>${cel}</td>
+        <td>${R(r.gerado)}</td><td>${R(r.depositado)}</td></tr>`;
+    }).join('')
+    : `<tr><td colspan="7" style="text-align:center;color:#8a7a68;padding:18px">Sem movimento ainda</td></tr>`;
+  html += `</tbody></table></div>`;
+
+  el.innerHTML = html;
+}
+
+// ---------- depósito ----------
+function cxAbrirDeposito(){
+  const t = cxTotais();
+  document.getElementById('cx-dep-valor').value = t.aDepositar>0 ? t.aDepositar.toFixed(2) : '';
+  document.getElementById('cx-dep-data').value = today();
+  document.getElementById('cx-dep-obs').value = '';
+  am('mod-cx-dep');
+}
+function cxSalvarDeposito(){
+  const valor = parseFloat(document.getElementById('cx-dep-valor').value)||0;
+  if(valor<=0){ toast('Informe o valor do depósito','warn'); return; }
+  const data = document.getElementById('cx-dep-data').value || today();
+  const obs = document.getElementById('cx-dep-obs').value.trim();
+  cxCfg().depositos.push({id:uid(), valor:Math.round(valor*100)/100, data, obs, criadoEm:new Date().toISOString()});
+  salvarCfg(); fm('mod-cx-dep'); rendCaixinha(); cxPainelCard();
+  toast('Depósito de '+R(valor)+' registrado','ok');
+}
+function cxExcluirDeposito(id){
+  const d = cxCfg().depositos.find(x=>x.id===id); if(!d) return;
+  pedirPin('Excluir o depósito de '+R(d.valor)+'?', ()=>{
+    cfg.caixinha.depositos = cfg.caixinha.depositos.filter(x=>x.id!==id);
+    salvarCfg(); rendCaixinha(); cxPainelCard(); toast('Depósito excluído','warn');
+  });
+}
+
+// ---------- consumo da loja ----------
+function cxAbrirConsumo(){
+  document.getElementById('cx-con-kg').value = '';
+  document.getElementById('cx-con-data').value = today();
+  document.getElementById('cx-con-obs').value = '';
+  cxRendConsumo(); am('mod-cx-con');
+}
+function cxRendConsumo(){
+  const lista = cxCfg().consumoLoja.slice().sort((a,b)=>String(b.data).localeCompare(String(a.data)));
+  document.getElementById('cx-con-lista').innerHTML = lista.length
+    ? lista.map(c=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--borda)">
+        <span>${dFD(c.data)} — <strong>${Rn(c.kg)} kg</strong> ${c.obs?'· '+x(c.obs):''}</span>
+        <button class="btn btn-ghost btn-sm" style="border-color:#c0392b;color:#c0392b" onclick="cxExcluirConsumo('${c.id}')">×</button></div>`).join('')
+    : '<div style="color:#8a7a68;padding:10px 0">Nenhum lançamento ainda.</div>';
+}
+function cxSalvarConsumo(){
+  const kg = parseFloat(String(document.getElementById('cx-con-kg').value).replace(',','.'))||0;
+  if(kg<=0){ toast('Informe os kg usados','warn'); return; }
+  cxCfg().consumoLoja.push({id:uid(), kg, data:document.getElementById('cx-con-data').value||today(),
+                            obs:document.getElementById('cx-con-obs').value.trim()});
+  salvarCfg(); cxRendConsumo(); rendCaixinha(); cxPainelCard();
+  document.getElementById('cx-con-kg').value='';
+  toast('+'+Rn(kg)+' kg de consumo da loja','ok');
+}
+function cxExcluirConsumo(id){
+  cfg.caixinha.consumoLoja = cfg.caixinha.consumoLoja.filter(c=>c.id!==id);
+  salvarCfg(); cxRendConsumo(); rendCaixinha(); cxPainelCard();
+}
+
+// ---------- configurações ----------
+function cxAbrirCfg(){
+  const c = cxCfg();
+  document.getElementById('cx-cfg-varejo').value = c.valorVarejo;
+  document.getElementById('cx-cfg-atacado').value = c.valorAtacado;
+  document.getElementById('cx-cfg-fabrica').value = c.fabricaAtiva?'1':'0';
+  document.getElementById('cx-cfg-fabrica-desde').value = c.fabricaDesde||today();
+  document.getElementById('cx-cfg-base').value = c.metaBase;
+  document.getElementById('cx-cfg-a1').value = c.crescimentos.a1;
+  document.getElementById('cx-cfg-a2').value = c.crescimentos.a2;
+  document.getElementById('cx-cfg-a3').value = c.crescimentos.a3;
+  document.getElementById('cx-cfg-a4').value = c.crescimentos.a4;
+  cxToggleFabricaCampo(); am('mod-cx-cfg');
+}
+function cxToggleFabricaCampo(){
+  const on = document.getElementById('cx-cfg-fabrica').value==='1';
+  document.getElementById('cx-cfg-fabrica-wrap').style.display = on?'flex':'none';
+}
+function cxSalvarCfgForm(){
+  const c = cxCfg();
+  c.valorVarejo  = parseFloat(document.getElementById('cx-cfg-varejo').value)||0;
+  c.valorAtacado = parseFloat(document.getElementById('cx-cfg-atacado').value)||0;
+  const ativa = document.getElementById('cx-cfg-fabrica').value==='1';
+  if(ativa && !c.fabricaAtiva) c.fabricaDesde = document.getElementById('cx-cfg-fabrica-desde').value || today();
+  else if(ativa) c.fabricaDesde = document.getElementById('cx-cfg-fabrica-desde').value || c.fabricaDesde;
+  c.fabricaAtiva = ativa;
+  c.metaBase = parseFloat(document.getElementById('cx-cfg-base').value)||0;
+  c.crescimentos = {
+    a1: parseFloat(document.getElementById('cx-cfg-a1').value)||0,
+    a2: parseFloat(document.getElementById('cx-cfg-a2').value)||0,
+    a3: parseFloat(document.getElementById('cx-cfg-a3').value)||0,
+    a4: parseFloat(document.getElementById('cx-cfg-a4').value)||0
+  };
+  salvarCfg(); fm('mod-cx-cfg'); rendCaixinha(); cxPainelCard(); toast('Configurações da caixinha salvas','ok');
+}
+
+// ---------- card no painel ----------
+function cxPainelCard(){
+  const alvo = document.getElementById('painel-caixinha'); if(!alvo) return;
+  const t = cxTotais();
+  alvo.innerHTML = `<div onclick="ir('caixinha')" style="cursor:pointer;background:#fff;border:1.5px solid var(--borda);border-left:5px solid #2e7d32;border-radius:var(--radius2);padding:12px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+    <div><strong>🏠 Caixinha: ${R(t.aDepositar)} a depositar</strong>
+      <div style="font-size:12px;color:#8a7a68;margin-top:2px">${Rn(t.kgTotal)} kg acumulados · ${(t.gerado/CX_META_VALOR*100).toFixed(2).replace('.',',')}% dos R$ 5 milhões</div></div>
+    <span style="color:#2e7d32;font-weight:700">abrir ›</span></div>`;
+}
+
+// ---------- campo Peso (kg) no cadastro de produto ----------
+function cxInjetarCampoPeso(){
+  if(document.getElementById('prod-pesokg')) return;
+  const wrap = document.getElementById('prod-pacote-wrap'); if(!wrap) return;
+  const div = document.createElement('div');
+  div.className = 'form-group';
+  div.id = 'prod-pesokg-wrap';
+  div.innerHTML = '<label>Peso (kg) <span style="font-weight:400;color:#8a7a68">— usado na caixinha</span></label>'+
+                  '<input id="prod-pesokg" type="number" min="0" step=".001" placeholder="1, 0,5, 2...">';
+  wrap.parentNode.insertBefore(div, wrap.nextSibling);
+}
+
+// ---------- hooks (wrappers, sem tocar no código existente) ----------
+let _cxUltimoGerado = null, _cxUltimoKg = null;
+
+function cxInstalarHooks(){
+  // 1) toast ao gerar caixinha + atualização do card
+  const _salvarOrig = salvar;
+  salvar = function(){
+    const r = _salvarOrig.apply(this, arguments);
+    try{
+      const t = cxTotais(), atual = t.gerado;
+      if(_cxUltimoGerado!=null && atual > _cxUltimoGerado + 0.004){
+        const delta = Math.round((atual-_cxUltimoGerado)*100)/100;
+        const dkg = Math.round((t.kgTotal-(_cxUltimoKg||0))*1000)/1000;
+        toast('+'+R(delta)+' para a caixinha ('+Rn(dkg)+' kg)','ok');
+      }
+      _cxUltimoGerado = atual; _cxUltimoKg = t.kgTotal;
+      cxPainelCard();
+      if(curPage==='caixinha') rendCaixinha();
+    }catch(e){}
+    return r;
+  };
+
+  // 2) card no painel
+  const _rendPainelOrig = rendPainel;
+  rendPainel = function(){ const r=_rendPainelOrig.apply(this,arguments); try{cxPainelCard();}catch(e){} return r; };
+
+  // 3) campo Peso (kg) no cadastro de produto
+  const _novoProd = abrirNovoProd;
+  abrirNovoProd = function(){ const r=_novoProd.apply(this,arguments); try{cxInjetarCampoPeso();const e=document.getElementById('prod-pesokg');if(e)e.value='';}catch(e){} return r; };
+  const _editProd = abrirEditProd;
+  abrirEditProd = function(id){ const r=_editProd.apply(this,arguments); try{cxInjetarCampoPeso();const p=gP(id),e=document.getElementById('prod-pesokg');if(e&&p)e.value=(p.pesoKg!=null?p.pesoKg:(cxInferirPeso(p.pacote)??''));}catch(e){} return r; };
+  const _salvarProd = salvarProd;
+  salvarProd = function(){
+    const id = document.getElementById('prod-id').value;
+    const el = document.getElementById('prod-pesokg');
+    const peso = el ? parseFloat(String(el.value).replace(',','.')) : NaN;
+    const r = _salvarProd.apply(this, arguments);
+    try{
+      let alvo = id ? gP(id) : db.prods[db.prods.length-1];
+      if(alvo){ alvo.pesoKg = isNaN(peso)||peso<=0 ? null : peso; salvar(); }
+    }catch(e){}
+    return r;
+  };
+}
+
+// ---------- menu + página + modais ----------
+function cxMontarUI(){
+  // item no menu, antes de Config
+  const nav = document.querySelector('.sb-nav');
+  if(nav && !nav.querySelector('[data-cx]')){
+    const btn = document.createElement('button');
+    btn.className = 'sb-item'; btn.setAttribute('data-cx','1');
+    btn.setAttribute('onclick', "ir('caixinha')");
+    btn.innerHTML = '<span class="icon">🏠</span> <span>Caixinha</span>';
+    const cfgBtn = Array.from(nav.querySelectorAll('.sb-item')).find(b=>(b.getAttribute('onclick')||'').includes("'config'"));
+    nav.insertBefore(btn, cfgBtn||null);
+  }
+  // página
+  if(!document.getElementById('p-caixinha')){
+    const pg = document.createElement('div');
+    pg.className = 'page'; pg.id = 'p-caixinha';
+    document.getElementById('content').appendChild(pg);
+  }
+  // slot do card no painel
+  if(!document.getElementById('painel-caixinha')){
+    const alertas = document.getElementById('painel-alertas');
+    if(alertas){ const d=document.createElement('div'); d.id='painel-caixinha'; alertas.parentNode.insertBefore(d, alertas); }
+  }
+  // modais
+  if(!document.getElementById('mod-cx-dep')){
+    document.body.insertAdjacentHTML('beforeend', `
+<div class="modal-overlay" id="mod-cx-dep"><div class="modal"><div class="modal-head"><h3>💰 Registrar depósito</h3><button class="close-btn" onclick="fm('mod-cx-dep')">×</button></div>
+<div class="modal-body"><div class="form-grid">
+<div class="form-group"><label>Valor R$</label><input id="cx-dep-valor" type="number" min="0" step=".01"></div>
+<div class="form-group"><label>Data</label><input id="cx-dep-data" type="date"></div>
+<div class="form-group" style="grid-column:1/-1"><label>Observação</label><input id="cx-dep-obs" placeholder="Transferência para a poupança do imóvel"></div>
+</div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-cx-dep')">Cancelar</button><button class="btn btn-primary" onclick="cxSalvarDeposito()">Salvar</button></div></div></div>
+
+<div class="modal-overlay" id="mod-cx-con"><div class="modal"><div class="modal-head"><h3>🔥 Consumo da loja (assados)</h3><button class="close-btn" onclick="fm('mod-cx-con')">×</button></div>
+<div class="modal-body"><p style="color:#7a6a58;font-size:13px;margin-top:0">Informe os kg de congelado que a loja assou e vendeu no balcão. Conta como varejo.</p>
+<div class="form-grid">
+<div class="form-group"><label>Kg usados</label><input id="cx-con-kg" type="number" min="0" step=".001"></div>
+<div class="form-group"><label>Data</label><input id="cx-con-data" type="date"></div>
+<div class="form-group" style="grid-column:1/-1"><label>Observação</label><input id="cx-con-obs" placeholder="opcional"></div>
+</div><div style="margin-top:14px"><strong>Lançamentos</strong><div id="cx-con-lista" style="margin-top:6px;max-height:220px;overflow:auto"></div></div></div>
+<div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-cx-con')">Fechar</button><button class="btn btn-primary" onclick="cxSalvarConsumo()">Lançar</button></div></div></div>
+
+<div class="modal-overlay" id="mod-cx-cfg"><div class="modal"><div class="modal-head"><h3>⚙️ Configurações da caixinha</h3><button class="close-btn" onclick="fm('mod-cx-cfg')">×</button></div>
+<div class="modal-body"><div class="form-grid">
+<div class="form-group"><label>Varejo R$/kg</label><input id="cx-cfg-varejo" type="number" min="0" step=".01"></div>
+<div class="form-group"><label>Atacado R$/kg</label><input id="cx-cfg-atacado" type="number" min="0" step=".01"></div>
+<div class="form-group"><label>Fábrica própria ativa</label><select id="cx-cfg-fabrica" onchange="cxToggleFabricaCampo()"><option value="0">Não</option><option value="1">Sim — atacado passa a valer o mesmo do varejo</option></select></div>
+<div class="form-group" id="cx-cfg-fabrica-wrap"><label>Ativa desde</label><input id="cx-cfg-fabrica-desde" type="date"></div>
+<div class="form-group" style="grid-column:1/-1"><hr style="border:0;border-top:1px solid var(--borda);margin:4px 0"></div>
+<div class="form-group"><label>Base da meta (kg/mês)</label><input id="cx-cfg-base" type="number" min="0" step="1"></div>
+<div class="form-group"><label>Crescimento ano 1 (%)</label><input id="cx-cfg-a1" type="number" step=".1"></div>
+<div class="form-group"><label>Crescimento ano 2 (%)</label><input id="cx-cfg-a2" type="number" step=".1"></div>
+<div class="form-group"><label>Crescimento ano 3 (%)</label><input id="cx-cfg-a3" type="number" step=".1"></div>
+<div class="form-group"><label>Crescimento ano 4+ (%)</label><input id="cx-cfg-a4" type="number" step=".1"></div>
+</div><p style="color:#7a6a58;font-size:12px">A meta começa em ${CX_MES_INICIO.split('-').reverse().join('/')}. O primeiro mês já recebe o crescimento do ano 1.</p></div>
+<div class="modal-foot"><button class="btn btn-ghost" onclick="fm('mod-cx-cfg')">Cancelar</button><button class="btn btn-primary" onclick="cxSalvarCfgForm()">Salvar</button></div></div></div>`);
+  }
+  // título e renderer
+  TITLES['caixinha'] = '🏠 Caixinha do Imóvel';
+  const _getRendererOrig = getRenderer;
+  getRenderer = function(pg){ return pg==='caixinha' ? (()=>rendCaixinha()) : _getRendererOrig(pg); };
+}
+
+function cxInit(){
+  try{
+    cxMontarUI();
+    cxInstalarHooks();
+    const t0 = cxTotais(); _cxUltimoGerado = t0.gerado; _cxUltimoKg = t0.kgTotal;
+    cxPainelCard();
+  }catch(e){ console.error('Caixinha do Imóvel:', e); }
+}
+
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', ()=>setTimeout(cxInit,600));
+else setTimeout(cxInit,600);
+
+</script>
 </body>
 </html>
