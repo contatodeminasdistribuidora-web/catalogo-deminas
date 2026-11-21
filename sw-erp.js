@@ -1,6 +1,6 @@
 // Service worker do ERP De Minas: o ERP sempre tenta a internet primeiro (para pegar a versão mais nova)
 // e só usa a cópia guardada se estiver sem sinal. Dados e pedidos NUNCA ficam guardados aqui.
-const VERSAO = 'erp-v1';
+const VERSAO = 'erp-v2';
 const ARQUIVOS = ['./de_minas_v15_1_cloud.html', './erp-192.png', './erp-512.png', './erp.webmanifest'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSAO).then(c => Promise.all(ARQUIVOS.map(a => c.add(a).catch(() => null)))).then(() => self.skipWaiting()));
