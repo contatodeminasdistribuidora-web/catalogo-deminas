@@ -556,3 +556,7 @@ details.rg .bd{padding:0 20px 20px;display:grid;gap:10px}
 /* Pingo de joia nas dicas: tamanho */
 .dp2 .mascote img{width:auto;max-width:100%;max-height:325px;height:auto;display:block;margin:0 auto}
 @media(max-width:820px){.dp2 .mascote img{max-height:285px}}
+
+/* Ícone oficial do WhatsApp nos botões e links de WhatsApp (15/11) */
+a[data-wa]:not(.av)::before{content:"";display:inline-block;flex:none;width:1.2em;height:1.2em;margin-right:.4em;vertical-align:-.22em;background:url(icone-whatsapp.png) center/contain no-repeat}
+a.btn-wa[data-wa]::before{width:1.5em;height:1.5em;vertical-align:-.38em;border-radius:50%;background:#fff url(icone-whatsapp.png) center/70% no-repeat}

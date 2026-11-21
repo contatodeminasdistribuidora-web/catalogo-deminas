@@ -29,7 +29,7 @@
    "id": "pq-001",
    "codigo": "PQ-001",
    "cat": "congelados",
-   "grupo": "Pão de Queijo Tradicional",
+   "grupo": "Pão de Queijo Tradicional — Sabor da Roça",
    "nome": "Pão de Queijo Tradicional 30g",
    "foto": "atacado-sabor-da-roca-2kg.jpg",
    "descricao": "",
@@ -48,7 +48,7 @@
    "id": "pq-023",
    "codigo": "PQ-023",
    "cat": "congelados",
-   "grupo": "Pão de Queijo Tradicional",
+   "grupo": "Pão de Queijo Tradicional — Sabor da Roça",
    "nome": "Pão de Queijo Coquetel 15g",
    "foto": "atacado-sabor-da-roca-coquetel-2kg.jpg",
    "descricao": "Peças de 15g. Pacote de 2kg.",
@@ -64,7 +64,7 @@
    "id": "pq-024",
    "codigo": "PQ-024",
    "cat": "congelados",
-   "grupo": "Pão de Queijo Tradicional",
+   "grupo": "Pão de Queijo Tradicional — Sabor da Roça",
    "nome": "Pão de Queijo Lanche 80g",
    "foto": "atacado-sabor-da-roca-2kg.jpg",
    "descricao": "Peças de 80g. Pacote de 2kg.",
@@ -80,7 +80,7 @@
    "id": "pq-025",
    "codigo": "PQ-025",
    "cat": "congelados",
-   "grupo": "Pão de Queijo Tradicional",
+   "grupo": "Pão de Queijo Tradicional — Sabor da Roça",
    "nome": "Pão de Queijo Super Lanche 100g",
    "foto": "atacado-sabor-da-roca-2kg.jpg",
    "descricao": "Peças de 100g. Pacote de 2kg.",
@@ -96,7 +96,7 @@
    "id": "pq-002",
    "codigo": "PQ-002",
    "cat": "congelados",
-   "grupo": "Sabores Especiais",
+   "grupo": "Sabores Especiais — Sabor da Roça",
    "nome": "Biscoito de Queijo com 2 Queijos",
    "foto": "sabor-da-roca-biscoito-de-queijo-com-2-queijos-mve4l26d.jpg",
    "descricao": "Queijo Minas e Provolone.",
@@ -112,7 +112,7 @@
    "id": "pq-003",
    "codigo": "PQ-003",
    "cat": "congelados",
-   "grupo": "Sabores Especiais",
+   "grupo": "Sabores Especiais — Sabor da Roça",
    "nome": "Chipa com 3 Queijos",
    "foto": "atacado-sabor-da-roca-chipa-3-queijos-1kg.jpg",
    "descricao": "Queijo Minas, Provolone e Parmesão.",
@@ -128,7 +128,7 @@
    "id": "pq-007",
    "codigo": "PQ-007",
    "cat": "congelados",
-   "grupo": "Broas de Milho",
+   "grupo": "Broas de Milho — Sabor da Roça",
    "nome": "Broa de Doce",
    "foto": "pq-007-mvfrk7y0.jpg",
    "descricao": "",
@@ -147,7 +147,7 @@
    "id": "pq-008",
    "codigo": "PQ-008",
    "cat": "congelados",
-   "grupo": "Broas de Milho",
+   "grupo": "Broas de Milho — Sabor da Roça",
    "nome": "Broa de Doce com Erva-doce",
    "foto": "pq-008-mvfrk99z.jpg",
    "descricao": "",
@@ -166,7 +166,7 @@
    "id": "pq-009",
    "codigo": "PQ-009",
    "cat": "congelados",
-   "grupo": "Broas de Milho",
+   "grupo": "Broas de Milho — Sabor da Roça",
    "nome": "Broa de Sal Temperada",
    "foto": "pq-009-mvfrkal5.jpg",
    "descricao": "",
@@ -182,10 +182,44 @@
    "consultarEstoque": false
   },
   {
+   "id": "pq-029",
+   "codigo": "PQ-029",
+   "cat": "congelados",
+   "grupo": "Pão de Queijo Tradicional — Bem de Minas",
+   "nome": "Pão de Queijo Tradicional 25g",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "500g"
+    },
+    {
+     "label": "1kg"
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
+   "id": "pq-022",
+   "codigo": "PQ-022",
+   "cat": "congelados",
+   "grupo": "Pão de Queijo Tradicional — Bem de Minas",
+   "nome": "Chipa Tradicional",
+   "foto": "pq-022-mvfrk6rb.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "500g"
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": false
+  },
+  {
    "id": "pq-010",
    "codigo": "PQ-010",
    "cat": "congelados",
-   "grupo": "Recheados Artesanais",
+   "grupo": "Recheados Artesanais — Garcia de Minas",
    "nome": "Recheado de Goiabada",
    "foto": "pq-010-mvg4j96i.jpg",
    "descricao": "",
@@ -201,25 +235,9 @@
    "id": "pq-011",
    "codigo": "PQ-011",
    "cat": "congelados",
-   "grupo": "Recheados Artesanais",
+   "grupo": "Recheados Artesanais — Garcia de Minas",
    "nome": "Recheado de Frango",
    "foto": "garcia-de-minas-recheado-frango-mve4l9mn.jpg",
-   "descricao": "",
-   "opcoes": [
-    {
-     "label": "1kg"
-    }
-   ],
-   "disponivel": true,
-   "consultarEstoque": true
-  },
-  {
-   "id": "pq-013",
-   "codigo": "PQ-013",
-   "cat": "congelados",
-   "grupo": "Recheados Artesanais",
-   "nome": "Recheado de Calabresa",
-   "foto": "garcia-de-minas-recheado-calabresa-mve4laws.jpg",
    "descricao": "",
    "opcoes": [
     {
@@ -233,9 +251,57 @@
    "id": "pq-012",
    "codigo": "PQ-012",
    "cat": "congelados",
-   "grupo": "Recheados Artesanais",
+   "grupo": "Recheados Artesanais — Garcia de Minas",
    "nome": "Recheado de Requeijão",
    "foto": "garcia-de-minas-recheado-requeijao-mve4lc2z.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg"
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-013",
+   "codigo": "PQ-013",
+   "cat": "congelados",
+   "grupo": "Recheados Artesanais — Garcia de Minas",
+   "nome": "Recheado de Calabresa",
+   "foto": "garcia-de-minas-recheado-calabresa-mve4laws.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg"
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-014",
+   "codigo": "PQ-014",
+   "cat": "congelados",
+   "grupo": "Recheados Artesanais — Garcia de Minas",
+   "nome": "Recheado de Doce de Leite",
+   "foto": "pq-014-mvg4jala.jpg",
+   "descricao": "",
+   "opcoes": [
+    {
+     "label": "1kg"
+    }
+   ],
+   "disponivel": true,
+   "consultarEstoque": true
+  },
+  {
+   "id": "pq-015",
+   "codigo": "PQ-015",
+   "cat": "congelados",
+   "grupo": "Recheados Artesanais — Garcia de Minas",
+   "nome": "Recheado de Costela",
+   "foto": "pq-015-mvg4jbrb.jpg",
    "descricao": "",
    "opcoes": [
     {
@@ -249,7 +315,7 @@
    "id": "pq-004",
    "codigo": "PQ-004",
    "cat": "congelados",
-   "grupo": "Sabores Especiais",
+   "grupo": "Sabores Especiais — Encanto de Minas",
    "nome": "Pão de Queijo Gourmet 4 Queijos",
    "foto": "encanto-de-minas-brasil-mineiro-gourmet-4-queijos-mve4ljfk.jpg",
    "descricao": "Queijo Minas Artesanal, Mussarela, Parmesão e Provolone",
@@ -268,7 +334,7 @@
    "id": "pq-005",
    "codigo": "PQ-005",
    "cat": "congelados",
-   "grupo": "Sabores Especiais",
+   "grupo": "Sabores Especiais — Encanto de Minas",
    "nome": "Palito de Provolone",
    "foto": "encanto-de-minas-brasil-mineiro-palitinho-provolone-mve4lkk8.jpg",
    "descricao": "",
@@ -287,7 +353,7 @@
    "id": "pq-006",
    "codigo": "PQ-006",
    "cat": "congelados",
-   "grupo": "Sabores Especiais",
+   "grupo": "Sabores Especiais — Encanto de Minas",
    "nome": "Pão de Queijo Temperado",
    "foto": "encanto-de-minas-brasil-mineiro-temperado-mve4lfuh.jpg",
    "descricao": "",
@@ -303,7 +369,7 @@
    "id": "pq-020",
    "codigo": "PQ-020",
    "cat": "congelados",
-   "grupo": "Multigrãos",
+   "grupo": "Multigrãos — Encanto de Minas",
    "nome": "Pão de Queijo Multigrãos",
    "foto": "encanto-de-minas-brasil-mineiro-multigraos-mve4lic7.jpg",
    "descricao": "",
@@ -319,7 +385,7 @@
    "id": "pq-021",
    "codigo": "PQ-021",
    "cat": "congelados",
-   "grupo": "Dadinho de Tapioca",
+   "grupo": "Dadinho de Tapioca — Encanto de Minas",
    "nome": "Dadinho de Tapioca",
    "foto": "encanto-de-minas-brasil-mineiro-dadinho-de-tapioca-mve4ltz9.jpg",
    "descricao": "",
@@ -335,7 +401,7 @@
    "id": "pq-016",
    "codigo": "PQ-016",
    "cat": "congelados",
-   "grupo": "Recheados Empanados",
+   "grupo": "Recheados Empanados — Encanto de Minas",
    "nome": "Empanado de Doce de Leite",
    "foto": "pq-016-mvg4jcvv.jpg",
    "descricao": "",
@@ -351,7 +417,7 @@
    "id": "pq-017",
    "codigo": "PQ-017",
    "cat": "congelados",
-   "grupo": "Recheados Empanados",
+   "grupo": "Recheados Empanados — Encanto de Minas",
    "nome": "Empanado de Requeijão",
    "foto": "encanto-de-minas-brasil-mineiro-requeijao-empanado-mve4lmv5.jpg",
    "descricao": "",
@@ -367,7 +433,7 @@
    "id": "pq-018",
    "codigo": "PQ-018",
    "cat": "congelados",
-   "grupo": "Recheados Empanados",
+   "grupo": "Recheados Empanados — Encanto de Minas",
    "nome": "Empanado de Goiabada",
    "foto": "pq-018-mvg4jeax.jpg",
    "descricao": "",
@@ -383,7 +449,7 @@
    "id": "pq-019",
    "codigo": "PQ-019",
    "cat": "congelados",
-   "grupo": "Recheados Empanados",
+   "grupo": "Recheados Empanados — Encanto de Minas",
    "nome": "Empanado de Frango",
    "foto": "encanto-de-minas-brasil-mineiro-frango-empanado-mve4lp4n.jpg",
    "descricao": "",
@@ -396,12 +462,11 @@
    "consultarEstoque": true
   },
   {
-   "id": "pq-014",
-   "codigo": "PQ-014",
+   "id": "pq-026",
+   "codigo": "PQ-026",
    "cat": "congelados",
-   "grupo": "Recheados Artesanais",
-   "nome": "Recheado de Doce de Leite",
-   "foto": "pq-014-mvg4jala.jpg",
+   "grupo": "Recheados Artesanais — Encanto de Minas",
+   "nome": "Recheado Artesanal de Goiabada",
    "descricao": "",
    "opcoes": [
     {
@@ -412,12 +477,11 @@
    "consultarEstoque": true
   },
   {
-   "id": "pq-015",
-   "codigo": "PQ-015",
+   "id": "pq-027",
+   "codigo": "PQ-027",
    "cat": "congelados",
-   "grupo": "Recheados Artesanais",
-   "nome": "Recheado de Costela",
-   "foto": "pq-015-mvg4jbrb.jpg",
+   "grupo": "Recheados Artesanais — Encanto de Minas",
+   "nome": "Recheado Artesanal de Requeijão",
    "descricao": "",
    "opcoes": [
     {
@@ -428,23 +492,19 @@
    "consultarEstoque": true
   },
   {
-   "id": "pq-022",
-   "codigo": "PQ-022",
+   "id": "pq-028",
+   "codigo": "PQ-028",
    "cat": "congelados",
-   "grupo": "Pão de Queijo Tradicional",
-   "nome": "Chipa Tradicional",
-   "foto": "pq-022-mvfrk6rb.jpg",
+   "grupo": "Recheados Artesanais — Encanto de Minas",
+   "nome": "Recheado Artesanal de Frango",
    "descricao": "",
    "opcoes": [
-    {
-     "label": "500g"
-    },
     {
      "label": "1kg"
     }
    ],
    "disponivel": true,
-   "consultarEstoque": false
+   "consultarEstoque": true
   }
  ]
 }
