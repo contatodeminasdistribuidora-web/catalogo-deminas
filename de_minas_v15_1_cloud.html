@@ -2227,7 +2227,7 @@ function nomeNorm(n){return String(n||'').toLowerCase().normalize('NFD').replace
 function cliTemNome(c,nn){return nomeNorm(c.n)===nn||(c.nomes||[]).some(x=>nomeNorm(x)===nn);}
 // acha o cadastro: 1º pelo telefone; sem telefone, pelo nome exato. Com telefone novo, só junta pelo nome se o cadastro ainda não tem telefone.
 // ===== 10% do 1o pedido (QR do panfleto) =====
-const PROMO_IND=/panfleto|banner|flyer|qr/i, PROMO_PCT=10;
+const PROMO_IND=/panfleto|banner|flyer|qr|camiseta|adesivo/i, PROMO_PCT=10;
 function endChave(e){
   let s=String(e||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   if(/retirada na loja/.test(s))return '';
