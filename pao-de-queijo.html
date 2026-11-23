@@ -195,16 +195,11 @@ html.theme-ready body { opacity: 1; }
 #qrbox .qrtop{padding:18px 44px 14px 18px}
 #qrbox .qrtop h2{font-size:21px;line-height:1.25;margin:0 0 6px;color:var(--brown)}
 #qrbox .qrtop p{margin:0;color:var(--muted);font-size:15px}
-#qrbox .qrtop .qrfonte{display:inline-block;margin-top:10px;font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--gold-d);background:var(--cream2);border-radius:999px;padding:4px 12px}
 #qrbox .qrfechar{position:absolute;top:8px;right:8px;z-index:3;width:34px;height:34px;border:0;border-radius:50%;background:rgba(255,250,240,.9);color:var(--brown);font-size:20px;line-height:1;display:grid;place-items:center}
 #qrbox .qrslides{position:relative;height:200px;background:var(--cream2)}
 #qrbox .qrslide{position:absolute;inset:0;opacity:0;transition:opacity .7s ease;display:block}
 #qrbox .qrslide.on{opacity:1}
 #qrbox .qrslide img{width:100%;height:100%;object-fit:cover;display:block}
-#qrbox .qrlegenda{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 12px;color:#fff;
-  background:linear-gradient(to top,rgba(42,13,3,.88),rgba(42,13,3,.55) 45%,transparent)}
-#qrbox .qrlegenda b{display:block;font-family:'Fraunces',Georgia,serif;font-size:19px;line-height:1.2}
-#qrbox .qrlegenda span{display:block;font-size:13px;opacity:.92;margin-top:2px}
 #qrbox .qrpontos{display:flex;gap:7px;justify-content:center;padding:10px 0 12px}
 #qrbox .qrponto{width:8px;height:8px;border-radius:50%;border:0;background:var(--line);padding:0}
 #qrbox .qrponto[aria-current="true"]{background:var(--gold)}
@@ -234,7 +229,6 @@ html.theme-ready body { opacity: 1; }
     <div class="qrtop">
       <h2>Obrigado por acessar nosso catálogo</h2>
       <p>Desculpe se a gente te deixar com fome.</p>
-      <span class="qrfonte" id="qrfonte" hidden></span>
     </div>
     <div class="qrslides" id="qrslides"></div>
     <div class="qrpontos" id="qrpontos"></div>
@@ -1122,19 +1116,16 @@ setTimeout(() => document.documentElement.classList.replace('theme-loading', 'th
 /* ===== Boas-vindas de quem chega por QR ===== */
 (function(){
   var SLIDES = [
-    {img:'tradicional-30g-real.jpg',    t:'Pão de queijo tradicional', s:'do freezer direto para o forno'},
-    {img:'combo-romeu-e-julieta.jpg',   t:'Romeu e Julieta',           s:'queijo Minas com goiabada cascão'},
-    {img:'palito-de-provolone-real.jpg',t:'Palito de provolone',       s:'crocante por fora, queijo por dentro'},
-    {img:'chipa-tradicional-real.jpg',  t:'Chipa tradicional',         s:'a rosquinha mineira de queijo'},
-    {img:'dadinho-de-tapioca.jpg',      t:'Dadinho de tapioca',        s:'para servir de petisco'}
+    {img:'banner-01.jpg'},
+    {img:'banner-02.jpg'},
+    {img:'banner-03.jpg'},
+    {img:'banner-04.jpg'},
+    {img:'banner-05.jpg'},
+    {img:'banner-06.jpg'},
+    {img:'banner-07.jpg'},
+    {img:'banner-08.jpg'},
+    {img:'banner-09.jpg'}
   ];
-  var FONTES = {
-    camiseta: 'Você veio pela camiseta',
-    panfleto: 'Você veio pelo panfleto',
-    banner:   'Você veio pelo banner',
-    instagram:'Você veio pelo Instagram',
-    loja:     'Você veio da loja'
-  };
 
   function origem(){
     try { return (new URLSearchParams(location.search).get('ind')||'')
@@ -1151,21 +1142,15 @@ setTimeout(() => document.documentElement.classList.replace('theme-loading', 'th
   var pontos = document.getElementById('qrpontos');
   if(!box || !alvo || !pontos) return;
 
-  var rotulo = FONTES[ind];
-  if(rotulo){ var el = document.getElementById('qrfonte'); el.textContent = rotulo; el.hidden = false; }
-
   SLIDES.forEach(function(s, i){
     var d = document.createElement('div');
     d.className = 'qrslide' + (i===0?' on':'');
-    d.innerHTML = '<img src="'+s.img+'" alt="'+s.t+'" loading="'+(i===0?'eager':'lazy')+'">'+
-                  '<div class="qrlegenda"><b></b><span></span></div>';
-    d.querySelector('b').textContent = s.t;
-    d.querySelector('span').textContent = s.s;
+    d.innerHTML = '<img src="'+s.img+'" alt="" loading="'+(i===0?'eager':'lazy')+'">';
     alvo.appendChild(d);
 
     var p = document.createElement('button');
     p.type = 'button'; p.className = 'qrponto';
-    p.setAttribute('aria-label', 'Ver ' + s.t);
+    p.setAttribute('aria-label', 'Foto ' + (i+1));
     p.setAttribute('aria-current', i===0 ? 'true' : 'false');
     p.addEventListener('click', function(){ mostrar(i); parar(); });
     pontos.appendChild(p);
