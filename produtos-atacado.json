@@ -1,6 +1,6 @@
 {
  "versao": 5,
- "atualizadoEm": "2026-10-24T11:06:51Z",
+ "atualizadoEm": "2026-11-25T14:58:00Z",
  "whatsapp": "5511986975803",
  "pedidoMinimo": 300,
  "pix": "(11) 98697-5803",
@@ -8,7 +8,7 @@
  "avisos": [
   "Catálogo exclusivo para empresas (CNPJ) e revendedores autônomos (CPF).",
   "Pagamento: PIX ou prazo de 7 dias para clientes com cadastro aprovado.",
-  "Entrega: frete grátis na Zona Leste de São Paulo em pedidos a partir de R$ 300,00. Dia e horário combinados pelo WhatsApp.",
+  "Pedido mínimo de R$ 300,00 por CNPJ ou CPF. Entrega com frete grátis na Zona Leste de São Paulo, em dia e horário combinados pelo WhatsApp.",
   "Troca ou devolução de produtos congelados: combinada caso a caso pelo WhatsApp.",
   "Valores sujeitos a alteração conforme reajuste do fornecedor.",
   "Recheados, linha especial e gourmet: consultar estoque."
@@ -35,10 +35,14 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 21.9,
+     "rev": 30.9
     },
     {
-     "label": "2kgs"
+     "label": "2kgs",
+     "preco": 43.8,
+     "rev": 59.9
     }
    ],
    "disponivel": true,
@@ -54,7 +58,9 @@
    "descricao": "Peças de 15g. Pacote de 2kg.",
    "opcoes": [
     {
-     "label": "2kgs"
+     "label": "2kgs",
+     "preco": 43.8,
+     "rev": 59.9
     }
    ],
    "disponivel": true,
@@ -70,7 +76,9 @@
    "descricao": "Peças de 80g. Pacote de 2kg.",
    "opcoes": [
     {
-     "label": "2kgs"
+     "label": "2kgs",
+     "preco": 43.8,
+     "rev": 59.9
     }
    ],
    "disponivel": true,
@@ -86,7 +94,9 @@
    "descricao": "Peças de 100g. Pacote de 2kg.",
    "opcoes": [
     {
-     "label": "2kgs"
+     "label": "2kgs",
+     "preco": 43.8,
+     "rev": 59.9
     }
    ],
    "disponivel": true,
@@ -102,7 +112,9 @@
    "descricao": "Queijo Minas e Provolone.",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 22.0,
+     "rev": 32.9
     }
    ],
    "disponivel": true,
@@ -118,7 +130,9 @@
    "descricao": "Queijo Minas, Provolone e Parmesão.",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 24.9,
+     "rev": 34.9
     }
    ],
    "disponivel": true,
@@ -134,10 +148,14 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 21.9,
+     "rev": 30.9
     },
     {
-     "label": "2kgs"
+     "label": "2kgs",
+     "preco": 43.8,
+     "rev": 61.8
     }
    ],
    "disponivel": true,
@@ -153,10 +171,14 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 21.9,
+     "rev": 30.9
     },
     {
-     "label": "2kgs"
+     "label": "2kgs",
+     "preco": 43.8,
+     "rev": 61.8
     }
    ],
    "disponivel": true,
@@ -172,10 +194,14 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 21.9,
+     "rev": 30.9
     },
     {
-     "label": "2kgs"
+     "label": "2kgs",
+     "preco": 43.8,
+     "rev": 61.8
     }
    ],
    "disponivel": true,
@@ -190,10 +216,14 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "500g"
+     "label": "500g",
+     "preco": 11.9,
+     "rev": 18.0
     },
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 22.9,
+     "rev": 34.0
     }
    ],
    "disponivel": true,
@@ -209,7 +239,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "500g"
+     "label": "500g",
+     "preco": 12.9,
+     "rev": 18.0
     }
    ],
    "disponivel": true,
@@ -225,7 +257,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 28.9,
+     "rev": 44.9
     }
    ],
    "disponivel": true,
@@ -241,7 +275,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 28.9,
+     "rev": 44.9
     }
    ],
    "disponivel": true,
@@ -257,7 +293,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 28.9,
+     "rev": 44.9
     }
    ],
    "disponivel": true,
@@ -273,7 +311,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 28.9,
+     "rev": 44.9
     }
    ],
    "disponivel": true,
@@ -305,7 +345,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 32.9,
+     "rev": 44.9
     }
    ],
    "disponivel": true,
@@ -321,10 +363,14 @@
    "descricao": "Queijo Minas Artesanal, Mussarela, Parmesão e Provolone",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 37.2,
+     "rev": 54.9
     },
     {
-     "label": "2kgs"
+     "label": "2kgs",
+     "preco": 69.7,
+     "rev": 98.9
     }
    ],
    "disponivel": true,
@@ -340,10 +386,14 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 28.5,
+     "rev": 34.9
     },
     {
-     "label": "2kgs"
+     "label": "2kgs",
+     "preco": 56.2,
+     "rev": 69.8
     }
    ],
    "disponivel": true,
@@ -359,7 +409,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 24.3,
+     "rev": 33.9
     }
    ],
    "disponivel": true,
@@ -375,7 +427,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 21.7,
+     "rev": 30.9
     }
    ],
    "disponivel": true,
@@ -391,7 +445,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "500g"
+     "label": "500g",
+     "preco": 24.1,
+     "rev": 29.9
     }
    ],
    "disponivel": true,
@@ -407,7 +463,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 35.1,
+     "rev": 47.9
     }
    ],
    "disponivel": true,
@@ -423,7 +481,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 35.1,
+     "rev": 47.9
     }
    ],
    "disponivel": true,
@@ -439,7 +499,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 35.1,
+     "rev": 47.9
     }
    ],
    "disponivel": true,
@@ -455,7 +517,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 37.6,
+     "rev": 47.9
     }
    ],
    "disponivel": true,
@@ -470,7 +534,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 33.2,
+     "rev": 45.9
     }
    ],
    "disponivel": true,
@@ -485,7 +551,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 33.2,
+     "rev": 45.9
     }
    ],
    "disponivel": true,
@@ -500,7 +568,9 @@
    "descricao": "",
    "opcoes": [
     {
-     "label": "1kg"
+     "label": "1kg",
+     "preco": 35.5,
+     "rev": 49.9
     }
    ],
    "disponivel": true,
